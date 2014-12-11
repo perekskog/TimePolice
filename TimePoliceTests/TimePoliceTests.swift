@@ -381,6 +381,9 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let tsh = TaskSelectionHelper()
         tp1.taskSelectionDelegate = tsh
 
+        XCTAssertEqual(tsh.taskSignInList, [])
+        XCTAssertEqual(tsh.taskSignOutList, [[]])
+
         // Simulate "tap" on first item
         let (view2, position) = tp1.layout.getView(tp1.workspace.view, selectionArea:0)
         if let recognizers = view2.gestureRecognizers {
@@ -391,6 +394,20 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(tsh.taskSignInList, [t1])
         XCTAssertEqual(1, tsh.taskSignOutList.count)
         XCTAssertEqual(tsh.taskSignOutList, [[]])
+
+        // Simulate "tap" on second item
+        let (view3, position2) = tp1.layout.getView(tp1.workspace.view, selectionArea:1)
+        if let recognizers = view3.gestureRecognizers {
+            if let recognizer = recognizers[0] as? UITapGestureRecognizer {
+                tp1.handleTap(recognizer)
+            }
+        }
+        XCTAssertEqual(tsh.taskSignInList, [t1, t2],
+            "taskSignInList=\(tsh.taskSignInList[1].name)")
+        XCTAssertEqual(2, tsh.taskSignOutList.count)
+        var signoutlist = tsh.taskSignOutList[1]
+        XCTAssertEqual(signoutlist, [t1], "taskSignOutList=\(signoutlist[0].name)")
+
     }
 
 
