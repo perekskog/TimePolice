@@ -273,7 +273,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
             }
     }
 
-    func testTaskPicker() {
+    func testTaskPicker1() {
         let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let ws = WorkSpace(view: view1)
         let layout = GridLayout(rows: 2, columns: 1)
@@ -295,9 +295,9 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
             let (view2, position) = tp1.layout.getView(tp1.workspace.view, selectionArea:i)
             if let recognizers = view2.gestureRecognizers {
                 XCTAssertEqual(1, recognizers.count)
-                if let recognizer = recognizers[0] as? UIGestureRecognizer {
+                if let recognizer = recognizers[0] as? UITapGestureRecognizer {
                     if let taskIndex = tp1.recognizers[recognizer] {
-                        XCTAssertEqual(0, taskIndex, "taskIndex=\(taskIndex), i=\(i)")
+                        XCTAssertEqual(i, taskIndex, "taskIndex=\(taskIndex), i=\(i)")
                     } else {
                         XCTAssert(false, "Gesture recognizer not found in TaskPicker")
                     }
@@ -308,6 +308,26 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
                 XCTAssert(false, "No gesture recognizers")
             }
         }
+
+    }
+
+
+    func testTaskPicker2() {
+        let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
+        let ws = WorkSpace(view: view1)
+        let layout = GridLayout(rows: 2, columns: 1)
+        let theme = BasicTheme()
+        let t1 = Task(name:"t1")
+        let t2 = Task(name:"t2")
+        let t3 = Task(name:"t3")
+        let tl1 = [t1, t2, t3]
+        let s1Name = "Session 1"
+        let s1 = Session(name: s1Name, taskList: tl1)
+        let tsa = TaskSelectAny()
+        let tp1 = TaskPicker(workspace: ws, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        tp1.setup()
+        let tsh = TaskSelectionHelper()
+        tp1.taskSelectionDelegate = tsh
 
         tp1.signIn()
         XCTAssertEqual(tsh.taskSignInList, [])
@@ -342,7 +362,37 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         signoutlist = tsh.taskSignOutList[3]
         XCTAssertEqual(signoutlist, [t1, t3, t2])
 
-}
+    }
+
+    func testTaskPicker3() {
+        let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
+        let ws = WorkSpace(view: view1)
+        let layout = GridLayout(rows: 2, columns: 1)
+        let theme = BasicTheme()
+        let t1 = Task(name:"t1")
+        let t2 = Task(name:"t2")
+        let t3 = Task(name:"t3")
+        let tl1 = [t1, t2, t3]
+        let s1Name = "Session 1"
+        let s1 = Session(name: s1Name, taskList: tl1)
+        let tsa = TaskSelectAny()
+        let tp1 = TaskPicker(workspace: ws, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        tp1.setup()
+        let tsh = TaskSelectionHelper()
+        tp1.taskSelectionDelegate = tsh
+
+        // Simulate "tap" on first item
+        let (view2, position) = tp1.layout.getView(tp1.workspace.view, selectionArea:0)
+        if let recognizers = view2.gestureRecognizers {
+            if let recognizer = recognizers[0] as? UITapGestureRecognizer {
+                tp1.handleTap(recognizer)
+            }
+        }
+        XCTAssertEqual(tsh.taskSignInList, [t1])
+        XCTAssertEqual(1, tsh.taskSignOutList.count)
+        XCTAssertEqual(tsh.taskSignOutList, [[]])
+    }
+
 
     func testWorkSpace() {
         XCTAssert(true)
