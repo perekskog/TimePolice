@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+/*
+        let ws = WorkSpace(theView)
+        let tp = TimePolice(ws)
+        tp.redraw()
+*/
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,10 +34,12 @@ class ViewController: UIViewController {
 class TimePolice {
 	var templateList: [String:ProjectTemplate]!
 	var projectList: [String:Project]!
+	var workspace: WorkSpace!
 
-	init() {
+	init(workspace: WorkSPace) {
 		templateList = [:]
 		projectList = [:]
+		self.workspace = workspace
 	}
 
 	var workspace: WorkSpace?
@@ -53,6 +60,28 @@ class TimePolice {
 		projectList[project.name] = nil
 	}
 
+	func redraw() {
+
+	}
+
+}
+
+
+/////////////////////////
+// WorkSpace
+
+class WorkSpace {
+    var view: UIView!
+	var taskPickers: [TaskPicker]!
+
+	init(view: UIView){
+		self.view = view
+		self.taskPickers = []
+	}
+
+	func addSubview(view: UIView, position:CGPoint) {
+		view.addSubview(xxx)
+	}
 }
 
 
@@ -332,6 +361,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
             recognizer.delegate = self
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
+			workspace.addSubview(view, position)
 		}
 	}
 
@@ -377,19 +407,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	}
 }
 
-
-/////////////////////////
-// WorkSpace
-
-class WorkSpace {
-    var view: UIView!
-	var taskPickers: [TaskPicker]!
-
-	init(view: UIView){
-		self.view = view
-		self.taskPickers = []
-	}
-}
 
 
 
