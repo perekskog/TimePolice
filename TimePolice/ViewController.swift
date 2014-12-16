@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet var button1: UIView!
+    @IBOutlet var button1: ButtonView!
     @IBOutlet var statustext: UITextView!
     
     override func viewDidLoad() {
@@ -35,7 +35,12 @@ class ViewController: UIViewController {
 class ButtonView: UIView {
 	override func drawRect(rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()
-		CGContextClearRect(context, rect)
+		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
+  		CGContextMoveToPoint(context, rect.width / 4, rect.height / 4)
+  		CGContextAddLineToPoint(context, rect.width * 3 / 4, rect.height / 2)
+  		CGContextAddLineToPoint(context, rect.width / 4, rect.height * 3 / 4)
+  		CGContextAddLineToPoint(context, rect.width / 4, rect.height / 4)
+  		CGContextFillPath(context)
 	}
 }
  
