@@ -41,7 +41,31 @@ class ButtonView: UIView {
   		CGContextAddLineToPoint(context, rect.width / 4, rect.height * 3 / 4)
   		CGContextAddLineToPoint(context, rect.width / 4, rect.height / 4)
   		CGContextFillPath(context)
+
+  		var textAttributes: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(17)
+		]
+
+		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
 	}
+
+    func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+    	let font = attributes[NSFontAttributeName] as UIFont
+    	let attributedString = NSAttributedString(string: text, attributes: attributes)
+
+    	let textSize = text.sizeWithAttributes(attributes)
+
+    	// y: Add font.descender (its a negative value) to align the text at the baseline
+    	let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
+    	let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+    	let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+
+    	CTFrameDraw(frame, context)
+
+    	return textSize
+	}
+
 }
  
 ///////////////////////////////////////////////
