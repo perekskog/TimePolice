@@ -233,20 +233,17 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
         let vr1 = CGRect(x:0, y:0, width:200, height:320)
         let v1 = UIView(frame:vr1)
-        let (sa1, pa1) = gl1.getView(v1, selectionArea: 0)
-        XCTAssertEqual(sa1.frame, CGRect(x:0, y:0, width:100, height:80))
-        XCTAssertEqual(pa1, CGPoint(x:0, y:0))
+        let view1 = gl1.getView(v1, selectionArea: 0)
+        XCTAssertEqual(view1.frame, CGRect(x:0, y:0, width:100, height:80))
         
-        let (sa2, pa2) = gl1.getView(v1, selectionArea: 1)
-        XCTAssertEqual(sa2.frame, CGRect(x:0, y:0, width:100, height:80))
-        XCTAssertEqual(pa2, CGPoint(x:100, y:0))
+        let view2 = gl1.getView(v1, selectionArea: 1)
+        XCTAssertEqual(view2.frame, CGRect(x:100, y:0, width:100, height:80))
         
-        let (sa3, pa3) = gl1.getView(v1, selectionArea: 2)
-        XCTAssertEqual(sa3.frame, CGRect(x:0, y:0, width:100, height:80))
-        XCTAssertEqual(pa3, CGPoint(x:0, y:80))
+        let view3 = gl1.getView(v1, selectionArea: 2)
+        XCTAssertEqual(view3.frame, CGRect(x:0, y:80, width:100, height:80))
 
-        let (sa4, pa4) = gl1.getView(v1, selectionArea: 2)
-        XCTAssert(sa3 === sa4)
+        let view4 = gl1.getView(v1, selectionArea: 2)
+        XCTAssert(view3 === view4)
     }
 
     func testTheme() {
@@ -275,7 +272,6 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     func testTaskPicker1() {
         let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
-        let ws = WorkSpace(view: view1)
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")
@@ -285,14 +281,14 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: ws, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
         tp1.setup()
         let tsh = TaskSelectionHelper()
         tp1.taskSelectionDelegate = tsh
 
         for i in 0..<tp1.layout.numberOfSelectionAreas() {
             XCTAssert(tp1.taskIsSelectable(i), "task \(i)")
-            let (view2, position) = tp1.layout.getView(tp1.workspace.view, selectionArea:i)
+            let view2 = tp1.layout.getView(tp1.workspace, selectionArea:i)
             if let recognizers = view2.gestureRecognizers {
                 XCTAssertEqual(1, recognizers.count)
                 if let recognizer = recognizers[0] as? UITapGestureRecognizer {
@@ -314,7 +310,6 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     func testTaskPicker2() {
         let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
-        let ws = WorkSpace(view: view1)
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")
@@ -324,7 +319,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: ws, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
         tp1.setup()
         let tsh = TaskSelectionHelper()
         tp1.taskSelectionDelegate = tsh
@@ -366,7 +361,6 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     func testTaskPicker3() {
         let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
-        let ws = WorkSpace(view: view1)
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")
@@ -376,7 +370,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: ws, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
         tp1.setup()
         let tsh = TaskSelectionHelper()
         tp1.taskSelectionDelegate = tsh
@@ -385,7 +379,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(tsh.taskSignOutList, [[]])
 
         // Simulate "tap" on first item
-        let (view2, position) = tp1.layout.getView(tp1.workspace.view, selectionArea:0)
+        let view2 = tp1.layout.getView(tp1.workspace, selectionArea:0)
         if let recognizers = view2.gestureRecognizers {
             if let recognizer = recognizers[0] as? UITapGestureRecognizer {
                 tp1.handleTap(recognizer)
@@ -396,7 +390,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(tsh.taskSignOutList, [[]])
 
         // Simulate "tap" on second item
-        let (view3, position2) = tp1.layout.getView(tp1.workspace.view, selectionArea:1)
+        let view3 = tp1.layout.getView(tp1.workspace, selectionArea:1)
         if let recognizers = view3.gestureRecognizers {
             if let recognizer = recognizers[0] as? UITapGestureRecognizer {
                 tp1.handleTap(recognizer)
@@ -410,11 +404,12 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     }
 
+/*
 
     func testWorkSpace() {
         XCTAssert(true)
     }
-
+*/
     
     func testPerformanceExample() {
         // This is an example of a performance test case.

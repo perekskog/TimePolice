@@ -13,11 +13,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-/*
-        let ws = WorkSpace(theView)
-        let tp = TimePolice(ws)
+        let tp = TimePolice()
+        //tp.view = 
         tp.redraw()
-*/
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,15 +32,13 @@ class ViewController: UIViewController {
 class TimePolice {
 	var templateList: [String:ProjectTemplate]!
 	var projectList: [String:Project]!
-	var workspace: WorkSpace!
 
-	init(workspace: WorkSPace) {
+	init() {
 		templateList = [:]
 		projectList = [:]
-		self.workspace = workspace
 	}
 
-	var workspace: WorkSpace?
+	var view: UIView?
 
 	func addTemplate(template: ProjectTemplate) {
 		templateList[template.name] = template
@@ -69,7 +65,7 @@ class TimePolice {
 
 /////////////////////////
 // WorkSpace
-
+/*
 class WorkSpace {
     var view: UIView!
 	var taskPickers: [TaskPicker]!
@@ -83,7 +79,7 @@ class WorkSpace {
 		view.addSubview(xxx)
 	}
 }
-
+*/
 
 ///////////////////////////////////////////////
 // ProjectTemplate
@@ -268,13 +264,13 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 
 protocol Layout {
     func numberOfSelectionAreas() -> Int
-	func getView(parentView: UIView, selectionArea: Int) -> (view: UIImageView, position: CGPoint)
+	func getView(parentView: UIView, selectionArea: Int) -> UIView
 }
 
 class GridLayout : Layout {
 	var rows: Int
 	var columns: Int
-    var views: [Int: UIImageView]!
+    var views: [Int: UIView]!
 
 	init(rows: Int, columns: Int) {
 		self.rows = rows
@@ -284,31 +280,31 @@ class GridLayout : Layout {
     func numberOfSelectionAreas() -> Int {
         return rows * columns;
     }
-	func getView(parentView: UIView, selectionArea: Int) -> (view: UIImageView, position: CGPoint) {
+	func getView(parentView: UIView, selectionArea: Int) -> UIView {
 		let row = selectionArea / columns
 		let column = selectionArea % columns
 		let frame = parentView.frame
 		let rowHeight = Int(frame.height) / rows
 		let columnWidth = Int(frame.width) / columns
-        let point = CGPoint(x: column*columnWidth, y: row*rowHeight)
 
-        var x: UIImageView
+        var x: UIView
 		if let view = views[selectionArea] {
             x = view
 		} else {
-	        views[selectionArea] = UIImageView(frame: CGRect(x:0, y:0, width:columnWidth, height:rowHeight))
+            let y = UIView(frame: CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight))
+	        views[selectionArea] = y
             x = views[selectionArea]!
 		}
-        return (x, point)
+        return (x)
 	}
 }
 
 protocol Theme {
-	func decorateView(view: UIImageView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIImageView
+	func decorateView(view: UIView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIView
 }		
 
 class BasicTheme : Theme {
-	func decorateView(view: UIImageView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIImageView {
+	func decorateView(view: UIView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIView {
 		return view
 	}	
 }
@@ -325,7 +321,7 @@ protocol TaskPickerTaskSelectionDelegate {
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	// Initialized roperties
-    var workspace:WorkSpace!
+    var workspace:UIView!
 	var layout: Layout!
 	var theme: Theme!
 	var session: Session!
@@ -333,7 +329,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
     var taskSelectionStrategy: TaskSelectionStrategy!
     var recognizers: [UIGestureRecognizer: Int]!
 	
-	init(workspace:WorkSpace, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
+	init(workspace:UIView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
         self.workspace = workspace
 		self.layout = layout
 		self.theme = theme
@@ -350,7 +346,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 
 	func setup() {
 		for i in 0..<layout.numberOfSelectionAreas() {
-			let (view, position) = layout.getView(workspace.view, selectionArea: i)
+			let view = layout.getView(workspace, selectionArea: i)
             let t = taskList[i]
             let b = taskIsSelectable(i)
             theme.decorateView(view,
@@ -361,7 +357,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
             recognizer.delegate = self
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
-			workspace.addSubview(view, position)
+			workspace.addSubview(view)
 		}
 	}
 
