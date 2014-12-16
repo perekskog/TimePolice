@@ -41,6 +41,7 @@
                     </view>
                     <connections>
                         <outlet property="button1" destination="YWN-4G-VKq" id="WPq-7l-tIn"/>
+                        <outlet property="statustext" destination="8kz-hh-PfF" id="Moq-ng-hXe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet var button1: UIView!
+    @IBOutlet var statustext: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
