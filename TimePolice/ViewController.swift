@@ -10,12 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet var button1: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let tp = TimePolice()
-        //tp.view = 
-        tp.redraw()
+        // let tp = TimePolice()
+        // tp.view = 
+        // tp.redraw()
     }
 
     override func didReceiveMemoryWarning() {
