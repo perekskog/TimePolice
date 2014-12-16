@@ -26,6 +26,16 @@ class ViewController: UIViewController {
 
 }
 
+//////////////////////////////////////////////
+// Custom view
+
+class ButtonView: UIView {
+	override func drawRect(rect: CGRect) {
+		let context = UIGraphicsGetCurrentContext()
+		CGContextClearRect(context, rect)
+	}
+}
+ 
 ///////////////////////////////////////////////
 // ProjectTemplate and ProjectTemplateManager
 
