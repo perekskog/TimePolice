@@ -40,12 +40,24 @@ class ButtonView: UIView {
 
   		var textAttributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(30)
+    		NSFontAttributeName : UIFont.systemFontOfSize(12)
 		]
 
 		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
-        drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
+ //       drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
 	}
+
+    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+//        let font = UIFont(name: "Arial", size: 30)
+//        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
+//        let attr = [NSFontAttributeName: UIFont.systemFontOfSize(24), NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
+        let size = text.sizeWithAttributes(attributes)
+        let rectText = CGRectMake(x, y, 200, 100)
+//        text.drawInRect(rectText, withAttributes: attr)
+        text.drawInRect(rectText, withAttributes: attributes)
+        return size
+    }
+    
 
 	func drawButton(context: CGContextRef, rect: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -121,6 +133,9 @@ class ButtonView: UIView {
     	let font = attributes[NSFontAttributeName] as UIFont
     	let attributedString = NSAttributedString(string: text, attributes: attributes)
     	let textSize = text.sizeWithAttributes(attributes)
+        
+//        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        
     	// y: Add font.descender (its a negative value) to align the text at the baseline
     	let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
     	let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
@@ -129,15 +144,6 @@ class ButtonView: UIView {
     	return textSize
 	}
 
-    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-        let font = UIFont(name: "Arial", size: 30)
-        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
-        let size = text.sizeWithAttributes(attr)
-        let rectText = CGRectMake(x, y, 200, 100)
-        text.drawInRect(rectText, withAttributes: attr)
-        return size
-    }
-    
  
 
 }
