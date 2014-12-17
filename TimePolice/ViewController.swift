@@ -40,22 +40,30 @@ class ButtonView: UIView {
 
   		var textAttributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(12)
+    		NSFontAttributeName : UIFont.systemFontOfSize(15)
 		]
 
-		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
+		drawText(context, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
  //       drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
 	}
 
-    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-//        let font = UIFont(name: "Arial", size: 30)
-//        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
-//        let attr = [NSFontAttributeName: UIFont.systemFontOfSize(24), NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
-        let size = text.sizeWithAttributes(attributes)
-        let rectText = CGRectMake(x, y, 200, 100)
-//        text.drawInRect(rectText, withAttributes: attr)
-        text.drawInRect(rectText, withAttributes: attributes)
-        return size
+    func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        
+//        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        
+        CGContextTranslateCTM(context, 0.0, 383-150);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        // y: Add font.descender (its a negative value) to align the text at the baseline
+//        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
+        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)
+        return textSize
     }
     
 
@@ -65,7 +73,7 @@ class ButtonView: UIView {
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
 	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+        	          CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])]
 	    let colorspace = CGColorSpaceCreateDeviceRGB()
 	    let gradient = CGGradientCreateWithColors(colorspace,
                   colors, locations)
@@ -74,7 +82,7 @@ class ButtonView: UIView {
     	startPoint.x = 0.0
 	    startPoint.y = 0.0
     	endPoint.x = 0
-    	endPoint.y = 150
+    	endPoint.y = 1000
 	    CGContextDrawLinearGradient(context, gradient,
                startPoint, endPoint, 0)
 
@@ -129,22 +137,16 @@ class ButtonView: UIView {
         CGContextStrokePath(context)
 	}
 
-    func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-    	let font = attributes[NSFontAttributeName] as UIFont
-    	let attributedString = NSAttributedString(string: text, attributes: attributes)
-    	let textSize = text.sizeWithAttributes(attributes)
-        
-//        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        
-    	// y: Add font.descender (its a negative value) to align the text at the baseline
-    	let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
-    	let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-    	let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-    	CTFrameDraw(frame, context)
-    	return textSize
-	}
-
- 
+    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+        //        let font = UIFont(name: "Arial", size: 30)
+        //        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
+        //        let attr = [NSFontAttributeName: UIFont.systemFontOfSize(24), NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
+        let size = text.sizeWithAttributes(attributes)
+        let rectText = CGRectMake(x, y, 200, 100)
+        //        text.drawInRect(rectText, withAttributes: attr)
+        text.drawInRect(rectText, withAttributes: attributes)
+        return size
+    }
 
 }
  
