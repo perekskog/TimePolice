@@ -49,6 +49,7 @@ class ButtonView: UIView {
 	func drawButton(context: CGContextRef, rect: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
 
+        // Play button
 		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
   		CGContextMoveToPoint(context, rect.width / 4, rect.height / 4)
   		CGContextAddLineToPoint(context, rect.width * 3 / 4, rect.height / 2)
@@ -56,6 +57,7 @@ class ButtonView: UIView {
   		CGContextAddLineToPoint(context, rect.width / 4, rect.height / 4)
   		CGContextFillPath(context)
 
+        // Blue rectangle
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
             UIColor.blueColor().CGColor)
@@ -63,30 +65,58 @@ class ButtonView: UIView {
         CGContextAddRect(context, rectangle)
         CGContextStrokePath(context)
 
+        // Fill blue rectangle
         CGContextAddRect(context, rectangle)
-        let components: [CGFloat] = [1.0, 0.8, 0.8, 0.8]
-        let color = CGColorCreate(colorSpaceRGB, components)
-		CGContextSetFillColorWithColor(context, color)
-//		CGContextSetFillColorWithColor(context, UIColor.whiteColor().CGColor)
+		CGContextSetFillColorWithColor(context, CGColorCreate(colorSpaceRGB, [1.0, 0.8, 0.8, 0.8]))
   		CGContextFillPath(context)
 
+
+        // Thin ellipse
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
             UIColor.blueColor().CGColor)
         let rectangle2 = CGRectMake(60,100,10,80)
-        CGContextAddEllipseInRect(context, rectangle)
         CGContextAddEllipseInRect(context, rectangle2)
         CGContextStrokePath(context)
 
+        // Dashed curve
         CGContextSetLineWidth(context, 20.0)
+        CGContextSaveGState(context)
         CGContextSetStrokeColorWithColor(context,
-                UIColor.blueColor().CGColor)
+                CGColorCreate(colorSpaceRGB, [1.0, 0.2, 0.2, 0.8]))
         let dashArray:[CGFloat] = [2,6,4,2]
         CGContextSetLineDash(context, 3, dashArray, 4)
-        CGContextMoveToPoint(context, 10, 200)
-        CGContextAddQuadCurveToPoint(context, 150, 10, 300, 200)
+        CGContextMoveToPoint(context, 60, 170)
+        CGContextAddQuadCurveToPoint(context, 165, 90, 260, 170)
         CGContextStrokePath(context)
-	}
+        CGContextRestoreGState(context)
+        
+        let myShadowOffset = CGSizeMake (-10,  15)
+        CGContextSaveGState(context)
+        CGContextSetShadow (context, myShadowOffset, 5)
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rectangle3 = CGRectMake(60,170,200,80)
+        CGContextAddEllipseInRect(context, rectangle3)
+        CGContextStrokePath(context)
+        CGContextRestoreGState(context)
+
+/*
+        let myShadowOffset2 = CGSizeMake (-10,  15)
+        CGContextSaveGState(context)
+        CGContextSetShadow (context, myShadowOffset2, 5)
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        
+        let rectangle4 = CGRectMake(60,170,200,80)
+        CGContextAddEllipseInRect(context, rectangle4)
+        
+        CGContextStrokePath(context)
+        CGContextRestoreGState(context)
+*/
+}
 
     func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
     	let font = attributes[NSFontAttributeName] as UIFont
