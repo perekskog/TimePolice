@@ -35,6 +35,20 @@ class ViewController: UIViewController {
 class ButtonView: UIView {
 	override func drawRect(rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()
+
+		drawButton(context, rect: rect)
+
+  		var textAttributes: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(30)
+		]
+
+		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
+	}
+
+	func drawButton(context: CGContextRef, rect: CGRect) {
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+
 		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
   		CGContextMoveToPoint(context, rect.width / 4, rect.height / 4)
   		CGContextAddLineToPoint(context, rect.width * 3 / 4, rect.height / 2)
@@ -42,12 +56,36 @@ class ButtonView: UIView {
   		CGContextAddLineToPoint(context, rect.width / 4, rect.height / 4)
   		CGContextFillPath(context)
 
-  		var textAttributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(17)
-		]
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rectangle = CGRectMake(60,170,200,80)
+        CGContextAddRect(context, rectangle)
+        CGContextStrokePath(context)
 
-		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
+        CGContextAddRect(context, rectangle)
+        let components: [CGFloat] = [1.0, 0.8, 0.8, 0.8]
+        let color = CGColorCreate(colorSpaceRGB, components)
+		CGContextSetFillColorWithColor(context, color)
+//		CGContextSetFillColorWithColor(context, UIColor.whiteColor().CGColor)
+  		CGContextFillPath(context)
+
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rectangle2 = CGRectMake(60,100,10,80)
+        CGContextAddEllipseInRect(context, rectangle)
+        CGContextAddEllipseInRect(context, rectangle2)
+        CGContextStrokePath(context)
+
+        CGContextSetLineWidth(context, 20.0)
+        CGContextSetStrokeColorWithColor(context,
+                UIColor.blueColor().CGColor)
+        let dashArray:[CGFloat] = [2,6,4,2]
+        CGContextSetLineDash(context, 3, dashArray, 4)
+        CGContextMoveToPoint(context, 10, 200)
+        CGContextAddQuadCurveToPoint(context, 150, 10, 300, 200)
+        CGContextStrokePath(context)
 	}
 
     func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
