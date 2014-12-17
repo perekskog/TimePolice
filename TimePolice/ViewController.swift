@@ -44,10 +44,27 @@ class ButtonView: UIView {
 		]
 
 		drawText(context, text: "Hello, World!", attributes: textAttributes, x: 50, y: 50)
+        drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
 	}
 
 	func drawButton(context: CGContextRef, rect: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+
+        // Gradient
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
+        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+	    let colorspace = CGColorSpaceCreateDeviceRGB()
+	    let gradient = CGGradientCreateWithColors(colorspace,
+                  colors, locations)
+    	var startPoint = CGPoint()
+	    var endPoint =  CGPoint()
+    	startPoint.x = 0.0
+	    startPoint.y = 0.0
+    	endPoint.x = 0
+    	endPoint.y = 150
+	    CGContextDrawLinearGradient(context, gradient,
+               startPoint, endPoint, 0)
 
         // Play button
 		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
@@ -70,18 +87,18 @@ class ButtonView: UIView {
 		CGContextSetFillColorWithColor(context, CGColorCreate(colorSpaceRGB, [1.0, 0.8, 0.8, 0.8]))
   		CGContextFillPath(context)
 
-
-        // Thin ellipse
+        // Ellipse
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
             UIColor.blueColor().CGColor)
-        let rectangle2 = CGRectMake(60,100,10,80)
-        CGContextAddEllipseInRect(context, rectangle2)
+        CGContextAddEllipseInRect(context, rectangle)
         CGContextStrokePath(context)
 
-        // Dashed curve
+        // Dashed curve with shadow
+        let myShadowOffset = CGSizeMake (-10,  15)
         CGContextSetLineWidth(context, 20.0)
         CGContextSaveGState(context)
+        CGContextSetShadow (context, myShadowOffset, 5)
         CGContextSetStrokeColorWithColor(context,
                 CGColorCreate(colorSpaceRGB, [1.0, 0.2, 0.2, 0.8]))
         let dashArray:[CGFloat] = [2,6,4,2]
@@ -90,49 +107,38 @@ class ButtonView: UIView {
         CGContextAddQuadCurveToPoint(context, 165, 90, 260, 170)
         CGContextStrokePath(context)
         CGContextRestoreGState(context)
-        
-        let myShadowOffset = CGSizeMake (-10,  15)
-        CGContextSaveGState(context)
-        CGContextSetShadow (context, myShadowOffset, 5)
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rectangle3 = CGRectMake(60,170,200,80)
-        CGContextAddEllipseInRect(context, rectangle3)
-        CGContextStrokePath(context)
-        CGContextRestoreGState(context)
 
-/*
-        let myShadowOffset2 = CGSizeMake (-10,  15)
-        CGContextSaveGState(context)
-        CGContextSetShadow (context, myShadowOffset2, 5)
+        // Red rectangle
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        
-        let rectangle4 = CGRectMake(60,170,200,80)
-        CGContextAddEllipseInRect(context, rectangle4)
-        
+            UIColor.redColor().CGColor)
+        let rectangle2 = CGRectMake(50,50,100,100)
+        CGContextAddRect(context, rectangle2)
         CGContextStrokePath(context)
-        CGContextRestoreGState(context)
-*/
-}
+	}
 
     func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
     	let font = attributes[NSFontAttributeName] as UIFont
     	let attributedString = NSAttributedString(string: text, attributes: attributes)
-
     	let textSize = text.sizeWithAttributes(attributes)
-
     	// y: Add font.descender (its a negative value) to align the text at the baseline
     	let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
     	let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
     	let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-
     	CTFrameDraw(frame, context)
-
     	return textSize
 	}
+
+    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+        let font = UIFont(name: "Arial", size: 30)
+        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
+        let size = text.sizeWithAttributes(attr)
+        let rectText = CGRectMake(x, y, 200, 100)
+        text.drawInRect(rectText, withAttributes: attr)
+        return size
+    }
+    
+ 
 
 }
  
