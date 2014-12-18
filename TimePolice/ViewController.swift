@@ -46,8 +46,31 @@ class ButtonView: UIView {
         drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
         drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
         drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
+        drawTextOnelIne(context, rect: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
  //       drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
 	}
+
+    func drawTextOnelIne(context: CGContextRef, rect: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+         CGContextSaveGState(context)
+
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        
+        // y: Add font.descender (its a negative value) to align the text at the baseline
+        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
+//        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)
+        
+        CGContextRestoreGState(context)
+
+        return textSize
+   }
+
 
     func drawText(context: CGContextRef, rect: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
 
@@ -81,7 +104,7 @@ class ButtonView: UIView {
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
 	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])]
+        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
 	    let colorspace = CGColorSpaceCreateDeviceRGB()
 	    let gradient = CGGradientCreateWithColors(colorspace,
                   colors, locations)
@@ -90,7 +113,7 @@ class ButtonView: UIView {
     	startPoint.x = 0.0
 	    startPoint.y = 0.0
     	endPoint.x = 0
-    	endPoint.y = 1000
+    	endPoint.y = 500
 	    CGContextDrawLinearGradient(context, gradient,
                startPoint, endPoint, 0)
 
