@@ -36,21 +36,21 @@ class ButtonView: UIView {
 	override func drawRect(rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()
 
-		drawButton(context, rect: rect)
+		drawButton(context, parent: rect)
 
   		var textAttributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
     		NSFontAttributeName : UIFont.systemFontOfSize(15)
 		]
 
-        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
-        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
-        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
-        drawTextOnelIne(context, rect: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
- //       drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
+        drawTextOnelIne(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
 	}
 
-    func drawTextOnelIne(context: CGContextRef, rect: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+    func drawTextOnelIne(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+
          CGContextSaveGState(context)
 
         let font = attributes[NSFontAttributeName] as UIFont
@@ -61,7 +61,6 @@ class ButtonView: UIView {
         
         // y: Add font.descender (its a negative value) to align the text at the baseline
         let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
-//        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
         let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
         CTFrameDraw(frame, context)
@@ -72,7 +71,7 @@ class ButtonView: UIView {
    }
 
 
-    func drawText(context: CGContextRef, rect: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+    func drawTextMultiLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
 
         CGContextSaveGState(context)
 
@@ -80,13 +79,9 @@ class ButtonView: UIView {
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         let textSize = text.sizeWithAttributes(attributes)
         
-//        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        
-        CGContextTranslateCTM(context, 0.0, rect.size.height+2*y-250) //
+        CGContextTranslateCTM(context, 0.0, parent.size.height+2*y-250) //
         CGContextScaleCTM(context, 1.0, -1.0);
         
-        // y: Add font.descender (its a negative value) to align the text at the baseline
-//        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
         let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
         let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
@@ -98,7 +93,7 @@ class ButtonView: UIView {
     }
     
 
-	func drawButton(context: CGContextRef, rect: CGRect) {
+	func drawButton(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
 
         // Gradient
@@ -119,10 +114,10 @@ class ButtonView: UIView {
 
         // Play button
 		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
-  		CGContextMoveToPoint(context, rect.width / 4, rect.height / 4)
-  		CGContextAddLineToPoint(context, rect.width * 3 / 4, rect.height / 2)
-  		CGContextAddLineToPoint(context, rect.width / 4, rect.height * 3 / 4)
-  		CGContextAddLineToPoint(context, rect.width / 4, rect.height / 4)
+  		CGContextMoveToPoint(context, parent.width / 4, parent.height / 4)
+  		CGContextAddLineToPoint(context, parent.width * 3 / 4, parent.height / 2)
+  		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
+  		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
   		CGContextFillPath(context)
 
         // Blue rectangle
@@ -167,17 +162,6 @@ class ButtonView: UIView {
         CGContextAddRect(context, rectangle2)
         CGContextStrokePath(context)
 	}
-
-    func drawText2(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-        //        let font = UIFont(name: "Arial", size: 30)
-        //        let attr = [NSFontAttributeName: font!, NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
-        //        let attr = [NSFontAttributeName: UIFont.systemFontOfSize(24), NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor]
-        let size = text.sizeWithAttributes(attributes)
-        let rectText = CGRectMake(x, y, 200, 100)
-        //        text.drawInRect(rectText, withAttributes: attr)
-        text.drawInRect(rectText, withAttributes: attributes)
-        return size
-    }
 
 }
  
