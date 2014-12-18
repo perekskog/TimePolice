@@ -43,18 +43,23 @@ class ButtonView: UIView {
     		NSFontAttributeName : UIFont.systemFontOfSize(15)
 		]
 
-		drawText(context, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
+        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
+        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
+        drawText(context, rect: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
  //       drawText2(context, text: "Hello, World, again!", attributes: textAttributes, x: 50, y: 50)
 	}
 
-    func drawText(context: CGContextRef, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+    func drawText(context: CGContextRef, rect: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+
+        CGContextSaveGState(context)
+
         let font = attributes[NSFontAttributeName] as UIFont
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         let textSize = text.sizeWithAttributes(attributes)
         
 //        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
         
-        CGContextTranslateCTM(context, 0.0, 383-150);
+        CGContextTranslateCTM(context, 0.0, rect.size.height+2*y-250) //
         CGContextScaleCTM(context, 1.0, -1.0);
         
         // y: Add font.descender (its a negative value) to align the text at the baseline
@@ -63,6 +68,9 @@ class ButtonView: UIView {
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
         let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
         CTFrameDraw(frame, context)
+        
+        CGContextRestoreGState(context)
+
         return textSize
     }
     
