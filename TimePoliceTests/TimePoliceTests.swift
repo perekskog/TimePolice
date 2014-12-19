@@ -232,7 +232,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(gl1.numberOfSelectionAreas(), 8)
 
         let vr1 = CGRect(x:0, y:0, width:200, height:320)
-        let v1 = UIView(frame:vr1)
+        let v1 = BackgroundView(frame:vr1)
         let view1 = gl1.getView(v1, selectionArea: 0)
         XCTAssertEqual(view1.frame, CGRect(x:0, y:0, width:100, height:80))
         
@@ -271,7 +271,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
     }
 
     func testTaskPicker1() {
-        let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
+        let view1 = BackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")
@@ -309,7 +309,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
 
     func testTaskPicker2() {
-        let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
+        let view1 = BackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")
@@ -360,7 +360,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
     }
 
     func testTaskPicker3() {
-        let view1 = UIView(frame: CGRect(x: 0, y:0, width:200, height:320))
+        let view1 = BackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
         let theme = BasicTheme()
         let t1 = Task(name:"t1")

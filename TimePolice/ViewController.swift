@@ -6,11 +6,23 @@
 //  Copyright (c) 2014 Per Ekskog. All rights reserved.
 //
 
+/*
+Branch: v1.0-ui-themeview
+ButtonView.isSelectable
+	- Kan inte vara statisk, den måste kollas varje gång vyn uppdateras.
+	- Måste uppdateras när propertyn ändras. Men hur vet man det? Kanske måste ritas om efter varje knapptryckning?
+
+Saknas helt: Vy för bakgrund? Kanske i TaskPicker.setup?
+
+För många optionals när jag ropar på draw...
+
+*/
+
 import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet var button1: ButtonView!
+    @IBOutlet var button1: TestButtonView!
     @IBOutlet var statustext: UITextView!
     
     override func viewDidLoad() {
@@ -32,7 +44,7 @@ class ViewController: UIViewController {
 //////////////////////////////////////////////
 // Custom view
 
-class ButtonView: UIView {
+class TestButtonView: UIView {
 	override func drawRect(rect: CGRect) {
 		let context = UIGraphicsGetCurrentContext()
 
@@ -345,7 +357,7 @@ class Task: Equatable {
 
 
 //////////////////////////////////////////////
-// TaskSelectionStrategy, Layout, Theme
+// TaskSelectionStrategy, BackgroundView, ButtonView, Layout, Theme
 
 protocol TaskSelectionStrategy {
 	func selectableTasks(taskList: [Task]) -> [Task]
@@ -401,15 +413,42 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 	}	
 }
 
+class BackgroundView: UIView {
+	var theme: Theme?
+	var numberOfTasks: Int?
+
+	override func drawRect(rect: CGRect) {
+		super.drawRect(rect)
+		let context = UIGraphicsGetCurrentContext()
+        theme?.drawBackground(context, parent: rect, numberOfTasks: numberOfTasks)
+	}
+}
+
+class ButtonView: UIView {
+    var theme: Theme?
+    var numberOfTasks: Int?
+	var task: Task?
+	var taskPosition: Int?
+	var taskIsSelectable: Bool?
+
+	override func drawRect(rect: CGRect) {
+		super.drawRect(rect)
+		let context = UIGraphicsGetCurrentContext()
+        theme?.drawButton(context, parent: rect, numberOfTasks: numberOfTasks?, task: task?, taskPosition: taskPosition, isSelectable: taskIsSelectable)
+	}
+}
+
+
+
 protocol Layout {
     func numberOfSelectionAreas() -> Int
-	func getView(parentView: UIView, selectionArea: Int) -> UIView
+	func getView(parentView: BackgroundView, selectionArea: Int) -> ButtonView
 }
 
 class GridLayout : Layout {
 	var rows: Int
 	var columns: Int
-    var views: [Int: UIView]!
+    var views: [Int: ButtonView]!
 
 	init(rows: Int, columns: Int) {
 		self.rows = rows
@@ -419,18 +458,18 @@ class GridLayout : Layout {
     func numberOfSelectionAreas() -> Int {
         return rows * columns;
     }
-	func getView(parentView: UIView, selectionArea: Int) -> UIView {
+	func getView(parentView: BackgroundView, selectionArea: Int) -> ButtonView {
 		let row = selectionArea / columns
 		let column = selectionArea % columns
 		let frame = parentView.frame
 		let rowHeight = Int(frame.height) / rows
 		let columnWidth = Int(frame.width) / columns
 
-        var x: UIView
+        var x: ButtonView
 		if let view = views[selectionArea] {
             x = view
 		} else {
-            let y = UIView(frame: CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight))
+            let y = ButtonView(frame: CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight))
 	        views[selectionArea] = y
             x = views[selectionArea]!
 		}
@@ -439,13 +478,17 @@ class GridLayout : Layout {
 }
 
 protocol Theme {
-	func decorateView(view: UIView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIView
+	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int?)
+	func drawButton(context: CGContextRef, parent: CGRect, numberOfTasks: Int?, task: Task?, taskPosition: Int?, isSelectable: Bool?)
 }		
 
 class BasicTheme : Theme {
-	func decorateView(view: UIView, task: Task, taskPosition: Int, isSelectable: Bool) -> UIView {
-		return view
-	}	
+	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int?) {
+
+	}
+	func drawButton(context: CGContextRef, parent: CGRect, numberOfTasks: Int?, task: Task?, taskPosition: Int?, isSelectable: Bool?) {
+
+	}
 }
 
 
@@ -460,7 +503,7 @@ protocol TaskPickerTaskSelectionDelegate {
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	// Initialized roperties
-    var workspace:UIView!
+    var workspace:BackgroundView!
 	var layout: Layout!
 	var theme: Theme!
 	var session: Session!
@@ -468,7 +511,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
     var taskSelectionStrategy: TaskSelectionStrategy!
     var recognizers: [UIGestureRecognizer: Int]!
 	
-	init(workspace:UIView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
+	init(workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
         self.workspace = workspace
 		self.layout = layout
 		self.theme = theme
@@ -486,16 +529,17 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	func setup() {
 		for i in 0..<layout.numberOfSelectionAreas() {
 			let view = layout.getView(workspace, selectionArea: i)
-            let t = taskList[i]
-            let b = taskIsSelectable(i)
-            theme.decorateView(view,
-                task: t,
-                taskPosition: i,
-                isSelectable: taskIsSelectable(i))
+			view.theme = theme
+			view.numberOfTasks = layout.numberOfSelectionAreas()
+			view.task = taskList[i]
+			view.taskPosition = i
+            view.taskIsSelectable = taskIsSelectable(i)
+
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
             recognizer.delegate = self
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
+
 			workspace.addSubview(view)
 		}
 	}
