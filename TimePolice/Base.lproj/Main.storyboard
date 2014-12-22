@@ -24,14 +24,19 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YWN-4G-VKq" customClass="TestButtonView" customModule="TimePolice" customModuleProvider="target">
-                                <rect key="frame" x="16" y="28" width="288" height="383"/>
+                                <rect key="frame" x="16" y="28" width="288" height="313"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NPN-uO-nIw" customClass="ButtonView" customModule="TimePolice" customModuleProvider="target">
+                                <rect key="frame" x="80" y="393" width="160" height="37"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="button1" destination="YWN-4G-VKq" id="WPq-7l-tIn"/>
+                        <outlet property="smallButton" destination="NPN-uO-nIw" id="JSb-sP-wQU"/>
                         <outlet property="statustext" destination="8kz-hh-PfF" id="Moq-ng-hXe"/>
                     </connections>
                 </viewController>

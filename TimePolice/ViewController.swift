@@ -25,18 +25,21 @@ v BackgroundView/ButtonView - ska theme vara en (optional) parameter som ändras
 v Layout borde bara managera en samling rect då det är dessa sm definierar layouten. 
 Vyerna innehåller saker som inte har med själva layouten att göra, alltså får TaskPicker managera vyerna.
 
+v Använd bara defaultkonstruktor i view, så de kan användas i ett storyboard?
+
+
+
 Saknas helt: Vy för bakgrund? Kanske i TaskPicker.setup?
-
-
 
 
 */
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, SelectionAreaInfoDelegate {
 
     @IBOutlet var button1: TestButtonView!
+    @IBOutlet var smallButton: ButtonView!
     @IBOutlet var statustext: UITextView!
     
     override func viewDidLoad() {
@@ -45,12 +48,21 @@ class ViewController: UIViewController {
         // let tp = TimePolice()
         // tp.view = 
         // tp.redraw()
+        smallButton.selectionAreaInfoDelegate = self
+        smallButton.taskPosition = 1
+        smallButton.theme = BasicTheme()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool) {
+        let t = Task(name: "Test task 1")
+    	return (t, true)
+    }
+
 
 
 }
@@ -428,47 +440,33 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 }
 
 class BackgroundView: UIView {
-	var numberOfTasks: Int!
 
-	init(frame: CGRect, numberOfTasks: Int) {
-		super.init(frame: frame)
-		self.numberOfTasks = numberOfTasks
-	}
-
-	required init(coder aDecoder: NSCoder) {
-	    fatalError("init(coder:) has not been implemented")
-	}
-
+	var numberOfTasks: Int?
 	var theme: Theme?
 
 	override func drawRect(rect: CGRect) {
 		super.drawRect(rect)
 		let context = UIGraphicsGetCurrentContext()
-        theme?.drawBackground(context, parent: rect, numberOfTasks: numberOfTasks)
+        if let n = numberOfTasks {
+            theme?.drawBackground(context, parent: rect, numberOfTasks: n)
+        }
 	}
 }
 
 class ButtonView: UIView {
 	
-	var taskPosition: Int!
-	var selectionAreaInfoDelegate: SelectionAreaInfoDelegate!
-
-	init(frame: CGRect, taskPosition: Int, selectionAreaInfoDelegate: SelectionAreaInfoDelegate) {
-		super.init(frame: frame)
-		self.selectionAreaInfoDelegate = selectionAreaInfoDelegate
-	}
-
-	required init(coder aDecoder: NSCoder) {
-	    fatalError("init(coder:) has not been implemented")
-	}
-
+	var taskPosition: Int?
+	var selectionAreaInfoDelegate: SelectionAreaInfoDelegate?
 	var theme: Theme?
 
 	override func drawRect(rect: CGRect) {
 		super.drawRect(rect)
 		let context = UIGraphicsGetCurrentContext()
-		let (task, taskIsSelectable) = selectionAreaInfoDelegate.getSelectionAreaInfo(taskPosition)
-        theme?.drawButton(context, parent: rect, task: task, taskPosition: taskPosition, isSelectable: taskIsSelectable)
+		if let i = taskPosition {
+	 		if let (task, taskIsSelectable) = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
+    		    theme?.drawButton(context, parent: rect, task: task, taskPosition: i, isSelectable: taskIsSelectable)
+    		}
+    	}
 	}
 }
 
@@ -609,8 +607,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	func setup() {
 		for i in 0..<layout.numberOfSelectionAreas() {
 			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
-            let view = ButtonView(frame: viewRect, taskPosition: i, selectionAreaInfoDelegate: self)
+            let view = ButtonView(frame: viewRect)
 			view.theme = theme
+			view.selectionAreaInfoDelegate = self
+			view.taskPosition = i
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
             recognizer.delegate = self
             view.addGestureRecognizer(recognizer)
