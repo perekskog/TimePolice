@@ -8,13 +8,29 @@
 
 /*
 Branch: v1.0-ui-themeview
-ButtonView.isSelectable
+
+v ButtonView.isSelectable
 	- Kan inte vara statisk, den måste kollas varje gång vyn uppdateras.
 	- Måste uppdateras när propertyn ändras. Men hur vet man det? Kanske måste ritas om efter varje knapptryckning?
+=> SelectionAreaInfoDelegate
+
+v Om Layout skapar vyer måste Layout veta saker som t ex theme, vilket den inte ska veta. 
+Kanske Layout returnerar en frame och låter TaskPicker skapa vyerna? Men då måste TaskPicker också cacha vyerna...
+=> Theme är en property som TaskPicker får sätta när vyn är skapad.
+
+
+v BackgroundView/ButtonView - ska theme vara en (optional) parameter som ändras när theme ändras? Eller ska den hämtas nånstans?
+=> Optional delegate
 
 Saknas helt: Vy för bakgrund? Kanske i TaskPicker.setup?
 
-För många optionals när jag ropar på draw...
+Layout borde bara managera en samling rect då det är dessa sm definierar layouten. 
+Vyerna innehåller saker som inte har med själva layouten att göra, alltså får TaskPicker managera vyerna.
+1. Fixa UT så som interfacen ser ut nu.
+2. Ändra så Layout bara managerar rect
+Eller är jag för feg då?
+
+
 
 */
 
@@ -414,8 +430,18 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 }
 
 class BackgroundView: UIView {
+	var numberOfTasks: Int!
+
+	init(frame: CGRect, numberOfTasks: Int) {
+		super.init(frame: frame)
+		self.numberOfTasks = numberOfTasks
+	}
+
+	required init(coder aDecoder: NSCoder) {
+	    fatalError("init(coder:) has not been implemented")
+	}
+
 	var theme: Theme?
-	var numberOfTasks: Int?
 
 	override func drawRect(rect: CGRect) {
 		super.drawRect(rect)
@@ -425,68 +451,122 @@ class BackgroundView: UIView {
 }
 
 class ButtonView: UIView {
-    var theme: Theme?
-    var numberOfTasks: Int?
-	var task: Task?
-	var taskPosition: Int?
-	var taskIsSelectable: Bool?
+	
+	var taskPosition: Int!
+	var selectionAreaInfoDelegate: SelectionAreaInfoDelegate!
+
+	init(frame: CGRect, taskPosition: Int, selectionAreaInfoDelegate: SelectionAreaInfoDelegate) {
+		super.init(frame: frame)
+		self.selectionAreaInfoDelegate = selectionAreaInfoDelegate
+	}
+
+	required init(coder aDecoder: NSCoder) {
+	    fatalError("init(coder:) has not been implemented")
+	}
+
+	var theme: Theme?
 
 	override func drawRect(rect: CGRect) {
 		super.drawRect(rect)
 		let context = UIGraphicsGetCurrentContext()
-        theme?.drawButton(context, parent: rect, numberOfTasks: numberOfTasks?, task: task?, taskPosition: taskPosition, isSelectable: taskIsSelectable)
+		let (task, taskIsSelectable) = selectionAreaInfoDelegate.getSelectionAreaInfo(taskPosition)
+        theme?.drawButton(context, parent: rect, task: task, taskPosition: taskPosition, isSelectable: taskIsSelectable)
 	}
 }
 
+protocol SelectionAreaInfoDelegate {
+	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool)
+}
 
 
 protocol Layout {
     func numberOfSelectionAreas() -> Int
-	func getView(parentView: BackgroundView, selectionArea: Int) -> ButtonView
+	func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect
 }
 
 class GridLayout : Layout {
 	var rows: Int
 	var columns: Int
-    var views: [Int: ButtonView]!
 
 	init(rows: Int, columns: Int) {
 		self.rows = rows
 		self.columns = columns
-		self.views = [:]
 	}
+
     func numberOfSelectionAreas() -> Int {
         return rows * columns;
     }
-	func getView(parentView: BackgroundView, selectionArea: Int) -> ButtonView {
+
+	func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect {
 		let row = selectionArea / columns
 		let column = selectionArea % columns
-		let frame = parentView.frame
-		let rowHeight = Int(frame.height) / rows
-		let columnWidth = Int(frame.width) / columns
+		let rowHeight = Int(parentViewRect.height) / rows
+		let columnWidth = Int(parentViewRect.width) / columns
+		let rect = CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight)
 
-        var x: ButtonView
-		if let view = views[selectionArea] {
-            x = view
-		} else {
-            let y = ButtonView(frame: CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight))
-	        views[selectionArea] = y
-            x = views[selectionArea]!
-		}
-        return (x)
+		return rect
 	}
 }
 
 protocol Theme {
-	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int?)
-	func drawButton(context: CGContextRef, parent: CGRect, numberOfTasks: Int?, task: Task?, taskPosition: Int?, isSelectable: Bool?)
+	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
+	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool)
 }		
 
 class BasicTheme : Theme {
-	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int?) {
+	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int) {
+		// Gradient
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
+        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+	    let colorspace = CGColorSpaceCreateDeviceRGB()
+	    let gradient = CGGradientCreateWithColors(colorspace,
+                  colors, locations)
+    	var startPoint = CGPoint()
+	    var endPoint =  CGPoint()
+    	startPoint.x = 0.0
+	    startPoint.y = 0.0
+    	endPoint.x = 0
+    	endPoint.y = parent.height
+	    CGContextDrawLinearGradient(context, gradient,
+               startPoint, endPoint, 0)
 
 	}
-	func drawButton(context: CGContextRef, parent: CGRect, numberOfTasks: Int?, task: Task?, taskPosition: Int?, isSelectable: Bool?) {
+	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool) {
+        // Gradient
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        let colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0])]
+        let colorspace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradientCreateWithColors(colorspace,
+            colors, locations)
+        var startPoint = CGPoint()
+        var endPoint =  CGPoint()
+        startPoint.x = 0.0
+        startPoint.y = 0.0
+        endPoint.x = 0
+        endPoint.y = parent.height
+        CGContextDrawLinearGradient(context, gradient,
+            startPoint, endPoint, 0)
+
+		CGContextSaveGState(context)
+		var attributes: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(15)
+		]
+
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: task.name, attributes: attributes)
+        let textSize = task.name.sizeWithAttributes(attributes)
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        let textPath    = CGPathCreateWithRect(CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height), nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)        
+        CGContextRestoreGState(context)
+
 
 	}
 }
@@ -501,7 +581,7 @@ protocol TaskPickerTaskSelectionDelegate {
 }
 
 
-class TaskPicker: NSObject, UIGestureRecognizerDelegate {
+class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelegate {
 	// Initialized roperties
     var workspace:BackgroundView!
 	var layout: Layout!
@@ -510,6 +590,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
     var taskList: [Task]!
     var taskSelectionStrategy: TaskSelectionStrategy!
     var recognizers: [UIGestureRecognizer: Int]!
+    var views: [Int: ButtonView]!
 	
 	init(workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
         self.workspace = workspace
@@ -518,6 +599,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 		self.taskList = taskList
 		self.taskSelectionStrategy = taskSelectionStrategy
 		self.recognizers = [:]
+        self.views = [:]
 	}
 
 	// Uninitialized properties
@@ -528,17 +610,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 
 	func setup() {
 		for i in 0..<layout.numberOfSelectionAreas() {
-			let view = layout.getView(workspace, selectionArea: i)
+			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
+            let view = ButtonView(frame: viewRect, taskPosition: i, selectionAreaInfoDelegate: self)
 			view.theme = theme
-			view.numberOfTasks = layout.numberOfSelectionAreas()
-			view.task = taskList[i]
-			view.taskPosition = i
-            view.taskIsSelectable = taskIsSelectable(i)
-
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
             recognizer.delegate = self
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
+            views[i] = view
 
 			workspace.addSubview(view)
 		}
@@ -584,6 +663,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
                 return true
             }
 	}
+
+	// SelectionAreaInfoDelegate
+	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool) {
+		return (taskList[selectionArea], taskIsSelectable(selectionArea))
+	}
+
 }
 
 
