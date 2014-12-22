@@ -22,13 +22,11 @@ Kanske Layout returnerar en frame och låter TaskPicker skapa vyerna? Men då m�
 v BackgroundView/ButtonView - ska theme vara en (optional) parameter som ändras när theme ändras? Eller ska den hämtas nånstans?
 => Optional delegate
 
+v Layout borde bara managera en samling rect då det är dessa sm definierar layouten. 
+Vyerna innehåller saker som inte har med själva layouten att göra, alltså får TaskPicker managera vyerna.
+
 Saknas helt: Vy för bakgrund? Kanske i TaskPicker.setup?
 
-Layout borde bara managera en samling rect då det är dessa sm definierar layouten. 
-Vyerna innehåller saker som inte har med själva layouten att göra, alltså får TaskPicker managera vyerna.
-1. Fixa UT så som interfacen ser ut nu.
-2. Ändra så Layout bara managerar rect
-Eller är jag för feg då?
 
 
 
