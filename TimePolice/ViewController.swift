@@ -40,6 +40,7 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
 
     @IBOutlet var button1: TestButtonView!
     @IBOutlet var smallButton: ButtonView!
+    @IBOutlet var smallBackground: BackgroundView!
     @IBOutlet var statustext: UITextView!
     
     override func viewDidLoad() {
@@ -48,9 +49,9 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         // let tp = TimePolice()
         // tp.view = 
         // tp.redraw()
-        smallButton.selectionAreaInfoDelegate = self
-        smallButton.taskPosition = 1
-        smallButton.theme = BasicTheme()
+        smallButton?.selectionAreaInfoDelegate = self
+        smallButton?.taskPosition = 1
+        smallButton?.theme = BasicTheme()
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,146 +64,8 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
     	return (t, true)
     }
 
-
-
 }
 
-//////////////////////////////////////////////
-// Custom view
-
-class TestButtonView: UIView {
-	override func drawRect(rect: CGRect) {
-		let context = UIGraphicsGetCurrentContext()
-
-		drawButton(context, parent: rect)
-
-  		var textAttributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(15)
-		]
-
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
-        drawTextOnelIne(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
-	}
-
-    func drawTextOnelIne(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-
-         CGContextSaveGState(context)
-
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        
-        // y: Add font.descender (its a negative value) to align the text at the baseline
-        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)
-        
-        CGContextRestoreGState(context)
-
-        return textSize
-   }
-
-
-    func drawTextMultiLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-
-        CGContextSaveGState(context)
-
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        
-        CGContextTranslateCTM(context, 0.0, parent.size.height+2*y-250) //
-        CGContextScaleCTM(context, 1.0, -1.0);
-        
-        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)
-        
-        CGContextRestoreGState(context)
-
-        return textSize
-    }
-    
-
-	func drawButton(context: CGContextRef, parent: CGRect) {
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-
-        // Gradient
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
-	    let colorspace = CGColorSpaceCreateDeviceRGB()
-	    let gradient = CGGradientCreateWithColors(colorspace,
-                  colors, locations)
-    	var startPoint = CGPoint()
-	    var endPoint =  CGPoint()
-    	startPoint.x = 0.0
-	    startPoint.y = 0.0
-    	endPoint.x = 0
-    	endPoint.y = 500
-	    CGContextDrawLinearGradient(context, gradient,
-               startPoint, endPoint, 0)
-
-        // Play button
-		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
-  		CGContextMoveToPoint(context, parent.width / 4, parent.height / 4)
-  		CGContextAddLineToPoint(context, parent.width * 3 / 4, parent.height / 2)
-  		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
-  		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
-  		CGContextFillPath(context)
-
-        // Blue rectangle
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rectangle = CGRectMake(60,170,200,80)
-        CGContextAddRect(context, rectangle)
-        CGContextStrokePath(context)
-
-        // Fill blue rectangle
-        CGContextAddRect(context, rectangle)
-		CGContextSetFillColorWithColor(context, CGColorCreate(colorSpaceRGB, [1.0, 0.8, 0.8, 0.8]))
-  		CGContextFillPath(context)
-
-        // Ellipse
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        CGContextAddEllipseInRect(context, rectangle)
-        CGContextStrokePath(context)
-
-        // Dashed curve with shadow
-        let myShadowOffset = CGSizeMake (-10,  15)
-        CGContextSetLineWidth(context, 20.0)
-        CGContextSaveGState(context)
-        CGContextSetShadow (context, myShadowOffset, 5)
-        CGContextSetStrokeColorWithColor(context,
-                CGColorCreate(colorSpaceRGB, [1.0, 0.2, 0.2, 0.8]))
-        let dashArray:[CGFloat] = [2,6,4,2]
-        CGContextSetLineDash(context, 3, dashArray, 4)
-        CGContextMoveToPoint(context, 60, 170)
-        CGContextAddQuadCurveToPoint(context, 165, 90, 260, 170)
-        CGContextStrokePath(context)
-        CGContextRestoreGState(context)
-
-        // Red rectangle
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.redColor().CGColor)
-        let rectangle2 = CGRectMake(50,50,100,100)
-        CGContextAddRect(context, rectangle2)
-        CGContextStrokePath(context)
-	}
-
-}
- 
 ///////////////////////////////////////////////
 // ProjectTemplate and ProjectTemplateManager
 
@@ -668,6 +531,143 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	}
 
 }
+
+//////////////////////////////////////////////
+// Custom view
+
+class TestButtonView: UIView {
+	override func drawRect(rect: CGRect) {
+		let context = UIGraphicsGetCurrentContext()
+
+		drawButton(context, parent: rect)
+
+  		var textAttributes: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(15)
+		]
+
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
+        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
+        drawTextOnelIne(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
+	}
+
+    func drawTextOnelIne(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+
+         CGContextSaveGState(context)
+
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        
+        // y: Add font.descender (its a negative value) to align the text at the baseline
+        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)
+        
+        CGContextRestoreGState(context)
+
+        return textSize
+   }
+
+
+    func drawTextMultiLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+
+        CGContextSaveGState(context)
+
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        
+        CGContextTranslateCTM(context, 0.0, parent.size.height+2*y-250) //
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)
+        
+        CGContextRestoreGState(context)
+
+        return textSize
+    }
+    
+
+	func drawButton(context: CGContextRef, parent: CGRect) {
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+
+        // Gradient
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
+        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+	    let colorspace = CGColorSpaceCreateDeviceRGB()
+	    let gradient = CGGradientCreateWithColors(colorspace,
+                  colors, locations)
+    	var startPoint = CGPoint()
+	    var endPoint =  CGPoint()
+    	startPoint.x = 0.0
+	    startPoint.y = 0.0
+    	endPoint.x = 0
+    	endPoint.y = 500
+	    CGContextDrawLinearGradient(context, gradient,
+               startPoint, endPoint, 0)
+
+        // Play button
+		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
+  		CGContextMoveToPoint(context, parent.width / 4, parent.height / 4)
+  		CGContextAddLineToPoint(context, parent.width * 3 / 4, parent.height / 2)
+  		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
+  		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
+  		CGContextFillPath(context)
+
+        // Blue rectangle
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rectangle = CGRectMake(60,170,200,80)
+        CGContextAddRect(context, rectangle)
+        CGContextStrokePath(context)
+
+        // Fill blue rectangle
+        CGContextAddRect(context, rectangle)
+		CGContextSetFillColorWithColor(context, CGColorCreate(colorSpaceRGB, [1.0, 0.8, 0.8, 0.8]))
+  		CGContextFillPath(context)
+
+        // Ellipse
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        CGContextAddEllipseInRect(context, rectangle)
+        CGContextStrokePath(context)
+
+        // Dashed curve with shadow
+        let myShadowOffset = CGSizeMake (-10,  15)
+        CGContextSetLineWidth(context, 20.0)
+        CGContextSaveGState(context)
+        CGContextSetShadow (context, myShadowOffset, 5)
+        CGContextSetStrokeColorWithColor(context,
+                CGColorCreate(colorSpaceRGB, [1.0, 0.2, 0.2, 0.8]))
+        let dashArray:[CGFloat] = [2,6,4,2]
+        CGContextSetLineDash(context, 3, dashArray, 4)
+        CGContextMoveToPoint(context, 60, 170)
+        CGContextAddQuadCurveToPoint(context, 165, 90, 260, 170)
+        CGContextStrokePath(context)
+        CGContextRestoreGState(context)
+
+        // Red rectangle
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.redColor().CGColor)
+        let rectangle2 = CGRectMake(50,50,100,100)
+        CGContextAddRect(context, rectangle2)
+        CGContextStrokePath(context)
+	}
+
+}
+ 
 
 
 
