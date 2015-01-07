@@ -425,7 +425,7 @@ class BasicTheme : Theme {
 		CGContextSaveGState(context)
 		var attributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(15)
+    		NSFontAttributeName : UIFont.systemFontOfSize(13)
 		]
 
         let font = attributes[NSFontAttributeName] as UIFont
@@ -433,7 +433,8 @@ class BasicTheme : Theme {
         let textSize = task.name.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
         let o = CGPoint(x:(parent.width-textSize.width)/2, y:parent.height/2)
-        let s = CGSize(width:textSize.width, height:18)
+        let anInt = Int(textSize.height+0.5)
+        let s = CGSize(width:Int(textSize.width+0.5), height:Int(textSize.height+0.5))
         let textRect = CGRect(origin: o, size: s)
         let textPath    = CGPathCreateWithRect(textRect, nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)

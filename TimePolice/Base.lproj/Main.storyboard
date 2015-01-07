@@ -28,7 +28,7 @@
                                 <color key="backgroundColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QGb-1S-5xt" customClass="BackgroundView" customModule="TimePolice" customModuleProvider="target">
-                                <rect key="frame" x="33" y="290" width="254" height="95"/>
+                                <rect key="frame" x="33" y="202" width="254" height="183"/>
                                 <color key="backgroundColor" red="0.84334422809999998" green="0.85714285710000004" blue="0.32542815339999998" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                         </subviews>
