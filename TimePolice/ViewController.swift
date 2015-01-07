@@ -39,7 +39,6 @@ import UIKit
 class ViewController: UIViewController, SelectionAreaInfoDelegate {
 
     @IBOutlet var button1: TestButtonView!
-    @IBOutlet var smallButton: ButtonView!
     @IBOutlet var smallBackground: BackgroundView!
     @IBOutlet var statustext: UITextView!
     
@@ -52,12 +51,18 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
 
         let theme = BasicTheme()
 
-        smallButton?.selectionAreaInfoDelegate = self
-        smallButton?.taskPosition = 1
-        smallButton?.theme = theme
-        
         smallBackground?.numberOfTasks = 2
         smallBackground?.theme = theme
+
+        let layout = GridLayout(rows: 3, columns: 3)
+
+        let middleRect = layout.getViewRect(smallBackground.frame, selectionArea: 4)
+        let buttonView = ButtonView(frame: middleRect)
+		buttonView.selectionAreaInfoDelegate = self
+		buttonView.taskPosition = 5
+		buttonView.theme = theme
+
+		smallBackground.addSubview(buttonView)
     }
 
     override func didReceiveMemoryWarning() {
@@ -427,11 +432,20 @@ class BasicTheme : Theme {
         let attributedString = NSAttributedString(string: task.name, attributes: attributes)
         let textSize = task.name.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let textPath    = CGPathCreateWithRect(CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height), nil)
+        let textRect = CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height)
+        let textPath    = CGPathCreateWithRect(textRect, nil)
+//        let textPath    = CGPathCreateWithRect(CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height), nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
         let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
         CTFrameDraw(frame, context)        
         CGContextRestoreGState(context)
+
+        // Rectangle
+        CGContextSetLineWidth(context, 4.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.redColor().CGColor)
+        CGContextAddRect(context, textRect)
+        CGContextStrokePath(context)
 
 
 	}
