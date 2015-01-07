@@ -409,7 +409,7 @@ class BasicTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         let colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0])]
+            CGColorCreate(colorSpaceRGB, [0.3, 0.3, 1.0, 1.0])]
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
             colors, locations)
@@ -432,21 +432,22 @@ class BasicTheme : Theme {
         let attributedString = NSAttributedString(string: task.name, attributes: attributes)
         let textSize = task.name.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let textRect = CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height)
+        let o = CGPoint(x:(parent.width-textSize.width)/2, y:parent.height/2)
+        let s = CGSize(width:textSize.width, height:18)
+        let textRect = CGRect(origin: o, size: s)
         let textPath    = CGPathCreateWithRect(textRect, nil)
-//        let textPath    = CGPathCreateWithRect(CGRect(x: 0, y: 0 + font.descender, width: parent.width, height: parent.height), nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
         let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
         CTFrameDraw(frame, context)        
         CGContextRestoreGState(context)
 
         // Rectangle
-        CGContextSetLineWidth(context, 4.0)
+        CGContextSetLineWidth(context, 1.0)
         CGContextSetStrokeColorWithColor(context,
-            UIColor.redColor().CGColor)
-        CGContextAddRect(context, textRect)
+            UIColor.blueColor().CGColor)
+        let rect = CGRect(x:(parent.width-textSize.width)/2, y:parent.height/2-textSize.height/2, width: textSize.width, height: textSize.height)
+        CGContextAddRect(context, rect)
         CGContextStrokePath(context)
-
 
 	}
 }
