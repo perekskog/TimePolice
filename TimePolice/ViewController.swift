@@ -49,9 +49,15 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         // let tp = TimePolice()
         // tp.view = 
         // tp.redraw()
+
+        let theme = BasicTheme()
+
         smallButton?.selectionAreaInfoDelegate = self
         smallButton?.taskPosition = 1
-        smallButton?.theme = BasicTheme()
+        smallButton?.theme = theme
+        
+        smallBackground?.numberOfTasks = 2
+        smallBackground?.theme = theme
     }
 
     override func didReceiveMemoryWarning() {
@@ -373,6 +379,7 @@ protocol Theme {
 }		
 
 class BasicTheme : Theme {
+
 	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int) {
 		// Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -390,8 +397,8 @@ class BasicTheme : Theme {
     	endPoint.y = parent.height
 	    CGContextDrawLinearGradient(context, gradient,
                startPoint, endPoint, 0)
-
 	}
+
 	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -412,7 +419,7 @@ class BasicTheme : Theme {
 
 		CGContextSaveGState(context)
 		var attributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
+	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
     		NSFontAttributeName : UIFont.systemFontOfSize(15)
 		]
 

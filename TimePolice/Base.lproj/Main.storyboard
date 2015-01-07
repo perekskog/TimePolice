@@ -25,15 +25,17 @@
                             </textView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YWN-4G-VKq" customClass="TestButtonView" customModule="TimePolice" customModuleProvider="target">
                                 <rect key="frame" x="16" y="28" width="288" height="313"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NPN-uO-nIw" customClass="ButtonView" customModule="TimePolice" customModuleProvider="target">
-                                <rect key="frame" x="80" y="393" width="160" height="37"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QGb-1S-5xt" customClass="BackgroundView" customModule="TimePolice" customModuleProvider="target">
                                 <rect key="frame" x="33" y="218" width="254" height="167"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NPN-uO-nIw" customClass="ButtonView" customModule="TimePolice" customModuleProvider="target">
+                                        <rect key="frame" x="55" y="108" width="160" height="37"/>
+                                        <color key="backgroundColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.84334422809999998" green="0.85714285710000004" blue="0.32542815339999998" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
