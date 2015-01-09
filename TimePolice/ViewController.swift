@@ -14,7 +14,8 @@ v Det blir bökigt med all data i getSelectionAreaInfo, kanske kapsla in all met
 v UT kraschar?
 	=> Allt som sätts upp genom storyboard måste vara optionals.
 
-- Hur ska tiden sparas? TimeInterval använde jag väl förut?
+v Hur ska tiden sparas? TimeInterval använde jag väl förut?
+	=> NSTimeINterval!
 
 */
 
@@ -61,7 +62,7 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         	task: Task(name: "Going home"),
         	isSelectable: true,
         	numberOfTimesActivated: 3,
-        	totalTimeActive: 113)
+        	totalTimeActive: NSTimeInterval(113))
     	return selectionAreaInfo
     }
 
@@ -338,8 +339,8 @@ class SelectionAreaInfo {
 	var task: Task
 	var isSelectable: Bool
 	var numberOfTimesActivated: Int
-	var totalTimeActive: Int
-	init(task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
+	var totalTimeActive: NSTimeInterval
+	init(task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval) {
 		self.task = task
 		self.isSelectable = isSelectable
 		self.numberOfTimesActivated = numberOfTimesActivated
@@ -407,7 +408,7 @@ class BasicTheme : Theme {
                startPoint, endPoint, 0)
 	}
 
-	func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat) {
+    func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool) {
 		CGContextSaveGState(context)
 		var attributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
@@ -417,7 +418,7 @@ class BasicTheme : Theme {
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         let textSize = text.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let size = CGSize(width:Int(textSize.width+0.5), height:Int(textSize.height+0.5))
+        let size = CGSize(width:Int(textSize.width+0.5)+1, height:Int(textSize.height+0.5))
         let textRect = CGRect(
                 origin: CGPoint(x: origin.x-textSize.width/2, y:origin.y),
                 size: size)
@@ -428,13 +429,14 @@ class BasicTheme : Theme {
         CGContextRestoreGState(context)
 
         // Rectangle
-        CGContextSetLineWidth(context, 1.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
-        CGContextAddRect(context, rect)
-        CGContextStrokePath(context)
-
+        if(withFrame) {
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context,
+                UIColor.blueColor().CGColor)
+            let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
+            CGContextAddRect(context, rect)
+            CGContextStrokePath(context)
+        }
 	}
 
 	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
@@ -455,9 +457,9 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15)
-        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10)
-        addText(context, text: "yes!!!", origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10)
+        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15, withFrame: false)
+        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10, withFrame: false)
+        addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10, withFrame: false)
 	}
 
 }
@@ -570,6 +572,18 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 }
 
 //////////////////////////////////////////////
+// Utilities
+
+func getString(timeInterval: NSTimeInterval) -> String {
+    let h = Int(timeInterval / 3600)
+	let m = (Int(timeInterval) - h*3600) / 60
+	let s = Int(timeInterval) - h*3600 - m*60
+    return "\(h):\(m):\(s)"
+}
+
+
+
+//////////////////////////////////////////////
 // Custom view
 
 class TestButtonView: UIView {
@@ -586,10 +600,10 @@ class TestButtonView: UIView {
         drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
         drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
         drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
-        drawTextOnelIne(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
+        drawTextOneLine(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
 	}
 
-    func drawTextOnelIne(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
+    func drawTextOneLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
 
          CGContextSaveGState(context)
 
