@@ -7,30 +7,9 @@
 //
 
 /*
-Branch: v1.0-ui-themeview
+Branch: v1.0-ui-layoutview
 
-v ButtonView.isSelectable
-	- Kan inte vara statisk, den måste kollas varje gång vyn uppdateras.
-	- Måste uppdateras när propertyn ändras. Men hur vet man det? Kanske måste ritas om efter varje knapptryckning?
-=> SelectionAreaInfoDelegate
-
-v Om Layout skapar vyer måste Layout veta saker som t ex theme, vilket den inte ska veta. 
-Kanske Layout returnerar en frame och låter TaskPicker skapa vyerna? Men då måste TaskPicker också cacha vyerna...
-=> Theme är en property som TaskPicker får sätta när vyn är skapad.
-
-
-v BackgroundView/ButtonView - ska theme vara en (optional) parameter som ändras när theme ändras? Eller ska den hämtas nånstans?
-=> Optional delegate
-
-v Layout borde bara managera en samling rect då det är dessa sm definierar layouten. 
-Vyerna innehåller saker som inte har med själva layouten att göra, alltså får TaskPicker managera vyerna.
-
-v Använd bara defaultkonstruktor i view, så de kan användas i ett storyboard?
-
-
-
-Saknas helt: Vy för bakgrund? Kanske i TaskPicker.setup?
-
+- Det blir bökigt med all data i getSelectionAreaInfo, kanske kapsla in all metadata i en egen struktur?
 
 */
 
@@ -70,9 +49,12 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool) {
-        let t = Task(name: "Test task 1")
-    	return (t, true)
+    func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
+        let task = Task(name: "Going home")
+        let isSelectable = true
+        let numberOfTimesActivated = 3
+        let totalTimeActive = 113
+    	return (task, isSelectable, numberOfTimesActivated, totalTimeActive)
     }
 
 }
@@ -337,15 +319,15 @@ class ButtonView: UIView {
 		super.drawRect(rect)
 		let context = UIGraphicsGetCurrentContext()
 		if let i = taskPosition {
-	 		if let (task, taskIsSelectable) = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
-    		    theme?.drawButton(context, parent: rect, task: task, taskPosition: i, isSelectable: taskIsSelectable)
+	 		if let (task, taskIsSelectable, totalTimes, totalNumber) = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
+    		    theme?.drawButton(context, parent: rect, task: task, taskPosition: i, isSelectable: taskIsSelectable, numberOfTimesActivated: totalTimes, totalTimeActive: totalNumber)
     		}
     	}
 	}
 }
 
 protocol SelectionAreaInfoDelegate {
-	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool)
+	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int)
 }
 
 
@@ -380,7 +362,7 @@ class GridLayout : Layout {
 
 protocol Theme {
 	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
-	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool)
+	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int)
 }		
 
 class BasicTheme : Theme {
@@ -404,7 +386,7 @@ class BasicTheme : Theme {
                startPoint, endPoint, 0)
 	}
 
-	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool) {
+	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -422,32 +404,59 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-		CGContextSaveGState(context)
-		var attributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(13)
-		]
 
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: task.name, attributes: attributes)
-        let textSize = task.name.sizeWithAttributes(attributes)
+		CGContextSaveGState(context)
+		var attributes1: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(15)
+		]
+		let text1 = task.name
+        let font1 = attributes1[NSFontAttributeName] as UIFont
+        let attributedString1 = NSAttributedString(string: text1, attributes: attributes1)
+        let textSize1 = text1.sizeWithAttributes(attributes1)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let o = CGPoint(x:(parent.width-textSize.width)/2, y:parent.height/2)
-        let anInt = Int(textSize.height+0.5)
-        let s = CGSize(width:Int(textSize.width+0.5), height:Int(textSize.height+0.5))
-        let textRect = CGRect(origin: o, size: s)
-        let textPath    = CGPathCreateWithRect(textRect, nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)        
+        let o1 = CGPoint(x:(parent.width-textSize1.width)/2, y:parent.height/3)
+        let s1 = CGSize(width:Int(textSize1.width+0.5), height:Int(textSize1.height+0.5))
+        let textRect1 = CGRect(origin: o1, size: s1)
+        let textPath1    = CGPathCreateWithRect(textRect1, nil)
+        let frameSetter1 = CTFramesetterCreateWithAttributedString(attributedString1)
+        let frame1       = CTFramesetterCreateFrame(frameSetter1, CFRange(location: 0, length: attributedString1.length), textPath1, nil)
+        CTFrameDraw(frame1, context)        
         CGContextRestoreGState(context)
 
         // Rectangle
         CGContextSetLineWidth(context, 1.0)
         CGContextSetStrokeColorWithColor(context,
             UIColor.blueColor().CGColor)
-        let rect = CGRect(x:(parent.width-textSize.width)/2, y:parent.height/2-textSize.height/2, width: textSize.width, height: textSize.height)
-        CGContextAddRect(context, rect)
+        let rect1 = CGRect(x:(parent.width-textSize1.width)/2, y:parent.height/3-textSize1.height/2, width: textSize1.width, height: textSize1.height)
+        CGContextAddRect(context, rect1)
+        CGContextStrokePath(context)
+
+		CGContextSaveGState(context)
+		var attributes2: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(10)
+		]
+		let text2 = "going?"
+        let font2 = attributes2[NSFontAttributeName] as UIFont
+        let attributedString2 = NSAttributedString(string: text2, attributes: attributes2)
+        let textSize2 = text2.sizeWithAttributes(attributes2)
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        let o2 = CGPoint(x:1, y:parent.height/3*2)
+        let s2 = CGSize(width:Int(textSize2.width+0.5), height:Int(textSize2.height+0.5))
+        let textRect2 = CGRect(origin: o2, size: s2)
+        let textPath2    = CGPathCreateWithRect(textRect2, nil)
+        let frameSetter2 = CTFramesetterCreateWithAttributedString(attributedString2)
+        let frame2       = CTFramesetterCreateFrame(frameSetter2, CFRange(location: 0, length: attributedString2.length), textPath2, nil)
+        CTFrameDraw(frame2, context)        
+        CGContextRestoreGState(context)
+
+        // Rectangle
+        CGContextSetLineWidth(context, 1.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rect2 = CGRect(x:1, y:parent.height/3*2-textSize2.height/2, width: textSize2.width, height: textSize2.height)
+        CGContextAddRect(context, rect2)
         CGContextStrokePath(context)
 
 	}
@@ -549,8 +558,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	}
 
 	// SelectionAreaInfoDelegate
-	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool) {
-		return (taskList[selectionArea], taskIsSelectable(selectionArea))
+	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
+		return (taskList[selectionArea], taskIsSelectable(selectionArea), 13, 120)
 	}
 
 }
