@@ -9,7 +9,12 @@
 /*
 Branch: v1.0-ui-layoutview
 
-- Det blir bökigt med all data i getSelectionAreaInfo, kanske kapsla in all metadata i en egen struktur?
+v Det blir bökigt med all data i getSelectionAreaInfo, kanske kapsla in all metadata i en egen struktur?
+
+v UT kraschar?
+	=> Allt som sätts upp genom storyboard måste vara optionals.
+
+- Hur ska tiden sparas? TimeInterval använde jag väl förut?
 
 */
 
@@ -35,13 +40,15 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
 
         let layout = GridLayout(rows: 3, columns: 3)
 
-        let middleRect = layout.getViewRect(smallBackground.frame, selectionArea: 4)
-        let buttonView = ButtonView(frame: middleRect)
-		buttonView.selectionAreaInfoDelegate = self
-		buttonView.taskPosition = 5
-		buttonView.theme = theme
+        if let rect = smallBackground?.frame {
+            let middleRect = layout.getViewRect(rect, selectionArea: 4)
+            let buttonView = ButtonView(frame: middleRect)
+            buttonView.selectionAreaInfoDelegate = self
+            buttonView.taskPosition = 5
+            buttonView.theme = theme
 
-		smallBackground.addSubview(buttonView)
+            smallBackground?.addSubview(buttonView)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,12 +56,13 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
-        let task = Task(name: "Going home")
-        let isSelectable = true
-        let numberOfTimesActivated = 3
-        let totalTimeActive = 113
-    	return (task, isSelectable, numberOfTimesActivated, totalTimeActive)
+    func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+        let selectionAreaInfo = SelectionAreaInfo(
+        	task: Task(name: "Going home"),
+        	isSelectable: true,
+        	numberOfTimesActivated: 3,
+        	totalTimeActive: 113)
+    	return selectionAreaInfo
     }
 
 }
@@ -319,15 +327,28 @@ class ButtonView: UIView {
 		super.drawRect(rect)
 		let context = UIGraphicsGetCurrentContext()
 		if let i = taskPosition {
-	 		if let (task, taskIsSelectable, totalTimes, totalNumber) = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
-    		    theme?.drawButton(context, parent: rect, task: task, taskPosition: i, isSelectable: taskIsSelectable, numberOfTimesActivated: totalTimes, totalTimeActive: totalNumber)
+	 		if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
+    		    theme?.drawButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
     		}
     	}
 	}
 }
 
+class SelectionAreaInfo {
+	var task: Task
+	var isSelectable: Bool
+	var numberOfTimesActivated: Int
+	var totalTimeActive: Int
+	init(task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
+		self.task = task
+		self.isSelectable = isSelectable
+		self.numberOfTimesActivated = numberOfTimesActivated
+		self.totalTimeActive = totalTimeActive
+	}
+}
+
 protocol SelectionAreaInfoDelegate {
-	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int)
+	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo
 }
 
 
@@ -362,7 +383,7 @@ class GridLayout : Layout {
 
 protocol Theme {
 	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
-	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int)
+	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
 }		
 
 class BasicTheme : Theme {
@@ -416,7 +437,7 @@ class BasicTheme : Theme {
 
 	}
 
-	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
+	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -434,8 +455,8 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-        addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15)
-        addText(context, text: "going?", origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10)
+        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15)
+        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10)
         addText(context, text: "yes!!!", origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10)
 	}
 
@@ -537,8 +558,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	}
 
 	// SelectionAreaInfoDelegate
-	func getSelectionAreaInfo(selectionArea: Int) -> (task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
-		return (taskList[selectionArea], taskIsSelectable(selectionArea), 13, 120)
+	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+        let selectionAreaInfo = SelectionAreaInfo(
+            task: taskList[selectionArea],
+            isSelectable: taskIsSelectable(selectionArea),
+            numberOfTimesActivated: 13,
+            totalTimeActive: 120)
+		return selectionAreaInfo
 	}
 
 }
