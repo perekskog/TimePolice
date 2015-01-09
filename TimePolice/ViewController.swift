@@ -386,6 +386,36 @@ class BasicTheme : Theme {
                startPoint, endPoint, 0)
 	}
 
+	func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat) {
+		CGContextSaveGState(context)
+		var attributes: [String: AnyObject] = [
+	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
+    		NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
+		]
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        let size = CGSize(width:Int(textSize.width+0.5), height:Int(textSize.height+0.5))
+        let textRect = CGRect(
+                origin: CGPoint(x: origin.x-textSize.width/2, y:origin.y),
+                size: size)
+        let textPath    = CGPathCreateWithRect(textRect, nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)        
+        CGContextRestoreGState(context)
+
+        // Rectangle
+        CGContextSetLineWidth(context, 1.0)
+        CGContextSetStrokeColorWithColor(context,
+            UIColor.blueColor().CGColor)
+        let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
+        CGContextAddRect(context, rect)
+        CGContextStrokePath(context)
+
+	}
+
 	func drawButton(context: CGContextRef, parent: CGRect, task: Task, taskPosition: Int, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: Int) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -404,62 +434,11 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-
-		CGContextSaveGState(context)
-		var attributes1: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(15)
-		]
-		let text1 = task.name
-        let font1 = attributes1[NSFontAttributeName] as UIFont
-        let attributedString1 = NSAttributedString(string: text1, attributes: attributes1)
-        let textSize1 = text1.sizeWithAttributes(attributes1)
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let o1 = CGPoint(x:(parent.width-textSize1.width)/2, y:parent.height/3)
-        let s1 = CGSize(width:Int(textSize1.width+0.5), height:Int(textSize1.height+0.5))
-        let textRect1 = CGRect(origin: o1, size: s1)
-        let textPath1    = CGPathCreateWithRect(textRect1, nil)
-        let frameSetter1 = CTFramesetterCreateWithAttributedString(attributedString1)
-        let frame1       = CTFramesetterCreateFrame(frameSetter1, CFRange(location: 0, length: attributedString1.length), textPath1, nil)
-        CTFrameDraw(frame1, context)        
-        CGContextRestoreGState(context)
-
-        // Rectangle
-        CGContextSetLineWidth(context, 1.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rect1 = CGRect(x:(parent.width-textSize1.width)/2, y:parent.height/3-textSize1.height/2, width: textSize1.width, height: textSize1.height)
-        CGContextAddRect(context, rect1)
-        CGContextStrokePath(context)
-
-		CGContextSaveGState(context)
-		var attributes2: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(10)
-		]
-		let text2 = "going?"
-        let font2 = attributes2[NSFontAttributeName] as UIFont
-        let attributedString2 = NSAttributedString(string: text2, attributes: attributes2)
-        let textSize2 = text2.sizeWithAttributes(attributes2)
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let o2 = CGPoint(x:1, y:parent.height/3*2)
-        let s2 = CGSize(width:Int(textSize2.width+0.5), height:Int(textSize2.height+0.5))
-        let textRect2 = CGRect(origin: o2, size: s2)
-        let textPath2    = CGPathCreateWithRect(textRect2, nil)
-        let frameSetter2 = CTFramesetterCreateWithAttributedString(attributedString2)
-        let frame2       = CTFramesetterCreateFrame(frameSetter2, CFRange(location: 0, length: attributedString2.length), textPath2, nil)
-        CTFrameDraw(frame2, context)        
-        CGContextRestoreGState(context)
-
-        // Rectangle
-        CGContextSetLineWidth(context, 1.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rect2 = CGRect(x:1, y:parent.height/3*2-textSize2.height/2, width: textSize2.width, height: textSize2.height)
-        CGContextAddRect(context, rect2)
-        CGContextStrokePath(context)
-
+        addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15)
+        addText(context, text: "going?", origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10)
+        addText(context, text: "yes!!!", origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10)
 	}
+
 }
 
 
