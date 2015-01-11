@@ -249,7 +249,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let bt1 = BasicTheme()
     }
 
-    class TaskSelectionHelper : TaskPickerTaskSelectionDelegate {
+    class TaskSelectionHelper : TaskPickerTaskSelectionDelegate, SelectionAreaInfoDelegate {
             var taskSignInList: [Task]
             var taskSignOutList: [[Task]]
             init() {
@@ -266,6 +266,14 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
             func taskSignOut() {
                 taskSignOutList.append(taskSignInList)
             }
+            func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+                let dummy = Task(name: "dummy")
+                let selectionAreaInfo = SelectionAreaInfo(
+                    task: dummy,
+                    numberOfTimesActivated: 13,
+                    totalTimeActive: 120)
+                return selectionAreaInfo
+            }
     }
 
     func testTaskPicker1() {
@@ -280,10 +288,10 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
-        tp1.setup()
         let tsh = TaskSelectionHelper()
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
+        tp1.setup()
 
         for i in 0..<tp1.layout.numberOfSelectionAreas() {
             XCTAssert(tp1.taskIsSelectable(i), "task \(i)")
@@ -322,10 +330,10 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
-        tp1.setup()
         let tsh = TaskSelectionHelper()
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
+        tp1.setup()
 
         tp1.signIn()
         XCTAssertEqual(tsh.taskSignInList, [])
@@ -374,10 +382,10 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1Name = "Session 1"
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
-        tp1.setup()
         let tsh = TaskSelectionHelper()
+        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
+        tp1.setup()
 
         XCTAssertEqual(tsh.taskSignInList, [])
         XCTAssertEqual(tsh.taskSignOutList, [[]])

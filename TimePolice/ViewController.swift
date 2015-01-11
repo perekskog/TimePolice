@@ -7,49 +7,70 @@
 //
 
 /*
-Branch: v1.0-ui-layoutview
+Branch: v1.0-ui-taskpickerview
 
-v Det blir bökigt med all data i getSelectionAreaInfo, kanske kapsla in all metadata i en egen struktur?
+- Kanske isSelectable INTE ska vara med i SelectionAreaInfo?
 
-v UT kraschar?
-	=> Allt som sätts upp genom storyboard måste vara optionals.
-
-v Hur ska tiden sparas? TimeInterval använde jag väl förut?
-	=> NSTimeINterval!
+- TaskSelectionStrategy måste få veta taskSelected/taskUnselected, bra eller dåligt?
 
 */
 
 import UIKit
 
-class ViewController: UIViewController, SelectionAreaInfoDelegate {
-
+class ViewController: UIViewController
+	 , SelectionAreaInfoDelegate
+	, TaskPickerTaskSelectionDelegate
+    , UIGestureRecognizerDelegate
+	{
+    
     @IBOutlet var button1: TestButtonView!
     @IBOutlet var smallBackground: BackgroundView!
     @IBOutlet var statustext: UITextView!
+
+    var taskList: [Task]?
+    
+    var tp: TaskPicker?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        // let tp = TimePolice()
-        // tp.view = 
-        // tp.redraw()
 
+/*
         let theme = BasicTheme()
 
         smallBackground?.numberOfTasks = 2
         smallBackground?.theme = theme
 
         let layout = GridLayout(rows: 3, columns: 3)
+        
+        taskList = [ Task(name: "Private"), Task(name: "Work")]
 
         if let rect = smallBackground?.frame {
             let middleRect = layout.getViewRect(rect, selectionArea: 4)
             let buttonView = ButtonView(frame: middleRect)
             buttonView.selectionAreaInfoDelegate = self
-            buttonView.taskPosition = 5
+            buttonView.taskPosition = 1
             buttonView.theme = theme
+
+			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+            recognizer.delegate = self
+            buttonView.addGestureRecognizer(recognizer)
 
             smallBackground?.addSubview(buttonView)
         }
+*/
+
+        let theme = BasicTheme()
+        let layout = GridLayout(rows: 3, columns: 3)
+        let taskSelectionStrategy = TaskSelectAny()
+
+        taskList = [ Task(name: "Private"), Task(name: "Work")]
+        if let workspace = smallBackground {
+            tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
+            tp!.taskSelectionDelegate = self
+            tp!.setup()
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,14 +78,26 @@ class ViewController: UIViewController, SelectionAreaInfoDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+	func taskSignIn(task: Task) {
+
+	}
+	func taskSignOut() {
+
+	}
+
+	// SelectionAreaInfoDelegate
+	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
         let selectionAreaInfo = SelectionAreaInfo(
-        	task: Task(name: "Going home"),
-        	isSelectable: true,
-        	numberOfTimesActivated: 3,
-        	totalTimeActive: NSTimeInterval(113))
-    	return selectionAreaInfo
-    }
+            task: taskList![selectionArea],
+            numberOfTimesActivated: 13,
+            totalTimeActive: 120)
+		return selectionAreaInfo
+	}
+
+	// Gesture recognizer delegate
+	func handleTap(sender: UITapGestureRecognizer) {
+        println("handleTap")
+	}
 
 }
 
@@ -321,6 +354,7 @@ class BackgroundView: UIView {
 class ButtonView: UIView {
 	
 	var taskPosition: Int?
+    var taskSelectionStrategy: TaskSelectionStrategy?
 	var selectionAreaInfoDelegate: SelectionAreaInfoDelegate?
 	var theme: Theme?
 
@@ -337,12 +371,10 @@ class ButtonView: UIView {
 
 class SelectionAreaInfo {
 	var task: Task
-	var isSelectable: Bool
 	var numberOfTimesActivated: Int
 	var totalTimeActive: NSTimeInterval
-	init(task: Task, isSelectable: Bool, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval) {
+	init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval) {
 		self.task = task
-		self.isSelectable = isSelectable
 		self.numberOfTimesActivated = numberOfTimesActivated
 		self.totalTimeActive = totalTimeActive
 	}
@@ -473,8 +505,15 @@ protocol TaskPickerTaskSelectionDelegate {
 	func taskSignOut()
 }
 
+class RecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
+	// Gesture recognizer delegate
+	func handleTap(sender: UITapGestureRecognizer) {
+        println("handleTap 1")
+	}	
+}
 
-class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelegate {
+
+class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	// Initialized roperties
     var workspace:BackgroundView!
 	var layout: Layout!
@@ -482,15 +521,17 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	var session: Session!
     var taskList: [Task]!
     var taskSelectionStrategy: TaskSelectionStrategy!
+    var selectionAreaInfoDelegate: SelectionAreaInfoDelegate
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: ButtonView]!
 	
-	init(workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
+	init(workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy, selectionAreaInfoDelegate: SelectionAreaInfoDelegate) {
         self.workspace = workspace
 		self.layout = layout
 		self.theme = theme
 		self.taskList = taskList
 		self.taskSelectionStrategy = taskSelectionStrategy
+		self.selectionAreaInfoDelegate = selectionAreaInfoDelegate
 		self.recognizers = [:]
         self.views = [:]
 	}
@@ -502,21 +543,38 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	var taskSelectionDelegate: TaskPickerTaskSelectionDelegate?
 
 	func setup() {
-		for i in 0..<layout.numberOfSelectionAreas() {
+		workspace.numberOfTasks = taskList.count
+		//workspace.theme = theme
+
+		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
+		for i in 0..<numberOfButtonsToDraw {
 			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
             let view = ButtonView(frame: viewRect)
 			view.theme = theme
-			view.selectionAreaInfoDelegate = self
+			view.selectionAreaInfoDelegate = selectionAreaInfoDelegate
+			//view.taskSelectionStrategy = taskSelectionStrategy
 			view.taskPosition = i
+			//let delegate = RecognizerDelegate()
+			//let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+            //recognizer.delegate = delegate
+
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
             recognizer.delegate = self
+
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
             views[i] = view
 
 			workspace.addSubview(view)
 		}
-	}
+		/*
+        let delegate = RecognizerDelegate()
+        let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+        recognizer.delegate = self
+        workspace.addGestureRecognizer(recognizer)
+        */
+
+    }
 
 	func signIn() {
         if let task = currentTask {
@@ -544,13 +602,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
 	}
 
 	// Gesture recognizer delegate
-	func handleTap(recognizer: UITapGestureRecognizer) {
-        if let taskNumber = recognizers[recognizer] {
+	func handleTap(sender: UITapGestureRecognizer) {
+        println("handleTap 2")
+        if let taskNumber = recognizers[sender] {
             taskSelected(taskNumber)
         }
 	}
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
+    /*
+    func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
         shouldReceiveTouch touch: UITouch) -> Bool {
             if let taskNumber = recognizers[gestureRecognizer] {
                 return taskIsSelectable(taskNumber)
@@ -558,16 +617,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, SelectionAreaInfoDelega
                 return true
             }
 	}
-
-	// SelectionAreaInfoDelegate
-	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        let selectionAreaInfo = SelectionAreaInfo(
-            task: taskList[selectionArea],
-            isSelectable: taskIsSelectable(selectionArea),
-            numberOfTimesActivated: 13,
-            totalTimeActive: 120)
-		return selectionAreaInfo
-	}
+	*/
 
 }
 
