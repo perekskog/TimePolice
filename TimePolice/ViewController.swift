@@ -13,6 +13,10 @@ Branch: v1.0-ui-taskpickerview
 
 - TaskSelectionStrategy måste få veta taskSelected/taskUnselected, bra eller dåligt?
 
+- TaskPicker::taskIsSelectable ska väl komma från SelectionAreaInfoDelegate?
+
+- TaskSignOut borde ha en task so argument
+
 */
 
 import UIKit
@@ -79,10 +83,10 @@ class ViewController: UIViewController
     }
 
 	func taskSignIn(task: Task) {
-
+		println("Sign in \(task.name)")
 	}
 	func taskSignOut() {
-
+		println("Sign out")
 	}
 
 	// SelectionAreaInfoDelegate
@@ -505,14 +509,6 @@ protocol TaskPickerTaskSelectionDelegate {
 	func taskSignOut()
 }
 
-class RecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
-	// Gesture recognizer delegate
-	func handleTap(sender: UITapGestureRecognizer) {
-        println("handleTap 1")
-	}	
-}
-
-
 class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	// Initialized roperties
     var workspace:BackgroundView!
@@ -552,11 +548,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
             let view = ButtonView(frame: viewRect)
 			view.theme = theme
 			view.selectionAreaInfoDelegate = selectionAreaInfoDelegate
-			//view.taskSelectionStrategy = taskSelectionStrategy
+			view.taskSelectionStrategy = taskSelectionStrategy
 			view.taskPosition = i
-			//let delegate = RecognizerDelegate()
-			//let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
-            //recognizer.delegate = delegate
 
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
             recognizer.delegate = self
@@ -567,12 +560,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 
 			workspace.addSubview(view)
 		}
-		/*
-        let delegate = RecognizerDelegate()
-        let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
-        recognizer.delegate = self
-        workspace.addGestureRecognizer(recognizer)
-        */
 
     }
 
@@ -603,12 +590,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 
 	// Gesture recognizer delegate
 	func handleTap(sender: UITapGestureRecognizer) {
-        println("handleTap 2")
         if let taskNumber = recognizers[sender] {
             taskSelected(taskNumber)
         }
 	}
-    /*
+    
     func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
         shouldReceiveTouch touch: UITouch) -> Bool {
             if let taskNumber = recognizers[gestureRecognizer] {
@@ -617,7 +603,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
                 return true
             }
 	}
-	*/
 
 }
 
