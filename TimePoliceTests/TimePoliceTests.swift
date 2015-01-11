@@ -153,13 +153,13 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssert(s1.workDone.count==0)
         s1.taskSignIn(t1)
         XCTAssertEqual(s1.currentWork!.task, t1)
-        s1.taskSignOut()
+        s1.taskSignOut(t1)
         XCTAssert(s1.currentWork == nil)
         XCTAssert(s1.workDone.count==1)
         XCTAssertEqual(s1.workDone[0].task, t1)
         s1.taskSignIn(t2)
         XCTAssertEqual(s1.currentWork!.task, t2)
-        s1.taskSignOut()
+        s1.taskSignOut(t2)
         XCTAssert(s1.currentWork == nil)
         XCTAssert(s1.workDone.count==2)
         XCTAssertEqual(s1.workDone[0].task, t1)
@@ -263,7 +263,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
             func taskSignIn(task: Task) {
                 taskSignInList.append(task)
             }
-            func taskSignOut() {
+        func taskSignOut(task: Task) {
                 taskSignOutList.append(taskSignInList)
             }
             func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {

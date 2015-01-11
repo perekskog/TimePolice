@@ -6,19 +6,6 @@
 //  Copyright (c) 2014 Per Ekskog. All rights reserved.
 //
 
-/*
-Branch: v1.0-ui-taskpickerview
-
-- Kanske isSelectable INTE ska vara med i SelectionAreaInfo?
-
-- TaskSelectionStrategy måste få veta taskSelected/taskUnselected, bra eller dåligt?
-
-- TaskPicker::taskIsSelectable ska väl komma från SelectionAreaInfoDelegate?
-
-- TaskSignOut borde ha en task so argument
-
-*/
-
 import UIKit
 
 class ViewController: UIViewController
@@ -65,10 +52,10 @@ class ViewController: UIViewController
 */
 
         let theme = BasicTheme()
-        let layout = GridLayout(rows: 3, columns: 3)
+        let layout = GridLayout(rows: 3, columns: 4)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Private"), Task(name: "Work")]
+        taskList = [ Task(name: "Private"), Task(name: "Work"), Task(name:"Travel"), Task(name: "Sleep")]
         if let workspace = smallBackground {
             tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
@@ -85,8 +72,8 @@ class ViewController: UIViewController
 	func taskSignIn(task: Task) {
 		println("Sign in \(task.name)")
 	}
-	func taskSignOut() {
-		println("Sign out")
+	func taskSignOut(task: Task) {
+		println("Sign out \(task.name)")
 	}
 
 	// SelectionAreaInfoDelegate
@@ -235,7 +222,7 @@ class Session: TaskPickerTaskSelectionDelegate {
         currentWork?.startTime = NSDate()
     }
 
-    func taskSignOut() {
+    func taskSignOut(task: Task) {
         currentWork?.stopTime = NSDate()
         if let work = currentWork {
             workDone.append(work)
@@ -506,7 +493,7 @@ class BasicTheme : Theme {
 
 protocol TaskPickerTaskSelectionDelegate {
 	func taskSignIn(task: Task)
-	func taskSignOut()
+	func taskSignOut(task: Task)
 }
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate {
@@ -571,14 +558,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 
 	func signOut() {
         if let task = currentTask {
-            taskSelectionDelegate?.taskSignOut()
+            taskSelectionDelegate?.taskSignOut(task)
         }
 	}
 
 	func taskSelected(newTaskIndex: Int) {
         let newTask = taskList[newTaskIndex]
         if let task = currentTask {
-            taskSelectionDelegate?.taskSignOut()
+            taskSelectionDelegate?.taskSignOut(task)
         }
         taskSelectionDelegate?.taskSignIn(newTask)
         currentTask = newTask
