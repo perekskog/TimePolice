@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Per Ekskog. All rights reserved.
 //
 
+
 import UIKit
 
 class ViewController: UIViewController
@@ -21,7 +22,12 @@ class ViewController: UIViewController
     var taskList: [Task]?
     
     var tp: TaskPicker?
-    
+
+    var currentWork: Work?
+
+    var totalTimeActive: [String: NSTimeInterval]!
+    var numberOfTimesActivated: [String: Int]!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -51,11 +57,14 @@ class ViewController: UIViewController
         }
 */
 
+        totalTimeActive = [:]
+        numberOfTimesActivated = [:]
+
         let theme = BasicTheme()
         let layout = GridLayout(rows: 3, columns: 4)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Private"), Task(name: "Work"), Task(name:"Travel"), Task(name: "Sleep")]
+        taskList = [ Task(name: "Idle"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Backlog"), Task(name: "Support"), Task(name: "Walking around")]
         if let workspace = smallBackground {
             tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
@@ -69,19 +78,47 @@ class ViewController: UIViewController
         // Dispose of any resources that can be recreated.
     }
 
-	func taskSignIn(task: Task) {
-		println("Sign in \(task.name)")
-	}
-	func taskSignOut(task: Task) {
-		println("Sign out \(task.name)")
-	}
+    func taskSignIn(task: Task) {
+    	println("SignIn\(task.name)")
+        currentWork = Work(task: task)
+        currentWork?.startTime = NSDate()
+    }
+
+    func taskSignOut(task: Task) {
+    	println("SignOut\(task.name)")
+        currentWork?.stopTime = NSDate()
+        if let work = currentWork {
+            var nn = 1
+            if var n = numberOfTimesActivated[task.id]? {
+                nn = n+1
+            }
+            numberOfTimesActivated[task.id] = nn
+
+            var mm = work.stopTime.timeIntervalSinceDate(work.startTime)
+        	if var m = totalTimeActive[task.id]? {
+                mm = m + mm
+            }
+        totalTimeActive[task.id] = mm
+        }
+        currentWork = nil
+    }
 
 	// SelectionAreaInfoDelegate
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+		println("getSelectionArea\(selectionArea)")
+		let task = taskList![selectionArea]
+        var nn: Int = 0
+        if let n = numberOfTimesActivated[task.id]? {
+            nn = n
+        }
+        var mm: NSTimeInterval = 0
+        if let m = totalTimeActive![task.id]? {
+            mm = m
+        }
         let selectionAreaInfo = SelectionAreaInfo(
-            task: taskList![selectionArea],
-            numberOfTimesActivated: 13,
-            totalTimeActive: 120)
+            task: task,
+            numberOfTimesActivated: nn,
+            totalTimeActive: mm)
 		return selectionAreaInfo
 	}
 
@@ -236,13 +273,15 @@ class Session: TaskPickerTaskSelectionDelegate {
 
 class Work {
 	var task: Task!
+    var startTime: NSDate!
+    var stopTime: NSDate!
 
 	init(task: Task) {
 		self.task = task
+		startTime = NSDate()
+		stopTime = NSDate()
 	}
 
-    var startTime: NSDate?
-    var stopTime: NSDate?
 }
 
 func == (lhs: Task, rhs: Task) -> Bool {
@@ -480,7 +519,7 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 15, withFrame: false)
+        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 12, withFrame: false)
         addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10, withFrame: false)
         addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10, withFrame: false)
 	}
@@ -507,6 +546,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
     var selectionAreaInfoDelegate: SelectionAreaInfoDelegate
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: ButtonView]!
+	var currentTaskIndex: Int!
 	
 	init(workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy, selectionAreaInfoDelegate: SelectionAreaInfoDelegate) {
         self.workspace = workspace
@@ -517,10 +557,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 		self.selectionAreaInfoDelegate = selectionAreaInfoDelegate
 		self.recognizers = [:]
         self.views = [:]
+        self.currentTaskIndex = -1
 	}
 
 	// Uninitialized properties
-	var currentTask: Task?
 
 	// Delegates
 	var taskSelectionDelegate: TaskPickerTaskSelectionDelegate?
@@ -551,24 +591,28 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
     }
 
 	func signIn() {
-        if let task = currentTask {
-            taskSelectionDelegate?.taskSignIn(task)
+        if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
+            taskSelectionDelegate?.taskSignIn(taskList[currentTaskIndex])        	
         }
 	}
 
 	func signOut() {
-        if let task = currentTask {
-            taskSelectionDelegate?.taskSignOut(task)
+        if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
+            taskSelectionDelegate?.taskSignIn(taskList[currentTaskIndex])
         }
 	}
 
+
 	func taskSelected(newTaskIndex: Int) {
-        let newTask = taskList[newTaskIndex]
-        if let task = currentTask {
-            taskSelectionDelegate?.taskSignOut(task)
+        //let newTask = taskList[newTaskIndex]
+        if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
+            taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
+            views[currentTaskIndex]?.setNeedsDisplay()
         }
-        taskSelectionDelegate?.taskSignIn(newTask)
-        currentTask = newTask
+        if (newTaskIndex >= 0 && newTaskIndex < taskList.count) {
+            taskSelectionDelegate?.taskSignIn(taskList[newTaskIndex])
+        }
+        currentTaskIndex = newTaskIndex
 	}
 
 	func taskIsSelectable(taskNumber: Int) -> Bool {
