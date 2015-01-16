@@ -64,7 +64,7 @@ class ViewController: UIViewController
         let layout = GridLayout(rows: 4, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Idle"), Task(name: "Walking around"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo")]
+        taskList = [ Task(name: "Out"), Task(name: "Walking"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo")]
         if let workspace = smallBackground {
             tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
