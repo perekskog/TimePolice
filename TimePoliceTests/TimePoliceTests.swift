@@ -271,7 +271,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
                 let selectionAreaInfo = SelectionAreaInfo(
                     task: dummy,
                     numberOfTimesActivated: 13,
-                    totalTimeActive: 120)
+                    totalTimeActive: 120,
+                    active: true)
                 return selectionAreaInfo
             }
     }

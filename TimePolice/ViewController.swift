@@ -61,10 +61,10 @@ class ViewController: UIViewController
         numberOfTimesActivated = [:]
 
         let theme = BasicTheme()
-        let layout = GridLayout(rows: 3, columns: 4)
+        let layout = GridLayout(rows: 4, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Idle"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Backlog"), Task(name: "Support"), Task(name: "Walking around")]
+        taskList = [ Task(name: "Idle"), Task(name: "Walking around"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo")]
         if let workspace = smallBackground {
             tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
@@ -115,11 +115,18 @@ class ViewController: UIViewController
         if let m = totalTimeActive![task.id]? {
             mm = m
         }
+        var active = false
+        if let work = currentWork? {
+            if taskList![selectionArea] == work.task {
+                active = true
+            }
+        }
         let selectionAreaInfo = SelectionAreaInfo(
             task: task,
             numberOfTimesActivated: nn,
-            totalTimeActive: mm)
-		return selectionAreaInfo
+            totalTimeActive: mm,
+            active: active)
+ 		return selectionAreaInfo
 	}
 
 	// Gesture recognizer delegate
@@ -403,10 +410,12 @@ class SelectionAreaInfo {
 	var task: Task
 	var numberOfTimesActivated: Int
 	var totalTimeActive: NSTimeInterval
-	init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval) {
+	var active: Bool
+	init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool) {
 		self.task = task
 		self.numberOfTimesActivated = numberOfTimesActivated
 		self.totalTimeActive = totalTimeActive
+		self.active = active
 	}
 }
 
@@ -505,8 +514,12 @@ class BasicTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.3, 0.3, 1.0, 1.0])]
+        if selectionAreaInfo.active {
+        	colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+        }
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
             colors, locations)
@@ -608,6 +621,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
             views[currentTaskIndex]?.setNeedsDisplay()
+            views[newTaskIndex]?.setNeedsDisplay()
         }
         if (newTaskIndex >= 0 && newTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignIn(taskList[newTaskIndex])
