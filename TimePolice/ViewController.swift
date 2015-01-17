@@ -64,7 +64,8 @@ class ViewController: UIViewController
         let layout = GridLayout(rows: 4, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Out"), Task(name: "Walking"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo"), Task(name: "Meeting")]
+//        taskList = [ Task(name: "Out"), Task(name: "Walking"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo"), Task(name: "Meeting")]
+        taskList = [ Task(name: "Out"), Task(name: "Down"), Task(name: "Other"), Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"), Task(name: "Dev"), Task(name: "Media")]
         if let workspace = smallBackground {
             tp = TaskPicker(workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
@@ -406,6 +407,23 @@ class ButtonView: UIView {
 	}
 }
 
+class ToolView: UIView {
+	
+	var tool: Int?
+	var toolbarInfoDelegate: ToolbarInfoDelegate?
+	var theme: Theme?
+
+	override func drawRect(rect: CGRect) {
+		super.drawRect(rect)
+		let context = UIGraphicsGetCurrentContext()
+		if let i = tool {
+	 		if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
+    		    theme?.drawTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
+    		}
+    	}
+	}
+}
+
 class SelectionAreaInfo {
 	var task: Task
 	var numberOfTimesActivated: Int
@@ -419,9 +437,28 @@ class SelectionAreaInfo {
 	}
 }
 
+class ToolbarInfo {
+	var signedIn: Bool
+	var totalTimesActivatedForSession: Int
+	var totalTimeActiveForSession: NSTimeInterval
+	init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval) {
+		self.signedIn = signedIn
+		self.totalTimesActivatedForSession = totalTimesActivatedForSession
+		self.totalTimeActiveForSession = totalTimeActiveForSession
+	}
+}
+
 protocol SelectionAreaInfoDelegate {
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo
 }
+
+protocol ToolbarInfoDelegate {
+	func getToolbarInfo() -> ToolbarInfo
+}
+
+let SignInSignOut = -1	// Active button for signing in/out of a session
+let InfoArea = -2		// Display area for ongoing work
+let Settings = -3		// Segue to settings, configurations etc
 
 
 protocol Layout {
@@ -432,6 +469,7 @@ protocol Layout {
 class GridLayout : Layout {
 	var rows: Int
 	var columns: Int
+	let toolbarHeight = 30
 
 	init(rows: Int, columns: Int) {
 		self.rows = rows
@@ -443,19 +481,38 @@ class GridLayout : Layout {
     }
 
 	func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect {
-		let row = selectionArea / columns
-		let column = selectionArea % columns
-		let rowHeight = Int(parentViewRect.height) / rows
-		let columnWidth = Int(parentViewRect.width) / columns
-		let rect = CGRect(x:column*columnWidth, y:row*rowHeight, width:columnWidth, height:rowHeight)
+		switch selectionArea {
+			case SignInSignOut:
+				let column = 0
+				let columnWidth = Int(parentViewRect.width) / columns
+				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				return rect
+			case InfoArea:
+				let column = 1
+				let columnWidth = Int(parentViewRect.width) / columns
+				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				return rect
+			case Settings:
+				let column = 2
+				let columnWidth = Int(parentViewRect.width) / columns
+				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				return rect
+			default:
+				let row = selectionArea / columns
+				let column = selectionArea % columns
+				let rowHeight = (Int(parentViewRect.height)-toolbarHeight) / rows
+				let columnWidth = Int(parentViewRect.width) / columns
+				let rect = CGRect(x:column*columnWidth, y:row*rowHeight+toolbarHeight, width:columnWidth, height:rowHeight)
 
-		return rect
+				return rect
+		}
 	}
 }
 
 protocol Theme {
 	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
 	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
+	func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
 }		
 
 class BasicTheme : Theme {
@@ -537,6 +594,42 @@ class BasicTheme : Theme {
         addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10, withFrame: false)
 	}
 
+	func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
+        // Gradient
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.8, 0.8, 0.8, 1.0])]
+        let colorspace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradientCreateWithColors(colorspace,
+            colors, locations)
+        var startPoint = CGPoint()
+        var endPoint =  CGPoint()
+        startPoint.x = 0.0
+        startPoint.y = 0.0
+        endPoint.x = 0
+        endPoint.y = parent.height
+        CGContextDrawLinearGradient(context, gradient,
+            startPoint, endPoint, 0)
+
+        var text: String
+        switch tool {
+        	case SignInSignOut: 
+        		if toolbarInfo.signedIn {
+        			text = "Sign out"
+        		} else {
+        			text = "Sign in"
+        		}
+        	case InfoArea:
+        		text = "\(toolbarInfo.totalTimesActivatedForSession) : \(getString(toolbarInfo.totalTimeActiveForSession))"
+        	case Settings:
+        		text = "Settings"
+            default:
+                text = "---"
+        }
+        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: 12, withFrame: false)
+	}
+
 }
 
 
@@ -548,7 +641,7 @@ protocol TaskPickerTaskSelectionDelegate {
 	func taskSignOut(task: Task)
 }
 
-class TaskPicker: NSObject, UIGestureRecognizerDelegate {
+class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 	// Initialized roperties
     var workspace:BackgroundView!
 	var layout: Layout!
@@ -582,6 +675,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 		workspace.numberOfTasks = taskList.count
 		//workspace.theme = theme
 
+		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
 			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
@@ -601,6 +695,42 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 			workspace.addSubview(view)
 		}
 
+		// Setup sign in/out button
+		var viewRect = layout.getViewRect(workspace.frame, selectionArea: SignInSignOut)
+	    var view = ToolView(frame: viewRect)
+		view.theme = theme
+		view.toolbarInfoDelegate = self
+		view.tool = SignInSignOut
+
+		var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+	    recognizer.delegate = self
+
+	    view.addGestureRecognizer(recognizer)
+
+		workspace.addSubview(view)
+
+		// Setup infoarea
+		viewRect = layout.getViewRect(workspace.frame, selectionArea: InfoArea)
+	    view = ToolView(frame: viewRect)
+		view.theme = theme
+		view.toolbarInfoDelegate = self
+		view.tool = InfoArea
+
+		workspace.addSubview(view)
+
+		// Setup settings
+		viewRect = layout.getViewRect(workspace.frame, selectionArea: Settings)
+	    view = ToolView(frame: viewRect)
+		view.theme = theme
+		view.toolbarInfoDelegate = self
+		view.tool = Settings
+
+		recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSettings:"))
+	    recognizer.delegate = self
+
+	    view.addGestureRecognizer(recognizer)
+
+		workspace.addSubview(view)
     }
 
 	func signIn() {
@@ -634,12 +764,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
 	}
 
 	// Gesture recognizer delegate
-	func handleTap(sender: UITapGestureRecognizer) {
-        if let taskNumber = recognizers[sender] {
-            taskSelected(taskNumber)
-        }
-	}
-    
     func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
         shouldReceiveTouch touch: UITouch) -> Bool {
             if let taskNumber = recognizers[gestureRecognizer] {
@@ -648,6 +772,32 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
                 return true
             }
 	}
+
+	
+    // Gesture recognizer callbacks
+    func handleTap(sender: UITapGestureRecognizer) {
+        if let taskNumber = recognizers[sender] {
+            taskSelected(taskNumber)
+        }
+	}
+    
+	func handleTapSigninSignout(sender: UITapGestureRecognizer) {
+        println("Tap: Signin/signout")
+    }
+    
+	func handleTapSettings(sender: UITapGestureRecognizer) {
+        println("Tap: Settings")
+    }
+    
+    // ToolbarInfoDelegate
+    func getToolbarInfo() -> ToolbarInfo {
+    	let toolbarInfo = ToolbarInfo(
+    		signedIn: true, 
+    		totalTimesActivatedForSession: 0, 
+    		totalTimeActiveForSession: 0)
+    	return toolbarInfo
+    }
+
 
 }
 
