@@ -621,10 +621,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate {
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
             views[currentTaskIndex]?.setNeedsDisplay()
-            views[newTaskIndex]?.setNeedsDisplay()
         }
         if (newTaskIndex >= 0 && newTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignIn(taskList[newTaskIndex])
+            views[newTaskIndex]?.setNeedsDisplay()
         }
         currentTaskIndex = newTaskIndex
 	}
