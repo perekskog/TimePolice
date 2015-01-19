@@ -272,7 +272,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
                     task: dummy,
                     numberOfTimesActivated: 13,
                     totalTimeActive: 120,
-                    active: true)
+                    active: true,
+                    activatedAt: NSDate())
                 return selectionAreaInfo
             }
     }
@@ -290,7 +291,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
         tp1.setup()
 
@@ -332,7 +333,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
         tp1.setup()
 
@@ -384,7 +385,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
         tp1.taskSelectionDelegate = tsh
         tp1.setup()
 

@@ -17,10 +17,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8kz-hh-PfF">
-                                <rect key="frame" x="16" y="457" width="288" height="91"/>
+                                <rect key="frame" x="16" y="391" width="288" height="157"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YWN-4G-VKq" customClass="TestButtonView" customModule="TimePolice" customModuleProvider="target">
@@ -28,7 +28,7 @@
                                 <color key="backgroundColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QGb-1S-5xt" customClass="BackgroundView" customModule="TimePolice" customModuleProvider="target">
-                                <rect key="frame" x="54" y="196" width="213" height="224"/>
+                                <rect key="frame" x="54" y="73" width="213" height="310"/>
                                 <color key="backgroundColor" red="0.84334422809999998" green="0.85714285710000004" blue="0.32542815339999998" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                         </subviews>
@@ -37,7 +37,7 @@
                     <connections>
                         <outlet property="button1" destination="YWN-4G-VKq" id="WPq-7l-tIn"/>
                         <outlet property="smallBackground" destination="QGb-1S-5xt" id="Uku-lC-gD9"/>
-                        <outlet property="statustext" destination="8kz-hh-PfF" id="Moq-ng-hXe"/>
+                        <outlet property="statustext" destination="8kz-hh-PfF" id="eeL-EU-Pjj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

@@ -14,7 +14,6 @@
 		CBD182C51A08AAD2007BA9F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBD182C41A08AAD2007BA9F7 /* Images.xcassets */; };
 		CBD182C81A08AAD2007BA9F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CBD182C61A08AAD2007BA9F7 /* LaunchScreen.xib */; };
 		CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182D31A08AAD2007BA9F7 /* TimePoliceTests.swift */; };
-		CBDA2E611A4019FB00F5C568 /* bug.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDA2E601A4019FB00F5C568 /* bug.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,7 +203,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBDA2E611A4019FB00F5C568 /* bug.png in Resources */,
 				CBD182C31A08AAD2007BA9F7 /* Main.storyboard in Resources */,
 				CBD182C81A08AAD2007BA9F7 /* LaunchScreen.xib in Resources */,
 				CBD182C51A08AAD2007BA9F7 /* Images.xcassets in Resources */,
