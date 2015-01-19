@@ -689,6 +689,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 	}
 
 	var updateActiveActivityTimer: NSTimer?
+	var signInSignOutView: ToolView?
+	var infoAreaView: ToolView?
+	var settingsView: ToolView?
 
 	// Uninitialized properties
 
@@ -721,40 +724,38 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 
 		// Setup sign in/out button
 		var viewRect = layout.getViewRect(workspace.frame, selectionArea: SignInSignOut)
-	    var view = ToolView(frame: viewRect)
-		view.theme = theme
-		view.toolbarInfoDelegate = self
-		view.tool = SignInSignOut
+	    signInSignOutView = ToolView(frame: viewRect)
+		signInSignOutView!.theme = theme
+		signInSignOutView!.toolbarInfoDelegate = self
+		signInSignOutView!.tool = SignInSignOut
 
 		var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
 	    recognizer.delegate = self
+	    signInSignOutView!.addGestureRecognizer(recognizer)
 
-	    view.addGestureRecognizer(recognizer)
-
-		workspace.addSubview(view)
+		workspace.addSubview(signInSignOutView!)
 
 		// Setup infoarea
 		viewRect = layout.getViewRect(workspace.frame, selectionArea: InfoArea)
-	    view = ToolView(frame: viewRect)
-		view.theme = theme
-		view.toolbarInfoDelegate = self
-		view.tool = InfoArea
+	    infoAreaView = ToolView(frame: viewRect)
+		infoAreaView!.theme = theme
+		infoAreaView!.toolbarInfoDelegate = self
+		infoAreaView!.tool = InfoArea
 
-		workspace.addSubview(view)
+		workspace.addSubview(infoAreaView!)
 
 		// Setup settings
 		viewRect = layout.getViewRect(workspace.frame, selectionArea: Settings)
-	    view = ToolView(frame: viewRect)
-		view.theme = theme
-		view.toolbarInfoDelegate = self
-		view.tool = Settings
+	    settingsView = ToolView(frame: viewRect)
+		settingsView!.theme = theme
+		settingsView!.toolbarInfoDelegate = self
+		settingsView!.tool = Settings
 
 		recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSettings:"))
 	    recognizer.delegate = self
+	    settingsView!.addGestureRecognizer(recognizer)
 
-	    view.addGestureRecognizer(recognizer)
-
-		workspace.addSubview(view)
+		workspace.addSubview(settingsView!)
         
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                                    target: self,
@@ -763,22 +764,26 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
                                   repeats: true)
     }
 
+
 	func signIn() {
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignIn(taskList[currentTaskIndex])        	
+            views[currentTaskIndex]?.setNeedsDisplay()
+            signInSignOutView?.setNeedsDisplay()
         }
 	}
 
 	func signOut() {
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
-            taskSelectionDelegate?.taskSignIn(taskList[currentTaskIndex])
+            taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
+            views[currentTaskIndex]?.setNeedsDisplay()
+            signInSignOutView?.setNeedsDisplay()
         }
 	}
 
 
 	func taskSelected(newTaskIndex: Int) {
         statustext.text! += String("\n\(NSDate()):TaskPicker.taskSelected\(newTaskIndex)")
-        //let newTask = taskList[newTaskIndex]
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
             views[currentTaskIndex]?.setNeedsDisplay()
@@ -790,9 +795,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
         currentTaskIndex = newTaskIndex
 	}
 
+
 	func taskIsSelectable(taskNumber: Int) -> Bool {
 		return true
 	}
+
 
 	// Gesture recognizer delegate
     func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
@@ -815,6 +822,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 	func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         statustext.text! += String("\n\(NSDate()):TaskPicker.handleTapSigninSignout")
         println("Tap: Signin/signout")
+        if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
+        	signOut()
+        	currentTaskIndex = -1*currentTaskIndex
+        } else {
+        	currentTaskIndex = -1*currentTaskIndex
+        	signIn()
+        }
     }
     
 	func handleTapSettings(sender: UITapGestureRecognizer) {
@@ -824,8 +838,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
     
     // ToolbarInfoDelegate
     func getToolbarInfo() -> ToolbarInfo {
+    	var signedIn = false
+    	if currentTaskIndex >= 0 {
+    		signedIn = true
+    	}
     	let toolbarInfo = ToolbarInfo(
-    		signedIn: true, 
+    		signedIn: signedIn, 
     		totalTimesActivatedForSession: 0, 
     		totalTimeActiveForSession: 0)
     	return toolbarInfo
