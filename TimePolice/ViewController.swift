@@ -33,6 +33,9 @@ class ViewController: UIViewController
         super.viewDidLoad()
         
         statustext.text! = String("\n\(NSDate()):ViewController.viewDidLoad")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
 
         // Do any additional setup after loading the view, typically from a nib.
 
@@ -68,7 +71,12 @@ class ViewController: UIViewController
         let layout = GridLayout(rows: 4, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
 
-        taskList = [ Task(name: "Out"), Task(name: "Walking"), Task(name: "Other"), Task(name: "Email"), Task(name:"Tickets"), Task(name: "Support"), Task(name: "Backlog"), Task(name: "Promo"), Task(name: "Meeting")]
+        taskList = [
+            Task(name: "Walking"), Task(name: "Non prod"), Task(name: "Not work"),
+            Task(name: "In Email"), Task(name: "In Ticket"), Task(name: "In Other"),
+            Task(name: "Promo"), Task(name: "Backlog"), Task(name: "---"),
+            Task(name: "W Task"), Task(name: "W US"), Task(name: "W Other"),
+            Task(name: "Meeting")]
 //        taskList = [ Task(name: "Out"), Task(name: "Down"), Task(name: "Other"), Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"), Task(name: "Dev"), Task(name: "Media")]
         if let workspace = smallBackground {
             tp = TaskPicker(statustext: statustext, workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
@@ -81,22 +89,30 @@ class ViewController: UIViewController
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        statustext.text! += String("\n\(NSDate()):ViewController.didReceiveMemoryWarning")
-    }
-
-    func taskSignIn(task: Task) {
-        statustext.text! += String("\n\(NSDate()):ViewController.taskSignIn(\(task.name))")
+        statustext.text! += String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning")
         let numberOfElements = countElements(statustext.text)
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         statustext.scrollRangeToVisible(range)
-    	println("SignIn\(task.name)")
+    }
+
+    func taskSignIn(task: Task) {
+        statustext.text! += String("\n\(getString(NSDate())) ViewController.taskSignIn(\(task.name))")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
+
+        println("SignIn\(task.name)")
         currentWork = Work(task: task)
         currentWork?.startTime = NSDate()
     }
 
     func taskSignOut(task: Task) {
-        statustext.text! += String("\n\(NSDate()):ViewController.taskSignOut(\(task.name))")
-    	println("SignOut\(task.name)")
+        statustext.text! += String("\n\(getString(NSDate())) ViewController.taskSignOut(\(task.name))")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
+
+        println("SignOut\(task.name)")
         currentWork?.stopTime = NSDate()
         if let work = currentWork {
             var nn = 1
@@ -783,7 +799,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 
 
 	func taskSelected(newTaskIndex: Int) {
-        statustext.text! += String("\n\(NSDate()):TaskPicker.taskSelected\(newTaskIndex)")
+        statustext.text! += String("\n\(getString(NSDate())) TaskPicker.taskSelected\(newTaskIndex)")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
+
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
             taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
             views[currentTaskIndex]?.setNeedsDisplay()
@@ -820,7 +840,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 	}
     
 	func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        statustext.text! += String("\n\(NSDate()):TaskPicker.handleTapSigninSignout")
+        statustext.text! += String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
+
         println("Tap: Signin/signout")
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
         	signOut()
@@ -832,7 +856,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
     }
     
 	func handleTapSettings(sender: UITapGestureRecognizer) {
-        statustext.text! += String("\n\(NSDate()):TaskPicker.handleTapSettings")
+        statustext.text! += String("\n\(getString(NSDate())) TaskPicker.handleTapSettings")
+        let numberOfElements = countElements(statustext.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statustext.scrollRangeToVisible(range)
+
         println("Tap: Settings")
     }
     
@@ -868,6 +896,13 @@ func getString(timeInterval: NSTimeInterval) -> String {
 	let m = (Int(timeInterval) - h*3600) / 60
 	let s = Int(timeInterval) - h*3600 - m*60
     return "\(h):\(m):\(s)"
+}
+
+func getString(date: NSDate) -> String {
+	var formatter = NSDateFormatter();
+	formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+	let defaultTimeZoneStr = formatter.stringFromDate(date);
+	return defaultTimeZoneStr
 }
 
 
