@@ -14,6 +14,7 @@ class ViewController: UIViewController
 	 , SelectionAreaInfoDelegate
 	, TaskPickerTaskSelectionDelegate
     , UIGestureRecognizerDelegate
+    , ToolbarInfoDelegate
 	{
     
     @IBOutlet var button1: TestButtonView!
@@ -81,6 +82,7 @@ class ViewController: UIViewController
         if let workspace = smallBackground {
             tp = TaskPicker(statustext: statustext, workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
+            tp!.toolbarInfoDelegate = self
             tp!.setup()
         }
 
@@ -162,6 +164,35 @@ class ViewController: UIViewController
 	func handleTap(sender: UITapGestureRecognizer) {
         println("handleTap")
 	}
+
+	// ToolbarInfoDelegate
+    func getToolbarInfo() -> ToolbarInfo {
+    	var signedIn = false
+    	if let work = currentWork {
+    		signedIn = true
+    	}
+
+    	var totalActivations: Int = 1 // THe first task is active when first selected
+    	for (task, activations) in numberOfTimesActivated {
+    		totalActivations += activations
+    	}
+    	
+    	var totalTime: NSTimeInterval = 0
+    	for (task, time) in totalTimeActive {
+    		totalTime += time
+    	}
+    	if let work = currentWork {
+	    	let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+	    	totalTime += timeForActiveTask
+	    }
+    	
+    	let toolbarInfo = ToolbarInfo(
+    		signedIn: signedIn, 
+    		totalTimesActivatedForSession: totalActivations,
+    		totalTimeActiveForSession: totalTime)
+
+    	return toolbarInfo
+    }
 
 }
 
@@ -709,6 +740,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 	var infoAreaView: ToolView?
 	var settingsView: ToolView?
 
+	var toolbarInfoDelegate: ToolbarInfoDelegate?
+
 	// Uninitialized properties
 
 	// Delegates
@@ -813,6 +846,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             views[newTaskIndex]?.setNeedsDisplay()
         }
         currentTaskIndex = newTaskIndex
+        signInSignOutView?.setNeedsDisplay()
 	}
 
 
@@ -838,7 +872,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             taskSelected(taskNumber)
         }
 	}
-    
+
+    // Tap on sign in/sign out
 	func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         statustext.text! += String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout")
         let numberOfElements = countElements(statustext.text)
@@ -854,7 +889,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
         	signIn()
         }
     }
-    
+
+	// Tap on settings    
 	func handleTapSettings(sender: UITapGestureRecognizer) {
         statustext.text! += String("\n\(getString(NSDate())) TaskPicker.handleTapSettings")
         let numberOfElements = countElements(statustext.text)
@@ -866,14 +902,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
     
     // ToolbarInfoDelegate
     func getToolbarInfo() -> ToolbarInfo {
-    	var signedIn = false
-    	if currentTaskIndex >= 0 {
-    		signedIn = true
-    	}
-    	let toolbarInfo = ToolbarInfo(
-    		signedIn: signedIn, 
-    		totalTimesActivatedForSession: 0, 
-    		totalTimeActiveForSession: 0)
+        let toolbarInfo = toolbarInfoDelegate!.getToolbarInfo()
     	return toolbarInfo
     }
     
@@ -882,6 +911,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
         if currentTaskIndex >= 0 {
             let view = views[currentTaskIndex]
             views[currentTaskIndex]?.setNeedsDisplay()
+            infoAreaView?.setNeedsDisplay()
         }
     }
 
