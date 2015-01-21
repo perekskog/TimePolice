@@ -674,33 +674,28 @@ class BasicTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
 
-        var foregroundColor = UIColor(white: 1.0, alpha: 1.0).CGColor
-        var backgroundColors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.4, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
-        if !toolbarInfo.signedIn {
-        	backgroundColors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.8, 0.8, 0.8, 1.0])]
-            foregroundColor = UIColor(white: 0.0, alpha: 1.0).CGColor
-        }
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
-            backgroundColors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+        var foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
+        var foregroundColorBlack = UIColor(white: 0.0, alpha: 1.0).CGColor
+        var backgroundColorsGrey = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.6, 1.0])]
+        var backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.8, 0.0, 0.0, 1.0])]
+        var backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])]
 
+        let colorspace = CGColorSpaceCreateDeviceRGB()
+        var gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGrey, locations)
+        var foregroundColor = foregroundColorBlack
         var text: String
         switch tool {
         	case SignInSignOut: 
         		if toolbarInfo.signedIn {
         			text = "Sign out"
+        			gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
         		} else {
         			text = "Sign in"
+        			gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
+        			foregroundColor = foregroundColorWhite
         		}
         	case InfoArea:
         		text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
@@ -709,6 +704,15 @@ class BasicTheme : Theme {
             default:
                 text = "---"
         }
+
+        var startPoint = CGPoint()
+        var endPoint =  CGPoint()
+        startPoint.x = 0.0
+        startPoint.y = 0.0
+        endPoint.x = 0
+        endPoint.y = parent.height
+        CGContextDrawLinearGradient(context, gradient,
+            startPoint, endPoint, 0)
 
         addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
 	}
@@ -836,7 +840,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             views[currentTaskIndex]?.setNeedsDisplay()
             signInSignOutView?.setNeedsDisplay()
             infoAreaView?.setNeedsDisplay()
-            settingsView?.setNeedsDisplay()
         }
 	}
 
@@ -846,7 +849,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             views[currentTaskIndex]?.setNeedsDisplay()
             signInSignOutView?.setNeedsDisplay()
             infoAreaView?.setNeedsDisplay()
-            settingsView?.setNeedsDisplay()
         }
 	}
 
@@ -977,6 +979,7 @@ class TestButtonView: UIView {
 
 		drawButton(context, parent: rect)
 
+/*
   		var textAttributes: [String: AnyObject] = [
 	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
     		NSFontAttributeName : UIFont.systemFontOfSize(15)
@@ -986,6 +989,7 @@ class TestButtonView: UIView {
         drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
         drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
         drawTextOneLine(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
+*/
 	}
 
     func drawTextOneLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
@@ -1037,8 +1041,8 @@ class TestButtonView: UIView {
 
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.4, 1.0]),
+        	          CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.8, 1.0])]
 	    let colorspace = CGColorSpaceCreateDeviceRGB()
 	    let gradient = CGGradientCreateWithColors(colorspace,
                   colors, locations)
@@ -1059,7 +1063,7 @@ class TestButtonView: UIView {
   		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
   		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
   		CGContextFillPath(context)
-*/
+
         // Blue rectangle
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
@@ -1101,6 +1105,7 @@ class TestButtonView: UIView {
         let rectangle2 = CGRectMake(50,50,100,100)
         CGContextAddRect(context, rectangle2)
         CGContextStrokePath(context)
+*/
 	}
 
 }
