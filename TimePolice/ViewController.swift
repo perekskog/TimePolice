@@ -69,15 +69,18 @@ class ViewController: UIViewController
         numberOfTimesActivated = [:]
 
         let theme = BasicTheme()
-        let layout = GridLayout(rows: 4, columns: 3)
+        let layout = GridLayout(rows: 7, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
 
         taskList = [
-            Task(name: "Walking"), Task(name: "Non prod"), Task(name: "Not work"),
-            Task(name: "In Email"), Task(name: "In Ticket"), Task(name: "In Other"),
-            Task(name: "Promo"), Task(name: "Backlog"), Task(name: "---"),
-            Task(name: "W Task"), Task(name: "W US"), Task(name: "W Other"),
-            Task(name: "Meeting")]
+            Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "---"),
+            Task(name: "I Lync"), Task(name: "I F2F"), Task(name: "---"),
+            Task(name: "P Task"), Task(name: "P US"), Task(name: "P Ticket"), 
+            Task(name: "P OF"), Task(name: "P Meeting"), Task(name: "---"),
+            Task(name: "U Productive"), Task(name: "U Non productive"), Task(name: "U Non work"),
+            Task(name: "M Planned"), Task(name: "M Coffee"),  Task(name: "---"),
+            Task(name: "M WC"), Task(name: "M Other"), Task(name: "---")
+		]
 //        taskList = [ Task(name: "Out"), Task(name: "Down"), Task(name: "Other"), Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"), Task(name: "Dev"), Task(name: "Media")]
         if let workspace = smallBackground {
             tp = TaskPicker(statustext: statustext, workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
@@ -531,6 +534,7 @@ class GridLayout : Layout {
 	var rows: Int
 	var columns: Int
 	let toolbarHeight = 30
+	let padding = 2
 
 	init(rows: Int, columns: Int) {
 		self.rows = rows
@@ -546,24 +550,24 @@ class GridLayout : Layout {
 			case SignInSignOut:
 				let column = 0
 				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
 				return rect
 			case InfoArea:
 				let column = 1
 				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
 				return rect
 			case Settings:
 				let column = 2
 				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth, y:0, width:columnWidth, height:toolbarHeight)
+				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
 				return rect
 			default:
 				let row = selectionArea / columns
 				let column = selectionArea % columns
 				let rowHeight = (Int(parentViewRect.height)-toolbarHeight) / rows
 				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth, y:row*rowHeight+toolbarHeight, width:columnWidth, height:rowHeight)
+				let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+toolbarHeight+2*padding, width:columnWidth-padding, height:rowHeight-padding)
 
 				return rect
 		}
@@ -578,11 +582,14 @@ protocol Theme {
 
 class BasicTheme : Theme {
 
+    let bigSize:CGFloat = 13.0
+    let smallSize:CGFloat = 11.0
+
 	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int) {
 		// Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 1.0, 1.0]),
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 1.0, 0.0, 1.0]),
         	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
 	    let colorspace = CGColorSpaceCreateDeviceRGB()
 	    let gradient = CGGradientCreateWithColors(colorspace,
@@ -650,14 +657,14 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: 12, withFrame: false)
+        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false)
         if selectionAreaInfo.active {
         	let now = NSDate()
         	let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-    	    addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: 10, withFrame: false)
+    	    addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
         } else {
-	        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: 10, withFrame: false)
-    	    addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: 10, withFrame: false)
+	        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
+    	    addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
         }
 	}
 
@@ -694,7 +701,7 @@ class BasicTheme : Theme {
             default:
                 text = "---"
         }
-        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: 12, withFrame: false)
+        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false)
 	}
 
 }
@@ -749,7 +756,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 
 	func setup() {
 		workspace.numberOfTasks = taskList.count
-		//workspace.theme = theme
+		workspace.theme = theme
 
 		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
@@ -1016,18 +1023,19 @@ class TestButtonView: UIView {
     	startPoint.x = 0.0
 	    startPoint.y = 0.0
     	endPoint.x = 0
-    	endPoint.y = 500
+    	endPoint.y = 700
 	    CGContextDrawLinearGradient(context, gradient,
                startPoint, endPoint, 0)
 
         // Play button
+/*
 		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
   		CGContextMoveToPoint(context, parent.width / 4, parent.height / 4)
   		CGContextAddLineToPoint(context, parent.width * 3 / 4, parent.height / 2)
   		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
   		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
   		CGContextFillPath(context)
-
+*/
         // Blue rectangle
         CGContextSetLineWidth(context, 4.0)
         CGContextSetStrokeColorWithColor(context,
