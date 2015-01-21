@@ -604,10 +604,10 @@ class BasicTheme : Theme {
                startPoint, endPoint, 0)
 	}
 
-    func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool) {
+    func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
 		CGContextSaveGState(context)
 		var attributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 0.0, alpha: 1.0).CGColor,
+	    	NSForegroundColorAttributeName : foregroundColor,
     		NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
 		]
         let font = attributes[NSFontAttributeName] as UIFont
@@ -657,14 +657,15 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
 
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false)
+        let color = UIColor(white: 0.0, alpha: 1.0).CGColor
+        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         if selectionAreaInfo.active {
         	let now = NSDate()
         	let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-    	    addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
+    	    addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
         } else {
-	        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
-    	    addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false)
+	        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+    	    addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
         }
 	}
 
@@ -672,11 +673,18 @@ class BasicTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+
+        var foregroundColor = UIColor(white: 1.0, alpha: 1.0).CGColor
+        var backgroundColors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.4, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
+        if !toolbarInfo.signedIn {
+        	backgroundColors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.8, 0.8, 0.8, 1.0])]
+            foregroundColor = UIColor(white: 0.0, alpha: 1.0).CGColor
+        }
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
-            colors, locations)
+            backgroundColors, locations)
         var startPoint = CGPoint()
         var endPoint =  CGPoint()
         startPoint.x = 0.0
@@ -695,13 +703,14 @@ class BasicTheme : Theme {
         			text = "Sign in"
         		}
         	case InfoArea:
-        		text = "\(toolbarInfo.totalTimesActivatedForSession) : \(getString(toolbarInfo.totalTimeActiveForSession))"
+        		text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
         	case Settings:
         		text = "Settings"
             default:
                 text = "---"
         }
-        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false)
+
+        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
 	}
 
 }
@@ -826,6 +835,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             taskSelectionDelegate?.taskSignIn(taskList[currentTaskIndex])        	
             views[currentTaskIndex]?.setNeedsDisplay()
             signInSignOutView?.setNeedsDisplay()
+            infoAreaView?.setNeedsDisplay()
+            settingsView?.setNeedsDisplay()
         }
 	}
 
@@ -834,6 +845,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
             taskSelectionDelegate?.taskSignOut(taskList[currentTaskIndex])
             views[currentTaskIndex]?.setNeedsDisplay()
             signInSignOutView?.setNeedsDisplay()
+            infoAreaView?.setNeedsDisplay()
+            settingsView?.setNeedsDisplay()
         }
 	}
 
@@ -932,7 +945,18 @@ func getString(timeInterval: NSTimeInterval) -> String {
     let h = Int(timeInterval / 3600)
 	let m = (Int(timeInterval) - h*3600) / 60
 	let s = Int(timeInterval) - h*3600 - m*60
-    return "\(h):\(m):\(s)"
+	var time: String = "\(h):"
+	if m < 10 {
+		time += "0\(m):"
+	} else {
+		time += "\(m):"
+	}
+	if s < 10 {
+		time += "0\(s)"
+	} else {
+		time += "\(s)"
+	}
+    return time
 }
 
 func getString(date: NSDate) -> String {
