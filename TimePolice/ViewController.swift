@@ -73,13 +73,13 @@ class ViewController: UIViewController
         let taskSelectionStrategy = TaskSelectAny()
 
         taskList = [
+            Task(name: "I F2F"), Task(name: "---"), Task(name: "I Lync"),
             Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "---"),
-            Task(name: "I Lync"), Task(name: "I F2F"), Task(name: "---"),
-            Task(name: "P Task"), Task(name: "P US"), Task(name: "P Ticket"), 
-            Task(name: "P OF"), Task(name: "P Meeting"), Task(name: "---"),
-            Task(name: "U Productive"), Task(name: "U Non productive"), Task(name: "U Non work"),
-            Task(name: "M Planned"), Task(name: "M Coffee"),  Task(name: "---"),
-            Task(name: "M WC"), Task(name: "M Other"), Task(name: "---")
+            Task(name: "P OF"), Task(name: "P Task"), Task(name: "P Ticket"),
+            Task(name: "P US"), Task(name: "---"), Task(name: "P Meeting"),
+            Task(name: "U Productive"), Task(name: "U Non productive"), Task(name: "U Not work"),
+            Task(name: "M Planned"), Task(name: "M Coffee/WC"),  Task(name: "M Other"),
+            Task(name: "---"), Task(name: "---"), Task(name: "---")
 		]
 //        taskList = [ Task(name: "Out"), Task(name: "Down"), Task(name: "Other"), Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"), Task(name: "Dev"), Task(name: "Media")]
         if let workspace = smallBackground {
