@@ -38,33 +38,6 @@ class ViewController: UIViewController
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         statustext.scrollRangeToVisible(range)
 
-        // Do any additional setup after loading the view, typically from a nib.
-
-/*
-        let theme = BasicTheme()
-
-        smallBackground?.numberOfTasks = 2
-        smallBackground?.theme = theme
-
-        let layout = GridLayout(rows: 3, columns: 3)
-        
-        taskList = [ Task(name: "Private"), Task(name: "Work")]
-
-        if let rect = smallBackground?.frame {
-            let middleRect = layout.getViewRect(rect, selectionArea: 4)
-            let buttonView = ButtonView(frame: middleRect)
-            buttonView.selectionAreaInfoDelegate = self
-            buttonView.taskPosition = 1
-            buttonView.theme = theme
-
-			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
-            recognizer.delegate = self
-            buttonView.addGestureRecognizer(recognizer)
-
-            smallBackground?.addSubview(buttonView)
-        }
-*/
-
         totalTimeActive = [:]
         numberOfTimesActivated = [:]
 
@@ -81,7 +54,15 @@ class ViewController: UIViewController
             Task(name: "M Planned"), Task(name: "M Coffee/WC"),  Task(name: "M Other"),
             Task(name: "---"), Task(name: "---"), Task(name: "---")
 		]
-//        taskList = [ Task(name: "Out"), Task(name: "Down"), Task(name: "Other"), Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"), Task(name: "Dev"), Task(name: "Media")]
+        
+/*
+        taskList = [
+            Task(name: "Out"), Task(name: "Down"), Task(name: "Other"),
+            Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"),
+            Task(name: "Dev"), Task(name: "Media")
+        ]
+*/
+        
         if let workspace = smallBackground {
             tp = TaskPicker(statustext: statustext, workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy, selectionAreaInfoDelegate: self)
             tp!.taskSelectionDelegate = self
@@ -235,24 +216,6 @@ class TimePolice {
 
 }
 
-
-/////////////////////////
-// WorkSpace
-/*
-class WorkSpace {
-    var view: UIView!
-	var taskPickers: [TaskPicker]!
-
-	init(view: UIView){
-		self.view = view
-		self.taskPickers = []
-	}
-
-	func addSubview(view: UIView, position:CGPoint) {
-		view.addSubview(xxx)
-	}
-}
-*/
 
 ///////////////////////////////////////////////
 // ProjectTemplate
@@ -520,204 +483,7 @@ protocol ToolbarInfoDelegate {
 	func getToolbarInfo() -> ToolbarInfo
 }
 
-let SignInSignOut = -1	// Active button for signing in/out of a session
-let InfoArea = -2		// Display area for ongoing work
-let Settings = -3		// Segue to settings, configurations etc
 
-
-protocol Layout {
-    func numberOfSelectionAreas() -> Int
-	func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect
-}
-
-class GridLayout : Layout {
-	var rows: Int
-	var columns: Int
-	let toolbarHeight = 30
-	let padding = 2
-
-	init(rows: Int, columns: Int) {
-		self.rows = rows
-		self.columns = columns
-	}
-
-    func numberOfSelectionAreas() -> Int {
-        return rows * columns;
-    }
-
-	func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect {
-		switch selectionArea {
-			case SignInSignOut:
-				let column = 0
-				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
-				return rect
-			case InfoArea:
-				let column = 1
-				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
-				return rect
-			case Settings:
-				let column = 2
-				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth+padding, y:padding, width:columnWidth-padding, height:toolbarHeight)
-				return rect
-			default:
-				let row = selectionArea / columns
-				let column = selectionArea % columns
-				let rowHeight = (Int(parentViewRect.height)-toolbarHeight) / rows
-				let columnWidth = Int(parentViewRect.width) / columns
-				let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+toolbarHeight+2*padding, width:columnWidth-padding, height:rowHeight-padding)
-
-				return rect
-		}
-	}
-}
-
-protocol Theme {
-	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
-	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
-	func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
-}		
-
-class BasicTheme : Theme {
-
-    let bigSize:CGFloat = 13.0
-    let smallSize:CGFloat = 11.0
-
-	func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int) {
-		// Gradient
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.0, 1.0, 0.0, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
-	    let colorspace = CGColorSpaceCreateDeviceRGB()
-	    let gradient = CGGradientCreateWithColors(colorspace,
-                  colors, locations)
-    	var startPoint = CGPoint()
-	    var endPoint =  CGPoint()
-    	startPoint.x = 0.0
-	    startPoint.y = 0.0
-    	endPoint.x = 0
-    	endPoint.y = parent.height
-	    CGContextDrawLinearGradient(context, gradient,
-               startPoint, endPoint, 0)
-	}
-
-    func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
-		CGContextSaveGState(context)
-		var attributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : foregroundColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
-		]
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let size = CGSize(width:Int(textSize.width+0.5)+1, height:Int(textSize.height+0.5))
-        let textRect = CGRect(
-                origin: CGPoint(x: origin.x-textSize.width/2, y:origin.y),
-                size: size)
-        let textPath    = CGPathCreateWithRect(textRect, nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)        
-        CGContextRestoreGState(context)
-
-        // Rectangle
-        if(withFrame) {
-            CGContextSetLineWidth(context, 1.0)
-            CGContextSetStrokeColorWithColor(context,
-                UIColor.blueColor().CGColor)
-            let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
-            CGContextAddRect(context, rect)
-            CGContextStrokePath(context)
-        }
-	}
-
-	func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
-        // Gradient
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.3, 0.3, 1.0, 1.0])]
-        if selectionAreaInfo.active {
-        	colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
-        }
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
-            colors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
-
-        let color = UIColor(white: 0.0, alpha: 1.0).CGColor
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
-        if selectionAreaInfo.active {
-        	let now = NSDate()
-        	let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-    	    addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-        } else {
-	        addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-    	    addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-        }
-	}
-
-	func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
-        // Gradient
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-
-        var foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
-        var foregroundColorBlack = UIColor(white: 0.0, alpha: 1.0).CGColor
-        var backgroundColorsGrey = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.6, 1.0])]
-        var backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.8, 0.0, 0.0, 1.0])]
-        var backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])]
-
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        var gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGrey, locations)
-        var foregroundColor = foregroundColorBlack
-        var text: String
-        switch tool {
-        	case SignInSignOut: 
-        		if toolbarInfo.signedIn {
-        			text = "Sign out"
-        			gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
-        		} else {
-        			text = "Sign in"
-        			gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
-        			foregroundColor = foregroundColorWhite
-        		}
-        	case InfoArea:
-        		text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
-        	case Settings:
-        		text = "Settings"
-            default:
-                text = "---"
-        }
-
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
-
-        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
-	}
-
-}
 
 
 ///////////////////////////////////////////////////
@@ -978,63 +744,7 @@ class TestButtonView: UIView {
 		let context = UIGraphicsGetCurrentContext()
 
 		drawButton(context, parent: rect)
-
-/*
-  		var textAttributes: [String: AnyObject] = [
-	    	NSForegroundColorAttributeName : UIColor(white: 1.0, alpha: 1.0).CGColor,
-    		NSFontAttributeName : UIFont.systemFontOfSize(15)
-		]
-
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 50, y: 50)
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 150, y: 150)
-        drawTextMultiLine(context, parent: rect, text: "Hello, World, here I am again! The quick brown fox jumps over the lazy dog", attributes: textAttributes, x: 0, y: 0)
-        drawTextOneLine(context, parent: rect, text: "Mail", attributes: textAttributes, x:200, y:50)
-*/
 	}
-
-    func drawTextOneLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-
-         CGContextSaveGState(context)
-
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        
-        // y: Add font.descender (its a negative value) to align the text at the baseline
-        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y + font.descender, width: ceil(textSize.width), height: ceil(textSize.height)), nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)
-        
-        CGContextRestoreGState(context)
-
-        return textSize
-   }
-
-
-    func drawTextMultiLine(context: CGContextRef, parent: CGRect, text: NSString, attributes: [String: AnyObject], x: CGFloat, y: CGFloat) -> CGSize {
-
-        CGContextSaveGState(context)
-
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        
-        CGContextTranslateCTM(context, 0.0, parent.size.height+2*y-250) //
-        CGContextScaleCTM(context, 1.0, -1.0);
-        
-        let textPath    = CGPathCreateWithRect(CGRect(x: x, y: y, width: 50, height: 150), nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)
-        
-        CGContextRestoreGState(context)
-
-        return textSize
-    }
-    
 
 	func drawButton(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -1055,57 +765,6 @@ class TestButtonView: UIView {
 	    CGContextDrawLinearGradient(context, gradient,
                startPoint, endPoint, 0)
 
-        // Play button
-/*
-		CGContextSetFillColorWithColor(context, UIColor.blackColor().CGColor)
-  		CGContextMoveToPoint(context, parent.width / 4, parent.height / 4)
-  		CGContextAddLineToPoint(context, parent.width * 3 / 4, parent.height / 2)
-  		CGContextAddLineToPoint(context, parent.width / 4, parent.height * 3 / 4)
-  		CGContextAddLineToPoint(context, parent.width / 4, parent.height / 4)
-  		CGContextFillPath(context)
-
-        // Blue rectangle
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        let rectangle = CGRectMake(60,170,200,80)
-        CGContextAddRect(context, rectangle)
-        CGContextStrokePath(context)
-
-        // Fill blue rectangle
-        CGContextAddRect(context, rectangle)
-		CGContextSetFillColorWithColor(context, CGColorCreate(colorSpaceRGB, [1.0, 0.8, 0.8, 0.8]))
-  		CGContextFillPath(context)
-
-        // Ellipse
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.blueColor().CGColor)
-        CGContextAddEllipseInRect(context, rectangle)
-        CGContextStrokePath(context)
-
-        // Dashed curve with shadow
-        let myShadowOffset = CGSizeMake (-10,  15)
-        CGContextSetLineWidth(context, 20.0)
-        CGContextSaveGState(context)
-        CGContextSetShadow (context, myShadowOffset, 5)
-        CGContextSetStrokeColorWithColor(context,
-                CGColorCreate(colorSpaceRGB, [1.0, 0.2, 0.2, 0.8]))
-        let dashArray:[CGFloat] = [2,6,4,2]
-        CGContextSetLineDash(context, 3, dashArray, 4)
-        CGContextMoveToPoint(context, 60, 170)
-        CGContextAddQuadCurveToPoint(context, 165, 90, 260, 170)
-        CGContextStrokePath(context)
-        CGContextRestoreGState(context)
-
-        // Red rectangle
-        CGContextSetLineWidth(context, 4.0)
-        CGContextSetStrokeColorWithColor(context,
-            UIColor.redColor().CGColor)
-        let rectangle2 = CGRectMake(50,50,100,100)
-        CGContextAddRect(context, rectangle2)
-        CGContextStrokePath(context)
-*/
 	}
 
 }
