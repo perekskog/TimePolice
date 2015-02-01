@@ -74,10 +74,10 @@ class ViewController: UIViewController
 
         taskList = [
             Task(name: "I F2F"), Task(name: "---"), Task(name: "I Lync"),
-            Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "---"),
+            Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "I Blixt"),
             Task(name: "P OF"), Task(name: "P Task"), Task(name: "P Ticket"),
-            Task(name: "P US"), Task(name: "---"), Task(name: "P Meeting"),
-            Task(name: "U Productive"), Task(name: "U Non productive"), Task(name: "U Not work"),
+            Task(name: "P US"), Task(name: "P Meeting"), Task(name: "P Other"),
+            Task(name: "N Down"), Task(name: "---"), Task(name: "N Not work"),
             Task(name: "M Planned"), Task(name: "M Coffee/WC"),  Task(name: "M Other"),
             Task(name: "---"), Task(name: "---"), Task(name: "---")
 		]
