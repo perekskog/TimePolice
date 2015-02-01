@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TaskPickerViewController.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2014-11-04.
@@ -10,7 +10,7 @@
 import UIKit
 
 
-class ViewController: UIViewController
+class TaskPickerViewController: UIViewController
 	 , SelectionAreaInfoDelegate
 	, TaskPickerTaskSelectionDelegate
     , UIGestureRecognizerDelegate
