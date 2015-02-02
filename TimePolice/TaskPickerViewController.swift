@@ -50,9 +50,9 @@ class TaskPickerViewController: UIViewController
             Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "I Blixt"),
             Task(name: "P OF"), Task(name: "P Task"), Task(name: "P Ticket"),
             Task(name: "P US"), Task(name: "P Meeting"), Task(name: "P Other"),
-            Task(name: "N Down"), Task(name: "---"), Task(name: "N Not work"),
-            Task(name: "M Planned"), Task(name: "M Coffee/WC"),  Task(name: "M Other"),
-            Task(name: "---"), Task(name: "---"), Task(name: "---")
+            Task(name: "N Waste"), Task(name: "---"), Task(name: "N Not work"),
+            Task(name: "N Connect"), Task(name: "N Down"), Task(name: "N Time in"),
+            Task(name: "N Walking"), Task(name: "N Coffee/WC"),  Task(name: "N Other"),
 		]
         
 /*
@@ -751,8 +751,8 @@ class TestButtonView: UIView {
 
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.4, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.8, 1.0])]
+	    let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
+        	          CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
 	    let colorspace = CGColorSpaceCreateDeviceRGB()
 	    let gradient = CGGradientCreateWithColors(colorspace,
                   colors, locations)

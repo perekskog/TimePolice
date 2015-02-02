@@ -25,7 +25,7 @@ class BasicTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         let colors = [CGColorCreate(colorSpaceRGB, [0.0, 1.0, 0.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+            CGColorCreate(colorSpaceRGB, [0.8, 1.0, 0.8, 1.0])]
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
             colors, locations)
@@ -75,7 +75,7 @@ class BasicTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.3, 0.3, 1.0, 1.0])]
+            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 1.0, 1.0])]
         if selectionAreaInfo.active {
             colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
                 CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
