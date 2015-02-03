@@ -133,11 +133,6 @@ class TaskPickerViewController: UIViewController
  		return selectionAreaInfo
 	}
 
-	// Gesture recognizer delegate
-	func handleTap(sender: UITapGestureRecognizer) {
-        println("handleTap")
-	}
-
 	// ToolbarInfoDelegate
     func getToolbarInfo() -> ToolbarInfo {
     	var signedIn = false
