@@ -154,7 +154,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let bt1 = BasicTheme()
     }
 
-    class TaskSelectionHelper : TaskPickerTaskSelectionDelegate, SelectionAreaInfoDelegate {
+    class TaskSelectionHelper : SelectionAreaInfoDelegate {
             var taskSignInList: [Task]
             var taskSignOutList: [[Task]]
             init() {
@@ -196,8 +196,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
-        tp1.taskSelectionDelegate = tsh
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
         tp1.setup()
 
         for i in 0..<tp1.layout.numberOfSelectionAreas() {
@@ -238,8 +237,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
-        tp1.taskSelectionDelegate = tsh
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        
         tp1.setup()
 
         tp1.signIn()
@@ -290,8 +289,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa, selectionAreaInfoDelegate: tsh)
-        tp1.taskSelectionDelegate = tsh
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
         tp1.setup()
 
         XCTAssertEqual(tsh.taskSignInList, [])

@@ -43,7 +43,7 @@ class Project: Equatable {
 ////////////////////////////////////////////////
 // Session and SessionTaskListUpdateDelegate
 
-class Session: TaskPickerTaskSelectionDelegate {	
+class Session {	
 	var name: String!
 	var taskList: [Task]!
 	var workDone: [Work]!
