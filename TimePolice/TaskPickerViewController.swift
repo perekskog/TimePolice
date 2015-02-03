@@ -74,31 +74,20 @@ class TaskPickerViewController: UIViewController
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-        statustext.text! += String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning")
-        let numberOfElements = countElements(statustext.text)
-        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-        statustext.scrollRangeToVisible(range)
+        let s = String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning")
+        TextViewLogger.log(statustext, message: s)
     }
 
     func taskSignIn(task: Task) {
-        statustext.text! += String("\n\(getString(NSDate())) ViewController.taskSignIn(\(task.name))")
-        let numberOfElements = countElements(statustext.text)
-        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-        statustext.scrollRangeToVisible(range)
+        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.taskSignIn(\(task.name))"))
 
-        println("SignIn\(task.name)")
         currentWork = Work(task: task)
         currentWork?.startTime = NSDate()
     }
 
     func taskSignOut(task: Task) {
-        statustext.text! += String("\n\(getString(NSDate())) ViewController.taskSignOut(\(task.name))")
-        let numberOfElements = countElements(statustext.text)
-        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-        statustext.scrollRangeToVisible(range)
+        TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) ViewController.taskSignOut(\(task.name))"))
 
-        println("SignOut\(task.name)")
         currentWork?.stopTime = NSDate()
         if let work = currentWork {
             var nn = 1
@@ -399,34 +388,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
     }
 
 
-}
-
-//////////////////////////////////////////////
-// Utilities
-
-func getString(timeInterval: NSTimeInterval) -> String {
-    let h = Int(timeInterval / 3600)
-	let m = (Int(timeInterval) - h*3600) / 60
-	let s = Int(timeInterval) - h*3600 - m*60
-	var time: String = "\(h):"
-	if m < 10 {
-		time += "0\(m):"
-	} else {
-		time += "\(m):"
-	}
-	if s < 10 {
-		time += "0\(s)"
-	} else {
-		time += "\(s)"
-	}
-    return time
-}
-
-func getString(date: NSDate) -> String {
-	var formatter = NSDateFormatter();
-	formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-	let defaultTimeZoneStr = formatter.stringFromDate(date);
-	return defaultTimeZoneStr
 }
 
 
