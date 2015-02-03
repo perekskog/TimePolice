@@ -22,6 +22,7 @@ class TaskPickerViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        TextViewLogger.reset(statustext)
         TextViewLogger.log(statustext, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
         let theme = BasicTheme()
