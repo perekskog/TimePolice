@@ -13,8 +13,7 @@ import UIKit
 class TaskPickerViewController: UIViewController
 	{
     
-    @IBOutlet var button1: TestButtonView!
-    @IBOutlet var smallBackground: BackgroundView!
+    @IBOutlet var taskPickerView: TaskPickerBackgroundView!
     @IBOutlet var statustext: UITextView!
 
     var taskList: [Task]?
@@ -47,8 +46,8 @@ class TaskPickerViewController: UIViewController
         ]
 */
         
-        if let workspace = smallBackground {
-            tp = TaskPicker(statustext: statustext, workspace: smallBackground, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy)
+        if let workspace = taskPickerView {
+            tp = TaskPicker(statustext: statustext, workspace: workspace, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy)
             tp!.setup()
         }
 
@@ -69,20 +68,20 @@ class TaskPickerViewController: UIViewController
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
 	// Initialized roperties
     var statustext: UITextView
-    var workspace:BackgroundView!
+    var workspace:TaskPickerBackgroundView!
 	var layout: Layout!
 	var theme: Theme!
 	var session: Session!
     var taskList: [Task]!
     var taskSelectionStrategy: TaskSelectionStrategy!
     var recognizers: [UIGestureRecognizer: Int]!
-    var views: [Int: ButtonView]!
+    var views: [Int: TaskPickerButtonView]!
 	var currentTaskIndex: Int!
 	var totalTimeActive: [String: NSTimeInterval]!
     var numberOfTimesActivated: [String: Int]!
 
 	
-    init(statustext: UITextView, workspace:BackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
+    init(statustext: UITextView, workspace:TaskPickerBackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
         self.statustext = statustext
         self.workspace = workspace
 		self.layout = layout
@@ -114,7 +113,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
 			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
-            let view = ButtonView(frame: viewRect)
+            let view = TaskPickerButtonView(frame: viewRect)
 			view.theme = theme
 			view.selectionAreaInfoDelegate = self
 			view.taskSelectionStrategy = taskSelectionStrategy
@@ -359,39 +358,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 }
 
 
-
-//////////////////////////////////////////////
-// Custom view
-
-class TestButtonView: UIView {
-	override func drawRect(rect: CGRect) {
-		let context = UIGraphicsGetCurrentContext()
-
-		drawButton(context, parent: rect)
-	}
-
-	func drawButton(context: CGContextRef, parent: CGRect) {
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-
-        // Gradient
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-	    let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
-        	          CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
-	    let colorspace = CGColorSpaceCreateDeviceRGB()
-	    let gradient = CGGradientCreateWithColors(colorspace,
-                  colors, locations)
-    	var startPoint = CGPoint()
-	    var endPoint =  CGPoint()
-    	startPoint.x = 0.0
-	    startPoint.y = 0.0
-    	endPoint.x = 0
-    	endPoint.y = 700
-	    CGContextDrawLinearGradient(context, gradient,
-               startPoint, endPoint, 0)
-
-	}
-
-}
  
 
 

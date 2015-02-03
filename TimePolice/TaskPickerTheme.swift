@@ -9,7 +9,37 @@
 import Foundation
 import UIKit
 
-class BackgroundView: UIView {
+class TimePoliceBackgroundView: UIView {
+    override func drawRect(rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()
+
+        drawButton(context, parent: rect)
+    }
+
+    func drawButton(context: CGContextRef, parent: CGRect) {
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+
+        // Gradient
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
+                      CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
+        let colorspace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradientCreateWithColors(colorspace,
+                  colors, locations)
+        var startPoint = CGPoint()
+        var endPoint =  CGPoint()
+        startPoint.x = 0.0
+        startPoint.y = 0.0
+        endPoint.x = 0
+        endPoint.y = 700
+        CGContextDrawLinearGradient(context, gradient,
+               startPoint, endPoint, 0)
+
+    }
+
+}
+
+class TaskPickerBackgroundView: UIView {
 
     var numberOfTasks: Int?
     var theme: Theme?
@@ -23,7 +53,7 @@ class BackgroundView: UIView {
     }
 }
 
-class ButtonView: UIView {
+class TaskPickerButtonView: UIView {
     
     var taskPosition: Int?
     var taskSelectionStrategy: TaskSelectionStrategy?
