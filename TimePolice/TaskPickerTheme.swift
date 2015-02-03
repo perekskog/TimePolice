@@ -1,5 +1,5 @@
 //
-//  Themes.swift
+//  TaskPickerTheme.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-02-01.
@@ -8,6 +8,90 @@
 
 import Foundation
 import UIKit
+
+class BackgroundView: UIView {
+
+    var numberOfTasks: Int?
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        let context = UIGraphicsGetCurrentContext()
+        if let n = numberOfTasks {
+            theme?.drawBackground(context, parent: rect, numberOfTasks: n)
+        }
+    }
+}
+
+class ButtonView: UIView {
+    
+    var taskPosition: Int?
+    var taskSelectionStrategy: TaskSelectionStrategy?
+    var selectionAreaInfoDelegate: SelectionAreaInfoDelegate?
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        let context = UIGraphicsGetCurrentContext()
+        if let i = taskPosition {
+            if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
+                theme?.drawButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
+            }
+        }
+    }
+}
+
+class ToolView: UIView {
+    
+    var tool: Int?
+    var toolbarInfoDelegate: ToolbarInfoDelegate?
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        let context = UIGraphicsGetCurrentContext()
+        if let i = tool {
+            if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
+                theme?.drawTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
+            }
+        }
+    }
+}
+
+class SelectionAreaInfo {
+    var task: Task
+    var numberOfTimesActivated: Int
+    var totalTimeActive: NSTimeInterval
+    var active: Bool
+    var activatedAt: NSDate
+    init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool, activatedAt: NSDate) {
+        self.task = task
+        self.numberOfTimesActivated = numberOfTimesActivated
+        self.totalTimeActive = totalTimeActive
+        self.active = active
+        self.activatedAt = activatedAt
+    }
+}
+
+class ToolbarInfo {
+    var signedIn: Bool
+    var totalTimesActivatedForSession: Int
+    var totalTimeActiveForSession: NSTimeInterval
+    init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval) {
+        self.signedIn = signedIn
+        self.totalTimesActivatedForSession = totalTimesActivatedForSession
+        self.totalTimeActiveForSession = totalTimeActiveForSession
+    }
+}
+
+protocol SelectionAreaInfoDelegate {
+    func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo
+}
+
+protocol ToolbarInfoDelegate {
+    func getToolbarInfo() -> ToolbarInfo
+}
+
 
 protocol Theme {
     func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
