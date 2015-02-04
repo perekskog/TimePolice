@@ -28,6 +28,8 @@ class TaskPickerViewController: UIViewController
         let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3)
         let taskSelectionStrategy = TaskSelectAny()
+        
+        (self.view as TimePoliceBackgroundView).theme = theme
 
         taskList = [
             Task(name: "I F2F"), Task(name: "---"), Task(name: "I Lync"),
@@ -107,7 +109,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// Uninitialized properties
 
 	func setup() {
-		workspace.numberOfTasks = taskList.count
 		workspace.theme = theme
 
 		// Setup task buttons

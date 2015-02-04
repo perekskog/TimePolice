@@ -12,46 +12,24 @@ import UIKit
 /////////////// --- Views --- //////////////////
 
 class TimePoliceBackgroundView: UIView {
-    override func drawRect(rect: CGRect) {
-        let context = UIGraphicsGetCurrentContext()
 
-        drawButton(context, parent: rect)
-    }
-
-    func drawButton(context: CGContextRef, parent: CGRect) {
-        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-
-        // Gradient
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
-                      CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
-                  colors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = 700
-        CGContextDrawLinearGradient(context, gradient,
-               startPoint, endPoint, 0)
-
-    }
-
-}
-
-class TaskPickerBackgroundView: UIView {
-
-    var numberOfTasks: Int?
     var theme: Theme?
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         let context = UIGraphicsGetCurrentContext()
-        if let n = numberOfTasks {
-            theme?.drawBackground(context, parent: rect, numberOfTasks: n)
-        }
+        theme?.drawDesktop(context, parent: rect)
+    }
+}
+
+class TaskPickerBackgroundView: UIView {
+
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        let context = UIGraphicsGetCurrentContext()
+        theme?.drawBackground(context, parent: rect)
     }
 }
 
@@ -130,7 +108,8 @@ class ToolbarInfo {
 /////////////// --- Visuals --- //////////////////
 
 protocol Theme {
-    func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
+    func drawDesktop(context: CGContextRef, parent: CGRect)
+    func drawBackground(context: CGContextRef, parent: CGRect)
     func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
     func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
 }
@@ -140,7 +119,28 @@ class BasicTheme : Theme {
     let bigSize:CGFloat = 13.0
     let smallSize:CGFloat = 11.0
     
-    func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int) {
+    func drawDesktop(context: CGContextRef, parent: CGRect) {
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        
+        // Gradient
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
+        let colorspace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradientCreateWithColors(colorspace,
+            colors, locations)
+        var startPoint = CGPoint()
+        var endPoint =  CGPoint()
+        startPoint.x = 0.0
+        startPoint.y = 0.0
+        endPoint.x = 0
+        endPoint.y = 700
+        CGContextDrawLinearGradient(context, gradient,
+            startPoint, endPoint, 0)
+        
+    }
+    
+    func drawBackground(context: CGContextRef, parent: CGRect) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
