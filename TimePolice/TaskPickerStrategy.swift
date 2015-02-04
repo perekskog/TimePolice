@@ -10,6 +10,7 @@ import Foundation
 
 protocol TaskSelectionStrategy {
 	func selectableTasks(taskList: [Task]) -> [Task]
+    func isSelectable(task: Task) -> Bool
     func taskSelected(task: Task)
 	func taskUnselected(task: Task)
 }
@@ -19,6 +20,9 @@ class TaskSelectAny: TaskSelectionStrategy {
 	func selectableTasks(taskList: [Task]) -> [Task] {
 		return taskList
 	}
+    func isSelectable(task: Task) -> Bool {
+        return true
+    }
 	func taskSelected(task: Task) {
 		// Do nothing
 	}
@@ -50,6 +54,14 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 
 		return Array(taskList[x+1..<taskList.count])
 	}
+    
+    func isSelectable(task: Task) -> Bool {
+        if contains(selectedTasks, task) {
+            return false
+        } else {
+            return true
+        }
+    }
 
 	func taskSelected(task: Task) {
 		if !contains(selectedTasks, task) {
