@@ -9,7 +9,6 @@
 
 import UIKit
 
-
 class TaskPickerViewController: UIViewController
 	{
     
@@ -118,7 +117,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let view = TaskPickerButtonView(frame: viewRect)
 			view.theme = theme
 			view.selectionAreaInfoDelegate = self
-			view.taskSelectionStrategy = taskSelectionStrategy
 			view.taskPosition = i
 
 			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
@@ -238,10 +236,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on sign in/sign out
 	func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
-
-        let numberOfElements = countElements(statustext.text)
-        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-        statustext.scrollRangeToVisible(range)
 
         if (currentTaskIndex >= 0 && currentTaskIndex < taskList.count) {
         	signOut()

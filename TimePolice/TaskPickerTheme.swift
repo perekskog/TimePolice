@@ -36,7 +36,6 @@ class TaskPickerBackgroundView: UIView {
 class TaskPickerButtonView: UIView {
     
     var taskPosition: Int?
-    var taskSelectionStrategy: TaskSelectionStrategy?
     var selectionAreaInfoDelegate: SelectionAreaInfoDelegate?
     var theme: Theme?
 
