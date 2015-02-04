@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+/////////////// --- Views --- //////////////////
+
 class TimePoliceBackgroundView: UIView {
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
@@ -88,6 +90,13 @@ class ToolView: UIView {
     }
 }
 
+/////////////// --- Delegates --- //////////////////
+
+
+protocol SelectionAreaInfoDelegate {
+    func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo
+}
+
 class SelectionAreaInfo {
     var task: Task
     var numberOfTimesActivated: Int
@@ -103,6 +112,10 @@ class SelectionAreaInfo {
     }
 }
 
+protocol ToolbarInfoDelegate {
+    func getToolbarInfo() -> ToolbarInfo
+}
+
 class ToolbarInfo {
     var signedIn: Bool
     var totalTimesActivatedForSession: Int
@@ -114,14 +127,7 @@ class ToolbarInfo {
     }
 }
 
-protocol SelectionAreaInfoDelegate {
-    func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo
-}
-
-protocol ToolbarInfoDelegate {
-    func getToolbarInfo() -> ToolbarInfo
-}
-
+/////////////// --- Visuals --- //////////////////
 
 protocol Theme {
     func drawBackground(context: CGContextRef, parent: CGRect, numberOfTasks: Int)
@@ -153,37 +159,6 @@ class BasicTheme : Theme {
             startPoint, endPoint, 0)
     }
     
-    func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
-        CGContextSaveGState(context)
-        var attributes: [String: AnyObject] = [
-            NSForegroundColorAttributeName : foregroundColor,
-            NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
-        ]
-        let font = attributes[NSFontAttributeName] as UIFont
-        let attributedString = NSAttributedString(string: text, attributes: attributes)
-        let textSize = text.sizeWithAttributes(attributes)
-        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
-        let size = CGSize(width:Int(textSize.width+0.5)+1, height:Int(textSize.height+0.5))
-        let textRect = CGRect(
-            origin: CGPoint(x: origin.x-textSize.width/2, y:origin.y),
-            size: size)
-        let textPath    = CGPathCreateWithRect(textRect, nil)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
-        CTFrameDraw(frame, context)
-        CGContextRestoreGState(context)
-        
-        // Rectangle
-        if(withFrame) {
-            CGContextSetLineWidth(context, 1.0)
-            CGContextSetStrokeColorWithColor(context,
-                UIColor.blueColor().CGColor)
-            let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
-            CGContextAddRect(context, rect)
-            CGContextStrokePath(context)
-        }
-    }
-    
     func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
@@ -207,14 +182,14 @@ class BasicTheme : Theme {
             startPoint, endPoint, 0)
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
-        addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+        ThemeUtilities.addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         if selectionAreaInfo.active {
             let now = NSDate()
             let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-            addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+            ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
         } else {
-            addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-            addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+            ThemeUtilities.addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+            ThemeUtilities.addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
         }
     }
     
@@ -263,8 +238,45 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
         
-        addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
+        ThemeUtilities.addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
     }
     
+}
+
+/////////////// --- Helpers --- //////////////////
+
+class ThemeUtilities {
+    
+    class func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
+        CGContextSaveGState(context)
+        var attributes: [String: AnyObject] = [
+            NSForegroundColorAttributeName : foregroundColor,
+            NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
+        ]
+        let font = attributes[NSFontAttributeName] as UIFont
+        let attributedString = NSAttributedString(string: text, attributes: attributes)
+        let textSize = text.sizeWithAttributes(attributes)
+        CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+        let size = CGSize(width:Int(textSize.width+0.5)+1, height:Int(textSize.height+0.5))
+        let textRect = CGRect(
+            origin: CGPoint(x: origin.x-textSize.width/2, y:origin.y),
+            size: size)
+        let textPath    = CGPathCreateWithRect(textRect, nil)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        CTFrameDraw(frame, context)
+        CGContextRestoreGState(context)
+        
+        // Rectangle
+        if(withFrame) {
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context,
+                UIColor.blueColor().CGColor)
+            let rect = CGRect(x:origin.x-textSize.width/2, y: origin.y-textSize.height/2, width: textSize.width, height: textSize.height)
+            CGContextAddRect(context, rect)
+            CGContextStrokePath(context)
+        }
+    }
+
 }
 
