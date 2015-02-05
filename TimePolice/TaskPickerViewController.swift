@@ -49,7 +49,9 @@ class TaskPickerViewController: UIViewController
 */
         
         if let workspace = taskPickerView {
-            tp = TaskPicker(statustext: statustext, workspace: workspace, layout: layout, theme: theme, taskList: taskList!, taskSelectionStrategy: taskSelectionStrategy)
+            tp = TaskPicker(statustext: statustext, workspace: workspace, 
+                layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
+                taskList: taskList!, totalTimeActive: [:], numberOfTimesActivated:[:])
             tp!.setup()
         }
 
@@ -68,40 +70,52 @@ class TaskPickerViewController: UIViewController
 // TaskPicker and TaskPickerTaskSelectionDelegate
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
-	// Initialized roperties
+	// Persistent attributes, set in init
     var statustext: UITextView
     var workspace:TaskPickerBackgroundView!
+
+    // Preferences, set in init
 	var layout: Layout!
 	var theme: Theme!
-	var session: Session!
-    var taskList: [Task]!
     var taskSelectionStrategy: TaskSelectionStrategy!
-    var recognizers: [UIGestureRecognizer: Int]!
-    var views: [Int: TaskPickerButtonView]!
-	var currentTaskIndex: Int!
+
+    // Persistent attributes, to be replaced by a persistent session object
+    var taskList: [Task]!
 	var totalTimeActive: [String: NSTimeInterval]!
     var numberOfTimesActivated: [String: Int]!
 
+    // Persistent attributes, to be set by creator if they are set
+    var currentWork: Work?
+    var previousTask: Task?
+
+    // Non persitent attributes, initialized in init(), then set in setup()
+    var recognizers: [UIGestureRecognizer: Int]!
+    var views: [Int: TaskPickerButtonView]!
 	
-    init(statustext: UITextView, workspace:TaskPickerBackgroundView, layout: Layout, theme: Theme, taskList: [Task], taskSelectionStrategy: TaskSelectionStrategy) {
+    init(statustext: UITextView, workspace:TaskPickerBackgroundView, 
+        layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
+        taskList: [Task], totalTimeActive: [String: NSTimeInterval], numberOfTimesActivated: [String: Int]) {
         self.statustext = statustext
         self.workspace = workspace
+
 		self.layout = layout
 		self.theme = theme
+        self.taskSelectionStrategy = taskSelectionStrategy
+
 		self.taskList = taskList
-		self.taskSelectionStrategy = taskSelectionStrategy
-		self.recognizers = [:]
+        self.totalTimeActive = totalTimeActive // Was: [:]
+        self.numberOfTimesActivated = numberOfTimesActivated // Was: [:]
+
+        self.recognizers = [:]
         self.views = [:]
-        self.currentTaskIndex = -1
-        self.totalTimeActive = [:]
-        self.numberOfTimesActivated = [:]
 	}
 
+    // Non presistent local attributes, setup when initialising the view
+    var currentTaskIndex = -1
 	var updateActiveActivityTimer: NSTimer?
 	var signInSignOutView: ToolView?
 	var infoAreaView: ToolView?
 	var settingsView: ToolView?
-    var currentWork: Work?
 
 
 

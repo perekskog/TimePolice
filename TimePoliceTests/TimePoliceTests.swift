@@ -194,7 +194,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme,  taskSelectionStrategy: tsa, taskList: tl1, totalTimeActive: [:], numberOfTimesActivated: [:])
         tp1.setup()
 
         for i in 0..<tp1.layout.numberOfSelectionAreas() {
@@ -234,7 +234,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskSelectionStrategy: tsa, taskList: tl1, totalTimeActive: [:], numberOfTimesActivated: [:])
         
         tp1.setup()
 
@@ -285,7 +285,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let s1 = Session(name: s1Name, taskList: tl1)
         let tsa = TaskSelectAny()
         let tsh = TaskSelectionHelper()
-        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskList: tl1, taskSelectionStrategy: tsa)
+        let tp1 = TaskPicker(statustext: UITextView(), workspace: view1, layout: layout, theme: theme, taskSelectionStrategy: tsa, taskList: tl1, totalTimeActive: [:], numberOfTimesActivated: [:])
         tp1.setup()
 
         XCTAssertEqual(tsh.taskSignInList, [])
