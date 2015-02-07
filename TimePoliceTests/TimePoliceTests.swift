@@ -221,7 +221,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     }
 
-
+/*
     func testTaskPicker2() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
@@ -272,7 +272,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(signoutlist, [t1, t3, t2])
 
     }
-
+*/
+    
     func testTaskPicker3() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
