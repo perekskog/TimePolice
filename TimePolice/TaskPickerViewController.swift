@@ -30,6 +30,7 @@ class TaskPickerViewController: UIViewController
         
         (self.view as TimePoliceBackgroundView).theme = theme
 
+/*
         taskList = [
             Task(name: "I F2F"), Task(name: "---"), Task(name: "I Lync"),
             Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "I Blixt"),
@@ -39,14 +40,18 @@ class TaskPickerViewController: UIViewController
             Task(name: "N Connect"), Task(name: "N Down"), Task(name: "N Time in"),
             Task(name: "N Walking"), Task(name: "N Coffee/WC"),  Task(name: "N Other"),
 		]
-        
-/*
-        taskList = [
-            Task(name: "Out"), Task(name: "Down"), Task(name: "Other"),
-            Task(name: "Omnifocus"), Task(name: "Evernote"), Task(name: "---"),
-            Task(name: "Dev"), Task(name: "Media")
-        ]
+
 */
+
+        taskList = [
+            Task(name: "I F2F"), Task(name: "---"), Task(name: "I Chat"),
+            Task(name: "I Email"), Task(name: "---"), Task(name: "I Blixt"),
+            Task(name: "P OF"), Task(name: "---"), Task(name: "P Lista"),
+            Task(name: "P Hushåll"), Task(name: "---"), Task(name: "P Other"),
+            Task(name: "N Waste"), Task(name: "---"), Task(name: "N Work"),
+            Task(name: "N Connect"), Task(name: "N Down"), Task(name: "N Time in"),
+            Task(name: "---"), Task(name: "N Coffee/WC"),  Task(name: "N Other"),
+        ]
         
         if let workspace = taskPickerView {
             tp = TaskPicker(statustext: statustext, workspace: workspace, 
