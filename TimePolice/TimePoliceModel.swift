@@ -7,42 +7,36 @@
 //
 
 import Foundation
+import CoreData
 
-/////////////////////////////////////////
-// Project
+/*
+class Address: NSManagedObject {
 
-// TODO: Add check for taskSelectionStrategy and sessionList
-func == (lhs: Project, rhs: Project) -> Bool {
-    return (lhs.name == rhs.name
-    && lhs.taskList == rhs.taskList)
+    class func createInMOC(moc: NSManagedObjectContext, street: String, number: String, city:String, country:String) -> Address {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Address", inManagedObjectContext: moc) as Address
+        newItem.street = street
+        newItem.number = number
+        newItem.city = city
+        newItem.country = country
+        newItem.created = NSDate()
+
+        return newItem
+    }
+
+    @NSManaged var street: String
+    @NSManaged var number: String
+    @NSManaged var city: String
+    @NSManaged var country: String
+    @NSManaged var created: NSDate
+    @NSManaged var persons: NSSet
+
 }
-
-class Project: Equatable {
-	var name: String
-	var taskSelectionStrategy: TaskSelectionStrategy!
-    var taskList: [Task]!
-    var sessionList: [String:Session]!
-
-    init(name: String, taskSelectionStrategy: TaskSelectionStrategy, taskList: [Task]) {
-    	self.name = name
-        self.taskSelectionStrategy = taskSelectionStrategy
-        self.taskList = taskList
-        self.sessionList = [:]
-    }
-
-    func addSession(session: Session) {
-    	sessionList[session.name] = session
-    }
-
-    func removeSession(session: Session) {
-    	sessionList[session.name] = nil
-    }
-    
-}
+*/
 
 ////////////////////////////////////////////////
 // Session and SessionTaskListUpdateDelegate
 
+/*
 class Session {	
 	var name: String!
 	var taskList: [Task]!
@@ -69,7 +63,7 @@ class Session {
         currentWork = nil
     }
 }
-
+*/
 /////////////////////////////
 // Work and Task
 

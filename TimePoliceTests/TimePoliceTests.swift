@@ -21,6 +21,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         super.tearDown()
     }
    
+    /*
      func testProject() {
         let t1 = Task(name:"t1")
         let t2 = Task(name:"t1")
@@ -47,7 +48,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(s2Name, p1.sessionList[s2Name]!.name)
         XCTAssert(nil==p1.sessionList[s1Name])
     }
-
+*/
+    /*
     func testSession() {
         let t1 = Task(name:"t1")
         let t2 = Task(name:"t1")
@@ -70,6 +72,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(s1.workDone[0].task, t1)
         XCTAssertEqual(s1.workDone[1].task, t2)
     }
+*/
 
     func testWork() {
         // No tests, just a "struct"
@@ -182,6 +185,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
             }
     }
 
+    /*
     func testTaskPicker1() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
@@ -220,7 +224,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         }
 
     }
-
+*/
 /*
     func testTaskPicker2() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
@@ -273,7 +277,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     }
 */
-    
+    /*
     func testTaskPicker3() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))
         let layout = GridLayout(rows: 2, columns: 1)
@@ -319,7 +323,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(signoutlist, [t1], "taskSignOutList=\(signoutlist[0].name)")
 
     }
-
+*/
 /*
 
     func testWorkSpace() {
