@@ -11,18 +11,11 @@ import UIKit
 
 class TaskPickerViewController: UIViewController
 	{
-    
-    @IBOutlet var taskPickerView: TaskPickerBackgroundView!
-    @IBOutlet var statustext: UITextView!
 
     var taskList: [Task]?
-    var tp: TaskPicker?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        TextViewLogger.reset(statustext)
-        TextViewLogger.log(statustext, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
         let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3)
@@ -30,41 +23,35 @@ class TaskPickerViewController: UIViewController
         
         (self.view as TimePoliceBackgroundView).theme = theme
 
-/*
-        taskList = [
-            Task(name: "I F2F"), Task(name: "---"), Task(name: "I Lync"),
-            Task(name: "I Email"), Task(name: "I Ticket"), Task(name: "I Blixt"),
-            Task(name: "P OF"), Task(name: "P Task"), Task(name: "P Ticket"),
-            Task(name: "P US"), Task(name: "P Meeting"), Task(name: "P Other"),
-            Task(name: "N Waste"), Task(name: "---"), Task(name: "N Not work"),
-            Task(name: "N Connect"), Task(name: "N Down"), Task(name: "N Time in"),
-            Task(name: "N Walking"), Task(name: "N Coffee/WC"),  Task(name: "N Other"),
-		]
+        var tpRect = self.view.bounds
+        tpRect.origin.x = 5
+        tpRect.size.width -= 10
+        tpRect.origin.y += 30
+        tpRect.size.height -= 160
+        let tpView = TaskPickerBackgroundView(frame: tpRect)
+        self.view.addSubview(tpView)
 
-*/
-
-        taskList = [
-            Task(name: "I F2F"), Task(name: "---"), Task(name: "I Chat"),
-            Task(name: "I Email"), Task(name: "---"), Task(name: "I Blixt"),
-            Task(name: "P OF"), Task(name: "---"), Task(name: "P Lista"),
-            Task(name: "P Hushåll"), Task(name: "---"), Task(name: "P Other"),
-            Task(name: "N Waste"), Task(name: "---"), Task(name: "N Work"),
-            Task(name: "N Connect"), Task(name: "N Down"), Task(name: "N Time in"),
-            Task(name: "---"), Task(name: "N Coffee/WC"),  Task(name: "N Other"),
-        ]
+        var statusRect = self.view.bounds
+        statusRect.origin.x = 5
+        statusRect.size.width -= 10
+        statusRect.origin.y = statusRect.size.height-110
+        statusRect.size.height = 100
+        let statusView = UITextView(frame: statusRect)
+        self.view.addSubview(statusView)
         
-        if let workspace = taskPickerView {
-            tp = TaskPicker(statustext: statustext, workspace: workspace, 
-                layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
-                taskList: taskList!, totalTimeActive: [:], numberOfTimesActivated:[:])
-            tp!.setup()
-        }
+        TextViewLogger.reset(statusView)
+        TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
+
+        var tp = TaskPicker(statustext: statusView, workspace: tpView,
+            layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
+            taskList: taskList!, totalTimeActive: [:], numberOfTimesActivated:[:])
+        tp.setup()
 
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+//        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
     }
 
 
