@@ -11,14 +11,17 @@ import CoreData
 
 class TimePoliceViewController: UIViewController {
 
-
+    var project: Project?
+    var session: Session?
     var taskList: [Task]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let newProject = Project.createInMOC(self.managedObjectContext!, name: "My project 1")
-        save()
-        dumpData()
+
+        project = Project.createInMOC(self.managedObjectContext!, name: "Project 1")
+
+        session = Session.createInMOC(self.managedObjectContext!, name: "Session 1.1")
+        session!.project = project!
 
         /*
         taskList = [
@@ -44,7 +47,20 @@ class TimePoliceViewController: UIViewController {
         ]
   */
     
-       taskList = [ Task.createInMOC(self.managedObjectContext!, name: "Dummy") ]
+       taskList = [ 
+            Task.createInMOC(self.managedObjectContext!, name: "I F2F"),
+            Task.createInMOC(self.managedObjectContext!, name: "---"),
+            Task.createInMOC(self.managedObjectContext!, name: "I Chat"),
+
+            Task.createInMOC(self.managedObjectContext!, name: "P OF"),
+            Task.createInMOC(self.managedObjectContext!, name: "---"),
+            Task.createInMOC(self.managedObjectContext!, name: "P Lista"),
+        ]
+
+        //save()
+        dumpData()
+
+
     }
 
     override func didReceiveMemoryWarning() {
