@@ -27,11 +27,7 @@
 		CBD182C81A08AAD2007BA9F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CBD182C61A08AAD2007BA9F7 /* LaunchScreen.xib */; };
 		CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182D31A08AAD2007BA9F7 /* TimePoliceTests.swift */; };
 		CBDBCE4E1A88273B00E33072 /* TimePolice.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */; };
-		CBDBCE501A88280B00E33072 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4F1A88280B00E33072 /* Session.swift */; };
-		CBDBCE521A88280C00E33072 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE511A88280C00E33072 /* Project.swift */; };
 		CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */; };
-		CBDBCE551A88316400E33072 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE511A88280C00E33072 /* Project.swift */; };
-		CBDBCE561A88316900E33072 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4F1A88280B00E33072 /* Session.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,8 +59,6 @@
 		CBD182D31A08AAD2007BA9F7 /* TimePoliceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePoliceTests.swift; sourceTree = "<group>"; };
 		CBDA2E601A4019FB00F5C568 /* bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bug.png; sourceTree = "<group>"; };
 		CBDBCE4D1A88273B00E33072 /* TimePolice.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimePolice.xcdatamodel; sourceTree = "<group>"; };
-		CBDBCE4F1A88280B00E33072 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		CBDBCE511A88280C00E33072 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,9 +154,7 @@
 		CBDBCE531A8828DB00E33072 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CBDBCE511A88280C00E33072 /* Project.swift */,
 				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
-				CBDBCE4F1A88280B00E33072 /* Session.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -267,14 +259,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBDBCE501A88280B00E33072 /* Session.swift in Sources */,
 				CB0B0AE61A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
 				CBD182C01A08AAD2007BA9F7 /* TaskPickerViewController.swift in Sources */,
 				CB0B0AEC1A815B0100D22A08 /* Utilities.swift in Sources */,
 				CBDBCE4E1A88273B00E33072 /* TimePolice.xcdatamodeld in Sources */,
 				CB0B0AF21A8177DA00D22A08 /* TimePoliceViewController.swift in Sources */,
 				CB0B0AE91A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
-				CBDBCE521A88280C00E33072 /* Project.swift in Sources */,
 				CB623C101A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CB623C0D1A7ED728004AE917 /* TaskPickerTheme.swift in Sources */,
 				CBD182BE1A08AAD2007BA9F7 /* AppDelegate.swift in Sources */,
@@ -288,11 +278,9 @@
 				CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
 				CB3418771A0B4F580062C281 /* TaskPickerViewController.swift in Sources */,
 				CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */,
-				CBDBCE551A88316400E33072 /* Project.swift in Sources */,
 				CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */,
 				CB0B0AF31A8177DA00D22A08 /* TimePoliceViewController.swift in Sources */,
 				CB0B0AEA1A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
-				CBDBCE561A88316900E33072 /* Session.swift in Sources */,
 				CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CB623C0E1A7ED728004AE917 /* TaskPickerTheme.swift in Sources */,
 				CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */,

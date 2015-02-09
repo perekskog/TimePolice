@@ -78,7 +78,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         // No tests, just a "struct"
         XCTAssert(true)
     }
- 
+ /*
     func testTask() {
         let t1 = Task(name:"t1")
         let t2 = Task(name:"t1")
@@ -90,7 +90,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertNotEqual(t2.name, t3.name, "\(t2.name),\(t3.name)")
         XCTAssertNotEqual(t1.name, t3.name, "\(t1.name),\(t3.name)")
     }
-
+*/
+    /*
     func testTaskSelectAny() {
         let t1 = Task(name:"t1")
         let t2 = Task(name:"t2")
@@ -102,7 +103,8 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(tl, tsa.selectableTasks(tl))
         tsa.taskUnselected(t1)
     }
-
+*/
+    /*
     func testTaskSelectInSequence() {
         let t1 = Task(name:"t1")
         let t2 = Task(name:"t2")
@@ -134,7 +136,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         tsa.taskUnselected(t3)
         XCTAssertEqual(tl1, tsa.selectableTasks(tl1), "\(tsa.selectableTasks(tl1))")
 }
-
+*/
     func testLayout() {
         let gl1 = GridLayout(rows: 4, columns: 2)
         XCTAssertEqual(gl1.numberOfSelectionAreas(), 8)
@@ -156,6 +158,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let bt1 = BasicTheme()
     }
 
+    /*
     class TaskSelectionHelper : SelectionAreaInfoDelegate {
             var taskSignInList: [Task]
             var taskSignOutList: [[Task]]
@@ -184,7 +187,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
                 return selectionAreaInfo
             }
     }
-
+*/
     /*
     func testTaskPicker1() {
         let view1 = TaskPickerBackgroundView(frame: CGRect(x: 0, y:0, width:200, height:320))

@@ -8,6 +8,7 @@
 
 
 import UIKit
+import CoreData
 
 class TaskPickerViewController: UIViewController
 	{
@@ -216,8 +217,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         if let work = currentWork {
             // Sign out
-            let taskIndex = find(taskList, work.task)
-            taskSignOut(work.task)
+            let taskIndex = find(taskList, work.task as Task)
+            taskSignOut(work.task as Task)
             views[taskIndex!]?.setNeedsDisplay()
         } else {
             // Sign in if there is a previous task to sign in to
@@ -239,8 +240,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
         if let work = currentWork {
-            let taskIndex = find(taskList, work.task)
-            taskSignOut(work.task)
+            let taskIndex = find(taskList, work.task as Task)
+            taskSignOut(work.task as Task)
             views[taskIndex!]?.setNeedsDisplay()
         }
 
@@ -259,7 +260,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func taskSignIn(task: Task) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
-        currentWork = Work(task: task)
+        currentWork = Work.createInMOC(self.managedObjectContext!)
+        currentWork?.task = task
         currentWork?.startTime = NSDate()
     }
 
@@ -272,16 +274,16 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             work.stopTime = NSDate()
 
             var nn = 1
-            if var n = numberOfTimesActivated[task.id]? {
+            if var n = numberOfTimesActivated[task.name]? {
                 nn = n+1
             }
-            numberOfTimesActivated[task.id] = nn
+            numberOfTimesActivated[task.name] = nn
 
             var mm = work.stopTime.timeIntervalSinceDate(work.startTime)
-        	if var m = totalTimeActive[task.id]? {
+        	if var m = totalTimeActive[task.name]? {
                 mm = m + mm
             }
-            totalTimeActive[task.id] = mm
+            totalTimeActive[task.name] = mm
 
             previousTask = work.task
         }
@@ -298,7 +300,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func updateActiveTask(timer: NSTimer) {
 //        if currentTaskIndex >= 0 {
         if let currentTask = currentWork?.task {
-            if let currentTaskIndex = find(taskList, currentTask) {
+            if let currentTaskIndex = find(taskList, currentTask as Task) {
                 let view = views[currentTaskIndex]
                 views[currentTaskIndex]?.setNeedsDisplay()
                 infoAreaView?.setNeedsDisplay()
@@ -314,11 +316,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
 		let task = taskList![selectionArea]
         var nn: Int = 0
-        if let n = numberOfTimesActivated[task.id]? {
+        if let n = numberOfTimesActivated[task.name]? {
             nn = n
         }
         var mm: NSTimeInterval = 0
-        if let m = totalTimeActive![task.id]? {
+        if let m = totalTimeActive![task.name]? {
             mm = m
         }
         var active = false
@@ -366,6 +368,37 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     		totalTimeActiveForSession: totalTime)
 
     	return toolbarInfo
+    }
+
+    /////////////////////
+    // CoreData
+    
+    lazy var managedObjectContext : NSManagedObjectContext? = {
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        if let managedObjectContext = appDelegate.managedObjectContext {
+            return managedObjectContext
+        }
+        else {
+            return nil
+        }
+        }()
+    
+    func save() {
+        var error : NSError?
+        if(managedObjectContext!.save(&error) ) {
+            println("Save: error(\(error?.localizedDescription))")
+        }
+    }
+    
+    
+    func dumpData() {
+        println("Projects")
+        let fetchRequest1 = NSFetchRequest(entityName: "Project")
+        if let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest1, error: nil) as? [Project] {
+            for project in fetchResults {
+                println("\(project.name)")
+            }
+        }
     }
 
 

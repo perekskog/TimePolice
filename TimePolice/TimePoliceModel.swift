@@ -9,6 +9,83 @@
 import Foundation
 import CoreData
 
+
+class Project: NSManagedObject {
+
+    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as Project
+
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "\(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.name = name
+
+        return newItem
+    }
+
+    @NSManaged var id: String
+    @NSManaged var name: String
+    @NSManaged var sessions: NSOrderedSet
+
+}
+
+class Session: NSManagedObject {
+
+    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Session {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as Session
+
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "\(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.name = name
+
+        return newItem
+    }
+
+    @NSManaged var id: String
+    @NSManaged var name: String
+    @NSManaged var currentWork: Work
+    @NSManaged var project: Project
+    @NSManaged var workDone: NSOrderedSet
+
+}
+
+class Work: NSManagedObject {
+
+    class func createInMOC(moc: NSManagedObjectContext) -> Work {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as Work
+
+        return newItem
+    }
+
+
+    @NSManaged var startTime: NSDate
+    @NSManaged var stopTime: NSDate
+    @NSManaged var session: Session
+    @NSManaged var task: Task
+
+}
+
+class Task: NSManagedObject {
+
+    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Task {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as Task
+
+        newItem.name = name
+
+        return newItem
+    }
+
+    @NSManaged var name: String
+    @NSManaged var work: Work
+
+}
+
+
 /*
 class Address: NSManagedObject {
 
@@ -67,6 +144,7 @@ class Session {
 /////////////////////////////
 // Work and Task
 
+/*
 class Work {
 	var task: Task!
     var startTime: NSDate!
@@ -83,7 +161,9 @@ class Work {
 func == (lhs: Task, rhs: Task) -> Bool {
     return lhs.id == rhs.id
 }
+*/
 
+/*
 class Task: Equatable {
 	var id: String!
 	var name: String!
@@ -103,4 +183,4 @@ class Task: Equatable {
 		self.name = name
 	}
 }
-
+*/
