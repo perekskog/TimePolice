@@ -19,7 +19,7 @@ class Project: NSManagedObject {
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "\(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.id = "\(name) - \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
         return newItem
@@ -40,7 +40,7 @@ class Session: NSManagedObject {
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "\(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.id = "\(name) \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
         return newItem
