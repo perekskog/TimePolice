@@ -28,8 +28,8 @@ class TaskPickerViewController: UIViewController
         tpRect.size.width -= 10
         tpRect.origin.y += 30
         tpRect.size.height -= 160
-        let tpView = TaskPickerBackgroundView(frame: tpRect)
-        self.view.addSubview(tpView)
+        let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
+        self.view.addSubview(taskPickerBackgroundView)
 
         var statusRect = self.view.bounds
         statusRect.origin.x = 5
@@ -42,7 +42,7 @@ class TaskPickerViewController: UIViewController
         TextViewLogger.reset(statusView)
         TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
-        var tp = TaskPicker(statustext: statusView, workspace: tpView,
+        var tp = TaskPicker(statustext: statusView, backgroundView: taskPickerBackgroundView,
             layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
             taskList: taskList!, totalTimeActive: [:], numberOfTimesActivated:[:])
         tp.setup()
@@ -62,33 +62,33 @@ class TaskPickerViewController: UIViewController
 // TaskPicker and TaskPickerTaskSelectionDelegate
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
-	// Persistent attributes, set in init
-    var statustext: UITextView
-    var workspace:TaskPickerBackgroundView!
+    // Persistent data form the model, set at creation time
+    var taskList: [Task]!
+    var currentWork: Work?
+    var previousTask: Task?
 
-    // Preferences, set in init
+	// Views, set at creation time
+    var statustext: UITextView
+    var backgroundView:TaskPickerBackgroundView!
+
+    // Preferences, set at creation time
 	var layout: Layout!
 	var theme: Theme!
     var taskSelectionStrategy: TaskSelectionStrategy!
 
-    // Persistent attributes, to be replaced by a persistent session object
-    var taskList: [Task]!
+    // Cached values, calculated at startup
 	var totalTimeActive: [String: NSTimeInterval]!
     var numberOfTimesActivated: [String: Int]!
 
-    // Persistent attributes, to be set by creator if they are set
-    var currentWork: Work?
-    var previousTask: Task?
-
-    // Non persitent attributes, initialized in init(), then set in setup()
+    // Non persitent data, initialized in init(), then set in setup()
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: TaskPickerButtonView]!
 	
-    init(statustext: UITextView, workspace:TaskPickerBackgroundView, 
+    init(statustext: UITextView, backgroundView:TaskPickerBackgroundView, 
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         taskList: [Task], totalTimeActive: [String: NSTimeInterval], numberOfTimesActivated: [String: Int]) {
         self.statustext = statustext
-        self.workspace = workspace
+        self.backgroundView = backgroundView
 
 		self.layout = layout
 		self.theme = theme
@@ -114,12 +114,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// Uninitialized properties
 
 	func setup() {
-		workspace.theme = theme
+		backgroundView.theme = theme
 
 		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
-			let viewRect = layout.getViewRect(workspace.frame, selectionArea: i)
+			let viewRect = layout.getViewRect(backgroundView.frame, selectionArea: i)
             let view = TaskPickerButtonView(frame: viewRect)
 			view.theme = theme
 			view.selectionAreaInfoDelegate = self
@@ -132,11 +132,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 			recognizers[recognizer] = i
             views[i] = view
 
-			workspace.addSubview(view)
+			backgroundView.addSubview(view)
 		}
 
 		// Setup sign in/out button
-		var viewRect = layout.getViewRect(workspace.frame, selectionArea: SignInSignOut)
+		var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
 	    signInSignOutView = ToolView(frame: viewRect)
 		signInSignOutView!.theme = theme
 		signInSignOutView!.toolbarInfoDelegate = self
@@ -146,19 +146,19 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	    recognizer.delegate = self
 	    signInSignOutView!.addGestureRecognizer(recognizer)
 
-		workspace.addSubview(signInSignOutView!)
+		backgroundView.addSubview(signInSignOutView!)
 
 		// Setup infoarea
-		viewRect = layout.getViewRect(workspace.frame, selectionArea: InfoArea)
+		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: InfoArea)
 	    infoAreaView = ToolView(frame: viewRect)
 		infoAreaView!.theme = theme
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
 
-		workspace.addSubview(infoAreaView!)
+		backgroundView.addSubview(infoAreaView!)
 
 		// Setup settings
-		viewRect = layout.getViewRect(workspace.frame, selectionArea: Settings)
+		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: Settings)
 	    settingsView = ToolView(frame: viewRect)
 		settingsView!.theme = theme
 		settingsView!.toolbarInfoDelegate = self
@@ -168,7 +168,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	    recognizer.delegate = self
 	    settingsView!.addGestureRecognizer(recognizer)
 
-		workspace.addSubview(settingsView!)
+		backgroundView.addSubview(settingsView!)
         
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                                    target: self,

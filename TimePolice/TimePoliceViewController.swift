@@ -52,6 +52,8 @@ class TimePoliceViewController: UIViewController {
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as TaskPickerViewController
             vc.taskList = taskList
+            // vc.currentWork = session.currentWork
+            // vc.previousTask = session.previousTask
         } 
     }
 
