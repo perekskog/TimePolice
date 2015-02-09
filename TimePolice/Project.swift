@@ -11,6 +11,13 @@ import CoreData
 
 class Project: NSManagedObject {
 
+	class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as Project
+        newItem.name = name
+
+        return newItem
+    }
+
     @NSManaged var name: String
     @NSManaged var sessions: NSOrderedSet
 

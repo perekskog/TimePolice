@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import CoreData
 
 class TimePoliceViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let newProject = Project.createInMOC(self.managedObjectContext!, name: "My project 1")
+        save()
+        dumpData()
         // Do any additional setup after loading the view.
     }
 
@@ -52,4 +55,34 @@ class TimePoliceViewController: UIViewController {
         } 
     }
 
+    /////////////////////
+    // CoreData
+
+    lazy var managedObjectContext : NSManagedObjectContext? = {
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        if let managedObjectContext = appDelegate.managedObjectContext {
+            return managedObjectContext
+        }
+        else {
+            return nil
+        }
+        }()
+
+    func save() {
+       var error : NSError?
+        if(managedObjectContext!.save(&error) ) {
+            println("Save: error(\(error?.localizedDescription))")
+        }
+    }
+
+    
+    func dumpData() {
+        println("Projects")
+        let fetchRequest1 = NSFetchRequest(entityName: "Project")
+        if let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest1, error: nil) as? [Project] {
+            for project in fetchResults {
+                println("\(project.name)")
+            }
+        }
+    }
 }

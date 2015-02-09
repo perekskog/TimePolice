@@ -29,6 +29,9 @@
 		CBDBCE4E1A88273B00E33072 /* TimePolice.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */; };
 		CBDBCE501A88280B00E33072 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4F1A88280B00E33072 /* Session.swift */; };
 		CBDBCE521A88280C00E33072 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE511A88280C00E33072 /* Project.swift */; };
+		CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */; };
+		CBDBCE551A88316400E33072 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE511A88280C00E33072 /* Project.swift */; };
+		CBDBCE561A88316900E33072 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDBCE4F1A88280B00E33072 /* Session.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,8 +160,8 @@
 		CBDBCE531A8828DB00E33072 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
 				CBDBCE511A88280C00E33072 /* Project.swift */,
+				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
 				CBDBCE4F1A88280B00E33072 /* Session.swift */,
 			);
 			name = Model;
@@ -285,8 +288,11 @@
 				CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
 				CB3418771A0B4F580062C281 /* TaskPickerViewController.swift in Sources */,
 				CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */,
+				CBDBCE551A88316400E33072 /* Project.swift in Sources */,
+				CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */,
 				CB0B0AF31A8177DA00D22A08 /* TimePoliceViewController.swift in Sources */,
 				CB0B0AEA1A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
+				CBDBCE561A88316900E33072 /* Session.swift in Sources */,
 				CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CB623C0E1A7ED728004AE917 /* TaskPickerTheme.swift in Sources */,
 				CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */,
