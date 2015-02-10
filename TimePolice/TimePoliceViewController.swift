@@ -99,7 +99,7 @@ class TimePoliceViewController: UIViewController {
             Task.createInMOC(self.managedObjectContext!, name: "N Down"),
             Task.createInMOC(self.managedObjectContext!, name: "N Time-in"),
 
-            Task.createInMOC(self.managedObjectContext!, name: "N Walking"),
+            Task.createInMOC(self.managedObjectContext!, name: "N Physical"),
             Task.createInMOC(self.managedObjectContext!, name: "N Coffe/WC"),
             Task.createInMOC(self.managedObjectContext!, name: "N Other"),
         ]
@@ -123,7 +123,7 @@ class TimePoliceViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as TaskPickerViewController
-            vc.taskList = taskListHome
+            vc.taskList = taskListWork
             // vc.currentWork = session.currentWork
             // vc.previousTask = session.previousTask
         } 

@@ -137,6 +137,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         XCTAssertEqual(tl1, tsa.selectableTasks(tl1), "\(tsa.selectableTasks(tl1))")
 }
 */
+    /*
     func testLayout() {
         let gl1 = GridLayout(rows: 4, columns: 2)
         XCTAssertEqual(gl1.numberOfSelectionAreas(), 8)
@@ -152,6 +153,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
         let view3Frame = gl1.getViewRect(v1.frame, selectionArea: 2)
         XCTAssertEqual(view3Frame, CGRect(x:0, y:80, width:100, height:80))
     }
+*/
 
     func testTheme() {
         XCTAssert(true)

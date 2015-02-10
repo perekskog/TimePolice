@@ -18,8 +18,8 @@ class TaskPickerViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let theme = BasicTheme()
-        let layout = GridLayout(rows: 7, columns: 3)
+        let theme = BlackGreenTheme()
+        let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
         (self.view as TimePoliceBackgroundView).theme = theme
@@ -28,7 +28,7 @@ class TaskPickerViewController: UIViewController
         tpRect.origin.x = 5
         tpRect.size.width -= 10
         tpRect.origin.y += 30
-        tpRect.size.height -= 160
+        tpRect.size.height -= 158
         let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
         self.view.addSubview(taskPickerBackgroundView)
 
@@ -38,6 +38,9 @@ class TaskPickerViewController: UIViewController
         statusRect.origin.y = statusRect.size.height-110
         statusRect.size.height = 100
         let statusView = UITextView(frame: statusRect)
+        statusView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
+        statusView.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
+        statusView.font = UIFont.systemFontOfSize(10)
         self.view.addSubview(statusView)
         
         TextViewLogger.reset(statusView)

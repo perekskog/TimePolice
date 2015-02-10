@@ -22,12 +22,14 @@ protocol Layout {
 class GridLayout : Layout {
     var rows: Int
     var columns: Int
-    let toolbarHeight = 40
-    let padding = 2
+    var padding: Int
+    var toolbarHeight: Int
     
-    init(rows: Int, columns: Int) {
+    init(rows: Int, columns: Int, padding: Int, toolbarHeight: Int) {
         self.rows = rows
         self.columns = columns
+        self.padding = padding
+        self.toolbarHeight = toolbarHeight
     }
     
     func numberOfSelectionAreas() -> Int {
