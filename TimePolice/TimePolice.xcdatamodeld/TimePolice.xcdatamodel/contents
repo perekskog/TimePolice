@@ -13,19 +13,27 @@
         <relationship name="taskList" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Task" syncable="YES"/>
         <relationship name="workDone" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Work" inverseName="session" inverseEntity="Work" syncable="YES"/>
     </entity>
+    <entity name="SessionTemplate" representedClassName="TimePolice.SessionTemplate" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="taskList" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Task" syncable="YES"/>
+    </entity>
     <entity name="Task" representedClassName="TimePolice.Task" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Work" representedClassName="TimePolice.Work" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="stopTime" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="workDone" inverseEntity="Session" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Task" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Project" positionX="-342" positionY="-171" width="128" height="88"/>
+        <element name="Project" positionX="-342" positionY="-151" width="128" height="88"/>
         <element name="Session" positionX="-146" positionY="-166" width="128" height="133"/>
-        <element name="Task" positionX="-261" positionY="99" width="128" height="58"/>
-        <element name="Work" positionX="88" positionY="-121" width="128" height="103"/>
+        <element name="Task" positionX="-29" positionY="149" width="128" height="58"/>
+        <element name="Work" positionX="88" positionY="-153" width="128" height="133"/>
+        <element name="SessionTemplate" positionX="-243" positionY="81" width="128" height="88"/>
     </elements>
 </model>

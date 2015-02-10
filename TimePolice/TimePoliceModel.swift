@@ -19,7 +19,7 @@ class Project: NSManagedObject {
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "\(name) - \(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.id = "[Project] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
         return newItem
@@ -40,7 +40,7 @@ class Session: NSManagedObject {
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "\(name) \(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.id = "[Session] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
         return newItem
@@ -60,11 +60,19 @@ class Work: NSManagedObject {
     class func createInMOC(moc: NSManagedObjectContext) -> Work {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as Work
 
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+
         return newItem
     }
 
     @NSManaged var startTime: NSDate
     @NSManaged var stopTime: NSDate
+    @NSManaged var id: String
+    @NSManaged var name: String
     @NSManaged var session: Session
     @NSManaged var task: Task
 
@@ -84,4 +92,24 @@ class Task: NSManagedObject {
 
 }
 
+class SessionTemplate: NSManagedObject {
+
+    class func createInMOC(moc: NSManagedObjectContext, name: String) -> SessionTemplate {
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("SessionTemplate", inManagedObjectContext: moc) as SessionTemplate
+
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "[SessionTemplate] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        newItem.name = name
+
+        return newItem
+    }
+
+    @NSManaged var name: String
+    @NSManaged var id: String
+    @NSManaged var taskList: NSOrderedSet
+
+}
 
