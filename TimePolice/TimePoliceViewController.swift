@@ -25,7 +25,7 @@ class TimePoliceViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         project1 = Project.createInMOC(self.managedObjectContext!, name: "Home")
         project2 = Project.createInMOC(self.managedObjectContext!, name: "Work")
 

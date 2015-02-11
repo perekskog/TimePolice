@@ -17,7 +17,13 @@ class TaskPickerViewController: UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+//        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+//        self.navigationController!.navigationBar.barStyle = UIBarStyle.BlackTranslucent
+        
+//        self.navigationController!.navigationBar.barStyle = UIBarStyle.Black
+//        self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
+        
         let theme = BlackGreenTheme()
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
@@ -56,6 +62,14 @@ class TaskPickerViewController: UIViewController
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 //        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        var nav = self.navigationController?.navigationBar
+        nav?.barStyle = UIBarStyle.Black
+        nav?.tintColor = UIColor.whiteColor()
+        nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
     }
 
 
