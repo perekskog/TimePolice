@@ -24,7 +24,8 @@ class TaskPickerViewController: UIViewController
 //        self.navigationController!.navigationBar.barStyle = UIBarStyle.Black
 //        self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
         
-        let theme = BlackGreenTheme()
+//        let theme = BlackGreenTheme()
+        let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         

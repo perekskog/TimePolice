@@ -24,12 +24,14 @@ class GridLayout : Layout {
     var columns: Int
     var padding: Int
     var toolbarHeight: Int
+    var verticalSpacing: Int
     
     init(rows: Int, columns: Int, padding: Int, toolbarHeight: Int) {
         self.rows = rows
         self.columns = columns
         self.padding = padding
         self.toolbarHeight = toolbarHeight
+        self.verticalSpacing = 0
     }
     
     func numberOfSelectionAreas() -> Int {
@@ -56,9 +58,9 @@ class GridLayout : Layout {
         default:
             let row = selectionArea / columns
             let column = selectionArea % columns
-            let rowHeight = (Int(parentViewRect.height)-toolbarHeight) / rows
+            let rowHeight = (Int(parentViewRect.height)-toolbarHeight-verticalSpacing) / rows
             let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+toolbarHeight+2*padding, width:columnWidth-padding, height:rowHeight-padding)
+            let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+toolbarHeight+2*padding+verticalSpacing, width:columnWidth-padding, height:rowHeight-padding)
             
             return rect
         }
