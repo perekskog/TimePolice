@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TimePoliceViewController: UIViewController {
+class TimePoliceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     var project1: Project?
     var session11: Session?
@@ -22,6 +22,11 @@ class TimePoliceViewController: UIViewController {
 
     var sessionTemplate1: SessionTemplate?
     var sessionTemplate2: SessionTemplate?
+    
+    var logTableView = UITableView(frame: CGRectZero, style: .Plain)
+
+    var sessions: [Session]?
+    var selectedTaskList: [Task]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +117,18 @@ class TimePoliceViewController: UIViewController {
         //save()
         dumpData()
 
+        var viewFrame = self.view.frame
+        viewFrame.origin.y += 80
+        viewFrame.size.height -= 80
+        logTableView.frame = viewFrame
+        self.view.addSubview(logTableView)
+        logTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TimePoliceSessionCell")
+        logTableView.dataSource = self
+        logTableView.delegate = self
+        let fetchRequest = NSFetchRequest(entityName: "Session")
+        if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            self.sessions = sessions
+        }
 
     }
 
@@ -123,10 +140,37 @@ class TimePoliceViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as TaskPickerViewController
-            vc.taskList = taskListWork
+            vc.taskList = selectedTaskList
+            for task in selectedTaskList! {
+                print("\(task.name)   ")
+            }
             // vc.currentWork = session.currentWork
             // vc.previousTask = session.previousTask
         } 
+    }
+    
+    /////////////////////
+    // UITableView
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let s = sessions {
+            return s.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as UITableViewCell
+        cell.textLabel?.text = sessions?[indexPath.row].name
+        return cell
+    }
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let session = sessions?[indexPath.row] {
+            selectedTaskList = session.taskList.array as [Task]
+        }
+        performSegueWithIdentifier("TaskPicker", sender: self)
     }
 
     /////////////////////

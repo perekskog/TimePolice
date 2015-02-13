@@ -47,6 +47,7 @@ class TaskPickerViewController: UIViewController
         statusView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         statusView.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
         statusView.font = UIFont.systemFontOfSize(10)
+        statusView.editable = false
         self.view.addSubview(statusView)
         
         TextViewLogger.reset(statusView)
