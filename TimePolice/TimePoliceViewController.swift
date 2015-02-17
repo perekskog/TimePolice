@@ -20,9 +20,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     var session22: Session?
     var taskListWork: [Task]?
 
-    var sessionTemplate1: SessionTemplate?
-    var sessionTemplate2: SessionTemplate?
-    
     var logTableView = UITableView(frame: CGRectZero, style: .Plain)
 
     var sessions: [Session]?
@@ -36,12 +33,13 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
         session11 = Session.createInMOC(self.managedObjectContext!, name: "Home 1")
         session11!.project = project1!
+        project1!.sessions = NSSet(array: [session11!])
 
         session21 = Session.createInMOC(self.managedObjectContext!, name: "Work 1")
         session21!.project = project2!
-
         session22 = Session.createInMOC(self.managedObjectContext!, name: "Work 2")
         session22!.project = project2!
+        project2!.sessions = NSSet(array:[session21!, session22!])
 
         // Personal
         taskListHome = [ 
@@ -74,9 +72,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             Task.createInMOC(self.managedObjectContext!, name: "N Other"),
         ]
 
-        sessionTemplate1 = SessionTemplate.createInMOC(self.managedObjectContext!, name: "Home")
-        sessionTemplate1!.taskList = NSOrderedSet(array:taskListHome!)
-        session11!.taskList = sessionTemplate1!.taskList
+        session11!.tasks = NSOrderedSet(array: taskListHome!)
 
         // Work
         taskListWork = [ 
@@ -109,10 +105,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             Task.createInMOC(self.managedObjectContext!, name: "N Other"),
         ]
 
-        sessionTemplate2 = SessionTemplate.createInMOC(self.managedObjectContext!, name: "Work")       
-        sessionTemplate2!.taskList = NSOrderedSet(array:taskListWork!)
-        session21!.taskList = sessionTemplate2!.taskList
-        session22!.taskList = sessionTemplate2!.taskList
+        session21!.tasks = NSOrderedSet(array: taskListWork!)
+        session22!.tasks = NSOrderedSet(array: taskListWork!)
     
         //save()
         dumpData()
@@ -168,7 +162,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let session = sessions?[indexPath.row] {
-            selectedTaskList = session.taskList.array as [Task]
+            selectedTaskList = session.tasks.array as [Task]
         }
         performSegueWithIdentifier("TaskPicker", sender: self)
     }
@@ -209,19 +203,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
 
-        println("\n-----------------------------------")
-        println("----------SessionTemplate----------\n")
-        fetchRequest = NSFetchRequest(entityName: "SessionTemplate")
-        if let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [SessionTemplate] {
-            for sessionTemplate in fetchResults {
-                println("ST: \(sessionTemplate.name)-\(sessionTemplate.id)")
-                sessionTemplate.taskList.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    let task = elem as Task
-                    println("    T: \(task.name)")
-                }
-            }
-        }
-
         println("\n---------------------------")
         println("----------Session----------\n")
         fetchRequest = NSFetchRequest(entityName: "Session")
@@ -229,11 +210,11 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             for session in fetchResults {
                 println("S: \(session.name)-\(session.id)")
                 println("    P: \(session.project.name)-\(session.project.id)")
-                session.workDone.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as Work
                     println("    W: \(work.task.name)")
                 }
-                session.taskList.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as Task
                     println("    T: \(task.name)")
                 }

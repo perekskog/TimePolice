@@ -279,7 +279,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func taskSignIn(task: Task) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
-        currentWork = Work.createInMOC(self.managedObjectContext!)
+        currentWork = Work.createInMOC(self.managedObjectContext!, name: "")
         currentWork?.task = task
         currentWork?.startTime = NSDate()
     }
