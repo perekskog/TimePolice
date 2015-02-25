@@ -10,22 +10,21 @@
 import UIKit
 import CoreData
 
+//==================================================
+//==================================================
+//  TaskPickerViewController
+//==================================================
+
 class TaskPickerViewController: UIViewController
 	{
 
-    var taskList: [Task]?
+    var session: Session?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
-//        self.navigationController!.navigationBar.barStyle = UIBarStyle.BlackTranslucent
-        
-//        self.navigationController!.navigationBar.barStyle = UIBarStyle.Black
-//        self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
-        
-//        let theme = BlackGreenTheme()
-        let theme = BasicTheme()
+        let theme = BlackGreenTheme()
+//        let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
@@ -54,10 +53,16 @@ class TaskPickerViewController: UIViewController
         TextViewLogger.reset(statusView)
         TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
-        var tp = TaskPicker(statustext: statusView, backgroundView: taskPickerBackgroundView,
-            layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
-            taskList: taskList!, totalTimeActive: [:], numberOfTimesActivated:[:])
-        tp.setup()
+        if let s = session {
+            if let moc = self.managedObjectContext {
+                let tp = TaskPicker(statustext: statusView, backgroundView: taskPickerBackgroundView,
+                    layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
+                    session: s, moc: moc)
+            
+                tp.setup()
+            }
+        }
+
 
     }
 
@@ -74,18 +79,41 @@ class TaskPickerViewController: UIViewController
         nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
     }
 
-
+    
+    //---------------------------------------------
+    // TaskPickerViewController - CoreData MOC & save
+    //---------------------------------------------
+    
+    lazy var managedObjectContext : NSManagedObjectContext? = {
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        if let managedObjectContext = appDelegate.managedObjectContext {
+            return managedObjectContext
+        }
+        else {
+            return nil
+        }
+        }()
+    
+    func save() {
+        var error : NSError?
+        if(managedObjectContext!.save(&error) ) {
+            println("Save: error(\(error?.localizedDescription))")
+        }
+    }
+    
 }
 
 
-///////////////////////////////////////////////////
-// TaskPicker and TaskPickerTaskSelectionDelegate
+//==================================================
+//==================================================
+//  TaskPicker
+//==================================================
+
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
     // Persistent data form the model, set at creation time
+    var session: Session
     var taskList: [Task]!
-    var currentWork: Work?
-    var previousTask: Task?
 
 	// Views, set at creation time
     var statustext: UITextView
@@ -97,16 +125,25 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var taskSelectionStrategy: TaskSelectionStrategy!
 
     // Cached values, calculated at startup
-	var totalTimeActive: [String: NSTimeInterval]!
-    var numberOfTimesActivated: [String: Int]!
+	var sessionSummary: [Task: (Int, NSTimeInterval)]!
 
     // Non persitent data, initialized in init(), then set in setup()
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: TaskPickerButtonView]!
+    var moc: NSManagedObjectContext!
+
+    // Non persistent data, empty at start
+    var currentWork: Work?
+    var previousTask: Task?
+
 	
     init(statustext: UITextView, backgroundView:TaskPickerBackgroundView, 
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
-        taskList: [Task], totalTimeActive: [String: NSTimeInterval], numberOfTimesActivated: [String: Int]) {
+        session: Session,
+        moc: NSManagedObjectContext) {
+
+        self.session = session
+
         self.statustext = statustext
         self.backgroundView = backgroundView
 
@@ -114,12 +151,17 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		self.theme = theme
         self.taskSelectionStrategy = taskSelectionStrategy
 
-		self.taskList = taskList
-        self.totalTimeActive = totalTimeActive // Was: [:]
-        self.numberOfTimesActivated = numberOfTimesActivated // Was: [:]
+		self.taskList = session.tasks.array as [Task]
+        self.sessionSummary = session.getSessionSummary(moc)
+            
+        self.moc = moc
 
         self.recognizers = [:]
         self.views = [:]
+
+        self.taskList = session.tasks.array as [Task]
+        self.sessionSummary = session.getSessionSummary(moc)
+
 	}
 
     // Non presistent local attributes, setup when initialising the view
@@ -130,8 +172,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	var settingsView: ToolView?
 
 
-
-	// Uninitialized properties
+    //--------------------------------------------------
+	// TaskPicker - setup
+    //--------------------------------------------------
 
 	func setup() {
 		backgroundView.theme = theme
@@ -200,6 +243,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
 
+    //------------------------------------
+    //  TaskPicker - SelectionStrategy
+    //------------------------------------
 
 	// Gesture recognizer delegate
 
@@ -218,8 +264,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     }
 
 
-
-
+    //-------------------------------------
+    //  TaskPicker - Tap on buttons
+    //-------------------------------------
 
     // Tap on settings    
 
@@ -273,13 +320,16 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         infoAreaView?.setNeedsDisplay()
     }
 
+    //--------------------------------------------
+    //  TaskPicker - Sign int/out
+    //--------------------------------------------
 
     // Update currentWork when sign in to a task
 
     func taskSignIn(task: Task) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
-        currentWork = Work.createInMOC(self.managedObjectContext!, name: "")
+        currentWork = Work.createInMOC(self.moc, name: "")
         currentWork?.task = task
         currentWork?.startTime = NSDate()
     }
@@ -291,20 +341,18 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         if let work = currentWork {
             work.stopTime = NSDate()
-
-            var nn = 1
-            if var n = numberOfTimesActivated[task.name]? {
-                nn = n+1
+            if let taskSummary = sessionSummary[work.task] {
+                var (numberOfTimesActivated, totalTimeActive) = taskSummary
+                numberOfTimesActivated++
+                totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
+                sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
             }
-            numberOfTimesActivated[task.name] = nn
-
-            var mm = work.stopTime.timeIntervalSinceDate(work.startTime)
-        	if var m = totalTimeActive[task.name]? {
-                mm = m + mm
-            }
-            totalTimeActive[task.name] = mm
 
             previousTask = work.task
+    
+            let w = NSMutableOrderedSet(array: session.work.array)
+            w.addObject(work)
+            session.work = w
         }
 
         currentWork = nil
@@ -312,8 +360,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
 
-
-    // Periodic update of views, triggered by timeout
+    //---------------------------------------------------
+    // TaskPicker - Periodic update of views, triggered by timeout
+    //---------------------------------------------------
 
     @objc
     func updateActiveTask(timer: NSTimer) {
@@ -328,20 +377,21 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     }
 
 
-
+    //----------------------------------------------
+    //  TaskPicker - Button info
+    //----------------------------------------------
 
 	// SelectionAreaInfoDelegate
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
 		let task = taskList![selectionArea]
-        var nn: Int = 0
-        if let n = numberOfTimesActivated[task.name]? {
-            nn = n
+
+        var taskSummary: (Int, NSTimeInterval) = (0, 0)
+        if let t = sessionSummary[task] {
+            taskSummary = t
         }
-        var mm: NSTimeInterval = 0
-        if let m = totalTimeActive![task.name]? {
-            mm = m
-        }
+        let (numberOfTimesActivated, totalTimeActive) = taskSummary
+
         var active = false
         var activatedAt = NSDate()
         if let work = currentWork? {
@@ -350,10 +400,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 activatedAt = work.startTime
             }
         }
+
         let selectionAreaInfo = SelectionAreaInfo(
             task: task,
-            numberOfTimesActivated: nn,
-            totalTimeActive: mm,
+            numberOfTimesActivated: numberOfTimesActivated,
+            totalTimeActive: totalTimeActive,
             active: active,
             activatedAt: activatedAt)
  		return selectionAreaInfo
@@ -367,16 +418,15 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     		signedIn = true
     	}
 
-    	var totalActivations: Int = 1 // THe first task is active when first selected
-    	for (task, activations) in numberOfTimesActivated {
-    		totalActivations += activations
-    	}
-    	
+    	var totalActivations: Int = 1 // The first task is active when first selected
     	var totalTime: NSTimeInterval = 0
-    	for (task, time) in totalTimeActive {
+
+    	for (task, (activations, time)) in sessionSummary {
+    		totalActivations += activations
     		totalTime += time
-    	}
-    	if let work = currentWork {
+        }
+
+        if let work = currentWork {
 	    	let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
 	    	totalTime += timeForActiveTask
 	    }
@@ -388,38 +438,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     	return toolbarInfo
     }
-
-    /////////////////////
-    // CoreData
-    
-    lazy var managedObjectContext : NSManagedObjectContext? = {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
-        }()
-    
-    func save() {
-        var error : NSError?
-        if(managedObjectContext!.save(&error) ) {
-            println("Save: error(\(error?.localizedDescription))")
-        }
-    }
-    
-    
-    func dumpData() {
-        println("Projects")
-        let fetchRequest1 = NSFetchRequest(entityName: "Project")
-        if let fetchResults = managedObjectContext!.executeFetchRequest(fetchRequest1, error: nil) as? [Project] {
-            for project in fetchResults {
-                println("\(project.name)")
-            }
-        }
-    }
-
 
 }
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 
 class Project: NSManagedObject {
@@ -44,6 +45,23 @@ class Session: NSManagedObject {
         newItem.name = name
 
         return newItem
+    }
+    
+    func getSessionSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
+        var taskSummary: [Task: (Int, NSTimeInterval)] = [:]
+
+        self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+            let work = elem as Work
+            let task = work.task
+            if let t = taskSummary[task] {
+                var (activations, totalTime) = t
+                activations++
+                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                taskSummary[task] = (activations, totalTime)
+            }
+        }
+
+        return taskSummary
     }
 
     @NSManaged var id: String
@@ -97,6 +115,176 @@ class Work: NSManagedObject {
     @NSManaged var stopTime: NSDate
     @NSManaged var session: Session
     @NSManaged var task: Task
+
+}
+
+
+//-------------------------------------
+// TimePoliceModel - Debug
+//-------------------------------------
+
+class TimePoliceModelUtils {
+
+    class func reset(moc: NSManagedObjectContext) {
+    }
+
+    class func save(moc: NSManagedObjectContext) {
+    }
+
+    class func dumpData(moc: NSManagedObjectContext) {
+        var fetchRequest: NSFetchRequest
+
+        println("---------------------------")
+        println("----------Project----------\n")
+        fetchRequest = NSFetchRequest(entityName: "Project")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
+            for project in fetchResults {
+                println("P: \(project.name)-\(project.id)")
+                for session in project.sessions {
+                    println("    S: \(session.name)-\(session.id)")
+                    let s = session as Session  // Why is this needed?
+                    println("        P: \(s.project.name)-\(session.project.id)")
+                }
+            }
+        }
+
+        println("\n---------------------------")
+        println("----------Session----------\n")
+        fetchRequest = NSFetchRequest(entityName: "Session")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            for session in fetchResults {
+                println("S: \(session.name)-\(session.id)")
+                println("    P: \(session.project.name)-\(session.project.id)")
+                session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    let work = elem as Work
+                    println("    W: \(work.task.name)")
+                }
+                session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    let task = elem as Task
+                    println("    T: \(task.name)")
+                }
+            }
+        }
+
+        println("\n------------------------")
+        println("----------Work----------\n")
+        fetchRequest = NSFetchRequest(entityName: "Work")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
+            for work in fetchResults {
+                print("W: \(work.task.name)"   )
+            }
+        }
+
+        println("\n------------------------")
+        println("----------Task----------\n")
+        fetchRequest = NSFetchRequest(entityName: "Task")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
+            for task in fetchResults {
+                print("T: \(task.name)")
+            }
+        }
+
+    }
+
+}
+
+//----------------------------------------
+// TimePoliceModel - Test data
+//----------------------------------------
+
+class TestData {
+
+    class func addTestData1(managedObjectContext: NSManagedObjectContext) {
+        var project1: Project
+        var session11: Session
+        var taskListHome: [Task]
+
+        var project2: Project
+        var session21: Session
+        var session22: Session
+        var taskListWork: [Task]
+        
+        project1 = Project.createInMOC(managedObjectContext, name: "Home")
+        project2 = Project.createInMOC(managedObjectContext, name: "Work")
+
+        session11 = Session.createInMOC(managedObjectContext, name: "Home 1")
+        session11.project = project1
+        project1.sessions = NSSet(array: [session11])
+
+        session21 = Session.createInMOC(managedObjectContext, name: "Work 1")
+        session21.project = project2
+        session22 = Session.createInMOC(managedObjectContext, name: "Work 2")
+        session22.project = project2
+        project2.sessions = NSSet(array:[session21, session22])
+
+        // Personal
+        taskListHome = [ 
+            Task.createInMOC(managedObjectContext, name: "I F2F"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "I Chat"),
+
+            Task.createInMOC(managedObjectContext, name: "I Email"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "I Blixt"),
+
+            Task.createInMOC(managedObjectContext, name: "P OF"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "P Lista"),
+
+            Task.createInMOC(managedObjectContext, name: "P Hushåll"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "P Other"),
+
+            Task.createInMOC(managedObjectContext, name: "N Waste"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "N Work"),
+
+            Task.createInMOC(managedObjectContext, name: "N Connect"),
+            Task.createInMOC(managedObjectContext, name: "N Down"),
+            Task.createInMOC(managedObjectContext, name: "N Time-in"),
+
+            Task.createInMOC(managedObjectContext, name: "N Physical"),
+            Task.createInMOC(managedObjectContext, name: "N Coffe/WC"),
+            Task.createInMOC(managedObjectContext, name: "N Other"),
+        ]
+
+        session11.tasks = NSOrderedSet(array: taskListHome)
+
+        // Work
+        taskListWork = [ 
+            Task.createInMOC(managedObjectContext, name: "I F2F"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "I Lync"),
+
+            Task.createInMOC(managedObjectContext, name: "I Email"),
+            Task.createInMOC(managedObjectContext, name: "I Ticket"),
+            Task.createInMOC(managedObjectContext, name: "I Blixt"),
+
+            Task.createInMOC(managedObjectContext, name: "P OF"),
+            Task.createInMOC(managedObjectContext, name: "P Task"),
+            Task.createInMOC(managedObjectContext, name: "P Ticket"),
+
+            Task.createInMOC(managedObjectContext, name: "P US"),
+            Task.createInMOC(managedObjectContext, name: "P Meeting"),
+            Task.createInMOC(managedObjectContext, name: "P Other"),
+
+            Task.createInMOC(managedObjectContext, name: "N Waste"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "N Not work"),
+
+            Task.createInMOC(managedObjectContext, name: "N Connect"),
+            Task.createInMOC(managedObjectContext, name: "N Down"),
+            Task.createInMOC(managedObjectContext, name: "N Time-in"),
+
+            Task.createInMOC(managedObjectContext, name: "N Physical"),
+            Task.createInMOC(managedObjectContext, name: "N Coffe/WC"),
+            Task.createInMOC(managedObjectContext, name: "N Other"),
+        ]
+
+        session21.tasks = NSOrderedSet(array: taskListWork)
+        session22.tasks = NSOrderedSet(array: taskListWork)
+
+    }
 
 }
 
