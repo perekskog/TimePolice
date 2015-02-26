@@ -48,20 +48,22 @@ class Session: NSManagedObject {
     }
     
     func getSessionSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
-        var taskSummary: [Task: (Int, NSTimeInterval)] = [:]
+        var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             let work = elem as Work
             let task = work.task
-            if let t = taskSummary[task] {
-                var (activations, totalTime) = t
-                activations++
-                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
-                taskSummary[task] = (activations, totalTime)
+            var taskSummary: (Int, NSTimeInterval) = (0, 0)
+            if let t = sessionSummary[task] {
+                taskSummary = t
             }
+            var (activations, totalTime) = taskSummary
+            activations++
+            totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+            sessionSummary[task] = (activations, totalTime)
         }
 
-        return taskSummary
+        return sessionSummary
     }
 
     @NSManaged var id: String
@@ -125,10 +127,48 @@ class Work: NSManagedObject {
 
 class TimePoliceModelUtils {
 
-    class func reset(moc: NSManagedObjectContext) {
+    class func save(moc: NSManagedObjectContext) {
+        var error : NSError?
+        if(moc.save(&error) ) {
+            println("Save: error(\(error?.localizedDescription))")
+        }
+
     }
 
-    class func save(moc: NSManagedObjectContext) {
+    class func clearAllData(moc: NSManagedObjectContext) {
+        var fetchRequest: NSFetchRequest
+
+        // Delete all work
+        fetchRequest = NSFetchRequest(entityName: "Work")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
+            for work in fetchResults {
+                moc.deleteObject(work)
+            }
+        }
+
+        // Delete all tasks
+        fetchRequest = NSFetchRequest(entityName: "Task")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
+            for task in fetchResults {
+                moc.deleteObject(task)
+            }
+        }
+
+        // Delete all sessions
+        fetchRequest = NSFetchRequest(entityName: "Session")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            for session in fetchResults {
+                moc.deleteObject(session)
+            }
+        }
+
+        // Delete all projects
+        fetchRequest = NSFetchRequest(entityName: "Project")
+        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
+            for project in fetchResults {
+                moc.deleteObject(project)
+            }
+        }
     }
 
     class func dumpAllData(moc: NSManagedObjectContext) {

@@ -19,12 +19,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let moc = self.managedObjectContext {
-            TestData.addTestData1(moc)
-            TimePoliceModelUtils.save(moc)
-            TimePoliceModelUtils.dumpAllData(moc)
-        }
-    
         var viewFrame = self.view.frame
         viewFrame.origin.y += 80
         viewFrame.size.height -= 80
@@ -51,9 +45,44 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             vc.session = selectedSession
         } 
     }
+
+    //----------------------------------------
+    // TimePoliceViewController - Buttons
+    //----------------------------------------
     
-    /////////////////////
-    // UITableView
+    @IBAction func loadData(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            TestData.addTestData1(moc)
+            TimePoliceModelUtils.save(moc)
+            TimePoliceModelUtils.dumpAllData(moc)
+
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+                self.sessions = sessions
+            }
+
+            logTableView.reloadData()
+        }
+    }
+    
+    @IBAction func clearAllData(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            TimePoliceModelUtils.clearAllData(moc)
+            TimePoliceModelUtils.save(moc)
+            TimePoliceModelUtils.dumpAllData(moc)
+
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+                self.sessions = sessions
+            }
+
+            logTableView.reloadData()
+        }
+    }
+
+    //-----------------------------------------
+    // TimePoliceViewController- UITableView
+    //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let s = sessions {
@@ -76,8 +105,9 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         performSegueWithIdentifier("TaskPicker", sender: self)
     }
 
-    /////////////////////
-    // CoreData
+    //---------------------------------------
+    // TimePoliceViewController - CoreData
+    //---------------------------------------
 
     lazy var managedObjectContext : NSManagedObjectContext? = {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -88,12 +118,4 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             return nil
         }
         }()
-
-    func save() {
-       var error : NSError?
-        if(managedObjectContext!.save(&error) ) {
-            println("Save: error(\(error?.localizedDescription))")
-        }
-    }
-
 }

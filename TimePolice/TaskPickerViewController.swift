@@ -93,13 +93,6 @@ class TaskPickerViewController: UIViewController
         }
         }()
     
-    func save() {
-        var error : NSError?
-        if(managedObjectContext!.save(&error) ) {
-            println("Save: error(\(error?.localizedDescription))")
-        }
-    }
-    
 }
 
 
@@ -111,11 +104,10 @@ class TaskPickerViewController: UIViewController
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
     // Persistent data form the model, set at creation time
-    var session: Session
-    var taskList: [Task]!
+    var session: Session?
 
 	// Views, set at creation time
-    var statustext: UITextView
+    var statustext: UITextView!
     var backgroundView:TaskPickerBackgroundView!
 
     // Preferences, set at creation time
@@ -130,6 +122,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: TaskPickerButtonView]!
     var moc: NSManagedObjectContext!
+    var taskList: [Task]!
 
     // Non persistent data, empty at start
     var currentWork: Work?
@@ -347,16 +340,21 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
             previousTask = work.task
     
-            let w = NSMutableOrderedSet(array: session.work.array)
-            w.addObject(work)
-            session.work = w
+            if let s = session {
+                let w = NSMutableOrderedSet(array: s.work.array)
+                w.addObject(work)
+                s.work = w
+            }
+
+            TimePoliceModelUtils.save(moc)
         }
 
         currentWork = nil
 
-        TimePoliceModelUtils.dumpSessionWork(session)
-
-        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
+        if let s = session {
+            TimePoliceModelUtils.dumpSessionWork(s)
+            TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(s))
+        }
 
     }
 
@@ -423,9 +421,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     	var totalActivations: Int = 1 // The first task is active when first selected
     	var totalTime: NSTimeInterval = 0
 
-    	for (task, (activations, time)) in session.getSessionSummary(moc) {
-    		totalActivations += activations
-    		totalTime += time
+        if let s = session {
+            for (task, (activations, time)) in sessionSummary {
+                totalActivations += activations
+                totalTime += time
+            }
         }
 
         if let work = currentWork {
