@@ -423,7 +423,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     	var totalActivations: Int = 1 // The first task is active when first selected
     	var totalTime: NSTimeInterval = 0
 
-    	for (task, (activations, time)) in sessionSummary {
+    	for (task, (activations, time)) in session.getSessionSummary(moc) {
     		totalActivations += activations
     		totalTime += time
         }
