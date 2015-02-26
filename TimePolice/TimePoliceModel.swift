@@ -267,23 +267,11 @@ class TestData {
         var session11: Session
         var taskListHome: [Task]
 
-        var project2: Project
-        var session21: Session
-        var session22: Session
-        var taskListWork: [Task]
-        
         project1 = Project.createInMOC(managedObjectContext, name: "Home")
-        project2 = Project.createInMOC(managedObjectContext, name: "Work")
 
         session11 = Session.createInMOC(managedObjectContext, name: "Home 1")
         session11.project = project1
         project1.sessions = NSSet(array: [session11])
-
-        session21 = Session.createInMOC(managedObjectContext, name: "Work 1")
-        session21.project = project2
-        session22 = Session.createInMOC(managedObjectContext, name: "Work 2")
-        session22.project = project2
-        project2.sessions = NSSet(array:[session21, session22])
 
         // Personal
         taskListHome = [ 
@@ -317,41 +305,58 @@ class TestData {
         ]
 
         session11.tasks = NSOrderedSet(array: taskListHome)
+    }
 
+    class func addTestData2(managedObjectContext: NSManagedObjectContext) {
+
+        var project2: Project
+        var session21: Session
+        var session22: Session
+        var taskListWork: [Task]
+        
+        project2 = Project.createInMOC(managedObjectContext, name: "Work")
+        
+        session21 = Session.createInMOC(managedObjectContext, name: "Work 1")
+        session21.project = project2
+        session22 = Session.createInMOC(managedObjectContext, name: "Work 2")
+        session22.project = project2
+        project2.sessions = NSSet(array:[session21, session22])
+        
+        
         // Work
-        taskListWork = [ 
+        taskListWork = [
             Task.createInMOC(managedObjectContext, name: "I F2F"),
             Task.createInMOC(managedObjectContext, name: "---"),
             Task.createInMOC(managedObjectContext, name: "I Lync"),
-
+            
             Task.createInMOC(managedObjectContext, name: "I Email"),
             Task.createInMOC(managedObjectContext, name: "I Ticket"),
             Task.createInMOC(managedObjectContext, name: "I Blixt"),
-
+            
             Task.createInMOC(managedObjectContext, name: "P OF"),
             Task.createInMOC(managedObjectContext, name: "P Task"),
             Task.createInMOC(managedObjectContext, name: "P Ticket"),
-
+            
             Task.createInMOC(managedObjectContext, name: "P US"),
             Task.createInMOC(managedObjectContext, name: "P Meeting"),
             Task.createInMOC(managedObjectContext, name: "P Other"),
-
+            
             Task.createInMOC(managedObjectContext, name: "N Waste"),
             Task.createInMOC(managedObjectContext, name: "---"),
             Task.createInMOC(managedObjectContext, name: "N Not work"),
-
+            
             Task.createInMOC(managedObjectContext, name: "N Connect"),
             Task.createInMOC(managedObjectContext, name: "N Down"),
             Task.createInMOC(managedObjectContext, name: "N Time-in"),
-
+            
             Task.createInMOC(managedObjectContext, name: "N Physical"),
             Task.createInMOC(managedObjectContext, name: "N Coffe/WC"),
             Task.createInMOC(managedObjectContext, name: "N Other"),
         ]
-
+        
         session21.tasks = NSOrderedSet(array: taskListWork)
         session22.tasks = NSOrderedSet(array: taskListWork)
-
+        
     }
 
 }

@@ -50,7 +50,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     // TimePoliceViewController - Buttons
     //----------------------------------------
     
-    @IBAction func loadData(sender: UIButton) {
+    @IBAction func loadData1(sender: UIButton) {
         if let moc = self.managedObjectContext {
             TestData.addTestData1(moc)
             TimePoliceModelUtils.save(moc)
@@ -61,6 +61,21 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
                 self.sessions = sessions
             }
 
+            logTableView.reloadData()
+        }
+    }
+    
+    @IBAction func loadData2(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            TestData.addTestData2(moc)
+            TimePoliceModelUtils.save(moc)
+            TimePoliceModelUtils.dumpAllData(moc)
+            
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+                self.sessions = sessions
+            }
+            
             logTableView.reloadData()
         }
     }
