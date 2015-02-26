@@ -159,8 +159,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         self.views = [:]
 
         self.taskList = session.tasks.array as [Task]
-        self.sessionSummary = session.getSessionSummary(moc)
-
 	}
 
     // Non presistent local attributes, setup when initialising the view
