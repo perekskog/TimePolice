@@ -22,7 +22,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let moc = self.managedObjectContext {
             TestData.addTestData1(moc)
             TimePoliceModelUtils.save(moc)
-            TimePoliceModelUtils.dumpData(moc)
+            TimePoliceModelUtils.dumpAllData(moc)
         }
     
         var viewFrame = self.view.frame

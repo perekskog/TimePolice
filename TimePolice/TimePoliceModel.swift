@@ -131,7 +131,7 @@ class TimePoliceModelUtils {
     class func save(moc: NSManagedObjectContext) {
     }
 
-    class func dumpData(moc: NSManagedObjectContext) {
+    class func dumpAllData(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
 
         println("---------------------------")
@@ -157,7 +157,7 @@ class TimePoliceModelUtils {
                 println("    P: \(session.project.name)-\(session.project.id)")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as Work
-                    println("    W: \(work.task.name)")
+                    println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as Task
@@ -171,7 +171,7 @@ class TimePoliceModelUtils {
         fetchRequest = NSFetchRequest(entityName: "Work")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
             for work in fetchResults {
-                print("W: \(work.task.name)"   )
+                println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
             }
         }
 
@@ -180,10 +180,38 @@ class TimePoliceModelUtils {
         fetchRequest = NSFetchRequest(entityName: "Task")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
             for task in fetchResults {
-                print("T: \(task.name)")
+                println("T: \(task.name)")
             }
         }
 
+    }
+
+    class func dumpSessionWork(session: Session) {
+
+        println("\n---------------------------")
+        println("----------Session----------\n")
+        println("S: \(session.name)-\(session.id)")
+        println("    P: \(session.project.name)-\(session.project.id)")
+        session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+            let work = elem as Work
+            println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
+        }
+    }
+
+    class func getSessionWork(session: Session) -> String {
+
+        var s: String
+
+        s = "\n---------------------------"
+        s += "\n----------Session----------"
+        s += "\nS: \(session.name)-\(session.id)"
+        s += "\n    P: \(session.project.name)-\(session.project.id)"
+        session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+            let work = elem as Work
+            s += "\n    W: \(work.task.name) \(work.startTime)->\(work.stopTime)"
+        }
+
+        return s
     }
 
 }

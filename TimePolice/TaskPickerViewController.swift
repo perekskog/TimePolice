@@ -40,18 +40,17 @@ class TaskPickerViewController: UIViewController
 
         var statusRect = self.view.bounds
         statusRect.origin.x = 5
-        statusRect.size.width -= 10
         statusRect.origin.y = statusRect.size.height-110
         statusRect.size.height = 100
         let statusView = UITextView(frame: statusRect)
         statusView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         statusView.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
-        statusView.font = UIFont.systemFontOfSize(10)
+        statusView.font = UIFont.systemFontOfSize(8)
         statusView.editable = false
         self.view.addSubview(statusView)
         
-        TextViewLogger.reset(statusView)
-        TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
+        // TextViewLogger.reset(statusView)
+        // TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
         if let s = session {
             if let moc = self.managedObjectContext {
@@ -68,7 +67,7 @@ class TaskPickerViewController: UIViewController
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-//        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+// //        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -137,7 +136,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var previousTask: Task?
 
 	
-    init(statustext: UITextView, backgroundView:TaskPickerBackgroundView, 
+    init(statustext: UITextView, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext) {
@@ -271,7 +270,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on settings    
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
+        // TextViewLogger.log(statustext,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
     }
         
 
@@ -279,7 +278,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
+        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
         if let work = currentWork {
             // Sign out
@@ -303,7 +302,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on new task, call taskSignIn/taskSignOut and update views
 
     func handleTap(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
+        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
         if let work = currentWork {
             let taskIndex = find(taskList, work.task as Task)
@@ -327,7 +326,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork when sign in to a task
 
     func taskSignIn(task: Task) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
+        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
         currentWork = Work.createInMOC(self.moc, name: "")
         currentWork?.task = task
@@ -337,7 +336,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
 
     func taskSignOut(task: Task) {
-        TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
+        // TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
 
         if let work = currentWork {
             work.stopTime = NSDate()
@@ -356,6 +355,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         }
 
         currentWork = nil
+
+        TimePoliceModelUtils.dumpSessionWork(session)
+
+        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
+
     }
 
 
