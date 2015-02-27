@@ -267,9 +267,9 @@ class TestData {
         var session11: Session
         var taskListHome: [Task]
 
-        project1 = Project.createInMOC(managedObjectContext, name: "Home")
+        project1 = Project.createInMOC(managedObjectContext, name: "Home \(getString(NSDate()))")
 
-        session11 = Session.createInMOC(managedObjectContext, name: "Home 1")
+        session11 = Session.createInMOC(managedObjectContext, name: "Home \(getString(NSDate()))")
         session11.project = project1
         project1.sessions = NSSet(array: [session11])
 
@@ -314,11 +314,11 @@ class TestData {
         var session22: Session
         var taskListWork: [Task]
         
-        project2 = Project.createInMOC(managedObjectContext, name: "Work")
+        project2 = Project.createInMOC(managedObjectContext, name: "Work \(getString(NSDate()))")
         
-        session21 = Session.createInMOC(managedObjectContext, name: "Work 1")
+        session21 = Session.createInMOC(managedObjectContext, name: "Work 1 \(getString(NSDate()))")
         session21.project = project2
-        session22 = Session.createInMOC(managedObjectContext, name: "Work 2")
+        session22 = Session.createInMOC(managedObjectContext, name: "Work 2 \(getString(NSDate()))")
         session22.project = project2
         project2.sessions = NSSet(array:[session21, session22])
         
