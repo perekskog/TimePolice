@@ -324,7 +324,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork when sign in to a task
 
     func taskSignIn(task: Task) {
-        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
+        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
         currentWork = Work.createInMOC(self.moc, name: "")
         currentWork?.task = task
@@ -334,16 +334,18 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
 
     func taskSignOut(task: Task) {
-        // TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
+        TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
 
         if let work = currentWork {
             work.stopTime = NSDate()
-            if let taskSummary = sessionSummary[work.task] {
-                var (numberOfTimesActivated, totalTimeActive) = taskSummary
-                numberOfTimesActivated++
-                totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
-                sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+            var taskSummary: (Int, NSTimeInterval) = (0, 0)
+            if let t = sessionSummary[work.task] {
+                taskSummary = t
             }
+            var (numberOfTimesActivated, totalTimeActive) = taskSummary
+            numberOfTimesActivated++
+            totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
+            sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
             previousTask = work.task
     
@@ -360,6 +362,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         if let s = session {
             TimePoliceModelUtils.dumpSessionWork(s)
+            TextViewLogger.reset(statustext)
             TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(s))
         }
 
