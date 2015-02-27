@@ -78,10 +78,17 @@ class TaskPickerViewController: UIViewController
         nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
     }
 
+    //---------------------------------------------
+    // TaskPickerViewController - Buttons
+    //---------------------------------------------
+
+    @IBAction func goback(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
-    //---------------------------------------------
+    //--------------------------------------------------
     // TaskPickerViewController - CoreData MOC & save
-    //---------------------------------------------
+    //--------------------------------------------------
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
