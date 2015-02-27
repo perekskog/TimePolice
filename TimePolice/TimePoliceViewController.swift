@@ -52,7 +52,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBAction func loadData1(sender: UIButton) {
         if let moc = self.managedObjectContext {
-            TestData.addTestData1(moc)
+            TestData.addSessionToHome(moc)
             TimePoliceModelUtils.save(moc)
             TimePoliceModelUtils.dumpAllData(moc)
 
@@ -67,7 +67,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     
     @IBAction func loadData2(sender: UIButton) {
         if let moc = self.managedObjectContext {
-            TestData.addTestData2(moc)
+            TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
             TimePoliceModelUtils.dumpAllData(moc)
             

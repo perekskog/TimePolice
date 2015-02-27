@@ -26,6 +26,17 @@ class Project: NSManagedObject {
         return newItem
     }
 
+    class func findInMOC(moc: NSManagedObjectContext, name: String) -> [Project]? {
+
+        let fetchRequest = NSFetchRequest(entityName: "Project")
+        let predicate = NSPredicate(format: "name == %@", name) 
+        fetchRequest.predicate = predicate
+
+        let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project]
+
+        return fetchResults
+    }
+
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var sessions: NSSet
@@ -262,19 +273,30 @@ class TimePoliceModelUtils {
 
 class TestData {
 
-    class func addTestData1(managedObjectContext: NSManagedObjectContext) {
-        var project1: Project
-        var session11: Session
-        var taskListHome: [Task]
+    class func addSessionToHome(managedObjectContext: NSManagedObjectContext) {
+        var project: Project
+        var session: Session
+        var taskList: [Task]
 
-        project1 = Project.createInMOC(managedObjectContext, name: "Home \(getString(NSDate()))")
+        if let projects = Project.findInMOC(managedObjectContext, name: "Home") {
+            if projects.count > 0 {
+                project = projects[0]
+            } else {
+                project = Project.createInMOC(managedObjectContext, name: "Home")
+            }
+        } else {
+            return
+        }
 
-        session11 = Session.createInMOC(managedObjectContext, name: "Home \(getString(NSDate()))")
-        session11.project = project1
-        project1.sessions = NSSet(array: [session11])
+        session = Session.createInMOC(managedObjectContext, name: "Home \(getString(NSDate()))")
+        session.project = project
+
+        let s = project.sessions.mutableCopy() as NSMutableSet
+        s.addObject(session)
+        project.sessions = s
 
         // Personal
-        taskListHome = [ 
+        taskList = [
             Task.createInMOC(managedObjectContext, name: "I F2F"),
             Task.createInMOC(managedObjectContext, name: "---"),
             Task.createInMOC(managedObjectContext, name: "I Chat"),
@@ -304,27 +326,37 @@ class TestData {
             Task.createInMOC(managedObjectContext, name: "N Other"),
         ]
 
-        session11.tasks = NSOrderedSet(array: taskListHome)
+        session.tasks = NSOrderedSet(array: taskList)
     }
 
-    class func addTestData2(managedObjectContext: NSManagedObjectContext) {
+    class func addSessionToWork(managedObjectContext: NSManagedObjectContext) {
 
-        var project2: Project
-        var session21: Session
-        var session22: Session
-        var taskListWork: [Task]
-        
-        project2 = Project.createInMOC(managedObjectContext, name: "Work \(getString(NSDate()))")
-        
-        session21 = Session.createInMOC(managedObjectContext, name: "Work 1 \(getString(NSDate()))")
-        session21.project = project2
-        session22 = Session.createInMOC(managedObjectContext, name: "Work 2 \(getString(NSDate()))")
-        session22.project = project2
-        project2.sessions = NSSet(array:[session21, session22])
-        
+        var project: Project
+        var session: Session
+        var taskList: [Task]
+
+
+        let projects = Project.findInMOC(managedObjectContext, name: "Work")
+
+        if let projects = Project.findInMOC(managedObjectContext, name: "Work") {
+            if projects.count > 0 {
+                project = projects[0]
+            } else {
+                project = Project.createInMOC(managedObjectContext, name: "Work")
+            }
+        } else {
+            return
+        }
+
+        session = Session.createInMOC(managedObjectContext, name: "Work \(getString(NSDate()))")
+        session.project = project
+
+        let s = project.sessions.mutableCopy() as NSMutableSet
+        s.addObject(session)
+        project.sessions = s
         
         // Work
-        taskListWork = [
+        taskList = [
             Task.createInMOC(managedObjectContext, name: "I F2F"),
             Task.createInMOC(managedObjectContext, name: "---"),
             Task.createInMOC(managedObjectContext, name: "I Lync"),
@@ -354,9 +386,7 @@ class TestData {
             Task.createInMOC(managedObjectContext, name: "N Other"),
         ]
         
-        session21.tasks = NSOrderedSet(array: taskListWork)
-        session22.tasks = NSOrderedSet(array: taskListWork)
-        
+        session.tasks = NSOrderedSet(array: taskList)
     }
 
 }
