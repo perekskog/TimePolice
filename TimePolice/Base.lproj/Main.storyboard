@@ -41,6 +41,7 @@
                                 </state>
                                 <connections>
                                     <action selector="loadData1:" destination="ibE-kE-IVF" eventType="touchUpInside" id="jTR-zw-bpD"/>
+                                    <action selector="loadDataHome:" destination="ibE-kE-IVF" eventType="touchUpInside" id="bMz-zM-vFQ"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZwB-DC-1Hy">
@@ -62,6 +63,7 @@
                                 </state>
                                 <connections>
                                     <action selector="loadData2:" destination="ibE-kE-IVF" eventType="touchUpInside" id="XX6-QQ-bJi"/>
+                                    <action selector="loadDataWork:" destination="ibE-kE-IVF" eventType="touchUpInside" id="UAe-Da-wjz"/>
                                 </connections>
                             </button>
                         </subviews>
