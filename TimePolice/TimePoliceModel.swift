@@ -298,7 +298,7 @@ class TestData {
         // Personal
         taskList = [
             Task.createInMOC(managedObjectContext, name: "I F2F"),
-            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "I Eva"),
             Task.createInMOC(managedObjectContext, name: "I Chat"),
 
             Task.createInMOC(managedObjectContext, name: "I Email"),
@@ -310,12 +310,12 @@ class TestData {
             Task.createInMOC(managedObjectContext, name: "P Lista"),
 
             Task.createInMOC(managedObjectContext, name: "P Hushåll"),
-            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "P Eva"),
             Task.createInMOC(managedObjectContext, name: "P Other"),
 
             Task.createInMOC(managedObjectContext, name: "N Waste"),
             Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "N Work"),
+            Task.createInMOC(managedObjectContext, name: "N Not home"),
 
             Task.createInMOC(managedObjectContext, name: "N Connect"),
             Task.createInMOC(managedObjectContext, name: "N Down"),

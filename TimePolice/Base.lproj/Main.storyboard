@@ -40,7 +40,6 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loadData1:" destination="ibE-kE-IVF" eventType="touchUpInside" id="jTR-zw-bpD"/>
                                     <action selector="loadDataHome:" destination="ibE-kE-IVF" eventType="touchUpInside" id="bMz-zM-vFQ"/>
                                 </connections>
                             </button>
@@ -62,7 +61,6 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loadData2:" destination="ibE-kE-IVF" eventType="touchUpInside" id="XX6-QQ-bJi"/>
                                     <action selector="loadDataWork:" destination="ibE-kE-IVF" eventType="touchUpInside" id="UAe-Da-wjz"/>
                                 </connections>
                             </button>

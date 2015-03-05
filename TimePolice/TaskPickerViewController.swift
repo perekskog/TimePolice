@@ -350,7 +350,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             previousTask = work.task
     
             if let s = session {
-                let w = NSMutableOrderedSet(array: s.work.array)
+                let w = s.work.mutableCopy() as NSMutableOrderedSet
                 w.addObject(work)
                 s.work = w
             }
