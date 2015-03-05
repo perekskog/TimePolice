@@ -53,9 +53,9 @@ class TaskPickerViewController: UIViewController
         let exitRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-40), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as UIButton
         exitButton.frame = exitRect
-        exitButton.backgroundColor = UIColor.greenColor()
+        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("Exit", forState: UIControlState.Normal)
+        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
@@ -93,10 +93,6 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
     // TaskPickerViewController - Buttons
     //---------------------------------------------
-
-    @IBAction func goback(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
 
     func buttonAction(sender: UIButton) {
         println("buttonAction")
@@ -345,8 +341,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
         currentWork = Work.createInMOC(self.moc, name: "")
-        currentWork?.task = task
-        currentWork?.startTime = NSDate()
+        if let w = currentWork {
+            w.task = task
+            w.startTime = NSDate()
+            w.stopTime = w.startTime
+        }
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task

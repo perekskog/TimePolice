@@ -388,6 +388,56 @@ class TestData {
         
         session.tasks = NSOrderedSet(array: taskList)
     }
+    
+    class func addSessionToDaytime(managedObjectContext: NSManagedObjectContext) {
+        var project: Project
+        var session: Session
+        var taskList: [Task]
+        
+        if let projects = Project.findInMOC(managedObjectContext, name: "Daytime") {
+            if projects.count > 0 {
+                project = projects[0]
+            } else {
+                project = Project.createInMOC(managedObjectContext, name: "Daytime")
+            }
+        } else {
+            return
+        }
+        
+        session = Session.createInMOC(managedObjectContext, name: "Daytime \(getString(NSDate()))")
+        session.project = project
+        
+        let s = project.sessions.mutableCopy() as NSMutableSet
+        s.addObject(session)
+        project.sessions = s
+        
+        // Personal
+        taskList = [
+            Task.createInMOC(managedObjectContext, name: "Sleep"),
+            Task.createInMOC(managedObjectContext, name: "Sleep prep"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+            
+            Task.createInMOC(managedObjectContext, name: "Home"),
+            Task.createInMOC(managedObjectContext, name: "Home prep"),
+            Task.createInMOC(managedObjectContext, name: "Home out"),
+            
+            Task.createInMOC(managedObjectContext, name: "Work"),
+            Task.createInMOC(managedObjectContext, name: "Work prep"),
+            Task.createInMOC(managedObjectContext, name: "Work out"),
+                
+            Task.createInMOC(managedObjectContext, name: "Car"),
+            Task.createInMOC(managedObjectContext, name: "Errand"),
+            Task.createInMOC(managedObjectContext, name: "---"),
+
+            Task.createInMOC(managedObjectContext, name: "Car"),
+            Task.createInMOC(managedObjectContext, name: "Errand"),
+            Task.createInMOC(managedObjectContext, name: "Lunch"),
+
+        ]
+        
+        session.tasks = NSOrderedSet(array: taskList)
+    }
+
 
 }
 

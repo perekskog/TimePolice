@@ -48,7 +48,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func exitFromSegue() {
-        println("dismissViewController")
+        println("exitFromSegue")
     }
 
     //----------------------------------------
@@ -73,6 +73,21 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     @IBAction func loadDataWork(sender: UIButton) {
         if let moc = self.managedObjectContext {
             TestData.addSessionToWork(moc)
+            TimePoliceModelUtils.save(moc)
+            TimePoliceModelUtils.dumpAllData(moc)
+            
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+                self.sessions = sessions
+            }
+            
+            logTableView.reloadData()
+        }
+    }
+    
+    @IBAction func loadDataDaytime(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
             TimePoliceModelUtils.dumpAllData(moc)
             
