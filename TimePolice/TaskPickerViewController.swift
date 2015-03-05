@@ -19,6 +19,7 @@ class TaskPickerViewController: UIViewController
 	{
 
     var session: Session?
+    var sourceController: TimePoliceViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,8 +50,19 @@ class TaskPickerViewController: UIViewController
         statusView.editable = false
         self.view.addSubview(statusView)
         
+        let exitRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-40), size: CGSize(width:70, height:30))
+        let exitButton = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        exitButton.frame = exitRect
+        exitButton.backgroundColor = UIColor.greenColor()
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        exitButton.setTitle("Exit", forState: UIControlState.Normal)
+        exitButton.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(exitButton)
+
+        
+        
         // TextViewLogger.reset(statusView)
-        // TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
+        TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
         if let s = session {
             if let moc = self.managedObjectContext {
@@ -67,7 +79,7 @@ class TaskPickerViewController: UIViewController
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-// //        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -84,6 +96,12 @@ class TaskPickerViewController: UIViewController
 
     @IBAction func goback(sender: UIButton) {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func buttonAction(sender: UIButton) {
+        println("buttonAction")
+        sourceController?.exitFromSegue()
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     //--------------------------------------------------

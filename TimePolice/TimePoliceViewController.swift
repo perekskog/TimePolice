@@ -43,7 +43,12 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as TaskPickerViewController
             vc.session = selectedSession
+            vc.sourceController = self
         } 
+    }
+
+    func exitFromSegue() {
+        println("dismissViewController")
     }
 
     //----------------------------------------
