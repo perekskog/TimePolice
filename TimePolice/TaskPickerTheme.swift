@@ -272,8 +272,8 @@ class BlackGreenTheme : Theme {
         
         // Top area
         let locations1: [CGFloat] = [ 0.0, 1.0 ]
-        let colors1 = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.4, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.5, 0.7, 0.5, 1.0])]
+        let colors1 = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.5, 0.75, 0.5, 1.0])]
         let gradient1 = CGGradientCreateWithColors(colorSpaceRGB,
             colors1, locations1)
         var startPoint1 = CGPoint(x:0.0, y:0.0)
