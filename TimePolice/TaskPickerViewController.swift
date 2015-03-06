@@ -32,8 +32,8 @@ class TaskPickerViewController: UIViewController
         (self.view as TimePoliceBackgroundView).theme = theme
 
         var tpRect = self.view.bounds
-        tpRect.origin.x = 5
-        tpRect.size.width -= 10
+        tpRect.origin.x = 0
+        tpRect.size.width -= 0
         tpRect.origin.y += 30
         tpRect.size.height -= 158
         let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)

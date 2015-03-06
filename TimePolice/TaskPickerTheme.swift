@@ -270,39 +270,42 @@ class BlackGreenTheme : Theme {
     func drawDesktop(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         
+        // Top area
+        let locations1: [CGFloat] = [ 0.0, 1.0 ]
+        let colors1 = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.4, 1.0]),
+            CGColorCreate(colorSpaceRGB, [0.5, 0.7, 0.5, 1.0])]
+        let gradient1 = CGGradientCreateWithColors(colorSpaceRGB,
+            colors1, locations1)
+        var startPoint1 = CGPoint(x:0.0, y:0.0)
+        var endPoint1 =  CGPoint(x:0.0, y:30.0)
+        CGContextDrawLinearGradient(context, gradient1,
+            startPoint1, endPoint1, 0)
+
         // Gradient
-        let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0]),
+        let locations2: [CGFloat] = [ 0.0, 1.0 ]
+        let colors2 = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])]
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
-            colors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = 700
-        CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
-        
+        let gradient2 = CGGradientCreateWithColors(colorSpaceRGB,
+            colors2, locations2)
+        var startPoint2 = CGPoint(x:0.0, y:30.0)
+        var endPoint2 =  CGPoint(x:0.0, y:parent.height)
+        CGContextDrawLinearGradient(context, gradient2,
+            startPoint2, endPoint2, 0)
+  
+
     }
     
     func drawBackground(context: CGContextRef, parent: CGRect) {
-        // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+
+        // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])]
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
+        let gradient = CGGradientCreateWithColors(colorSpaceRGB,
             colors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = parent.height
+        var startPoint = CGPoint(x:0.0, y:0.0)
+        var endPoint =  CGPoint(x:0.0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
     }
@@ -317,15 +320,10 @@ class BlackGreenTheme : Theme {
             colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0]),
                 CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])]
         }
-        let colorspace = CGColorSpaceCreateDeviceRGB()
-        let gradient = CGGradientCreateWithColors(colorspace,
+        let gradient = CGGradientCreateWithColors(colorSpaceRGB,
             colors, locations)
-        var startPoint = CGPoint()
-        var endPoint =  CGPoint()
-        startPoint.x = 0.0
-        startPoint.y = 0.0
-        endPoint.x = 0
-        endPoint.y = parent.height
+        var startPoint = CGPoint(x: 0.0, y:0.0)
+        var endPoint =  CGPoint(x:0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
         
