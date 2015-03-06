@@ -63,15 +63,18 @@ class Session: NSManagedObject {
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             let work = elem as Work
-            let task = work.task
-            var taskSummary: (Int, NSTimeInterval) = (0, 0)
-            if let t = sessionSummary[task] {
-                taskSummary = t
+            // For all items but one that is ongoing
+            if work.startTime != work.stopTime {
+                let task = work.task
+                var taskSummary: (Int, NSTimeInterval) = (0, 0)
+                if let t = sessionSummary[task] {
+                    taskSummary = t
+                }
+                var (activations, totalTime) = taskSummary
+                activations++
+                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                sessionSummary[task] = (activations, totalTime)
             }
-            var (activations, totalTime) = taskSummary
-            activations++
-            totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
-            sessionSummary[task] = (activations, totalTime)
         }
 
         return sessionSummary

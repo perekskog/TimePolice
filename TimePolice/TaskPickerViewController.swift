@@ -34,7 +34,7 @@ class TaskPickerViewController: UIViewController
         var tpRect = self.view.bounds
         tpRect.origin.x = 0
         tpRect.size.width -= 0
-        tpRect.origin.y += 30
+        tpRect.origin.y += 25
         tpRect.size.height -= 158
         let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
         self.view.addSubview(taskPickerBackgroundView)
@@ -43,14 +43,15 @@ class TaskPickerViewController: UIViewController
         statusRect.origin.x = 5
         statusRect.origin.y = statusRect.size.height-110
         statusRect.size.height = 100
+        statusRect.size.width -= 10
         let statusView = UITextView(frame: statusRect)
-        statusView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
+        statusView.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
         statusView.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
         statusView.font = UIFont.systemFontOfSize(8)
         statusView.editable = false
         self.view.addSubview(statusView)
         
-        let exitRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-40), size: CGSize(width:70, height:30))
+        let exitRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-120), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as UIButton
         exitButton.frame = exitRect
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
@@ -64,6 +65,7 @@ class TaskPickerViewController: UIViewController
         // TextViewLogger.reset(statusView)
         TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
+
         if let s = session {
             if let moc = self.managedObjectContext {
                 let tp = TaskPicker(statustext: statusView, backgroundView: taskPickerBackgroundView,
@@ -71,6 +73,7 @@ class TaskPickerViewController: UIViewController
                     session: s, moc: moc)
             
                 tp.setup()
+                TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(s))
             }
         }
 
@@ -95,7 +98,6 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
 
     func buttonAction(sender: UIButton) {
-        println("buttonAction")
         sourceController?.exitFromSegue()
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -125,7 +127,7 @@ class TaskPickerViewController: UIViewController
 
 class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
     // Persistent data form the model, set at creation time
-    var session: Session?
+    var session: Session
 
 	// Views, set at creation time
     var statustext: UITextView!
@@ -249,6 +251,23 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                                  selector: "updateActiveTask:",
                                  userInfo: nil,
                                   repeats: true)
+        
+        // Check last work item, is something ongoing?
+        if session.work.count > 0 {
+            // Found a work item, look at the last one
+            let work = session.work.objectAtIndex(session.work.count-1) as Work
+            previousTask = work.task
+            // If start==stop it is ongoing work
+            if work.startTime == work.stopTime {
+                TextViewLogger.log(statustext, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
+                currentWork = work
+            } else {
+                TextViewLogger.log(statustext, message: String("\nNo ongoing work"))
+            }
+        } else {
+            TextViewLogger.log(statustext, message: String("\nWorklist empty"))
+        }
+            
     }
 
 
@@ -345,6 +364,17 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             w.task = task
             w.startTime = NSDate()
             w.stopTime = w.startTime
+            
+            let sw = session.work.mutableCopy() as NSMutableOrderedSet
+            sw.addObject(w)
+            session.work = sw
+
+            TimePoliceModelUtils.save(moc)
+            
+            TimePoliceModelUtils.dumpSessionWork(session)
+            TextViewLogger.reset(statustext)
+            TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
+
         }
     }
 
@@ -366,22 +396,18 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
             previousTask = work.task
     
-            if let s = session {
-                let w = s.work.mutableCopy() as NSMutableOrderedSet
-                w.addObject(work)
-                s.work = w
-            }
+            let sw = session.work.mutableCopy() as NSMutableOrderedSet
+            sw.replaceObjectAtIndex(sw.count-1, withObject: work)
+            session.work = sw
 
             TimePoliceModelUtils.save(moc)
         }
 
         currentWork = nil
 
-        if let s = session {
-            TimePoliceModelUtils.dumpSessionWork(s)
-            TextViewLogger.reset(statustext)
-            TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(s))
-        }
+        TimePoliceModelUtils.dumpSessionWork(session)
+        TextViewLogger.reset(statustext)
+        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
 
     }
 
@@ -448,11 +474,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     	var totalActivations: Int = 1 // The first task is active when first selected
     	var totalTime: NSTimeInterval = 0
 
-        if let s = session {
-            for (task, (activations, time)) in sessionSummary {
-                totalActivations += activations
-                totalTime += time
-            }
+        for (task, (activations, time)) in sessionSummary {
+            totalActivations += activations
+            totalTime += time
         }
 
         if let work = currentWork {

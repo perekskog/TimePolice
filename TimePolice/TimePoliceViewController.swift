@@ -48,7 +48,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func exitFromSegue() {
-        println("exitFromSegue")
     }
 
     //----------------------------------------

@@ -277,7 +277,7 @@ class BlackGreenTheme : Theme {
         let gradient1 = CGGradientCreateWithColors(colorSpaceRGB,
             colors1, locations1)
         var startPoint1 = CGPoint(x:0.0, y:0.0)
-        var endPoint1 =  CGPoint(x:0.0, y:30.0)
+        var endPoint1 =  CGPoint(x:0.0, y:25.0)
         CGContextDrawLinearGradient(context, gradient1,
             startPoint1, endPoint1, 0)
 
@@ -287,7 +287,7 @@ class BlackGreenTheme : Theme {
             CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])]
         let gradient2 = CGGradientCreateWithColors(colorSpaceRGB,
             colors2, locations2)
-        var startPoint2 = CGPoint(x:0.0, y:30.0)
+        var startPoint2 = CGPoint(x:0.0, y:25.0)
         var endPoint2 =  CGPoint(x:0.0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient2,
             startPoint2, endPoint2, 0)
