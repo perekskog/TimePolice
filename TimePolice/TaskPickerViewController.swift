@@ -68,7 +68,7 @@ class TaskPickerViewController: UIViewController
 
         if let s = session {
             if let moc = self.managedObjectContext {
-                let tp = TaskPicker(statustext: statusView, backgroundView: taskPickerBackgroundView,
+                let tp = TaskPicker(vc: self, statustext: statusView, backgroundView: taskPickerBackgroundView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc)
             
@@ -92,6 +92,48 @@ class TaskPickerViewController: UIViewController
         nav?.tintColor = UIColor.whiteColor()
         nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
     }
+    
+    //---------------------------------------------
+    // TaskPickerViewController - Segue exit
+    //---------------------------------------------
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "EditWork" {
+            let vc = segue.destinationViewController as EditWorkViewController
+            if let s = session {
+                vc.taskList = s.tasks.array as? [Task]
+            }
+        }
+    }
+
+    @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
+        // Only "implemented" to satisfy a respondsToSelector: search.
+        // You can actually implement more stuff here, if you want, IE, if
+        // you need to reach out to a server to mention that this screen was
+        // returned to from a later screen.
+        println("cancelEditWork")
+    }
+
+    @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
+        // Only "implemented" to satisfy a respondsToSelector: search.
+        // You can actually implement more stuff here, if you want, IE, if
+        // you need to reach out to a server to mention that this screen was
+        // returned to from a later screen.
+
+        println("okEditWork")
+
+        if unwindSegue.identifier == "OkEditWork" {
+            let vc = unwindSegue.sourceViewController as EditWorkViewController
+            if let t = vc.taskToUse {
+                println("taskToUse=\(t.name)")
+            }
+            if let d = vc.work?.startTime {
+                println("Input=\(d), current=\(vc.datePicker.date)")
+            }
+        }
+    }
+
+    
 
     //---------------------------------------------
     // TaskPickerViewController - Buttons
@@ -130,6 +172,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var session: Session
 
 	// Views, set at creation time
+    var vc: TaskPickerViewController!
     var statustext: UITextView!
     var backgroundView:TaskPickerBackgroundView!
 
@@ -152,13 +195,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var previousTask: Task?
 
 	
-    init(statustext: UITextView, backgroundView:TaskPickerBackgroundView,
+    init(vc: TaskPickerViewController, statustext: UITextView, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext) {
 
         self.session = session
 
+        self.vc = vc
         self.statustext = statustext
         self.backgroundView = backgroundView
 
@@ -301,7 +345,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on settings    
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
-        // TextViewLogger.log(statustext,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
+        TextViewLogger.log(statustext,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
+        vc.performSegueWithIdentifier("EditWork", sender: vc)
     }
         
 
@@ -309,7 +354,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
+        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
         if let work = currentWork {
             // Sign out
