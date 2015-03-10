@@ -346,7 +346,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         } else {
             TextViewLogger.log(statustext, message: String("\nWorklist empty"))
         }
-            
+        
+        TimePoliceModelUtils.dumpSessionWork(session)
     }
 
 
@@ -499,7 +500,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-        print(".")
+        //print(".")
         if let currentTask = currentWork?.task {
             if let currentTaskIndex = find(taskList, currentTask as Task) {
                 let view = views[currentTaskIndex]
@@ -517,7 +518,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// SelectionAreaInfoDelegate
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        print("gsl(\(selectionArea))")
+        //print("gsl(\(selectionArea))")
 		let task = taskList![selectionArea]
 
         var taskSummary: (Int, NSTimeInterval) = (0, 0)
