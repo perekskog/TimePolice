@@ -8,18 +8,19 @@
 
 import UIKit
 
-class EditWorkViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
     
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var taskPickerTable: UITableView!
     
     // Input values
     var work: Work?
+    var minimumDate: NSDate?
     var taskList: [Task]?
 
     // Output values
     var taskToUse: Task?
-    var startTimeToUse: NSDate?
+    var initialDate: NSDate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,8 @@ class EditWorkViewController: UIViewController, UITableViewDataSource, UITableVi
         taskPickerTable.delegate = self
         if let date = work?.startTime {
             datePicker.date = date
+            datePicker.minimumDate = self.minimumDate
+            initialDate = datePicker.date
         }
     }
 

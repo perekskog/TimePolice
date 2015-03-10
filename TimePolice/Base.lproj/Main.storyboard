@@ -100,10 +100,10 @@
             </objects>
             <point key="canvasLocation" x="2267" y="115"/>
         </scene>
-        <!--Edit Work View Controller-->
+        <!--Task Picker Edit Work View Controller-->
         <scene sceneID="2eV-W2-2w0">
             <objects>
-                <viewController id="Hmp-2V-xHL" customClass="EditWorkViewController" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Hmp-2V-xHL" customClass="TaskPickerEditWorkViewController" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TGW-MP-ifn"/>
                         <viewControllerLayoutGuide type="bottom" id="xVR-Vf-Bkn"/>

@@ -20,6 +20,7 @@ class TaskPickerViewController: UIViewController
 
     var session: Session?
     var sourceController: TimePoliceViewController?
+    var tp: TaskPicker?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +58,7 @@ class TaskPickerViewController: UIViewController
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
         
@@ -68,11 +69,11 @@ class TaskPickerViewController: UIViewController
 
         if let s = session {
             if let moc = self.managedObjectContext {
-                let tp = TaskPicker(vc: self, statustext: statusView, backgroundView: taskPickerBackgroundView,
+                tp = TaskPicker(vc: self, statustext: statusView, backgroundView: taskPickerBackgroundView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc)
             
-                tp.setup()
+                tp?.setup()
                 TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(s))
             }
         }
@@ -99,9 +100,21 @@ class TaskPickerViewController: UIViewController
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "EditWork" {
-            let vc = segue.destinationViewController as EditWorkViewController
+            if let s = session {
+                TimePoliceModelUtils.dumpSessionWork(s)
+            }
+
+            let vc = segue.destinationViewController as TaskPickerEditWorkViewController
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+                if let wl = s.work.array as? [Work] {
+                    if wl.count >= 1 {
+                        vc.work = wl[wl.count-1]
+                    }
+                    if wl.count >= 2 {
+                        vc.minimumDate = wl[wl.count-2].startTime
+                    }
+                }
             }
         }
     }
@@ -123,13 +136,34 @@ class TaskPickerViewController: UIViewController
         println("okEditWork")
 
         if unwindSegue.identifier == "OkEditWork" {
-            let vc = unwindSegue.sourceViewController as EditWorkViewController
+            let vc = unwindSegue.sourceViewController as TaskPickerEditWorkViewController
             if let t = vc.taskToUse {
                 println("taskToUse=\(t.name)")
+                if let s = session {
+                    if let wl = s.work.array as? [Work] {
+                        if wl.count >= 1 {
+                            wl[wl.count-1].task = t
+                        }
+                    } 
+                }
             }
-            if let d = vc.work?.startTime {
-                println("Input=\(d), current=\(vc.datePicker.date)")
+            println("Initial=\(vc.initialDate), current=\(vc.datePicker.date)")
+            if vc.datePicker.date != vc.initialDate {
+                if let s = session {
+                    if let wl = s.work.array as? [Work] {
+                        if wl.count >= 1 {
+                            wl[wl.count-1].startTime = vc.datePicker.date
+                        }
+                        if wl.count >= 2 {
+                            wl[wl.count-2].stopTime = vc.datePicker.date
+                        }
+                    }   
+                }
             }
+        }
+
+        if let s = session {
+            TimePoliceModelUtils.dumpSessionWork(s)
         }
     }
 
@@ -139,7 +173,7 @@ class TaskPickerViewController: UIViewController
     // TaskPickerViewController - Buttons
     //---------------------------------------------
 
-    func buttonAction(sender: UIButton) {
+    func exit(sender: UIButton) {
         sourceController?.exitFromSegue()
         self.navigationController?.popViewControllerAnimated(true)
     }
@@ -464,7 +498,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-//        if currentTaskIndex >= 0 {
+        print(".")
         if let currentTask = currentWork?.task {
             if let currentTaskIndex = find(taskList, currentTask as Task) {
                 let view = views[currentTaskIndex]
