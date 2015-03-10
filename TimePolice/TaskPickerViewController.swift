@@ -176,6 +176,7 @@ class TaskPickerViewController: UIViewController
     func exit(sender: UIButton) {
         sourceController?.exitFromSegue()
         self.navigationController?.popViewControllerAnimated(true)
+        tp?.updateActiveActivityTimer?.invalidate()
     }
     
     //--------------------------------------------------
@@ -516,6 +517,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// SelectionAreaInfoDelegate
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+        print("gsl(\(selectionArea))")
 		let task = taskList![selectionArea]
 
         var taskSummary: (Int, NSTimeInterval) = (0, 0)
