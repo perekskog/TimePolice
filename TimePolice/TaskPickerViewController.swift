@@ -136,7 +136,9 @@ class TaskPickerViewController: UIViewController
         println("okEditWork")
 
         if unwindSegue.identifier == "OkEditWork" {
+
             let vc = unwindSegue.sourceViewController as TaskPickerEditWorkViewController
+
             if let t = vc.taskToUse {
                 println("taskToUse=\(t.name)")
                 if let s = session {
@@ -147,6 +149,7 @@ class TaskPickerViewController: UIViewController
                     } 
                 }
             }
+            
             println("Initial=\(vc.initialDate), current=\(vc.datePicker.date)")
             if vc.datePicker.date != vc.initialDate {
                 if let s = session {
@@ -160,6 +163,10 @@ class TaskPickerViewController: UIViewController
                     }   
                 }
             }
+        }
+
+        if let moc = managedObjectContext {
+            TimePoliceModelUtils.save(moc)
         }
 
         if let s = session {
