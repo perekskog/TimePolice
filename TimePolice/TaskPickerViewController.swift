@@ -230,10 +230,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: TaskPickerButtonView]!
     var moc: NSManagedObjectContext!
-
-    // Non persistent data, empty at start
-    var currentWork: Work?
-
 	
     init(vc: TaskPickerViewController, statustext: UITextView, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
@@ -339,7 +335,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
             if work.isOngoing() {
                 TextViewLogger.log(statustext, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
-                currentWork = work
             } else {
                 TextViewLogger.log(statustext, message: String("\nNo ongoing work"))
             }
@@ -394,9 +389,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         let taskList = session.tasks.array as [Task]
         
-        if session.work.count >= 1 {
-            // At least one item in worklist, look at the last item
-            let work = session.work[session.work.count-1] as Work
+        if let work = session.getLastWork() {
             if work.isOngoing() {
                // Work ongoing => sign out
                 let taskIndex = find(taskList, work.task as Task)
@@ -425,10 +418,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         let taskList = session.tasks.array as [Task]
         
-        if let work = currentWork {
-            let taskIndex = find(taskList, work.task as Task)
-            taskSignOut(work.task as Task)
-            views[taskIndex!]?.setNeedsDisplay()
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                let taskIndex = find(taskList, work.task as Task)
+                taskSignOut(work.task as Task)
+                views[taskIndex!]?.setNeedsDisplay()
+            }
         }
 
         let taskIndex = recognizers[sender]
@@ -449,23 +444,20 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func taskSignIn(task: Task) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
-        currentWork = Work.createInMOC(self.moc, name: "")
-        if let w = currentWork {
-            w.task = task
-            w.startTime = NSDate()
-            w.stopTime = w.startTime
+        let w = Work.createInMOC(self.moc, name: "")
+        w.task = task
+        w.startTime = NSDate()
+        w.stopTime = w.startTime
             
-            let sw = session.work.mutableCopy() as NSMutableOrderedSet
-            sw.addObject(w)
-            session.work = sw
+        let sw = session.work.mutableCopy() as NSMutableOrderedSet
+        sw.addObject(w)
+        session.work = sw
 
-            TimePoliceModelUtils.save(moc)
+        TimePoliceModelUtils.save(moc)
             
-            TimePoliceModelUtils.dumpSessionWork(session)
-            TextViewLogger.reset(statustext)
-            TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
-
-        }
+        TimePoliceModelUtils.dumpSessionWork(session)
+        TextViewLogger.reset(statustext)
+        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
@@ -473,25 +465,30 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func taskSignOut(task: Task) {
         TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
 
-        if let work = currentWork {
-            work.stopTime = NSDate()
-            var taskSummary: (Int, NSTimeInterval) = (0, 0)
-            if let t = sessionSummary[work.task] {
-                taskSummary = t
+        //if let work = currentWork {
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                work.stopTime = NSDate()
+                var taskSummary: (Int, NSTimeInterval) = (0, 0)
+                if let t = sessionSummary[work.task] {
+                    taskSummary = t
+                }
+                var (numberOfTimesActivated, totalTimeActive) = taskSummary
+                numberOfTimesActivated++
+                totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
+                sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+
+                let sw = session.work.mutableCopy() as NSMutableOrderedSet
+                sw.replaceObjectAtIndex(sw.count-1, withObject: work)
+                session.work = sw
+
+                TimePoliceModelUtils.save(moc)
+            } else {
+                TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work ongoing"))
             }
-            var (numberOfTimesActivated, totalTimeActive) = taskSummary
-            numberOfTimesActivated++
-            totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
-            sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
-
-            let sw = session.work.mutableCopy() as NSMutableOrderedSet
-            sw.replaceObjectAtIndex(sw.count-1, withObject: work)
-            session.work = sw
-
-            TimePoliceModelUtils.save(moc)
+        } else {
+            TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
         }
-
-        currentWork = nil
 
         TimePoliceModelUtils.dumpSessionWork(session)
         TextViewLogger.reset(statustext)
@@ -508,11 +505,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     @objc
     func updateActiveTask(timer: NSTimer) {
         //print(".")
-        if let currentTask = currentWork?.task {
+        if let work = session.getLastWork() {
+            let task = work.task
             let taskList = session.tasks.array as [Task]
-            if let currentTaskIndex = find(taskList, currentTask as Task) {
-                let view = views[currentTaskIndex]
-                views[currentTaskIndex]?.setNeedsDisplay()
+            if let taskIndex = find(taskList, task as Task) {
+                let view = views[taskIndex]
+                views[taskIndex]?.setNeedsDisplay()
                 infoAreaView?.setNeedsDisplay()
             }
         }
@@ -539,10 +537,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         var active = false
         var activatedAt = NSDate()
-        if let work = currentWork? {
-            if taskList[selectionArea] == work.task {
-                active = true
-                activatedAt = work.startTime
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                if taskList[selectionArea] == work.task {
+                    active = true
+                    activatedAt = work.startTime
+                }
             }
         }
 
@@ -558,24 +558,24 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// ToolbarInfoDelegate
 
     func getToolbarInfo() -> ToolbarInfo {
-    	var signedIn = false
-    	if let work = currentWork {
-    		signedIn = true
-    	}
 
-    	var totalActivations: Int = 1 // The first task is active when first selected
-    	var totalTime: NSTimeInterval = 0
-
+        var totalActivations: Int = 1 // The first task is active when first selected
+        var totalTime: NSTimeInterval = 0
+        
         for (task, (activations, time)) in sessionSummary {
             totalActivations += activations
             totalTime += time
         }
 
-        if let work = currentWork {
-	    	let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
-	    	totalTime += timeForActiveTask
-	    }
-    	
+        var signedIn = false
+    	if let work = session.getLastWork() {
+            if work.isOngoing() {
+                signedIn = true
+                let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                totalTime += timeForActiveTask
+            }
+    	}
+
     	let toolbarInfo = ToolbarInfo(
     		signedIn: signedIn, 
     		totalTimesActivatedForSession: totalActivations,

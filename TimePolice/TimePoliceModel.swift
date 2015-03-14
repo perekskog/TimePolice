@@ -79,6 +79,14 @@ class Session: NSManagedObject {
 
         return sessionSummary
     }
+    
+    func getLastWork() -> Work? {
+        if work.count >= 1 {
+            return work[work.count-1] as? Work
+        } else {
+            return nil
+        }
+    }
 
     @NSManaged var id: String
     @NSManaged var name: String
