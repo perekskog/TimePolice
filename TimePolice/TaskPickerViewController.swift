@@ -230,7 +230,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var recognizers: [UIGestureRecognizer: Int]!
     var views: [Int: TaskPickerButtonView]!
     var moc: NSManagedObjectContext!
-    var taskList: [Task]!
 
     // Non persistent data, empty at start
     var currentWork: Work?
@@ -252,15 +251,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		self.theme = theme
         self.taskSelectionStrategy = taskSelectionStrategy
 
-		self.taskList = session.tasks.array as [Task]
         self.sessionSummary = session.getSessionSummary(moc)
             
         self.moc = moc
 
         self.recognizers = [:]
         self.views = [:]
-
-        self.taskList = session.tasks.array as [Task]
 	}
 
     // Non presistent local attributes, setup when initialising the view
@@ -277,7 +273,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 	func setup() {
 		backgroundView.theme = theme
-
+        let taskList = session.tasks.array as [Task]
 		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
@@ -399,6 +395,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
+        let taskList = session.tasks.array as [Task]
+        
         if let work = currentWork {
             // Sign out
             let taskIndex = find(taskList, work.task as Task)
@@ -423,6 +421,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTap(sender: UITapGestureRecognizer) {
         // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
+        let taskList = session.tasks.array as [Task]
+        
         if let work = currentWork {
             let taskIndex = find(taskList, work.task as Task)
             taskSignOut(work.task as Task)
@@ -509,6 +509,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func updateActiveTask(timer: NSTimer) {
         //print(".")
         if let currentTask = currentWork?.task {
+            let taskList = session.tasks.array as [Task]
             if let currentTaskIndex = find(taskList, currentTask as Task) {
                 let view = views[currentTaskIndex]
                 views[currentTaskIndex]?.setNeedsDisplay()
@@ -526,7 +527,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
         //print("gsl(\(selectionArea))")
-		let task = taskList![selectionArea]
+
+        let taskList = session.tasks.array as [Task]
+        let task = taskList[selectionArea]
 
         var taskSummary: (Int, NSTimeInterval) = (0, 0)
         if let t = sessionSummary[task] {
@@ -537,7 +540,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         var active = false
         var activatedAt = NSDate()
         if let work = currentWork? {
-            if taskList![selectionArea] == work.task {
+            if taskList[selectionArea] == work.task {
                 active = true
                 activatedAt = work.startTime
             }
