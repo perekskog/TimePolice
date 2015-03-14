@@ -233,7 +233,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     // Non persistent data, empty at start
     var currentWork: Work?
-    var previousTask: Task?
 
 	
     init(vc: TaskPickerViewController, statustext: UITextView, backgroundView:TaskPickerBackgroundView,
@@ -260,7 +259,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	}
 
     // Non presistent local attributes, setup when initialising the view
-    // var currentTaskIndex = -1
 	var updateActiveActivityTimer: NSTimer?
 	var signInSignOutView: ToolView?
 	var infoAreaView: ToolView?
@@ -338,7 +336,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         if session.work.count > 0 {
             // Found a work item, look at the last one
             let work = session.work.objectAtIndex(session.work.count-1) as Work
-            previousTask = work.task
+
             // If start==stop it is ongoing work
             if work.startTime == work.stopTime {
                 TextViewLogger.log(statustext, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
@@ -372,7 +370,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	}
 
     func taskIsSelectable(taskNumber: Int) -> Bool {
-        // SHould use taskSelectionStrategy
+        // Should use taskSelectionStrategy
         return true
     }
 
@@ -397,18 +395,23 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         let taskList = session.tasks.array as [Task]
         
-        if let work = currentWork {
-            // Sign out
-            let taskIndex = find(taskList, work.task as Task)
-            taskSignOut(work.task as Task)
-            views[taskIndex!]?.setNeedsDisplay()
-        } else {
-            // Sign in if there is a previous task to sign in to
-            if let task = previousTask {
+        if session.work.count >= 1 {
+            // At least one item in worklist, look at the last item
+            let work = session.work[session.work.count-1] as Work
+            if work.startTime == work.stopTime {
+               // Work ongoing => sign out
+                let taskIndex = find(taskList, work.task as Task)
+                taskSignOut(work.task as Task)
+                views[taskIndex!]?.setNeedsDisplay()
+            } else {
+                // No ongoing work => sign in to previous task
+                let task = work.task
                 let taskIndex = find(taskList, task)
                 taskSignIn(task)
                 views[taskIndex!]?.setNeedsDisplay()
             }
+        } else {
+            // Empty worklist => do nothing
         }
 
         signInSignOutView?.setNeedsDisplay()
@@ -419,7 +422,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on new task, call taskSignIn/taskSignOut and update views
 
     func handleTap(sender: UITapGestureRecognizer) {
-        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
+        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
         let taskList = session.tasks.array as [Task]
         
@@ -482,8 +485,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
             sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
-            previousTask = work.task
-    
             let sw = session.work.mutableCopy() as NSMutableOrderedSet
             sw.replaceObjectAtIndex(sw.count-1, withObject: work)
             session.work = sw
