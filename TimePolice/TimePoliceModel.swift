@@ -256,6 +256,7 @@ class TimePoliceModelUtils {
 
     }
 
+/*
     class func dumpSessionWork(session: Session) {
 
         println("\n---------------------------")
@@ -267,6 +268,7 @@ class TimePoliceModelUtils {
             println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
         }
     }
+*/
 
     class func getSessionWork(session: Session) -> String {
 
@@ -433,24 +435,32 @@ class TestData {
         // Personal
         taskList = [
             Task.createInMOC(managedObjectContext, name: "Sleep"),
-            Task.createInMOC(managedObjectContext, name: "Sleep prep"),
+            Task.createInMOC(managedObjectContext, name: "Sleep in-out"),
             Task.createInMOC(managedObjectContext, name: "---"),
             
             Task.createInMOC(managedObjectContext, name: "Home"),
-            Task.createInMOC(managedObjectContext, name: "Home prep"),
-            Task.createInMOC(managedObjectContext, name: "Home out"),
+            Task.createInMOC(managedObjectContext, name: "Home in-out"),
+            Task.createInMOC(managedObjectContext, name: "Home outside"),
             
             Task.createInMOC(managedObjectContext, name: "Work"),
-            Task.createInMOC(managedObjectContext, name: "Work prep"),
-            Task.createInMOC(managedObjectContext, name: "Work out"),
-                
-            Task.createInMOC(managedObjectContext, name: "Car"),
-            Task.createInMOC(managedObjectContext, name: "Errand"),
             Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(managedObjectContext, name: "Work outside"),
+                
+            Task.createInMOC(managedObjectContext, name: "Car morning"),
+            Task.createInMOC(managedObjectContext, name: "Car day"),
+            Task.createInMOC(managedObjectContext, name: "Car evening"),
 
-            Task.createInMOC(managedObjectContext, name: "Car"),
-            Task.createInMOC(managedObjectContext, name: "Errand"),
             Task.createInMOC(managedObjectContext, name: "Lunch"),
+            Task.createInMOC(managedObjectContext, name: "Errand"),
+            Task.createInMOC(managedObjectContext, name: "F&S"),
+
+            Task.createInMOC(managedObjectContext, name: "1"),
+            Task.createInMOC(managedObjectContext, name: "2"),
+            Task.createInMOC(managedObjectContext, name: "3"),
+
+            Task.createInMOC(managedObjectContext, name: "4"),
+            Task.createInMOC(managedObjectContext, name: "5"),
+            Task.createInMOC(managedObjectContext, name: "6"),
 
         ]
         

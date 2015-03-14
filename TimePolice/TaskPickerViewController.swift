@@ -21,6 +21,8 @@ class TaskPickerViewController: UIViewController
     var session: Session?
     var sourceController: TimePoliceViewController?
     var tp: TaskPicker?
+    
+    var statusView: UITextView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +47,12 @@ class TaskPickerViewController: UIViewController
         statusRect.origin.y = statusRect.size.height-110
         statusRect.size.height = 100
         statusRect.size.width -= 10
-        let statusView = UITextView(frame: statusRect)
-        statusView.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
-        statusView.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
-        statusView.font = UIFont.systemFontOfSize(8)
-        statusView.editable = false
-        self.view.addSubview(statusView)
+        statusView = UITextView(frame: statusRect)
+        statusView!.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
+        statusView!.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
+        statusView!.font = UIFont.systemFontOfSize(8)
+        statusView!.editable = false
+        self.view.addSubview(statusView!)
         
         let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-120), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as UIButton
@@ -61,20 +63,16 @@ class TaskPickerViewController: UIViewController
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
-        
-        
-        // TextViewLogger.reset(statusView)
-        TextViewLogger.log(statusView, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
-
+        TextViewLogger.log(statusView!, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
 
         if let s = session {
             if let moc = self.managedObjectContext {
-                tp = TaskPicker(vc: self, statustext: statusView, backgroundView: taskPickerBackgroundView,
+                tp = TaskPicker(vc: self, statusView: statusView!, backgroundView: taskPickerBackgroundView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc)
             
                 tp?.setup()
-                TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(s))
+                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
             }
         }
 
@@ -101,7 +99,8 @@ class TaskPickerViewController: UIViewController
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "EditWork" {
             if let s = session {
-                TimePoliceModelUtils.dumpSessionWork(s)
+                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+//                TimePoliceModelUtils.dumpSessionWork(s)
             }
 
             let vc = segue.destinationViewController as TaskPickerEditWorkViewController
@@ -133,14 +132,23 @@ class TaskPickerViewController: UIViewController
         // you need to reach out to a server to mention that this screen was
         // returned to from a later screen.
 
-        println("okEditWork")
-
         if unwindSegue.identifier == "OkEditWork" {
 
             let vc = unwindSegue.sourceViewController as TaskPickerEditWorkViewController
 
+            if let s = session {
+                if let w = session?.getLastWork() {
+                    if !w.isOngoing() {
+                        TextViewLogger.log(statusView!, message: "\nDon't change anything while signed out")
+                        return
+                    }
+                }
+            }
+            
             if let t = vc.taskToUse {
                 println("taskToUse=\(t.name)")
+                TextViewLogger.log(statusView!, message: "\ntaskToUse=\(t.name)")
+
                 if let s = session {
                     if let wl = s.work.array as? [Work] {
                         if wl.count >= 1 {
@@ -151,6 +159,8 @@ class TaskPickerViewController: UIViewController
             }
             
             println("Initial=\(vc.initialDate), current=\(vc.datePicker.date)")
+            TextViewLogger.log(statusView!, message: "\nInitial=\(vc.initialDate), current=\(vc.datePicker.date)")
+
             if vc.datePicker.date != vc.initialDate {
                 if let s = session {
                     if let wl = s.work.array as? [Work] {
@@ -158,7 +168,12 @@ class TaskPickerViewController: UIViewController
                             wl[wl.count-1].startTime = vc.datePicker.date
                         }
                         if wl.count >= 2 {
-                            wl[wl.count-2].stopTime = vc.datePicker.date
+                            if wl[wl.count-2].stopTime.compare(vc.datePicker.date) == NSComparisonResult.OrderedDescending {
+                                wl[wl.count-2].stopTime = vc.datePicker.date
+                            } else {
+                                TextViewLogger.log(statusView!, message: "\nDid not change date")
+                                println("Did not change date")
+                            }
                         }
                     }   
                 }
@@ -170,7 +185,8 @@ class TaskPickerViewController: UIViewController
         }
 
         if let s = session {
-            TimePoliceModelUtils.dumpSessionWork(s)
+            TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+//            TimePoliceModelUtils.dumpSessionWork(s)
         }
     }
 
@@ -215,7 +231,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 	// Views, set at creation time
     var vc: TaskPickerViewController!
-    var statustext: UITextView!
+    var statusView: UITextView!
     var backgroundView:TaskPickerBackgroundView!
 
     // Preferences, set at creation time
@@ -231,7 +247,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var views: [Int: TaskPickerButtonView]!
     var moc: NSManagedObjectContext!
 	
-    init(vc: TaskPickerViewController, statustext: UITextView, backgroundView:TaskPickerBackgroundView,
+    init(vc: TaskPickerViewController, statusView: UITextView, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext) {
@@ -239,7 +255,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         self.session = session
 
         self.vc = vc
-        self.statustext = statustext
+        self.statusView = statusView
         self.backgroundView = backgroundView
 
 		self.layout = layout
@@ -334,15 +350,16 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let work = session.work[session.work.count-1] as Work
 
             if work.isOngoing() {
-                TextViewLogger.log(statustext, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
+                TextViewLogger.log(statusView, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
             } else {
-                TextViewLogger.log(statustext, message: String("\nNo ongoing work"))
+                TextViewLogger.log(statusView, message: String("\nNo ongoing work"))
             }
         } else {
-            TextViewLogger.log(statustext, message: String("\nWorklist empty"))
+            TextViewLogger.log(statusView, message: String("\nWorklist empty"))
         }
         
-        TimePoliceModelUtils.dumpSessionWork(session)
+        TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(session))
+//        TimePoliceModelUtils.dumpSessionWork(session)
     }
 
 
@@ -376,8 +393,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on settings    
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
-        vc.performSegueWithIdentifier("EditWork", sender: vc)
+        TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                vc.performSegueWithIdentifier("EditWork", sender: vc)                
+            }
+        }
     }
         
 
@@ -385,7 +406,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
+        TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
         let taskList = session.tasks.array as [Task]
         
@@ -414,7 +435,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on new task, call taskSignIn/taskSignOut and update views
 
     func handleTap(sender: UITapGestureRecognizer) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
+        TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
         let taskList = session.tasks.array as [Task]
         
@@ -442,7 +463,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork when sign in to a task
 
     func taskSignIn(task: Task) {
-        TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
+        TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
         let w = Work.createInMOC(self.moc, name: "")
         w.task = task
@@ -455,15 +476,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         TimePoliceModelUtils.save(moc)
             
-        TimePoliceModelUtils.dumpSessionWork(session)
-        TextViewLogger.reset(statustext)
-        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
+        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
 
     func taskSignOut(task: Task) {
-        TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
+        TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut(\(task.name))"))
 
         //if let work = currentWork {
         if let work = session.getLastWork() {
@@ -484,15 +503,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
                 TimePoliceModelUtils.save(moc)
             } else {
-                TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work ongoing"))
+                TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work ongoing"))
             }
         } else {
-            TextViewLogger.log(statustext, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
+            TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
         }
 
-        TimePoliceModelUtils.dumpSessionWork(session)
-        TextViewLogger.reset(statustext)
-        TextViewLogger.log(statustext, message: TimePoliceModelUtils.getSessionWork(session))
+        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
 
     }
 
