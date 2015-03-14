@@ -335,10 +335,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         // Check last work item, is something ongoing?
         if session.work.count > 0 {
             // Found a work item, look at the last one
-            let work = session.work.objectAtIndex(session.work.count-1) as Work
+            let work = session.work[session.work.count-1] as Work
 
-            // If start==stop it is ongoing work
-            if work.startTime == work.stopTime {
+            if work.isOngoing() {
                 TextViewLogger.log(statustext, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
                 currentWork = work
             } else {
@@ -398,7 +397,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         if session.work.count >= 1 {
             // At least one item in worklist, look at the last item
             let work = session.work[session.work.count-1] as Work
-            if work.startTime == work.stopTime {
+            if work.isOngoing() {
                // Work ongoing => sign out
                 let taskIndex = find(taskList, work.task as Task)
                 taskSignOut(work.task as Task)

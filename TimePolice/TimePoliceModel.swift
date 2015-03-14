@@ -124,6 +124,14 @@ class Work: NSManagedObject {
 
         return newItem
     }
+    
+    func isOngoing() -> Bool {
+        if startTime == stopTime {
+            return true
+        } else {
+            return false
+        }
+    }
 
     @NSManaged var id: String
     @NSManaged var name: String
