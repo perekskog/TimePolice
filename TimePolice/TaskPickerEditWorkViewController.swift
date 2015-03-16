@@ -16,6 +16,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
     // Input values
     var work: Work?
     var minimumDate: NSDate?
+    var maximumDate: NSDate?
     var taskList: [Task]?
 
     // Output values
@@ -32,6 +33,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
         if let date = work?.startTime {
             datePicker.date = date
             datePicker.minimumDate = self.minimumDate
+            datePicker.maximumDate = self.maximumDate
             initialDate = datePicker.date
         }
     }

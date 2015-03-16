@@ -81,7 +81,7 @@ class TaskPickerViewController: UIViewController
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // TextViewLogger.log(statustext, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -100,12 +100,12 @@ class TaskPickerViewController: UIViewController
         if segue.identifier == "EditWork" {
             if let s = session {
                 TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
-//                TimePoliceModelUtils.dumpSessionWork(s)
             }
 
             let vc = segue.destinationViewController as TaskPickerEditWorkViewController
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+                vc.maximumDate = NSDate()
                 if let wl = s.work.array as? [Work] {
                     if wl.count >= 1 {
                         vc.work = wl[wl.count-1]
@@ -123,7 +123,7 @@ class TaskPickerViewController: UIViewController
         // You can actually implement more stuff here, if you want, IE, if
         // you need to reach out to a server to mention that this screen was
         // returned to from a later screen.
-        println("cancelEditWork")
+        TextViewLogger.log(statusView!, message: "\ncancelEditWork")
     }
 
     @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
@@ -146,7 +146,6 @@ class TaskPickerViewController: UIViewController
             }
             
             if let t = vc.taskToUse {
-                println("taskToUse=\(t.name)")
                 TextViewLogger.log(statusView!, message: "\ntaskToUse=\(t.name)")
 
                 if let s = session {
@@ -158,21 +157,28 @@ class TaskPickerViewController: UIViewController
                 }
             }
             
-            println("Initial=\(vc.initialDate), current=\(vc.datePicker.date)")
             TextViewLogger.log(statusView!, message: "\nInitial=\(vc.initialDate), current=\(vc.datePicker.date)")
+            
+            var targetDate = vc.datePicker.date
+            if let minDate = vc.minimumDate {
+                if vc.datePicker.date.compare(minDate) == NSComparisonResult.OrderedAscending {
+                    targetDate = minDate
+                    TextViewLogger.log(statusView!, message: "\nAdjusted new date=\(targetDate)")
+                }
+            }
 
             if vc.datePicker.date != vc.initialDate {
                 if let s = session {
                     if let wl = s.work.array as? [Work] {
                         if wl.count >= 1 {
-                            wl[wl.count-1].startTime = vc.datePicker.date
+                            wl[wl.count-1].startTime = targetDate
+                            wl[wl.count-1].stopTime = targetDate
                         }
                         if wl.count >= 2 {
-                            if wl[wl.count-2].stopTime.compare(vc.datePicker.date) == NSComparisonResult.OrderedDescending {
-                                wl[wl.count-2].stopTime = vc.datePicker.date
+                            if wl[wl.count-2].stopTime.compare(targetDate) == NSComparisonResult.OrderedDescending {
+                                wl[wl.count-2].stopTime = targetDate
                             } else {
                                 TextViewLogger.log(statusView!, message: "\nDid not change date")
-                                println("Did not change date")
                             }
                         }
                     }   
@@ -186,7 +192,6 @@ class TaskPickerViewController: UIViewController
 
         if let s = session {
             TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
-//            TimePoliceModelUtils.dumpSessionWork(s)
         }
     }
 
@@ -359,7 +364,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         }
         
         TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(session))
-//        TimePoliceModelUtils.dumpSessionWork(session)
     }
 
 

@@ -40,6 +40,7 @@ class TextViewLogger {
         let numberOfElements = countElements(textview.text)
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         textview.scrollRangeToVisible(range)
+        print(message)
 	}
     class func reset(textview: UITextView) {
         textview.text = ""
