@@ -361,9 +361,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             }
         } else {
             TextViewLogger.log(statusView, message: String("\nWorklist empty"))
-        }
-        
-//        TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(session))
+        }        
     }
 
 
@@ -403,8 +401,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 vc.performSegueWithIdentifier("EditWork", sender: vc)                
             }
         }
-
-//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
         
 
@@ -484,9 +480,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         sw.addObject(w)
         session.work = sw
 
-        TimePoliceModelUtils.save(moc)
-            
-//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
+
+
+        TimePoliceModelUtils.save(moc)            
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
@@ -518,9 +514,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         } else {
             TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
         }
-
-//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
-
     }
 
 
