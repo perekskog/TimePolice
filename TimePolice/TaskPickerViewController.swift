@@ -108,9 +108,11 @@ class TaskPickerViewController: UIViewController
                 vc.maximumDate = NSDate()
                 if let wl = s.work.array as? [Work] {
                     if wl.count >= 1 {
+                        // At least one item: Set as item to edit.
                         vc.work = wl[wl.count-1]
                     }
                     if wl.count >= 2 {
+                        // If at least two items: Limit how far back in time the datepicker can go.
                         vc.minimumDate = wl[wl.count-2].startTime
                     }
                 }
@@ -119,18 +121,11 @@ class TaskPickerViewController: UIViewController
     }
 
     @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
-        // Only "implemented" to satisfy a respondsToSelector: search.
-        // You can actually implement more stuff here, if you want, IE, if
-        // you need to reach out to a server to mention that this screen was
-        // returned to from a later screen.
+
         TextViewLogger.log(statusView!, message: "\ncancelEditWork")
     }
 
     @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
-        // Only "implemented" to satisfy a respondsToSelector: search.
-        // You can actually implement more stuff here, if you want, IE, if
-        // you need to reach out to a server to mention that this screen was
-        // returned to from a later screen.
 
         if unwindSegue.identifier == "OkEditWork" {
 
@@ -146,6 +141,8 @@ class TaskPickerViewController: UIViewController
             }
             
             if let t = vc.taskToUse {
+                // Change task if this attribute was set
+
                 TextViewLogger.log(statusView!, message: "\ntaskToUse=\(t.name)")
 
                 if let s = session {
@@ -159,6 +156,7 @@ class TaskPickerViewController: UIViewController
             
             TextViewLogger.log(statusView!, message: "\nInitial=\(vc.initialDate), current=\(vc.datePicker.date)")
             
+            // If datepicker points to the earliest possible minute, it might be a few seconds too early, in that case, pick the input minimum date instead.
             var targetDate = vc.datePicker.date
             if let minDate = vc.minimumDate {
                 if vc.datePicker.date.compare(minDate) == NSComparisonResult.OrderedAscending {
@@ -171,10 +169,12 @@ class TaskPickerViewController: UIViewController
                 if let s = session {
                     if let wl = s.work.array as? [Work] {
                         if wl.count >= 1 {
+                            // If at least one item: Set start/stoptime
                             wl[wl.count-1].startTime = targetDate
                             wl[wl.count-1].stopTime = targetDate
                         }
                         if wl.count >= 2 {
+                            // If at least two items: Adjust stoptime of previous work item
                             if wl[wl.count-2].stopTime.compare(targetDate) == NSComparisonResult.OrderedDescending {
                                 wl[wl.count-2].stopTime = targetDate
                             } else {
@@ -363,7 +363,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             TextViewLogger.log(statusView, message: String("\nWorklist empty"))
         }
         
-        TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(session))
+//        TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
 
@@ -403,6 +403,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 vc.performSegueWithIdentifier("EditWork", sender: vc)                
             }
         }
+
+//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
         
 
@@ -433,6 +435,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
+
+        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
 
@@ -458,6 +462,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
+
+        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
     //--------------------------------------------
@@ -480,7 +486,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         TimePoliceModelUtils.save(moc)
             
-        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
+//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
@@ -513,7 +519,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
         }
 
-        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
+//        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
 
     }
 
