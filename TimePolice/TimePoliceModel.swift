@@ -260,8 +260,7 @@ class TimePoliceModelUtils {
 
         var s: String
 
-        s = "\n---------------------------"
-        s += "\n----------Session----------"
+        s = "\nCurrent Session:"
         s += "\nS: \(session.name)-\(session.id)"
         s += "\n    P: \(session.project.name)-\(session.project.id)"
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in

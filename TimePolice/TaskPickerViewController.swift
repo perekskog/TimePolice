@@ -26,6 +26,7 @@ class TaskPickerViewController: UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
@@ -63,7 +64,7 @@ class TaskPickerViewController: UIViewController
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
-        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())):ViewController.viewDidLoad"))
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) TaskPickerVC.viewDidLoad"))
 
         if let s = session {
             if let moc = self.managedObjectContext {
@@ -81,11 +82,12 @@ class TaskPickerViewController: UIViewController
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) ViewController.didReceiveMemoryWarning"))
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) TaskPickerVC.didReceiveMemoryWarning"))
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) TaskPickerVC.viewWillAppear"))
         var nav = self.navigationController?.navigationBar
         nav?.barStyle = UIBarStyle.Black
         nav?.tintColor = UIColor.whiteColor()
@@ -97,6 +99,8 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) TaskPickerVC.prepareForSegue(\(segue.identifier)"))
+
         if segue.identifier == "EditWork" {
             if let s = session {
                 TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
@@ -121,11 +125,11 @@ class TaskPickerViewController: UIViewController
     }
 
     @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
-
-        TextViewLogger.log(statusView!, message: "\ncancelEditWork")
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.cancelEditWork")
     }
 
     @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.okEditWork")
 
         if unwindSegue.identifier == "OkEditWork" {
 
@@ -143,7 +147,7 @@ class TaskPickerViewController: UIViewController
             if let t = vc.taskToUse {
                 // Change task if this attribute was set
 
-                TextViewLogger.log(statusView!, message: "\ntaskToUse=\(t.name)")
+                TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
 
                 if let s = session {
                     if let wl = s.work.array as? [Work] {
@@ -152,16 +156,21 @@ class TaskPickerViewController: UIViewController
                         }
                     } 
                 }
+            } else {
+                TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
             }
             
-            TextViewLogger.log(statusView!, message: "\nInitial=\(vc.initialDate), current=\(vc.datePicker.date)")
+            if let initialDate = vc.initialDate {
+                TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
+                TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+            }
             
             // If datepicker points to the earliest possible minute, it might be a few seconds too early, in that case, pick the input minimum date instead.
             var targetDate = vc.datePicker.date
             if let minDate = vc.minimumDate {
                 if vc.datePicker.date.compare(minDate) == NSComparisonResult.OrderedAscending {
                     targetDate = minDate
-                    TextViewLogger.log(statusView!, message: "\nAdjusted new date=\(targetDate)")
+                    TextViewLogger.log(statusView!, message: "\nAdjusted new date=\(getString(targetDate))")
                 }
             }
 
@@ -202,6 +211,8 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
 
     func exit(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
+
         sourceController?.exitFromSegue()
         self.navigationController?.popViewControllerAnimated(true)
         tp?.updateActiveActivityTimer?.invalidate()
@@ -212,6 +223,7 @@ class TaskPickerViewController: UIViewController
     //--------------------------------------------------
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
+
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         if let managedObjectContext = appDelegate.managedObjectContext {
             return managedObjectContext
@@ -256,6 +268,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext) {
+            
+        TextViewLogger.log(statusView, message: "\(getString(NSDate())) TaskPicker.init")
 
         self.session = session
 
@@ -287,6 +301,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     //--------------------------------------------------
 
 	func setup() {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPicker.setup")
+
 		backgroundView.theme = theme
         let taskList = session.tasks.array as [Task]
 		// Setup task buttons
@@ -355,7 +371,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let work = session.work[session.work.count-1] as Work
 
             if work.isOngoing() {
-                TextViewLogger.log(statusView, message: String("\nOW: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
+                TextViewLogger.log(statusView, message: String("\nWork ongoing: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
             } else {
                 TextViewLogger.log(statusView, message: String("\nNo ongoing work"))
             }
@@ -396,6 +412,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
+        
         if let work = session.getLastWork() {
             if work.isOngoing() {
                 vc.performSegueWithIdentifier("EditWork", sender: vc)                
