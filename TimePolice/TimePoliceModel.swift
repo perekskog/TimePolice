@@ -256,20 +256,6 @@ class TimePoliceModelUtils {
 
     }
 
-/*
-    class func dumpSessionWork(session: Session) {
-
-        println("\n---------------------------")
-        println("----------Session----------\n")
-        println("S: \(session.name)-\(session.id)")
-        println("    P: \(session.project.name)-\(session.project.id)")
-        session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            let work = elem as Work
-            println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
-        }
-    }
-*/
-
     class func getSessionWork(session: Session) -> String {
 
         var s: String
@@ -280,7 +266,7 @@ class TimePoliceModelUtils {
         s += "\n    P: \(session.project.name)-\(session.project.id)"
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             let work = elem as Work
-            s += "\n    W: \(work.task.name) \(work.startTime)->\(work.stopTime)"
+            s += "\n    W: \(work.task.name) \(getString(work.startTime))->\(getString(work.stopTime))"
         }
 
         return s

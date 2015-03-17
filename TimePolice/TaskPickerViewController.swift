@@ -63,7 +63,7 @@ class TaskPickerViewController: UIViewController
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
-        TextViewLogger.log(statusView!, message: String("\n\(NSDate()):ViewController.viewDidLoad"))
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())):ViewController.viewDidLoad"))
 
         if let s = session {
             if let moc = self.managedObjectContext {

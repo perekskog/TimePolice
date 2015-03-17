@@ -28,10 +28,10 @@ func getString(timeInterval: NSTimeInterval) -> String {
 }
 
 func getString(date: NSDate) -> String {
-	var formatter = NSDateFormatter();
-	formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-	let defaultTimeZoneStr = formatter.stringFromDate(date);
-	return defaultTimeZoneStr
+	let formatter = NSDateFormatter();
+    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyyMMddhhmmss", options: 0, locale: NSLocale.currentLocale())
+	let timeString = formatter.stringFromDate(date)
+	return timeString
 }
 
 class TextViewLogger {
