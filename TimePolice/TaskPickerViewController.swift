@@ -202,6 +202,8 @@ class TaskPickerViewController: UIViewController
         if let s = session {
             TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
         }
+
+        tp?.redraw()
     }
 
     
@@ -261,7 +263,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     // Non persitent data, initialized in init(), then set in setup()
     var recognizers: [UIGestureRecognizer: Int]!
-    var views: [Int: TaskPickerButtonView]!
+    var taskbuttonviews: [Int: TaskPickerButtonView]!
     var moc: NSManagedObjectContext!
 	
     init(vc: TaskPickerViewController, statusView: UITextView, backgroundView:TaskPickerBackgroundView,
@@ -286,7 +288,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         self.moc = moc
 
         self.recognizers = [:]
-        self.views = [:]
+        self.taskbuttonviews = [:]
 	}
 
     // Non presistent local attributes, setup when initialising the view
@@ -319,7 +321,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
             view.addGestureRecognizer(recognizer)
 			recognizers[recognizer] = i
-            views[i] = view
+            taskbuttonviews[i] = view
 
 			backgroundView.addSubview(view)
 		}
@@ -343,6 +345,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		infoAreaView!.theme = theme
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
+
+        let longPressRecognizer = UILongPressGestureRecognizer(target:self, action:Selector("handleLongPressInfo:"))
+        longPressRecognizer.delegate = self
+        infoAreaView!.addGestureRecognizer(longPressRecognizer)
 
 		backgroundView.addSubview(infoAreaView!)
 
@@ -380,7 +386,22 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         }        
     }
 
+    //------------------------------------
+    //  TaskPicker - redraw
+    //------------------------------------
 
+    func redraw() {
+
+        sessionSummary = session.getSessionSummary(moc)
+
+        signInSignOutView?.setNeedsDisplay()
+        infoAreaView?.setNeedsDisplay()
+        settingsView?.setNeedsDisplay()
+
+        for (_, view) in taskbuttonviews {
+            view.setNeedsDisplay()
+        }
+    }
 
 
     //------------------------------------
@@ -408,6 +429,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     //  TaskPicker - Tap on buttons
     //-------------------------------------
 
+
     // Tap on settings    
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
@@ -419,7 +441,21 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             }
         }
     }
-        
+
+
+    // Long press on infoarea, do same as in handleTap
+
+    func handleLongPressInfo(sender: UILongPressGestureRecognizer) {
+        TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPressInfo"))
+
+        if sender.state == UIGestureRecognizerState.Began {
+            if let work = session.getLastWork() {
+                if work.isOngoing() {
+                    vc.performSegueWithIdentifier("EditWork", sender: vc)
+                }
+            }
+        }
+    }
 
 
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
@@ -434,13 +470,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                // Work ongoing => sign out
                 let taskIndex = find(taskList, work.task as Task)
                 taskSignOut(work.task as Task)
-                views[taskIndex!]?.setNeedsDisplay()
+                taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             } else {
                 // No ongoing work => sign in to previous task
                 let task = work.task
                 let taskIndex = find(taskList, task)
                 taskSignIn(task)
-                views[taskIndex!]?.setNeedsDisplay()
+                taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             }
         } else {
             // Empty worklist => do nothing
@@ -464,20 +500,24 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             if work.isOngoing() {
                 let taskIndex = find(taskList, work.task as Task)
                 taskSignOut(work.task as Task)
-                views[taskIndex!]?.setNeedsDisplay()
+                taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             }
         }
 
         let taskIndex = recognizers[sender]
         let task = taskList[taskIndex!]
         taskSignIn(task)
-        views[taskIndex!]?.setNeedsDisplay()
+        taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
 
         TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
+
+
+
+
 
     //--------------------------------------------
     //  TaskPicker - Sign int/out
@@ -546,8 +586,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let task = work.task
             let taskList = session.tasks.array as [Task]
             if let taskIndex = find(taskList, task as Task) {
-                let view = views[taskIndex]
-                views[taskIndex]?.setNeedsDisplay()
+                let view = taskbuttonviews[taskIndex]
+                taskbuttonviews[taskIndex]?.setNeedsDisplay()
                 infoAreaView?.setNeedsDisplay()
             }
         }
