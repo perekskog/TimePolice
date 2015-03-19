@@ -316,11 +316,16 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 			view.selectionAreaInfoDelegate = self
 			view.taskPosition = i
 
-			let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
-            recognizer.delegate = self
+			let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+            tapRecognizer.delegate = self
+            view.addGestureRecognizer(tapRecognizer)
+			recognizers[tapRecognizer] = i
 
-            view.addGestureRecognizer(recognizer)
-			recognizers[recognizer] = i
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+            longPressRecognizer.delegate = self
+            view.addGestureRecognizer(longPressRecognizer)
+            recognizers[longPressRecognizer] = i
+
             taskbuttonviews[i] = view
 
 			backgroundView.addSubview(view)
@@ -345,10 +350,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		infoAreaView!.theme = theme
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
-
-        let longPressRecognizer = UILongPressGestureRecognizer(target:self, action:Selector("handleLongPressInfo:"))
-        longPressRecognizer.delegate = self
-        infoAreaView!.addGestureRecognizer(longPressRecognizer)
 
 		backgroundView.addSubview(infoAreaView!)
 
@@ -443,21 +444,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     }
 
 
-    // Long press on infoarea, do same as in handleTap
-
-    func handleLongPressInfo(sender: UILongPressGestureRecognizer) {
-        TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPressInfo"))
-
-        if sender.state == UIGestureRecognizerState.Began {
-            if let work = session.getLastWork() {
-                if work.isOngoing() {
-                    vc.performSegueWithIdentifier("EditWork", sender: vc)
-                }
-            }
-        }
-    }
-
-
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
@@ -514,6 +500,39 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
+
+    // Long press on infoarea, do same as in handleTap
+
+    func handleLongPress(sender: UILongPressGestureRecognizer) {
+
+        if sender.state != UIGestureRecognizerState.Began {
+            return
+        }
+
+        TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPress"))
+
+        if let work = session.getLastWork() {
+            if !work.isOngoing() {
+                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No ongoing work"))
+                return
+            }
+            
+            let taskList = session.tasks.array as [Task]
+            let taskIndex = recognizers[sender]
+            let task = taskList[taskIndex!]
+            if work.task != task {
+                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) LongPress on inactive task"))
+                return
+            }
+        }
+
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                vc.performSegueWithIdentifier("EditWork", sender: vc)
+            }
+        }
+    }
+
 
 
 
