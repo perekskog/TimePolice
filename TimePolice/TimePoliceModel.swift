@@ -432,8 +432,12 @@ class TestData {
             Task.createInMOC(managedObjectContext, name: "Work outside"),
                 
             Task.createInMOC(managedObjectContext, name: "Car morning"),
-            Task.createInMOC(managedObjectContext, name: "Car day"),
+            Task.createInMOC(managedObjectContext, name: "T morning"),
+            Task.createInMOC(managedObjectContext, name: "P morning"),
+
             Task.createInMOC(managedObjectContext, name: "Car evening"),
+            Task.createInMOC(managedObjectContext, name: "T evening"),
+            Task.createInMOC(managedObjectContext, name: "P evening"),
 
             Task.createInMOC(managedObjectContext, name: "Lunch"),
             Task.createInMOC(managedObjectContext, name: "Errand"),
@@ -442,11 +446,6 @@ class TestData {
             Task.createInMOC(managedObjectContext, name: "1"),
             Task.createInMOC(managedObjectContext, name: "2"),
             Task.createInMOC(managedObjectContext, name: "3"),
-
-            Task.createInMOC(managedObjectContext, name: "4"),
-            Task.createInMOC(managedObjectContext, name: "5"),
-            Task.createInMOC(managedObjectContext, name: "6"),
-
         ]
         
         session.tasks = NSOrderedSet(array: taskList)
