@@ -11,7 +11,20 @@ import CoreData
 import UIKit
 
 
+//=======================================================================================
+//=======================================================================================
+//  Project
+//=======================================================================================
+
 class Project: NSManagedObject {
+
+    @NSManaged var id: String
+    @NSManaged var name: String
+    @NSManaged var sessions: NSSet
+
+   //---------------------------------------------
+    // Project - createInMOC
+    //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as Project
@@ -26,6 +39,10 @@ class Project: NSManagedObject {
         return newItem
     }
 
+    //---------------------------------------------
+    // Project - findInMOC
+    //---------------------------------------------
+
     class func findInMOC(moc: NSManagedObjectContext, name: String) -> [Project]? {
 
         let fetchRequest = NSFetchRequest(entityName: "Project")
@@ -37,13 +54,24 @@ class Project: NSManagedObject {
         return fetchResults
     }
 
-    @NSManaged var id: String
-    @NSManaged var name: String
-    @NSManaged var sessions: NSSet
-
 }
 
+//=======================================================================================
+//=======================================================================================
+//  Session
+//=======================================================================================
+
 class Session: NSManagedObject {
+
+    @NSManaged var id: String
+    @NSManaged var name: String
+    @NSManaged var project: Project
+    @NSManaged var tasks: NSOrderedSet
+    @NSManaged var work: NSOrderedSet
+
+    //---------------------------------------------
+    // Session - createInMOC
+    //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Session {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as Session
@@ -58,6 +86,10 @@ class Session: NSManagedObject {
         return newItem
     }
     
+    //---------------------------------------------
+    // Session - getSessionSummary
+    //---------------------------------------------
+
     func getSessionSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
         var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
 
@@ -80,6 +112,10 @@ class Session: NSManagedObject {
         return sessionSummary
     }
     
+    //---------------------------------------------
+    // Session - getLastWork
+    //---------------------------------------------
+
     func getLastWork() -> Work? {
         if work.count >= 1 {
             return work[work.count-1] as? Work
@@ -88,15 +124,177 @@ class Session: NSManagedObject {
         }
     }
 
-    @NSManaged var id: String
-    @NSManaged var name: String
-    @NSManaged var project: Project
-    @NSManaged var tasks: NSOrderedSet
-    @NSManaged var work: NSOrderedSet
+    //---------------------------------------------
+    // Session - setStartTime
+    //---------------------------------------------
+
+/*
+    * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+
+    * Modify first item => There can't be a previous item
+
+         workToModify
+    y1  |-----y2-----| ... y3
+
+    * Modify anything but the first item => Need to take care of the previous item
+
+             previousWork      workToModify
+    x1  ... |-----x2-----| x3 |-----x4-----| ... x5
+
+*/
+
+    func setStartTime(moc: NSManagedObjectContext, workIndex: Int, desiredStartTime: NSDate) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
+
+        var targetTime = desiredStartTime
+        let workToModify = work[workIndex] as Work
+        if workIndex == 0 {
+            // y1, y2, y3
+            if workToModify.isOngoing() || targetTime.compare(workToModify.stopTime) == NSComparisonResult.OrderedAscending {
+                // Modify stopTime if work is ongoing
+                workToModify.stopTime = targetTime
+            }
+            workToModify.startTime = targetTime
+        } else {
+            // Not the first item => There is a previous item
+            let previousWork = work[workIndex-1] as Work
+
+            if targetTime.compare(previousWork.stopTime) == NSComparisonResult.OrderedDescending {
+                // workToModify will not overlap with previousWork
+                // x4
+                if workToModify.isOngoing() {
+                    // Modify stopTime if work is ongoing
+                    workToModify.stopTime = targetTime
+                }
+                workToModify.startTime = targetTime
+            } else {
+                // workToModify will overlap with previousWork
+                if targetTime.compare(previousWork.startTime) == NSComparisonResult.OrderedDescending {
+                    // targetTime points to a time between start and stop of previousWork => adjust stoptime of previousWork
+                    // x2
+                    previousWork.stopTime = targetTime
+                    if workToModify.isOngoing() {
+                        // Modify stopTime if work is ongoing
+                        workToModify.stopTime = targetTime
+                    }
+                    workToModify.startTime = targetTime
+                } else {
+                    // targetTime points to a time before start of previousWork => adjust targetTime AND start/stop of previousWork
+                    // x1
+                    targetTime = previousWork.startTime
+                    previousWork.startTime = targetTime
+                    previousWork.stopTime = targetTime
+
+                    if workToModify.isOngoing() {
+                        // Modify stopTime if work is ongoing
+                        workToModify.stopTime = targetTime
+                    }
+                    workToModify.startTime = targetTime
+                }
+            }
+        }
+
+
+        TimePoliceModelUtils.save(moc)
+    }
+
+    //---------------------------------------------
+    // Session - setStopTime
+    //---------------------------------------------
+
+    func setStopTime(workIndex: Int, stopTime: NSDate) {
+
+    }
+
+
+    //---------------------------------------------
+    // Session - deleteWorkAndAdjustNextStart
+    //---------------------------------------------
+
+/*
+    * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+
+    * Modify last item => Can't be a next item => Just delete
+
+             workToModify
+    c1  ... |------------|
+
+    * Modify anything but the last item => Adjust start time of successor
+
+             workToModify      nextWork
+    c2  ... |------------|  |------------| ...
+
+*/
+
+    func deleteWorkAndAdjustNextStart(workIndex: Int) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
+
+        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
+
+        if mutableWork.count == 1 {
+            // c1
+            mutableWork.removeObjectAtIndex(1)
+            return
+        }
+    }
+
+    //---------------------------------------------
+    // Session - deleteWorkAndAdjustPreviousStop
+    //---------------------------------------------
+
+/*
+    * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+
+    * Modify first item => Can't be a previous item => Just delete
+
+         workToModify
+    c1  |------------| ...
+
+    * Modify anything but the first item => Adjust stop time of predecessor
+
+             previousWork    workToModify
+    c2  ... |------------|  |------------| ...
+
+*/
+
+    func deleteWorkAndAdjustPreviousStop(workIndex: Int) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
+
+        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
+
+        if mutableWork.count == 1 {
+            // c1
+            mutableWork.removeObjectAtIndex(1)
+            return
+        }
+    }
 
 }
 
+//=======================================================================================
+//=======================================================================================
+//  Task
+//=======================================================================================
+
 class Task: NSManagedObject {
+
+    @NSManaged var name: String
+    @NSManaged var id: String
+    @NSManaged var sessions: NSSet
+    @NSManaged var work: NSOrderedSet
+
+    //---------------------------------------------
+    // Task - createInMOC
+    //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Task {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as Task
@@ -111,14 +309,25 @@ class Task: NSManagedObject {
         return newItem
     }
 
-    @NSManaged var name: String
-    @NSManaged var id: String
-    @NSManaged var sessions: NSSet
-    @NSManaged var work: NSOrderedSet
-
 }
 
+//=======================================================================================
+//=======================================================================================
+//  Work
+//=======================================================================================
+
 class Work: NSManagedObject {
+
+    @NSManaged var id: String
+    @NSManaged var name: String
+    @NSManaged var startTime: NSDate
+    @NSManaged var stopTime: NSDate
+    @NSManaged var session: Session
+    @NSManaged var task: Task
+
+    //---------------------------------------------
+    // Work - createInMOC
+    //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Work {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as Work
@@ -133,6 +342,10 @@ class Work: NSManagedObject {
         return newItem
     }
     
+    //---------------------------------------------
+    // Work - isOngoing
+    //---------------------------------------------
+
     func isOngoing() -> Bool {
         if startTime == stopTime {
             return true
@@ -141,21 +354,19 @@ class Work: NSManagedObject {
         }
     }
 
-    @NSManaged var id: String
-    @NSManaged var name: String
-    @NSManaged var startTime: NSDate
-    @NSManaged var stopTime: NSDate
-    @NSManaged var session: Session
-    @NSManaged var task: Task
-
 }
 
 
-//-------------------------------------
-// TimePoliceModel - Debug
-//-------------------------------------
+//=======================================================================================
+//=======================================================================================
+//  TimePoliceModelUtils
+//=======================================================================================
 
 class TimePoliceModelUtils {
+
+    //---------------------------------------------
+    // TimePoliceModelUtils - save
+    //---------------------------------------------
 
     class func save(moc: NSManagedObjectContext) {
         var error : NSError?
@@ -164,6 +375,10 @@ class TimePoliceModelUtils {
         }
 
     }
+
+    //---------------------------------------------
+    // TimePoliceModelUtils - clearAllData
+    //---------------------------------------------
 
     class func clearAllData(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
@@ -200,6 +415,10 @@ class TimePoliceModelUtils {
             }
         }
     }
+
+    //---------------------------------------------
+    // TimePoliceModelUtils - dumpAllData
+    //---------------------------------------------
 
     class func dumpAllData(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
@@ -256,6 +475,10 @@ class TimePoliceModelUtils {
 
     }
 
+    //---------------------------------------------
+    // TimePoliceModelUtils - getSessionWork
+    //---------------------------------------------
+
     class func getSessionWork(session: Session) -> String {
 
         var s: String
@@ -273,11 +496,16 @@ class TimePoliceModelUtils {
 
 }
 
-//----------------------------------------
-// TimePoliceModel - Test data
-//----------------------------------------
+//=======================================================================================
+//=======================================================================================
+//  TestData
+//=======================================================================================
 
 class TestData {
+
+    //---------------------------------------------
+    // TestData - addSessionToHome
+    //---------------------------------------------
 
     class func addSessionToHome(managedObjectContext: NSManagedObjectContext) {
         var project: Project
@@ -334,6 +562,10 @@ class TestData {
 
         session.tasks = NSOrderedSet(array: taskList)
     }
+
+    //---------------------------------------------
+    // TestData - addSessionToWork
+    //---------------------------------------------
 
     class func addSessionToWork(managedObjectContext: NSManagedObjectContext) {
 
@@ -395,6 +627,10 @@ class TestData {
         session.tasks = NSOrderedSet(array: taskList)
     }
     
+    //---------------------------------------------
+    // TestData - addSessionToDaytime
+    //---------------------------------------------
+
     class func addSessionToDaytime(managedObjectContext: NSManagedObjectContext) {
         var project: Project
         var session: Session
