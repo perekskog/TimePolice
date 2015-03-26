@@ -205,6 +205,13 @@ class Session: NSManagedObject {
     // Session - setStopTime
     //---------------------------------------------
 
+/*
+    * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+
+    * Modify last item => There can't be a next item
+
+*/
+
     func setStopTime(workIndex: Int, stopTime: NSDate) {
 
     }
@@ -215,35 +222,42 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+    * Only last item can be ongoing. 
+    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+    * | = fixed time, ? = can be fixed time or ongoing, ... 0 or more items
 
-    * Modify last item => Can't be a next item => Just delete, becomes signed out
+    * Only one item 
+        => Just delete, session becomes signed out
 
              workToModify
-    c1      |------------|
+    c1      |------------?
 
-    * Delete last work, previous work ended before workToModify started => Do not adjust previousWork, becomes signed out
+    * Delete last item, previous item ended before workToModify started 
+        => No next item to modify, session becomes signed out
 
-             previousWork       workToModify
-    c2      |------------| ... |------------|
+                 previousWork       workToModify
+    c2      ... |------------| ... |------------?
 
-    * Delete last work, previous work ended at same time workToModify started => Do not adjust previousWork, becomes signed out
+    * Delete last item, previous item ended at same time workToModify started 
+        => No next item to modify, session becomes signed out
 
-             previousWork workToModify
-    c3      |------------|------------|
+                 previousWork workToModify
+    c3      ... |------------|------------?
 
-    c1, c2, c3 => Same thing
+    c1, c2, c3 => Handled the same way
 
 
-    * Delete anything but the last item and nextWork starts at a later time than workToModify ended => Do no adjust start time of successor
+    * Delete an item that is not the last item and nextWork starts at a later time than workToModify ended 
+        => Do no adjust start time of successor, session is still signedin/out as before
 
-             workToModify      nextWork
-    c4  ... |------------| ... |------------| ...
+             workToModify        nextWork
+    c4  ... |------------| ... |----------? ...
 
-    * Delete anything but the last item and nextWork starts at same time as workToModify ended => Adjust start time of successor
+    * Delete an item that is not the last item and nextWork starts at same time as workToModify ended 
+        => Adjust start time of successor to start time of workToModify, session is still signedin/out as before
 
              workToModify  nextWork
-    c5  ... |------------|------------| ...
+    c5  ... |------------|----------? ...
 
 
 */
@@ -268,33 +282,38 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * When deleting the last item, this bahves as an "undo"
-    * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+    * Only last item can be ongoing. 
+    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ... = a gap in time
 
-    * Modify last item => Can't be a next item => Just delete, "undo"
+    * Only one item 
+        => Just delete, becomes signed out
 
              workToModify
-    c1      |------------|
+    c1      |------------?    ==> (empty)
 
-    * Delete last work, previous work ended before workToModify started => Don't adjust start time of previous work, becomes signed out, "undo"
+    * Delete last work, previous work ended before workToModify started 
+        => Don't adjust start time of previous work, session becomes signed out, "undo"
 
-             previousWork       workToModify
-    c2      |------------| ... |------------|
+             previousWork       workToModify             previousWork
+    c2      |------------| ... |------------?    ==>    |------------|
 
-    * Delete last work, previous work ended at same time workToModify started => Make previousWork ongoing, "undo"
+    * Delete last work, previous work ended at same time workToModify started 
+        => Set previousWork stop time same as workToModify stop time, inherits session state, "undo"
 
-             previousWork workToModify
-    c3      |------------|------------|
+             previousWork workToModify                     previousWork
+    c3      |------------|------------?    ==>     |------------------------?
 
-    * Delete anything but the last item and previousWork starts at a later time than workToModify started => Do no adjust start time of previousWork
+    * Delete anything but the last item and previousWork starts at a later time than workToModify started 
+        => Do no adjust start time of previousWork
 
-             previousWork       workToModify
-    c4  ... |------------| ... |------------| ...
+             previousWork       workToModify                     previousWork
+    c4  ... |------------| ... |------------| +++    ==>    ... |------------| +++
 
-    * Delete anything but the last item and previousWork starts at same time as workToModify started => Adjust start time of previousWork
+    * Delete anything but the last item and previousWork starts at same time as workToModify started => Adjust stop time of previousWork
 
-             previousWork workToModify
-    c5  ... |------------|------------| ...
+             previousWork workToModify                             previousWork
+    c5  ... |------------|------------| +++     ==>    ... |-------------------------| +++
 
 
 */
