@@ -217,15 +217,34 @@ class Session: NSManagedObject {
 /*
     * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
 
-    * Modify last item => Can't be a next item => Just delete
+    * Modify last item => Can't be a next item => Just delete, becomes signed out
 
              workToModify
-    c1  ... |------------|
+    c1      |------------|
 
-    * Modify anything but the last item => Adjust start time of successor
+    * Delete last work, previous work ended before workToModify started => Do not adjust previousWork, becomes signed out
+
+             previousWork       workToModify
+    c2      |------------| ... |------------|
+
+    * Delete last work, previous work ended at same time workToModify started => Do not adjust previousWork, becomes signed out
+
+             previousWork workToModify
+    c3      |------------|------------|
+
+    c1, c2, c3 => Same thing
+
+
+    * Delete anything but the last item and nextWork starts at a later time than workToModify ended => Do no adjust start time of successor
 
              workToModify      nextWork
-    c2  ... |------------|  |------------| ...
+    c4  ... |------------| ... |------------| ...
+
+    * Delete anything but the last item and nextWork starts at same time as workToModify ended => Adjust start time of successor
+
+             workToModify  nextWork
+    c5  ... |------------|------------| ...
+
 
 */
 
@@ -249,17 +268,34 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
+    * When deleting the last item, this bahves as an "undo"
     * Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
 
-    * Modify first item => Can't be a previous item => Just delete
+    * Modify last item => Can't be a next item => Just delete, "undo"
 
-         workToModify
-    c1  |------------| ...
+             workToModify
+    c1      |------------|
 
-    * Modify anything but the first item => Adjust stop time of predecessor
+    * Delete last work, previous work ended before workToModify started => Don't adjust start time of previous work, becomes signed out, "undo"
 
-             previousWork    workToModify
-    c2  ... |------------|  |------------| ...
+             previousWork       workToModify
+    c2      |------------| ... |------------|
+
+    * Delete last work, previous work ended at same time workToModify started => Make previousWork ongoing, "undo"
+
+             previousWork workToModify
+    c3      |------------|------------|
+
+    * Delete anything but the last item and previousWork starts at a later time than workToModify started => Do no adjust start time of previousWork
+
+             previousWork       workToModify
+    c4  ... |------------| ... |------------| ...
+
+    * Delete anything but the last item and previousWork starts at same time as workToModify started => Adjust start time of previousWork
+
+             previousWork workToModify
+    c5  ... |------------|------------| ...
+
 
 */
 
