@@ -230,32 +230,32 @@ class Session: NSManagedObject {
         => Just delete, session becomes signed out
 
              workToModify
-    c1      |------------?    ==>    (empty)
+    c1      |------------?                        ==>    (empty)
 
     * Delete last item, previous item ended before workToModify started 
         => No next item to modify, session becomes signed out
 
              previousWork       workToModify                    previousWork
-    c2  *** |------------| ... |------------?     ==>      *** |------------|
-            1            2     3            4                  1            2
+    c2  *** |------------| ... |------------?     ==>    *** |------------|
+            1            2     3            4                1            2
 
     * Delete last item, previous item ended at same time workToModify started 
         => No next item to modify, session becomes signed out
 
-             previousWork workToModify                 previousWork
-    c3  *** |------------|------------?    ==>    *** |------------|
-            1            2            3               1            2
+             previousWork workToModify                        previousWork
+    c3  *** |------------|------------?           ==>    *** |------------|
+            1            2            3                      1            2
 
    
 
-             workToModify  nextWork                        nextWork
-    c4  *** |------------|----------? ***  ==>    ***   |----------------------? ***
-            1            2          3                   1                      3
+             workToModify  nextWork                                 nextWork
+    c4  *** |------------|----------? ***         ==>    *** |----------------------? ***
+            1            2          3                        1                      3
  
 
-             workToModify       nextWork                 nextWork
-    c5  *** |------------| ... |----------? ***   ==>   *** |---------? ***
-            1            2     3          4                 3         4
+             workToModify       nextWork                       nextWork
+    c5  *** |------------| ... |----------? ***   ==>    *** |---------? ***
+            1            2     3          4                  3         4
 
 */
 
@@ -292,29 +292,29 @@ class Session: NSManagedObject {
     * Delete last work, previous work ended before workToModify started 
         => Don't adjust start time of previous work, session becomes signed out, "undo"
 
-             previousWork       workToModify                 previousWork
-    c2  *** |------------| ... |------------?    ==>    *** |------------|
-            1            2     3            4               1            2
+             previousWork       workToModify                    previousWork
+    c2  *** |------------| ... |------------?        ==>   *** |------------|
+            1            2     3            4                  1            2
 
     * Delete last work, previous work ended at same time workToModify started 
         => Set previousWork stop time same as workToModify stop time, inherits session state, "undo"
 
-             previousWork workToModify                     previousWork
-    c3  *** |------------|------------?    ==>     *** |------------------------?
-            1            2            3                1                        3
+             previousWork workToModify                              previousWork
+    c3  *** |------------|------------?              ==>   *** |------------------------?
+            1            2            3                        1                        3
 
     * Delete anything but the last item and previousWork starts at a later time than workToModify started 
         => Do no adjust start time of previousWork
 
              previousWork       workToModify                     previousWork
-    c4  *** |------------| ... |------------| +++    ==>    *** |------------| ... +++
-            1            2     3            4                   1            2
+    c4  *** |------------| ... |------------| +++    ==>   *** |------------| ... +++
+            1            2     3            4                  1            2
 
     * Delete anything but the last item and previousWork starts at same time as workToModify started => Adjust stop time of previousWork
 
-             previousWork workToModify                             previousWork
-    c5  *** |------------|------------| +++     ==>    *** |-------------------------| +++
-            1            2            3                    1                         3
+             previousWork workToModify                                 previousWork
+    c5  *** |------------|------------| +++          ==>   *** |-------------------------| +++
+            1            2            3                        1                         3
 
 
 */
