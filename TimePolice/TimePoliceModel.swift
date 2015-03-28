@@ -125,14 +125,31 @@ class Session: NSManagedObject {
     }
 
     //---------------------------------------------
+    // Session - Rules to follow
+    //---------------------------------------------
+
+/*
+    Rules for modification of list of work in a session.
+
+    * Only last item can be ongoing. 
+    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+
+    Notation:
+    | = fixed time
+    > = ongoing
+    ? = can be fixed time or ongoing
+    *** = 0 or more items
+    +++ = 1 or more items
+    ::: = a gap in time
+    ... = possible gap in time
+
+*/
+
+    //---------------------------------------------
     // Session - setStartTime
     //---------------------------------------------
 
 /*
-    * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
-
-    * Modify first item => There can't be a previous item
 
              workToModify
     <c1     |------------?
@@ -211,10 +228,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
-    * Modify last item => There can't be a next item
 
 */
 
@@ -228,10 +242,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * "swipeUp"
-
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
-
+    GUI operation: "swipeUp"
 
              workToModify
     N/A     |------------? ***
@@ -263,7 +274,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * "swipeDown"
+    GUI operation: "swipeDown"
 
     * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
@@ -299,37 +310,39 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    * Only last item can be ongoing. 
-    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
-
+    GUI operation: "swipeLR"
 
              workToModify
-    pc1     |------------?                           ==>    (empty)
-                                            swipeLR workToModify
-
-             previousWork       workToModify                    previousWork
-    pc2 *** |------------| ::: |------------?        ==>   *** |------------|
-            1            2     3            4                  1            2
-
-
-             previousWork workToModify                    previousWork
-    pc2 *** |------------|------------?        ==>   *** |------------?
-            1            2            3                  1            2
-
-
-             previousWork       workToModify                    previousWork
-    pc4 *** |------------| ::: |------------| +++    ==>   *** |------------| ::: +++
-            1            2     3            4                  1            2
-
-
-             previousWork workToModify                          previousWork
-    pc5 *** |------------|------------| +++          ==>   *** |------------| +++
-            1            2            3                        1            2
+    pc1 *** |------------? ***                       ==>  ***  (removed)  ***
 
 */
 
     func deleteWork(workIndex: Int) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
+
+        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
+
+        if mutableWork.count == 1 {
+            // c1
+            mutableWork.removeObjectAtIndex(1)
+            return
+        }
+    }
+
+    //---------------------------------------------
+    // Session - insertWork
+    //---------------------------------------------
+
+/*
+    GUI operation: ???
+
+
+*/
+
+    func insertWork(workIndex: Int, work: Work) {
         if workIndex >= work.count {
             // Index points to non existing item
             return
