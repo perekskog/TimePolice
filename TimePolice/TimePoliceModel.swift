@@ -214,7 +214,6 @@ class Session: NSManagedObject {
     * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
     * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
-
     * Modify last item => There can't be a next item
 
 */
@@ -225,52 +224,26 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
-    // Session - deleteWorkAndAdjustNextStart
+    // Session - deletePreviousWorkAndAlignStart
     //---------------------------------------------
 
 /*
-    * Only last item can be ongoing. 
-    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+    * "swipeUp"
+
     * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
-    * Only one item 
-        => Just delete, session becomes signed out
 
              workToModify
-    nc1     |------------?                        ==>    (empty)
-                                            swipeLR workToModify
-
-    * Delete last item, previous item ended before workToModify started 
-        => No next item to modify, session becomes signed out
-
-             previousWork       workToModify                    previousWork
-    nc2 *** |------------| ::: |------------?     ==>    *** |------------|
-            1            2     3            4                1            2
-                                            swipeLR workToModify
-
-    * Delete last item, previous item ended at same time workToModify started 
-        => No next item to modify, session becomes signed out
-
-             previousWork workToModify                        previousWork
-    nc3 *** |------------|------------?           ==>    *** |------------|
-            1            2            3                      1            2
-                                            swipeLR workToModify
+    N/A     |------------? ***
 
 
-             workToModify       nextWork                       nextWork
-    nc4 *** |------------| ::: |----------? ***   ==>    *** |---------? ***
-            1            2     3          4                  3         4
-                                            swipeLR workToModify
-
-
-             workToModify  nextWork                                 nextWork
-    nc5 *** |------------|----------? ***         ==>    *** |----------------------? ***
-            1            2          3                        1                      3
-                                            swipeUp nextWork 
+             previousWork       workToModify                      workToModify
+    pc1 *** |------------| ... |------------? ***     ==>    *** |------------? ***
+            1            2     3            4                    1            4
 
 */
 
-    func deleteWorkAndAdjustNextStart(workIndex: Int) {
+    func deletePreviousWorkAndAlignStart(workIndex: Int) {
         if workIndex >= work.count {
             // Index points to non existing item
             return
@@ -286,54 +259,25 @@ class Session: NSManagedObject {
     }
 
     //---------------------------------------------
-    // Session - deleteWorkAndAdjustPreviousStop
+    // Session - deleteNextWorkAndAlignStop
     //---------------------------------------------
 
 /*
-    * Only last item can be ongoing. 
-    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+    * "swipeDown"
+
     * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
-    * Only one item 
-        => Just delete, becomes signed out
-
              workToModify
-    pc1     |------------?                           ==>    (empty)
-                                            swipeLR workToModify
+    N/A     |------------? ***
 
-    * Delete last work, previous work ended before workToModify started 
-        => Don't adjust start time of previous work, session becomes signed out, "undo"
-        
-             previousWork       workToModify                    previousWork
-    pc2 *** |------------| ::: |------------?        ==>   *** |------------|
-            1            2     3            4                  1            2
-                                            swipeLR workToModify
 
-    * Delete last work, previous work ended at same time workToModify started 
-        => Set previousWork stop time same as workToModify stop time, inherits session state, "undo"
+             workToModify       nextWork                      workToModify
+    pc1 *** |------------| ... |--------? ***     ==>    *** |------------? ***
+            1            2     3        4                    1            4
 
-             previousWork workToModify                              previousWork
-    pc3 *** |------------|------------?              ==>   *** |------------------------?
-            1            2            3                        1                        3
-                                            swipeDown previousWork
-
-    * Delete anything but the last item and previousWork starts at a later time than workToModify started 
-        => Do no adjust start time of previousWork
-
-             previousWork       workToModify                     previousWork
-    pc4 *** |------------| ::: |------------| +++    ==>   *** |------------| ::: +++
-            1            2     3            4                  1            2
-                                            swipeLR workToModify
-
-    * Delete anything but the last item and previousWork starts at same time as workToModify started => Adjust stop time of previousWork
-
-             previousWork workToModify                                 previousWork
-    pc5 *** |------------|------------| +++          ==>   *** |-------------------------| +++
-            1            2            3                        1                         3
-                                            swipeDown previousWork
 */
 
-    func deleteWorkAndAdjustPreviousStop(workIndex: Int) {
+    func deleteNextWorkAndAlignStop(workIndex: Int) {
         if workIndex >= work.count {
             // Index points to non existing item
             return
@@ -349,6 +293,60 @@ class Session: NSManagedObject {
     }
 
 }
+
+    //---------------------------------------------
+    // Session - deleteWork
+    //---------------------------------------------
+
+/*
+    * Only last item can be ongoing. 
+    * If an item is ongoing, there can't be a successor => stopTime can be changed freely
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
+
+
+             workToModify
+    pc1     |------------?                           ==>    (empty)
+                                            swipeLR workToModify
+
+             previousWork       workToModify                    previousWork
+    pc2 *** |------------| ::: |------------?        ==>   *** |------------|
+            1            2     3            4                  1            2
+
+
+             previousWork workToModify                    previousWork
+    pc2 *** |------------|------------?        ==>   *** |------------?
+            1            2            3                  1            2
+
+
+             previousWork       workToModify                    previousWork
+    pc4 *** |------------| ::: |------------| +++    ==>   *** |------------| ::: +++
+            1            2     3            4                  1            2
+
+
+             previousWork workToModify                          previousWork
+    pc5 *** |------------|------------| +++          ==>   *** |------------| +++
+            1            2            3                        1            2
+
+*/
+
+    func deleteWork(workIndex: Int) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
+
+        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
+
+        if mutableWork.count == 1 {
+            // c1
+            mutableWork.removeObjectAtIndex(1)
+            return
+        }
+    }
+
+}
+
+
 
 //=======================================================================================
 //=======================================================================================
