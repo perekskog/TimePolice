@@ -130,16 +130,21 @@ class Session: NSManagedObject {
 
 /*
     * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
     * Modify first item => There can't be a previous item
 
-         workToModify
-    y1  |-----y2-----| ... y3
+             workToModify
+    <c1     |------------?
+         t1       t2        t3
+    
+                                    workToModify
+    <c2     *** |------------| ... |------------?
+                     t1        t2        t3         t4
 
-    * Modify anything but the first item => Need to take care of the previous item
-
-             previousWork      workToModify
-    x1  ... |-----x2-----| x3 |-----x4-----| ... x5
+                                    workToModify
+    <c3     *** |------------| ... |------------| ... +++
+                     t1        t2        t3
 
 */
 
@@ -207,6 +212,8 @@ class Session: NSManagedObject {
 
 /*
     * General: Only last item can be ongoing. If an item is ongoing, there can't be a successor => stopTime can be changed
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
+
 
     * Modify last item => There can't be a next item
 
@@ -224,7 +231,7 @@ class Session: NSManagedObject {
 /*
     * Only last item can be ongoing. 
     * If an item is ongoing, there can't be a successor => stopTime can be changed freely
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ... = a gap in time
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
     * Only one item 
         => Just delete, session becomes signed out
@@ -237,7 +244,7 @@ class Session: NSManagedObject {
         => No next item to modify, session becomes signed out
 
              previousWork       workToModify                    previousWork
-    nc2 *** |------------| ... |------------?     ==>    *** |------------|
+    nc2 *** |------------| ::: |------------?     ==>    *** |------------|
             1            2     3            4                1            2
                                             swipeLR workToModify
 
@@ -251,7 +258,7 @@ class Session: NSManagedObject {
 
 
              workToModify       nextWork                       nextWork
-    nc4 *** |------------| ... |----------? ***   ==>    *** |---------? ***
+    nc4 *** |------------| ::: |----------? ***   ==>    *** |---------? ***
             1            2     3          4                  3         4
                                             swipeLR workToModify
 
@@ -285,7 +292,7 @@ class Session: NSManagedObject {
 /*
     * Only last item can be ongoing. 
     * If an item is ongoing, there can't be a successor => stopTime can be changed freely
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ... = a gap in time
+    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
     * Only one item 
         => Just delete, becomes signed out
@@ -298,7 +305,7 @@ class Session: NSManagedObject {
         => Don't adjust start time of previous work, session becomes signed out, "undo"
         
              previousWork       workToModify                    previousWork
-    pc2 *** |------------| ... |------------?        ==>   *** |------------|
+    pc2 *** |------------| ::: |------------?        ==>   *** |------------|
             1            2     3            4                  1            2
                                             swipeLR workToModify
 
@@ -314,7 +321,7 @@ class Session: NSManagedObject {
         => Do no adjust start time of previousWork
 
              previousWork       workToModify                     previousWork
-    pc4 *** |------------| ... |------------| +++    ==>   *** |------------| ... +++
+    pc4 *** |------------| ::: |------------| +++    ==>   *** |------------| ::: +++
             1            2     3            4                  1            2
                                             swipeLR workToModify
 
