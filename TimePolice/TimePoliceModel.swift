@@ -125,7 +125,7 @@ class Session: NSManagedObject {
     }
 
     //---------------------------------------------
-    // Session - Rules to follow
+    // Session modifications - Rules to follow
     //---------------------------------------------
 
 /*
@@ -255,18 +255,7 @@ class Session: NSManagedObject {
 */
 
     func deletePreviousWorkAndAlignStart(workIndex: Int) {
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
 
-        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
-
-        if mutableWork.count == 1 {
-            // c1
-            mutableWork.removeObjectAtIndex(1)
-            return
-        }
     }
 
     //---------------------------------------------
@@ -289,18 +278,7 @@ class Session: NSManagedObject {
 */
 
     func deleteNextWorkAndAlignStop(workIndex: Int) {
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
 
-        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
-
-        if mutableWork.count == 1 {
-            // c1
-            mutableWork.removeObjectAtIndex(1)
-            return
-        }
     }
 
 }
@@ -318,18 +296,7 @@ class Session: NSManagedObject {
 */
 
     func deleteWork(workIndex: Int) {
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
 
-        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
-
-        if mutableWork.count == 1 {
-            // c1
-            mutableWork.removeObjectAtIndex(1)
-            return
-        }
     }
 
     //---------------------------------------------
@@ -343,18 +310,7 @@ class Session: NSManagedObject {
 */
 
     func insertWork(workIndex: Int, work: Work) {
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
 
-        let mutableWork = work.mutableCopy() as NSMutableOrderedSet
-
-        if mutableWork.count == 1 {
-            // c1
-            mutableWork.removeObjectAtIndex(1)
-            return
-        }
     }
 
 }
