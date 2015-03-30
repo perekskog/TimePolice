@@ -145,23 +145,35 @@ class Session: NSManagedObject {
 
 */
 
+
+
+
     //---------------------------------------------
     // Session - setStartTime
     //---------------------------------------------
 
 /*
-
              workToModify
     <c1     |------------?
-         t1       t2        t3
+         t1       t2
     
                                     workToModify
     <c2     *** |------------| ... |------------?
-                     t1        t2        t3         t4
+                     t1        t2        t3
 
                                     workToModify
     <c3     *** |------------| ... |------------| ... +++
                      t1        t2        t3
+
+Future extensions:
+
+             workToModify
+    <c10    |------------?
+         t1       t2        (t3)                             // t3 depends on other changes (t3 means it will become ongoing at some future point in time)
+    
+                                    workToModify
+    <c11    *** |------------| ... |------------?
+                     t1        t2        t3         (t4)     // t4 depends on other changes (t4 means it will become ongoing at some future point in time)
 
 */
 
@@ -228,13 +240,35 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
+             workToModify
+    >c1     |------------?
+                  t1
+    
+             workToModify       nextWork
+    >c2     |------------| ... |--------?
+                  t1        t2     t3
 
+             workToModify       nextWork
+    >c3     |------------| ... |--------| ***
+                  t1        t2     t3
 
+Future extensions:
+
+             workToModify
+    >c10    |------------?
+        (t1)      t2         (t3)                   // t1 and t3 depend on other chnages (t1 = become ongoing, t3 = will be stopped in the future)
+
+             workToModify       nextWork
+    >c11    |------------| ... |--------?
+                  t1        t2     t3      (t4)      // t4 depends on other changes (t4 means that nextWork will become ongoing in the future)
 */
+
 
     func setStopTime(workIndex: Int, stopTime: NSDate) {
 
     }
+
+
 
 
     //---------------------------------------------
@@ -251,12 +285,13 @@ class Session: NSManagedObject {
              previousWork       workToModify                      workToModify
     pc1 *** |------------| ... |------------? ***     ==>    *** |------------? ***
             1            2     3            4                    1            4
-
 */
-
     func deletePreviousWorkAndAlignStart(workIndex: Int) {
 
     }
+
+
+
 
     //---------------------------------------------
     // Session - deleteNextWorkAndAlignStop
@@ -265,21 +300,22 @@ class Session: NSManagedObject {
 /*
     GUI operation: "swipeDown"
 
-    * | = fixed time, > = ongoing, ? = can be fixed time or ongoing, *** = 0 or more items, +++ = 1 or more items, ::: = a gap in time, ... = possible gap in time
 
              workToModify
-    N/A     |------------? ***
+    N/A *** |------------?
 
 
              workToModify       nextWork                      workToModify
     pc1 *** |------------| ... |--------? ***     ==>    *** |------------? ***
             1            2     3        4                    1            4
-
 */
-
     func deleteNextWorkAndAlignStop(workIndex: Int) {
 
     }
+
+
+
+
 
     //---------------------------------------------
     // Session - deleteWork
@@ -290,12 +326,15 @@ class Session: NSManagedObject {
 
              workToModify
     pc1 *** |------------? ***                       ==>  ***  (removed)  ***
-
 */
 
     func deleteWork(workIndex: Int) {
 
     }
+
+
+
+
 
     //---------------------------------------------
     // Session - insertWork
