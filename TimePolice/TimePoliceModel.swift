@@ -142,6 +142,8 @@ class Session: NSManagedObject {
     +++ = 1 or more items
     ::: = a gap in time
     ... = possible gap in time
+    0 = now
+    tx = some specific time
 
 */
 
@@ -155,25 +157,27 @@ class Session: NSManagedObject {
 /*
              workToModify
     <c1     |------------?
-         t1       t2
+         t1       t2           0
     
-                                    workToModify
+                 previousWork       workToModify
     <c2     *** |------------| ... |------------?
-                     t1        t2        t3
+                |    t1        t2        t3           0
 
-                                    workToModify
+                 previousWork       workToModify
     <c3     *** |------------| ... |------------| ... +++
-                     t1        t2        t3
+                |    t1        t2        t3     |
 
-Future extensions:
+Future extensions
+
+- t3/t4 depends on other changes (t3/t4 means that workToModify will become ongoing at some future point in time)
 
              workToModify
     <c10    |------------?
-         t1       t2        (t3)                             // t3 depends on other changes (t3 means it will become ongoing at some future point in time)
+         t1       t2        0   t3
     
-                                    workToModify
+                 previousWork       workToModify
     <c11    *** |------------| ... |------------?
-                     t1        t2        t3         (t4)     // t4 depends on other changes (t4 means it will become ongoing at some future point in time)
+                     t1        t2        t3         0   t4
 
 */
 
@@ -240,27 +244,25 @@ Future extensions:
     //---------------------------------------------
 
 /*
-             workToModify
-    >c1     |------------?
-                  t1
+                 workToModify
+    >c1     *** |------------?
+                |     t1         0
     
-             workToModify       nextWork
-    >c2     |------------| ... |--------?
-                  t1        t2     t3
+                 workToModify       nextWork
+    >c2     *** |------------| ... |-------->
+                |     t1        t2     t3        0
 
-             workToModify       nextWork
-    >c3     |------------| ... |--------| ***
-                  t1        t2     t3
+                 workToModify       nextWork
+    >c3     *** |------------| ... |--------| ***
+                |     t1        t2     t3   |
 
-Future extensions:
+Future extensions
 
-             workToModify
-    >c10    |------------?
-        (t1)      t2         (t3)                   // t1 and t3 depend on other chnages (t1 = become ongoing, t3 = will be stopped in the future)
+- t3/t4 depend on other chnages (t3/t4 = workToModify will be stopped in the future)
 
-             workToModify       nextWork
-    >c11    |------------| ... |--------?
-                  t1        t2     t3      (t4)      // t4 depends on other changes (t4 means that nextWork will become ongoing in the future)
+                 workToModify
+    >c10    *** |------------?
+                      t2         0   t3
 */
 
 
