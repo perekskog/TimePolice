@@ -156,15 +156,19 @@ class Session: NSManagedObject {
 
 /*
              workToModify
-    <c1     |------------?
-         t1       t2           0
+    c1      |------------?
+         t1       t2          0
     
+             workToModify
+    c2      |------------| ***
+         t1       t2     |
+
                  previousWork       workToModify
-    <c2     *** |------------| ... |------------?
+    c11     *** |------------| ... |------------?
                 |    t1        t2        t3           0
 
                  previousWork       workToModify
-    <c3     *** |------------| ... |------------| ... +++
+    c12     *** |------------| ... |------------| ***
                 |    t1        t2        t3     |
 
 Future extensions
@@ -172,11 +176,11 @@ Future extensions
 - t3/t4 depends on other changes (t3/t4 means that workToModify will become ongoing at some future point in time)
 
              workToModify
-    <c10    |------------?
+            |------------?
          t1       t2        0   t3
     
                  previousWork       workToModify
-    <c11    *** |------------| ... |------------?
+            *** |------------| ... |------------?
                      t1        t2        t3         0   t4
 
 */
@@ -189,52 +193,54 @@ Future extensions
 
         var targetTime = desiredStartTime
         let workToModify = work[workIndex] as Work
+
+        // Never change starttime into the future
+        let now = NSDate()
+        if targetTime.compare(now) == .OrderedDescending {
+            // c1, c11
+            targetTime = now
+        }
+
+        // Don't set starttime passed a finished workToModify
+        if !workToModify.isOngoing() && targetTime.compare(workToModify.stopTime) == .OrderedDescending {
+            // c2, c12
+            targetTime = workToModify.stopTime
+        }
+
         if workIndex == 0 {
-            // y1, y2, y3
-            if workToModify.isOngoing() || targetTime.compare(workToModify.stopTime) == NSComparisonResult.OrderedAscending {
-                // Modify stopTime if work is ongoing
-                workToModify.stopTime = targetTime
-            }
-            workToModify.startTime = targetTime
+
+            // c1, c2
+            // Prepare modification of workToModify
+            // ...Everything is already taken care of
+
         } else {
+
+            // c11, c12
+            // Prepare modification of workToModify, also modify previousWork
+
             // Not the first item => There is a previous item
             let previousWork = work[workIndex-1] as Work
 
-            if targetTime.compare(previousWork.stopTime) == NSComparisonResult.OrderedDescending {
-                // workToModify will not overlap with previousWork
-                // x4
-                if workToModify.isOngoing() {
-                    // Modify stopTime if work is ongoing
-                    workToModify.stopTime = targetTime
-                }
-                workToModify.startTime = targetTime
-            } else {
-                // workToModify will overlap with previousWork
-                if targetTime.compare(previousWork.startTime) == NSComparisonResult.OrderedDescending {
-                    // targetTime points to a time between start and stop of previousWork => adjust stoptime of previousWork
-                    // x2
-                    previousWork.stopTime = targetTime
-                    if workToModify.isOngoing() {
-                        // Modify stopTime if work is ongoing
-                        workToModify.stopTime = targetTime
-                    }
-                    workToModify.startTime = targetTime
-                } else {
-                    // targetTime points to a time before start of previousWork => adjust targetTime AND start/stop of previousWork
-                    // x1
-                    targetTime = previousWork.startTime
-                    previousWork.startTime = targetTime
-                    previousWork.stopTime = targetTime
+            // Don't set starttime earlier than start of previous work
+            if targetTime.compare(previousWork.startTime) == .OrderedAscending {
+                targetTime = previousWork.startTime
+            }
 
-                    if workToModify.isOngoing() {
-                        // Modify stopTime if work is ongoing
-                        workToModify.stopTime = targetTime
-                    }
-                    workToModify.startTime = targetTime
-                }
+            if targetTime.compare(previousWork.stopTime) == .OrderedAscending {
+                // c11/c12: t1
+                // workToModify will overlap with previousWork
+                previousWork.stopTime = targetTime
             }
         }
 
+        // Do the modification of workToModify
+        if workToModify.isOngoing() {
+            // c1, c11
+            // Modify stopTime if work is ongoing
+            workToModify.stopTime = targetTime
+        }
+        // c1, c2, c11, c12
+        workToModify.startTime = targetTime
 
         TimePoliceModelUtils.save(moc)
     }
