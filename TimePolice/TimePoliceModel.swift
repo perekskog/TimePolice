@@ -156,7 +156,7 @@ class Session: NSManagedObject {
 
 /*
              workToModify
-    c1      |------------?
+    c1      |------------>
          t1       t2          0
     
              workToModify
@@ -299,6 +299,7 @@ Future extensions
             // Prepare modification of workToModify
             // ...Everything is already taken care of
 
+
         } else {
             // c11, c12
             // Prepare modification of workToModify, also modify previousWork
@@ -354,8 +355,20 @@ Future extensions
     pc1 *** |------------| ... |------------? ***     ==>    *** |------------? ***
             1            2     3            4                    1            4
 */
-    func deletePreviousWorkAndAlignStart(workIndex: Int) {
+    func deletePreviousWorkAndAlignStart(moc: NSManagedObjectContext, workIndex: Int) {
+        if workIndex == 0 {
+            // No previous item
+            return
+        }
 
+        let workToModify = work[workIndex] as Work
+        let previousWork = work[workIndex-1]
+        let startTime = previousWork.startTime
+
+        moc.deleteObject(previousWork)
+        workToModify.startTime = startTime
+
+        TimePoliceModelUtils.save(moc)
     }
 
 
@@ -377,8 +390,23 @@ Future extensions
     pc1 *** |------------| ... |--------? ***     ==>    *** |------------? ***
             1            2     3        4                    1            4
 */
-    func deleteNextWorkAndAlignStop(workIndex: Int) {
+    func deleteNextWorkAndAlignStop(moc: NSManagedObjectContext, workIndex: Int) {
+        if workIndex == work.count-1 {
+            // No next work
+            return
+        }
 
+        let workToModify = work[workIndex] as Work
+        let nextWork = work[workIndex+1]
+        var stopTime = previousWork.startTime
+        if nextWork.isOngoing() {
+            stopTime = workToModify.startTime
+        }
+
+        moc.deleteObject(nextWork)
+        workToModify.stopTime = stopTime
+
+        TimePoliceModelUtils.save(moc)        
     }
 
 
