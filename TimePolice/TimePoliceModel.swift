@@ -186,6 +186,11 @@ Future extensions
 */
 
     func setStartTime(moc: NSManagedObjectContext, workIndex: Int, desiredStartTime: NSDate) {
+        if workIndex < 0 || workIndex >= work.count  {
+            // Index out of bounds
+            return
+        }
+
         if workIndex >= work.count {
             // Index points to non existing item
             return
@@ -273,6 +278,11 @@ Future extensions
 
 
     func setStopTime(moc: NSManagedObjectContext, workIndex: Int, desiredStopTime: NSDate) {
+        if workIndex < 0 || workIndex >= work.count  {
+            // Index out of bounds
+            return
+        }
+
         if workIndex >= work.count {
             // Index points to non existing item
             return
@@ -356,6 +366,11 @@ Future extensions
             1            2     3            4                    1            4
 */
     func deletePreviousWorkAndAlignStart(moc: NSManagedObjectContext, workIndex: Int) {
+        if workIndex < 0 || workIndex >= work.count  {
+            // Index out of bounds
+            return
+        }
+
         if workIndex == 0 {
             // No previous item
             return
@@ -391,6 +406,11 @@ Future extensions
             1            2     3        4                    1            4
 */
     func deleteNextWorkAndAlignStop(moc: NSManagedObjectContext, workIndex: Int) {
+        if workIndex < 0 || workIndex >= work.count  {
+            // Index out of bounds
+            return
+        }
+
         if workIndex == work.count-1 {
             // No next work
             return
@@ -424,8 +444,16 @@ Future extensions
     pc1 *** |------------? ***                       ==>  ***  (removed)  ***
 */
 
-    func deleteWork(workIndex: Int) {
+    func deleteWork(moc: NSManagedObjectContext, workIndex: Int) {
+        if workIndex < 0 || workIndex >= work.count  {
+            // Index out of bounds
+            return
+        }
 
+        let workToModify = work[workIndex] as Work
+        moc.deleteObject(workToModify)
+
+        TimePoliceModelUtils.save(moc)        
     }
 
 
