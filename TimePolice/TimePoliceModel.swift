@@ -362,7 +362,7 @@ Future extensions
         }
 
         let workToModify = work[workIndex] as Work
-        let previousWork = work[workIndex-1]
+        let previousWork = work[workIndex-1] as Work
         let startTime = previousWork.startTime
 
         moc.deleteObject(previousWork)
@@ -397,8 +397,8 @@ Future extensions
         }
 
         let workToModify = work[workIndex] as Work
-        let nextWork = work[workIndex+1]
-        var stopTime = previousWork.startTime
+        let nextWork = work[workIndex+1] as Work
+        var stopTime = nextWork.stopTime
         if nextWork.isOngoing() {
             stopTime = workToModify.startTime
         }
