@@ -236,7 +236,7 @@ Future extensions
         // Do the modification of workToModify
         if workToModify.isOngoing() {
             // c1, c11
-            // Modify stopTime if work is ongoing
+            // Modify stopTime if work is ongoing to keep it as ongoing
             workToModify.stopTime = targetTime
         }
         // c1, c2, c11, c12
@@ -251,15 +251,15 @@ Future extensions
 
 /*
                  workToModify
-    >c1     *** |------------?
+    c1      *** |------------?
                 |     t1         0
     
                  workToModify       nextWork
-    >c2     *** |------------| ... |-------->
+    c11     *** |------------| ... |-------->
                 |     t1        t2     t3        0
 
                  workToModify       nextWork
-    >c3     *** |------------| ... |--------| ***
+    c12     *** |------------| ... |--------| ***
                 |     t1        t2     t3   |
 
 Future extensions
@@ -267,13 +267,73 @@ Future extensions
 - t3/t4 depend on other chnages (t3/t4 = workToModify will be stopped in the future)
 
                  workToModify
-    >c10    *** |------------?
+            *** |------------?
                       t2         0   t3
 */
 
 
-    func setStopTime(workIndex: Int, stopTime: NSDate) {
+    func setStopTime(moc: NSManagedObjectContext, workIndex: Int, desiredStopTime: NSDate) {
+        if workIndex >= work.count {
+            // Index points to non existing item
+            return
+        }
 
+        var targetTime = desiredStopTime
+        let workToModify = work[workIndex] as Work
+
+        // Never change stoptime into the future
+        let now = NSDate()
+        if targetTime.compare(now) == .OrderedDescending {
+            // c1, c11
+            targetTime = now
+        }
+
+        // Never set stoptime before start of workToModify
+        if targetTime.compare(workToModify.startTime) == .OrderedAscending {
+            targetTime = workToModify.startTime
+        }
+
+        if workIndex == work.count-1 {
+
+            // c1
+            // Prepare modification of workToModify
+            // ...Everything is already taken care of
+
+        } else {
+            // c11, c12
+            // Prepare modification of workToModify, also modify previousWork
+
+            // Not the last item => There is a next item
+            let nextWork = work[workIndex+1] as Work
+
+            if targetTime.compare(nextWork.startTime) == .OrderedDescending {
+                // Need to adjust next work
+
+                if !nextWork.isOngoing() && targetTime.compare(nextWork.stopTime) == .OrderedDescending {
+                    // c12
+                    targetTime = nextWork.stopTime
+                }
+
+                if nextWork.isOngoing() {
+                    // c11
+                    nextWork.stopTime = targetTime
+                }
+                // c11, c12
+                nextWork.startTime = targetTime
+            }
+        }
+
+        // Do the modification of workToModify
+        if workToModify.isOngoing() {
+            // c1
+            // Modify stopTime if work is ongoing to keep it as ongoing
+            workToModify.stopTime = targetTime
+        }
+
+        // c1, c11, c12
+        workToModify.stopTime = targetTime
+
+        TimePoliceModelUtils.save(moc)
     }
 
 
