@@ -11,6 +11,9 @@ import CoreData
 import UIKit
 
 
+
+
+
 //=======================================================================================
 //=======================================================================================
 //  Project
@@ -514,6 +517,10 @@ class Task: NSManagedObject {
 //  Work
 //=======================================================================================
 
+/*
+    create -> [Ongoing] <- setAsOngoing / setAsFinished(time) -> [Finished]
+*/
+
 class Work: NSManagedObject {
 
     @NSManaged var id: String
@@ -537,6 +544,10 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
+        let now = NSDate()
+        newItem.startTime = now
+        newItem.stopTime = now
+
         return newItem
     }
     
@@ -551,6 +562,23 @@ class Work: NSManagedObject {
             return false
         }
     }
+
+    func isFinished() -> Bool {
+        return !isOngoing()
+    }
+
+    func setAsFinished(time: NSDate) {
+        self.stopTime = time
+    }
+
+    func setAsOngoing() {
+        self.stopTime = self.startTime
+    }
+
+    func setStartedAt(time: NSDate) {
+        self.startTime = time
+    }
+
 
 }
 
