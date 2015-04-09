@@ -146,8 +146,7 @@ class Session: NSManagedObject {
     ::: = a gap in time
     ... = possible gap in time
     0 = now
-    tx = some specific time
-
+    tx = some specific point in time
 */
 
 
@@ -194,11 +193,6 @@ Future extensions
             return
         }
 
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
-
         var targetTime = desiredStartTime
         let workToModify = work[workIndex] as Work
 
@@ -209,8 +203,8 @@ Future extensions
             targetTime = now
         }
 
-        // Don't set starttime passed a finished workToModify
-        if !workToModify.isOngoing() && targetTime.compare(workToModify.stopTime) == .OrderedDescending {
+        // Don't set starttime passed a stopped workToModify
+        if workToModify.isStopped() && targetTime.compare(workToModify.stopTime) == .OrderedDescending {
             // c2, c12
             targetTime = workToModify.stopTime
         }
@@ -219,7 +213,7 @@ Future extensions
 
             // c1, c2
             // Prepare modification of workToModify
-            // ...Everything is already taken care of
+            // ...Everything has already been taken care of
 
         } else {
 
@@ -228,6 +222,9 @@ Future extensions
 
             // Not the first item => There is a previous item
             let previousWork = work[workIndex-1] as Work
+            if previousWork.isOngoing() {
+                return
+            }
 
             // Don't set starttime earlier than start of previous work
             if targetTime.compare(previousWork.startTime) == .OrderedAscending {
@@ -237,18 +234,12 @@ Future extensions
             if targetTime.compare(previousWork.stopTime) == .OrderedAscending {
                 // c11/c12: t1
                 // workToModify will overlap with previousWork
-                previousWork.stopTime = targetTime
+                previousWork.setStoppedAt(targetTime)
             }
         }
 
         // Do the modification of workToModify
-        if workToModify.isOngoing() {
-            // c1, c11
-            // Modify stopTime if work is ongoing to keep it as ongoing
-            workToModify.stopTime = targetTime
-        }
-        // c1, c2, c11, c12
-        workToModify.startTime = targetTime
+        workToModify.setStartedAt(targetTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -286,11 +277,6 @@ Future extensions
             return
         }
 
-        if workIndex >= work.count {
-            // Index points to non existing item
-            return
-        }
-
         var targetTime = desiredStopTime
         let workToModify = work[workIndex] as Work
 
@@ -310,7 +296,7 @@ Future extensions
 
             // c1
             // Prepare modification of workToModify
-            // ...Everything is already taken care of
+            // ...Everything has already been taken care of
 
 
         } else {
@@ -328,24 +314,12 @@ Future extensions
                     targetTime = nextWork.stopTime
                 }
 
-                if nextWork.isOngoing() {
-                    // c11
-                    nextWork.stopTime = targetTime
-                }
-                // c11, c12
-                nextWork.startTime = targetTime
+                nextWork.setStartedAt(targetTime)
             }
         }
 
         // Do the modification of workToModify
-        if workToModify.isOngoing() {
-            // c1
-            // Modify stopTime if work is ongoing to keep it as ongoing
-            workToModify.stopTime = targetTime
-        }
-
-        // c1, c11, c12
-        workToModify.stopTime = targetTime
+        workToModify.setStoppedAt(targetTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -384,7 +358,7 @@ Future extensions
         let startTime = previousWork.startTime
 
         moc.deleteObject(previousWork)
-        workToModify.startTime = startTime
+        workToModify.setStartedAt(startTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -421,13 +395,14 @@ Future extensions
 
         let workToModify = work[workIndex] as Work
         let nextWork = work[workIndex+1] as Work
-        var stopTime = nextWork.stopTime
+
         if nextWork.isOngoing() {
-            stopTime = workToModify.startTime
+            workToModify.setAsOngoing()
+        } else {
+            workToModify.setStoppedAt(nextWork.stopTime)
         }
 
         moc.deleteObject(nextWork)
-        workToModify.stopTime = stopTime
 
         TimePoliceModelUtils.save(moc)        
     }
@@ -525,7 +500,9 @@ class Work: NSManagedObject {
 
     @NSManaged var id: String
     @NSManaged var name: String
+    /* Readonly attribute */
     @NSManaged var startTime: NSDate
+    /* Readonly attribute. Valid if isOngoing retirns true. */
     @NSManaged var stopTime: NSDate
     @NSManaged var session: Session
     @NSManaged var task: Task
@@ -563,22 +540,33 @@ class Work: NSManagedObject {
         }
     }
 
-    func isFinished() -> Bool {
+    func isStopped() -> Bool {
         return !isOngoing()
     }
 
-    func setAsFinished(time: NSDate) {
-        self.stopTime = time
+    func setStartedAt(time: NSDate) {
+        if isStopped() && time.compare(self.startTime) == .OrderedDescending {
+            // Don't set a stopped item's starttime > stoptime
+            return
+        }
+        if isOngoing() {
+            // Keep work as ongoing if it already is ongoing
+            self.stopTime = time
+        }
+        self.startTime = time
+    }
+
+    func setStoppedAt(time: NSDate) {
+        if time.compare(self.startTime) == .OrderedAscending {
+            // Don't set an item's stoptime < starttime
+            return
+        }
+        self.stopTime = time            
     }
 
     func setAsOngoing() {
         self.stopTime = self.startTime
     }
-
-    func setStartedAt(time: NSDate) {
-        self.startTime = time
-    }
-
 
 }
 
