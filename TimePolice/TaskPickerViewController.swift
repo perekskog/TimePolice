@@ -174,7 +174,7 @@ class TaskPickerViewController: UIViewController
             
             if let s = session {
                 if let moc = managedObjectContext {
-                    s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
+                    s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                 }
             }
 

@@ -124,8 +124,8 @@ class Session: NSManagedObject {
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             let work = elem as Work
-            // For all items but one that is ongoing
-            if work.startTime != work.stopTime {
+            // For all items but the last one, if it is ongoing
+            if idx != self.work.count-1 || work.isStopped() {
                 let task = work.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionSummary[task] {
@@ -268,9 +268,6 @@ Future extensions
 
             // Not the first item => There is a previous item
             let previousWork = work[workIndex-1] as Work
-            if previousWork.isOngoing() {
-                return
-            }
 
             // Don't set starttime earlier than start of previous work
             if targetTime.compare(previousWork.startTime) == .OrderedAscending {
@@ -788,6 +785,7 @@ class TestData {
                 taskList = sessionTemplate.tasks.array as [Task]
             } else {
                 let sessionTemplate = Session.createInMOC(managedObjectContext, name: templateName)
+                sessionTemplate.project = project
                 sessionTemplate.tasks = NSOrderedSet(array: templateTasks)
                 taskList = templateTasks
             }
