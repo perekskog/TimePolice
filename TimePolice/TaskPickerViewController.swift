@@ -7,6 +7,13 @@
 //
 
 
+/* TODO
+
+- getSelectionAreaInfo
+  Är det Theme som gr uträkning av tid för aktuell task? Kasnek inte så bra...
+
+*/
+
 import UIKit
 import CoreData
 
@@ -165,6 +172,13 @@ class TaskPickerViewController: UIViewController
                 TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
             }
             
+            if let s = session {
+                if let moc = managedObjectContext {
+                    s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
+                }
+            }
+
+/*
             // If datepicker points to the earliest possible minute, it might be a few seconds too early, in that case, pick the input minimum date instead.
             var targetDate = vc.datePicker.date
             if let minDate = vc.minimumDate {
@@ -193,17 +207,18 @@ class TaskPickerViewController: UIViewController
                     }   
                 }
             }
-        }
+*/
 
-        if let moc = managedObjectContext {
-            TimePoliceModelUtils.save(moc)
-        }
+            if let moc = managedObjectContext {
+                TimePoliceModelUtils.save(moc)
+            }
 
-        if let s = session {
-            TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
-        }
+            if let s = session {
+                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+            }
 
-        tp?.redraw()
+            tp?.redraw()
+        }
     }
 
     
@@ -375,12 +390,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         // Check last work item, is something ongoing?
         if session.work.count > 0 {
             // Found a work item, look at the last one
-            let work = session.work[session.work.count-1] as Work
-
-            if work.isOngoing() {
-                TextViewLogger.log(statusView, message: String("\nWork ongoing: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
-            } else {
-                TextViewLogger.log(statusView, message: String("\nNo ongoing work"))
+            if let work = session.getLastWork() {
+                if work.isOngoing() {
+                    TextViewLogger.log(statusView, message: String("\nWork ongoing: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
+                } else {
+                    TextViewLogger.log(statusView, message: String("\nNo ongoing work"))
+                }
             }
         } else {
             TextViewLogger.log(statusView, message: String("\nWorklist empty"))
@@ -435,12 +450,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleTapSettings"))
-        
-        if let work = session.getLastWork() {
-            if work.isOngoing() {
-                vc.performSegueWithIdentifier("EditWork", sender: vc)                
-            }
-        }
     }
 
 
@@ -501,7 +510,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
 
-    // Long press on infoarea, do same as in handleTap
+    // Long press on task, edit current work
 
     func handleLongPress(sender: UILongPressGestureRecognizer) {
 
@@ -512,10 +521,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPress"))
 
         if let work = session.getLastWork() {
-            if !work.isOngoing() {
-                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No ongoing work"))
-                return
-            }
             
             let taskList = session.tasks.array as [Task]
             let taskIndex = recognizers[sender]
@@ -524,18 +529,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) LongPress on inactive task"))
                 return
             }
+
+            vc.performSegueWithIdentifier("EditWork", sender: vc)
         }
 
-        if let work = session.getLastWork() {
-            if work.isOngoing() {
-                vc.performSegueWithIdentifier("EditWork", sender: vc)
-            }
-        }
     }
-
-
-
-
 
 
     //--------------------------------------------
@@ -549,14 +547,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         let w = Work.createInMOC(self.moc, name: "")
         w.task = task
-        w.startTime = NSDate()
-        w.stopTime = w.startTime
-            
-        let sw = session.work.mutableCopy() as NSMutableOrderedSet
-        sw.addObject(w)
-        session.work = sw
 
-
+        session.appendWork(w)            
 
         TimePoliceModelUtils.save(moc)            
     }
@@ -569,7 +561,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         //if let work = currentWork {
         if let work = session.getLastWork() {
             if work.isOngoing() {
-                work.stopTime = NSDate()
+                work.setStoppedAt(NSDate())
+
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionSummary[work.task] {
                     taskSummary = t
@@ -579,9 +572,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
                 sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
-                let sw = session.work.mutableCopy() as NSMutableOrderedSet
-                sw.replaceObjectAtIndex(sw.count-1, withObject: work)
-                session.work = sw
+                session.replaceLastWork(work)
 
                 TimePoliceModelUtils.save(moc)
             } else {
@@ -667,8 +658,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     	if let work = session.getLastWork() {
             if work.isOngoing() {
                 signedIn = true
-                let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
-                totalTime += timeForActiveTask
+
+                let now = NSDate()
+                if(now.compare(work.startTime) == .OrderedDescending) {
+                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                    totalTime += timeForActiveTask
+                }
             }
     	}
 

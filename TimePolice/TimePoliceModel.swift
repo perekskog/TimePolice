@@ -154,6 +154,26 @@ class Session: NSManagedObject {
     }
 
     //---------------------------------------------
+    // Session - appendWork
+    //---------------------------------------------
+
+    func appendWork(work: Work) {
+        let sw = self.work.mutableCopy() as NSMutableOrderedSet
+        sw.addObject(work)
+        self.work = sw
+    }
+
+    //---------------------------------------------
+    // Session - replaceLastWork
+    //---------------------------------------------
+
+    func replaceLastWork(work: Work) {
+        let sw = self.work.mutableCopy() as NSMutableOrderedSet
+        sw.replaceObjectAtIndex(sw.count-1, withObject: work)
+        self.work = sw
+    }
+
+    //---------------------------------------------
     // Session modifications - Rules to follow
     //---------------------------------------------
 
