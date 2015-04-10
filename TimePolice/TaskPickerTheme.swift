@@ -414,7 +414,7 @@ class ThemeUtilities {
             NSForegroundColorAttributeName : foregroundColor,
             NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
         ]
-        let font = attributes[NSFontAttributeName] as UIFont
+        /*1.2*/let font = attributes[NSFontAttributeName] as! UIFont
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         let textSize = text.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));

@@ -41,7 +41,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "TaskPicker" {
-            let vc = segue.destinationViewController as TaskPickerViewController
+            /*1.2*/let vc = segue.destinationViewController as! TaskPickerViewController
             vc.session = selectedSession
             vc.sourceController = self
         } 
@@ -127,7 +127,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as UITableViewCell
+        /*1.2*/let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as! UITableViewCell
         cell.textLabel?.text = sessions?[indexPath.row].name
         return cell
     }
@@ -144,7 +144,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     //---------------------------------------
 
     lazy var managedObjectContext : NSManagedObjectContext? = {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if let managedObjectContext = appDelegate.managedObjectContext {
             return managedObjectContext
         }

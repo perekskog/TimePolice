@@ -56,7 +56,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("EditWorkCell") as UITableViewCell
+        /*1.2*/let cell = tableView.dequeueReusableCellWithIdentifier("EditWorkCell") as! UITableViewCell
         cell.textLabel?.text = taskList?[indexPath.row].name
         return cell
     }

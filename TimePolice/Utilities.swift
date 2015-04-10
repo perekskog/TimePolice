@@ -37,7 +37,7 @@ func getString(date: NSDate) -> String {
 class TextViewLogger {
 	class func log(textview: UITextView, message: String) {
         textview.text! += message
-        let numberOfElements = countElements(textview.text)
+        let numberOfElements = count(textview.text)
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         textview.scrollRangeToVisible(range)
         print(message)
