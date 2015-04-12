@@ -502,11 +502,18 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         let taskIndex = recognizers[sender]
         let task = taskList[taskIndex!]
-        taskSignIn(task)
-        taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 
+        println("before taskSignIn")
+
+        taskSignIn(task)
+
+        println("after taskSignIn")
+
+        taskbuttonviews[taskIndex!]?.setNeedsDisplay()
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
+
+        println("Done with handleTap")
 
         TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
@@ -549,9 +556,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let w = Work.createInMOC(self.moc, name: "")
         w.task = task
 
-        session.appendWork(w)            
+        session.appendWork(w) 
 
-        TimePoliceModelUtils.save(moc)            
+        println("appended to session")           
+
+        TimePoliceModelUtils.save(moc)
+
+        println("saved data")          
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
