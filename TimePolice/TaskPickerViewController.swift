@@ -40,7 +40,8 @@ class TaskPickerViewController: UIViewController
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
-        /*1.2*/(self.view as! TimePoliceBackgroundView).theme = theme
+        /*1.2OK*/
+        (self.view as! TimePoliceBackgroundView).theme = theme
 
         var tpRect = self.view.bounds
         tpRect.origin.x = 0
@@ -113,7 +114,8 @@ class TaskPickerViewController: UIViewController
                 TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
             }
 
-            /*1.2*/let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
+            let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
+            /*1.2OK*/
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
                 vc.maximumDate = NSDate()
@@ -140,8 +142,8 @@ class TaskPickerViewController: UIViewController
 
         if unwindSegue.identifier == "OkEditWork" {
 
-            /*1.2*/let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
-
+            let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+            /*1.2OK*/
             if let s = session {
                 if let w = session?.getLastWork() {
                     if !w.isOngoing() {
@@ -178,37 +180,6 @@ class TaskPickerViewController: UIViewController
                 }
             }
 
-/*
-            // If datepicker points to the earliest possible minute, it might be a few seconds too early, in that case, pick the input minimum date instead.
-            var targetDate = vc.datePicker.date
-            if let minDate = vc.minimumDate {
-                if vc.datePicker.date.compare(minDate) == NSComparisonResult.OrderedAscending {
-                    targetDate = minDate
-                    TextViewLogger.log(statusView!, message: "\nAdjusted new date=\(getString(targetDate))")
-                }
-            }
-
-            if vc.datePicker.date != vc.initialDate {
-                if let s = session {
-                    if let wl = s.work.array as? [Work] {
-                        if wl.count >= 1 {
-                            // If at least one item: Set start/stoptime
-                            wl[wl.count-1].startTime = targetDate
-                            wl[wl.count-1].stopTime = targetDate
-                        }
-                        if wl.count >= 2 {
-                            // If at least two items: Adjust stoptime of previous work item
-                            if wl[wl.count-2].stopTime.compare(targetDate) == NSComparisonResult.OrderedDescending {
-                                wl[wl.count-2].stopTime = targetDate
-                            } else {
-                                TextViewLogger.log(statusView!, message: "\nDid not change date")
-                            }
-                        }
-                    }   
-                }
-            }
-*/
-
             if let moc = managedObjectContext {
                 TimePoliceModelUtils.save(moc)
             }
@@ -241,7 +212,8 @@ class TaskPickerViewController: UIViewController
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
 
-        /*1.2*/let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        /*1.2OK*/
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if let managedObjectContext = appDelegate.managedObjectContext {
             return managedObjectContext
         }
@@ -321,7 +293,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPicker.setup")
 
 		backgroundView.theme = theme
-        /*1.2*/let taskList = session.tasks.array as! [Task]
+        /*1.2OK*/
+        let taskList = session.tasks.array as! [Task]
 		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
@@ -459,7 +432,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
-        /*1.2*/let taskList = session.tasks.array as! [Task]
+        /*1.2OK*/
+        let taskList = session.tasks.array as! [Task]
         
         if let work = session.getLastWork() {
             if work.isOngoing() {
@@ -490,7 +464,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTap(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
-        /*1.2*/let taskList = session.tasks.array as! [Task]
+        /*1.2OK*/
+        let taskList = session.tasks.array as! [Task]
         
         if let work = session.getLastWork() {
             if work.isOngoing() {
@@ -530,7 +505,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         if let work = session.getLastWork() {
             
-            /*1.2*/let taskList = session.tasks.array as! [Task]
+            /*1.2OK*/
+            let taskList = session.tasks.array as! [Task]
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
             if work.task != task {
@@ -556,7 +532,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let w = Work.createInMOC(self.moc, name: "")
         w.task = task
 
-        session.appendWork(w) 
+        //session.appendWork(w)
+        let sw = session.work.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(w)
+        session.work = sw
+
 
         println("appended to session")           
 
@@ -606,7 +586,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         //print(".")
         if let work = session.getLastWork() {
             let task = work.task
-            /*1.2*/let taskList = session.tasks.array as! [Task]
+            /*1.2OK*/
+            let taskList = session.tasks.array as! [Task]
             if let taskIndex = find(taskList, task as Task) {
                 let view = taskbuttonviews[taskIndex]
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
@@ -625,7 +606,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
         //print("gsl(\(selectionArea))")
 
-        /*1.2*/let taskList = session.tasks.array as! [Task]
+        /*1.2OK*/
+        let taskList = session.tasks.array as! [Task]
         let task = taskList[selectionArea]
 
         var taskSummary: (Int, NSTimeInterval) = (0, 0)

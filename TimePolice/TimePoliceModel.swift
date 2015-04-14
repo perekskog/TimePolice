@@ -30,7 +30,8 @@ class Project: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
-        /*1.2*/let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
+        /*1.2OK*/
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
 
         let date = NSDate()
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
@@ -62,7 +63,8 @@ class Project: NSManagedObject {
     //---------------------------------------------
 
     func addSession(session: Session) {
-        /*1.2*/let s = self.sessions.mutableCopy() as! NSMutableSet
+        /*1.2OK*/
+        let s = self.sessions.mutableCopy() as! NSMutableSet
         s.addObject(session)
         self.sessions = s
     }
@@ -87,7 +89,8 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Session {
-        /*1.2*/let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
+        /*1.2OK*/
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
         let date = NSDate()
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
@@ -123,7 +126,8 @@ class Session: NSManagedObject {
         var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            /*1.2*/let work = elem as! Work
+            /*1.2OK*/
+            let work = elem as! Work
             // For all items but the last one, if it is ongoing
             if idx != self.work.count-1 || work.isStopped() {
                 let task = work.task
@@ -158,7 +162,8 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     func appendWork(work: Work) {
-        /*1.2*/let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        /*1.2OK*/
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.addObject(work)
         self.work = sw
     }
@@ -168,7 +173,8 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     func replaceLastWork(work: Work) {
-        /*1.2*/let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        /*1.2OK*/
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.replaceObjectAtIndex(sw.count-1, withObject: work)
         self.work = sw
     }
@@ -240,7 +246,8 @@ Future extensions
         }
 
         var targetTime = desiredStartTime
-        /*1.2*/let workToModify = work[workIndex] as! Work
+        /*1.2OK*/
+        let workToModify = work[workIndex] as! Work
 
         // Never change starttime into the future
         let now = NSDate()
@@ -267,7 +274,8 @@ Future extensions
             // Prepare modification of workToModify, also modify previousWork
 
             // Not the first item => There is a previous item
-            /*1.2*/let previousWork = work[workIndex-1] as! Work
+            /*1.2OK*/
+            let previousWork = work[workIndex-1] as! Work
 
             // Don't set starttime earlier than start of previous work
             if targetTime.compare(previousWork.startTime) == .OrderedAscending {
@@ -321,7 +329,8 @@ Future extensions
         }
 
         var targetTime = desiredStopTime
-        /*1.2*/let workToModify = work[workIndex] as! Work
+        /*1.2OK*/
+        let workToModify = work[workIndex] as! Work
 
         // Never change stoptime into the future
         let now = NSDate()
@@ -347,7 +356,8 @@ Future extensions
             // Prepare modification of workToModify, also modify previousWork
 
             // Not the last item => There is a next item
-            /*1.2*/let nextWork = work[workIndex+1] as! Work
+            /*1.2OK*/
+            let nextWork = work[workIndex+1] as! Work
 
             if targetTime.compare(nextWork.startTime) == .OrderedDescending {
                 // Need to adjust next work
@@ -396,8 +406,10 @@ Future extensions
             return
         }
 
-        /*1.2*/let workToModify = work[workIndex] as! Work
-        /*1.2*/let previousWork = work[workIndex-1] as! Work
+        /*1.2OK*/
+        let workToModify = work[workIndex] as! Work
+        /*1.2OK*/
+        let previousWork = work[workIndex-1] as! Work
         let startTime = previousWork.startTime
 
         moc.deleteObject(previousWork)
@@ -436,8 +448,10 @@ Future extensions
             return
         }
 
-        /*1.2*/let workToModify = work[workIndex] as! Work
-        /*1.2*/let nextWork = work[workIndex+1] as! Work
+        /*1.2OK*/
+        let workToModify = work[workIndex] as! Work
+        /*1.2OK*/
+        let nextWork = work[workIndex+1] as! Work
 
         if nextWork.isOngoing() {
             workToModify.setAsOngoing()
@@ -471,7 +485,8 @@ Future extensions
             return
         }
 
-        /*1.2*/let workToModify = work[workIndex] as! Work
+        /*1.2OK*/
+        let workToModify = work[workIndex] as! Work
         moc.deleteObject(workToModify)
 
         TimePoliceModelUtils.save(moc)        
@@ -516,7 +531,8 @@ class Task: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Task {
-        /*1.2*/let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
+        /*1.2OK*/
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
 
         let date = NSDate()
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
@@ -555,7 +571,8 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Work {
-        /*1.2*/let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
+        /*1.2OK*/
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
 
         let date = NSDate()
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
@@ -688,7 +705,8 @@ class TimePoliceModelUtils {
                 println("P: \(project.name)-\(project.id)")
                 for session in project.sessions {
                     println("    S: \(session.name)-\(session.id)")
-                    /*1.2*/let s = session as! Session  // Why is this needed?
+                    /*1.2OK*/
+                    let s = session as! Session
                     println("        P: \(s.project.name)-\(session.project.id)")
                 }
             }
@@ -702,11 +720,13 @@ class TimePoliceModelUtils {
                 println("S: \(session.name)-\(session.id)")
                 println("    P: \(session.project.name)-\(session.project.id)")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    /*1.2*/let work = elem as! Work
+                    /*1.2OK*/
+                    let work = elem as! Work
                     println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    /*1.2*/let task = elem as! Task
+                    /*1.2OK*/
+                    let task = elem as! Task
                     println("    T: \(task.name)")
                 }
             }
@@ -744,7 +764,8 @@ class TimePoliceModelUtils {
         s += "\nS: \(session.name)-\(session.id)"
         s += "\n    P: \(session.project.name)-\(session.project.id)"
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            /*1.2*/let work = elem as! Work
+            /*1.2OK*/
+            let work = elem as! Work
             s += "\n    W: \(work.task.name) \(getString(work.startTime))->\(getString(work.stopTime))"
         }
 
@@ -782,7 +803,8 @@ class TestData {
         if let sessions = Session.findInMOC(managedObjectContext, name: templateName) {
             if sessions.count > 0 {
                 let sessionTemplate = sessions[0] as Session
-                /*1.2*/taskList = sessionTemplate.tasks.array as! [Task]
+                /*1.2OK*/
+                taskList = sessionTemplate.tasks.array as! [Task]
             } else {
                 let sessionTemplate = Session.createInMOC(managedObjectContext, name: templateName)
                 sessionTemplate.project = project
@@ -796,6 +818,7 @@ class TestData {
         project.addSession(session)
 
         session.tasks = NSOrderedSet(array: taskList)
+
     }
 
     //---------------------------------------------
