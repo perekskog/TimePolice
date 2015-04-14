@@ -412,6 +412,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -426,6 +427,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -473,7 +475,7 @@
 				CBD182D61A08AAD2007BA9F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CBD182D71A08AAD2007BA9F7 /* Build configuration list for PBXNativeTarget "TimePolice" */ = {
 			isa = XCConfigurationList;
@@ -482,7 +484,7 @@
 				CBD182D91A08AAD2007BA9F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		CBD182DA1A08AAD2007BA9F7 /* Build configuration list for PBXNativeTarget "TimePoliceTests" */ = {
 			isa = XCConfigurationList;
@@ -491,7 +493,7 @@
 				CBD182DC1A08AAD2007BA9F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 
