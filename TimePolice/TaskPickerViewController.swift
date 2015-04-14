@@ -103,7 +103,7 @@ class TaskPickerViewController: UIViewController
     }
     
     //---------------------------------------------
-    // TaskPickerViewController - Segue exit
+    // TaskPickerViewController - Segue handling
     //---------------------------------------------
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -192,12 +192,6 @@ class TaskPickerViewController: UIViewController
         }
     }
 
-    
-
-    //---------------------------------------------
-    // TaskPickerViewController - Buttons
-    //---------------------------------------------
-
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
 
@@ -205,9 +199,10 @@ class TaskPickerViewController: UIViewController
         self.navigationController?.popViewControllerAnimated(true)
         tp?.updateActiveActivityTimer?.invalidate()
     }
+
     
     //--------------------------------------------------
-    // TaskPickerViewController - CoreData MOC & save
+    // TaskPickerViewController - CoreData MOC
     //--------------------------------------------------
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
@@ -478,17 +473,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let taskIndex = recognizers[sender]
         let task = taskList[taskIndex!]
 
-        println("before taskSignIn")
-
         taskSignIn(task)
-
-        println("after taskSignIn")
 
         taskbuttonviews[taskIndex!]?.setNeedsDisplay()
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
-
-        println("Done with handleTap")
 
         TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
     }
@@ -534,11 +523,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         session.appendWork(w)
 
-        println("appended to session")           
-
         TimePoliceModelUtils.save(moc)
-
-        println("saved data")          
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
@@ -573,9 +558,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
 
-    //---------------------------------------------------
+    //--------------------------------------------------------------
     // TaskPicker - Periodic update of views, triggered by timeout
-    //---------------------------------------------------
+    //--------------------------------------------------------------
 
     @objc
     func updateActiveTask(timer: NSTimer) {

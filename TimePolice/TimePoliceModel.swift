@@ -67,6 +67,7 @@ class Project: NSManagedObject {
         let s = self.sessions.mutableCopy() as! NSMutableSet
         s.addObject(session)
         self.sessions = s
+        session.project = self
     }
 
 }
@@ -166,6 +167,7 @@ class Session: NSManagedObject {
         let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.addObject(work)
         self.work = sw
+        work.session = self
     }
 
     //---------------------------------------------
@@ -177,6 +179,7 @@ class Session: NSManagedObject {
         let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.replaceObjectAtIndex(sw.count-1, withObject: work)
         self.work = sw
+        work.session = self
     }
 
     //---------------------------------------------
@@ -818,23 +821,6 @@ class TestData {
         project.addSession(session)
 
         session.tasks = NSOrderedSet(array: taskList)
-/*
-        println("Save 1")
-        TimePoliceModelUtils.save(managedObjectContext)
-        managedObjectContext.reset()
-
-        let w = Work.createInMOC(managedObjectContext, name: "")
-        w.task = taskList[0]
-        
-        let sw = session.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(w)
-        session.work = sw
-
-        println("Save 2")
-        TimePoliceModelUtils.save(managedObjectContext)
-        println("Done saving")
-*/
-
     }
 
     //---------------------------------------------
