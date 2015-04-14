@@ -818,6 +818,22 @@ class TestData {
         project.addSession(session)
 
         session.tasks = NSOrderedSet(array: taskList)
+/*
+        println("Save 1")
+        TimePoliceModelUtils.save(managedObjectContext)
+        managedObjectContext.reset()
+
+        let w = Work.createInMOC(managedObjectContext, name: "")
+        w.task = taskList[0]
+        
+        let sw = session.work.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(w)
+        session.work = sw
+
+        println("Save 2")
+        TimePoliceModelUtils.save(managedObjectContext)
+        println("Done saving")
+*/
 
     }
 

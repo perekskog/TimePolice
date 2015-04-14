@@ -58,6 +58,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let moc = self.managedObjectContext {
             TestData.addSessionToHome(moc)
             TimePoliceModelUtils.save(moc)
+            moc.reset()
             TimePoliceModelUtils.dumpAllData(moc)
 
             let fetchRequest = NSFetchRequest(entityName: "Session")
@@ -73,6 +74,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let moc = self.managedObjectContext {
             TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
+            moc.reset()
             TimePoliceModelUtils.dumpAllData(moc)
             
             let fetchRequest = NSFetchRequest(entityName: "Session")
@@ -88,6 +90,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let moc = self.managedObjectContext {
             TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
+            moc.reset()
             TimePoliceModelUtils.dumpAllData(moc)
             
             let fetchRequest = NSFetchRequest(entityName: "Session")
@@ -103,6 +106,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let moc = self.managedObjectContext {
             TimePoliceModelUtils.clearAllData(moc)
             TimePoliceModelUtils.save(moc)
+            moc.reset()
             TimePoliceModelUtils.dumpAllData(moc)
 
             let fetchRequest = NSFetchRequest(entityName: "Session")

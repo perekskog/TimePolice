@@ -532,11 +532,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let w = Work.createInMOC(self.moc, name: "")
         w.task = task
 
-        //session.appendWork(w)
-        let sw = session.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(w)
-        session.work = sw
-
+        session.appendWork(w)
 
         println("appended to session")           
 
