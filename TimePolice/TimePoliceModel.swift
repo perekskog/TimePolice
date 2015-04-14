@@ -769,7 +769,8 @@ class TimePoliceModelUtils {
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             /*1.2OK*/
             let work = elem as! Work
-            s += "\n    W: \(work.task.name) \(getString(work.startTime))->\(getString(work.stopTime))"
+            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+            s += "\n    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))"
         }
 
         return s

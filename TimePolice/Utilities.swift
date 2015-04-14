@@ -34,6 +34,13 @@ func getString(date: NSDate) -> String {
 	return timeString
 }
 
+func getStringNoDate(date: NSDate) -> String {
+	let formatter = NSDateFormatter();
+    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("hhmmss", options: 0, locale: NSLocale.currentLocale())
+	let timeString = formatter.stringFromDate(date)
+	return timeString
+}
+
 class TextViewLogger {
 	class func log(textview: UITextView, message: String) {
         textview.text! += message
