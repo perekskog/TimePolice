@@ -132,6 +132,17 @@ class Session: NSManagedObject {
     }
 
 
+    //---------------------------------------------
+    // Session - addTasks
+    //---------------------------------------------
+
+    func addTasks(task: [Task]) {
+        for task in tasks {
+            addTask(task)
+        }
+    }
+
+
 
     //---------------------------------------------
     // Session - findInMOC
@@ -762,7 +773,6 @@ class TimePoliceModelUtils {
                 println("P: \(project.name)-\(project.id)")
                 for session in project.sessions {
                     println("    S: \(session.name)-\(session.id)")
-                    /*1.2OK*/
                     let s = session as! Session
                     println("        P: \(s.project.name)-\(session.project.id)")
                 }
@@ -843,7 +853,7 @@ class TestData {
     // TestData - addSession
     //---------------------------------------------
 
-    class func addSession(moc: NSManagedObjectContext, projectName: String, templateName: String, templateTasks: [Task], sessionName: String) {
+    class func addSession(moc: NSManagedObjectContext, projectName: String, templateName: String, templateTasks: [String], sessionName: String) {
         var project: Project
         var session: Session
         var taskList: [Task] = []
@@ -864,19 +874,17 @@ class TestData {
                 taskList = sessionTemplate.tasks.array as! [Task]
             } else {
                 let sessionTemplate = Session.createInMOC(moc, name: templateName, project: project)
-                sessionTemplate.project = project
-                for taskName in templateTask {
-                    let task = Task.createInMOC(moc, name: taskName)
+                for taskName in templateTasks {
+                    let task = Task.createInMOC(moc, name: taskName, session: sessionTemplate)
                     taskList.append(task)
                 }
-                sessionTemplate.tasks = NSOrderedSet(array: templateTasks)
-                taskList = templateTasks
+                taskList = sessionTemplate.tasks
             }
         }
 
         session = Session.createInMOC(moc, name: "\(sessionName) \(getString(NSDate()))", project: project)
 
-        session.tasks = NSOrderedSet(array: taskList)
+        session.addTasks(taskList)
     }
 
     //---------------------------------------------
@@ -886,33 +894,19 @@ class TestData {
     class func addSessionToHome(moc: NSManagedObjectContext) {
 
         let taskList =  [
-            Task.createInMOC(moc, name: "I F2F"),
-            Task.createInMOC(moc, name: "I Eva"),
-            Task.createInMOC(moc, name: "I Chat"),
+            "I F2F", "I Eva", "I Chat",
 
-            Task.createInMOC(moc, name: "I Email"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "I Blixt"),
+            "I Email", "---", "I Blixt",
 
-            Task.createInMOC(moc, name: "P OF"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "P Lista"),
+            "P OF", "---", "P Lista",
 
-            Task.createInMOC(moc, name: "P Hushåll"),
-            Task.createInMOC(moc, name: "P Eva"),
-            Task.createInMOC(moc, name: "P Other"),
+            "P Hushåll", "P Eva", "P Other",
 
-            Task.createInMOC(moc, name: "N Waste"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "N Not home"),
+            "N Waste", "---", "N Not home",
 
-            Task.createInMOC(moc, name: "N Connect"),
-            Task.createInMOC(moc, name: "N Down"),
-            Task.createInMOC(moc, name: "N Time-in"),
+            "N Connect", "N Down", "N Time-in",
 
-            Task.createInMOC(moc, name: "N Physical"),
-            Task.createInMOC(moc, name: "N Coffe/WC"),
-            Task.createInMOC(moc, name: "N Other"),
+            "N Physical", "N Coffe/WC", "N Other"
         ]
 
         addSession(moc, projectName: "Home", templateName: "Template - Home", templateTasks: taskList, sessionName: "Home")
@@ -925,33 +919,19 @@ class TestData {
     class func addSessionToWork(moc: NSManagedObjectContext) {
 
         let taskList = [
-            Task.createInMOC(moc, name: "I F2F"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "I Lync"),
+            "I F2F", "---", "I Lync",
             
-            Task.createInMOC(moc, name: "I Email"),
-            Task.createInMOC(moc, name: "I Ticket"),
-            Task.createInMOC(moc, name: "I Blixt"),
+            "I Email", "I Ticket", "I Blixt",
             
-            Task.createInMOC(moc, name: "P OF"),
-            Task.createInMOC(moc, name: "P Task"),
-            Task.createInMOC(moc, name: "P Ticket"),
+            "P OF", "P Task", "P Ticket",
             
-            Task.createInMOC(moc, name: "P US"),
-            Task.createInMOC(moc, name: "P Meeting"),
-            Task.createInMOC(moc, name: "P Other"),
+            "P US", "P Meeting", "P Other",
             
-            Task.createInMOC(moc, name: "N Waste"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "N Not work"),
+            "N Waste", "---", "N Not work",
             
-            Task.createInMOC(moc, name: "N Connect"),
-            Task.createInMOC(moc, name: "N Down"),
-            Task.createInMOC(moc, name: "N Time-in"),
+            "N Connect", "N Down", "N Time-in",
             
-            Task.createInMOC(moc, name: "N Physical"),
-            Task.createInMOC(moc, name: "N Coffe/WC"),
-            Task.createInMOC(moc, name: "N Other"),
+            "N Physical", "N Coffe/WC", "N Other"
         ]
         
         addSession(moc, projectName: "Work", templateName: "Template - Work", templateTasks: taskList, sessionName: "Work")
@@ -964,33 +944,19 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
 
         let taskList = [
-            Task.createInMOC(moc, name: "Sleep"),
-            Task.createInMOC(moc, name: "Sleep in-out"),
-            Task.createInMOC(moc, name: "---"),
+            "Sleep", "Sleep in-out", "---",
             
-            Task.createInMOC(moc, name: "Home"),
-            Task.createInMOC(moc, name: "Home in-out"),
-            Task.createInMOC(moc, name: "Home outside"),
+            "Home", "Home in-out", "Home outside",
             
-            Task.createInMOC(moc, name: "Work"),
-            Task.createInMOC(moc, name: "---"),
-            Task.createInMOC(moc, name: "Work outside"),
+            "Work", "---", "Work outside",
                 
-            Task.createInMOC(moc, name: "Car morning"),
-            Task.createInMOC(moc, name: "T morning"),
-            Task.createInMOC(moc, name: "P morning"),
+            "Car morning", "T morning", "P morning",
 
-            Task.createInMOC(moc, name: "Car evening"),
-            Task.createInMOC(moc, name: "T evening"),
-            Task.createInMOC(moc, name: "P evening"),
+            "Car evening", "T evening", "P evening",
 
-            Task.createInMOC(moc, name: "Lunch"),
-            Task.createInMOC(moc, name: "Errand"),
-            Task.createInMOC(moc, name: "F&S"),
+            "Lunch", "Errand", "F&S",
 
-            Task.createInMOC(moc, name: "1"),
-            Task.createInMOC(moc, name: "2"),
-            Task.createInMOC(moc, name: "3"),
+            "1", "2", "3"
         ]
         
         addSession(moc, projectName: "Daytime", templateName: "Template - Daytime", templateTasks: taskList, sessionName: "Daytime")
