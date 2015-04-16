@@ -48,6 +48,8 @@ class TextViewLogger {
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         textview.scrollRangeToVisible(range)
         print(message)
+        
+        UIPasteboard.generalPasteboard().string = textview.text
 	}
     class func reset(textview: UITextView) {
         textview.text = ""

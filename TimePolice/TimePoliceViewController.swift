@@ -41,7 +41,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "TaskPicker" {
-            /*1.2*/let vc = segue.destinationViewController as! TaskPickerViewController
+            let vc = segue.destinationViewController as! TaskPickerViewController
             vc.session = selectedSession
             vc.sourceController = self
         } 
@@ -59,7 +59,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TestData.addSessionToHome(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            TimePoliceModelUtils.dumpAllData(moc)
 
             let fetchRequest = NSFetchRequest(entityName: "Session")
             if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -75,7 +74,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            TimePoliceModelUtils.dumpAllData(moc)
             
             let fetchRequest = NSFetchRequest(entityName: "Session")
             if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -91,7 +89,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            TimePoliceModelUtils.dumpAllData(moc)
             
             let fetchRequest = NSFetchRequest(entityName: "Session")
             if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -107,7 +104,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TimePoliceModelUtils.clearAllData(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            TimePoliceModelUtils.dumpAllData(moc)
 
             let fetchRequest = NSFetchRequest(entityName: "Session")
             if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -115,6 +111,14 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             }
 
             logTableView.reloadData()
+        }
+    }
+
+    @IBAction func dumpAllCoreData(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            let s = TimePoliceModelUtils.dumpAllData(moc)
+            println(s)
+            UIPasteboard.generalPasteboard().string = s
         }
     }
 
@@ -131,7 +135,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        /*1.2*/let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as! UITableViewCell
         cell.textLabel?.text = sessions?[indexPath.row].name
         return cell
     }

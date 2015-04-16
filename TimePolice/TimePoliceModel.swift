@@ -763,68 +763,68 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - dumpAllData
     //---------------------------------------------
 
-    class func dumpAllData(moc: NSManagedObjectContext) {
+    class func dumpAllData(moc: NSManagedObjectContext) -> String {
         var fetchRequest: NSFetchRequest
+        var s: String
 
-        println("---------------------------")
-        println("----------Project----------\n")
+        s = ("---------------------------\n")
+        s += ("----------Project----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Project")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
             for project in fetchResults {
-                println("P: \(project.name)-\(project.id)")
+                s += ("P: \(project.name)-\(project.id)\n")
                 for session in project.sessions {
-                    println("    S: \(session.name)-\(session.id)")
-                    let s = session as! Session
-                    println("        P: \(s.project.name)-\(session.project.id)")
+                    s += ("    S: \(session.name)-\(session.id)\n")
                 }
             }
         }
 
-        println("\n---------------------------")
-        println("----------Session----------\n")
+        s += ("\n---------------------------\n")
+        s += ("----------Session----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Session")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
             for session in fetchResults {
-                println("S: \(session.name)-\(session.id)")
-                println("    P: \(session.project.name)-\(session.project.id)")
+                s += ("S: \(session.name)-\(session.id)\n")
+                s += ("    P: \(session.project.name)-\(session.project.id)\n")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
+                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as! Task
-                    println("    T: \(task.name)")
+                    s += ("   T: \(task.name)\n")
                 }
             }
         }
 
-        println("\n------------------------")
-        println("----------Work----------\n")
+        s += ("\n------------------------\n")
+        s += ("----------Work----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Work")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
             for work in fetchResults {
-                println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
-                println("   S: \(work.session.name)")
-                println("   T: \(work.task.name)")
+                s += ("W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
+                s += ("   S: \(work.session.name)\n")
+                s += ("   T: \(work.task.name)\n")
             }
         }
 
-        println("\n------------------------")
-        println("----------Task----------\n")
+        s += ("\n------------------------\n")
+        s += ("----------Task----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Task")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
             for task in fetchResults {
-                println("T: \(task.name)")
+                s += ("T: \(task.name)\n")
+                for session in task.sessions {
+                    s += ("   S: \(session.name)\n")
+                }
                 task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    println("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
-                }
-                for session in task.sessions {
-                    println("    S: \(session.name)")
+                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
                 }
             }
         }
-
+        
+        return s
     }
 
     //---------------------------------------------
