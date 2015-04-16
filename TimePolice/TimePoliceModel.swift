@@ -10,8 +10,15 @@ import Foundation
 import CoreData
 import UIKit
 
+/*  TODO in this file
 
+Session.delete*
+Session.insert*
+    Must update relations to session and tasks.
 
+TestData
+    Update according to relation maintaining methods
+*/
 
 
 //=======================================================================================
@@ -44,6 +51,16 @@ class Project: NSManagedObject {
     }
 
     //---------------------------------------------
+    // Project - addSession
+    //---------------------------------------------
+
+    func addSession(session: Session) {
+        let s = self.sessions.mutableCopy() as! NSMutableSet
+        s.addObject(session)
+        self.sessions = s
+    }
+
+    //---------------------------------------------
     // Project - findInMOC
     //---------------------------------------------
 
@@ -56,18 +73,6 @@ class Project: NSManagedObject {
         let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project]
 
         return fetchResults
-    }
-
-    //---------------------------------------------
-    // Project - addSession
-    //---------------------------------------------
-
-    func addSession(session: Session) {
-        /*1.2OK*/
-        let s = self.sessions.mutableCopy() as! NSMutableSet
-        s.addObject(session)
-        self.sessions = s
-        session.project = self
     }
 
 }
@@ -89,7 +94,7 @@ class Session: NSManagedObject {
     // Session - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Session {
+    class func createInMOC(moc: NSManagedObjectContext, name: String, project: Project) -> Session {
         /*1.2OK*/
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
@@ -100,8 +105,33 @@ class Session: NSManagedObject {
         newItem.id = "[Session] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
+        // Maintain relations
+        project.addSession(newItem)
+
         return newItem
     }
+
+    //---------------------------------------------
+    // Session - addWork
+    //---------------------------------------------
+
+    func addWork(work: Work) {
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(work)
+        self.work = sw
+    }
+
+    //---------------------------------------------
+    // Session - addTask
+    //---------------------------------------------
+
+    func addTask(task: Task) {
+        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
+        st.addObject(task)
+        self.tasks = st
+    }
+
+
 
     //---------------------------------------------
     // Session - findInMOC
@@ -158,29 +188,23 @@ class Session: NSManagedObject {
         }
     }
 
-    //---------------------------------------------
-    // Session - appendWork
-    //---------------------------------------------
 
-    func appendWork(work: Work) {
-        /*1.2OK*/
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(work)
-        self.work = sw
-        work.session = self
-    }
 
     //---------------------------------------------
     // Session - replaceLastWork
     //---------------------------------------------
 
+
+// Should not be needed, update the current item instead.
+
+/*
     func replaceLastWork(work: Work) {
-        /*1.2OK*/
         let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.replaceObjectAtIndex(sw.count-1, withObject: work)
         self.work = sw
         work.session = self
     }
+*/
 
     //---------------------------------------------
     // Session modifications - Rules to follow
@@ -533,7 +557,7 @@ class Task: NSManagedObject {
     // Task - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Task {
+    class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session) -> Task {
         /*1.2OK*/
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
 
@@ -544,10 +568,34 @@ class Task: NSManagedObject {
         newItem.id = "[Task] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
 
+        // Maintain relations
+        session.addTask(newItem)
+
         return newItem
+    }
+    
+    //---------------------------------------------
+    // Task - addWork
+    //---------------------------------------------
+    
+    func addWork(work: Work) {
+        let sw = work.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(work)
+        self.work = sw
+    }
+    
+    //---------------------------------------------
+    // Task - addSession
+    //---------------------------------------------
+    
+    func addSession(session: Session) {
+        let ss = self.sessions.mutableCopy() as! NSMutableOrderedSet
+        ss.addObject(session)
+        self.work = ss
     }
 
 }
+
 
 //=======================================================================================
 //=======================================================================================
@@ -573,7 +621,7 @@ class Work: NSManagedObject {
     // Work - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Work {
+    class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session, task: Task) -> Work {
         /*1.2OK*/
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
 
@@ -587,6 +635,12 @@ class Work: NSManagedObject {
         let now = NSDate()
         newItem.startTime = now
         newItem.stopTime = now
+
+        // Maintain relations
+        newItem.session = session
+        session.addWork(newItem)
+        newItem.task = task
+        task.addWork(newItem)
 
         return newItem
     }
@@ -789,37 +843,38 @@ class TestData {
     // TestData - addSession
     //---------------------------------------------
 
-    class func addSession(managedObjectContext: NSManagedObjectContext, projectName: String, templateName: String, templateTasks: [Task], sessionName: String) {
+    class func addSession(moc: NSManagedObjectContext, projectName: String, templateName: String, templateTasks: [Task], sessionName: String) {
         var project: Project
         var session: Session
         var taskList: [Task] = []
 
-        if let projects = Project.findInMOC(managedObjectContext, name: projectName) {
+        if let projects = Project.findInMOC(moc, name: projectName) {
             if projects.count > 0 {
                 project = projects[0]
             } else {
-                project = Project.createInMOC(managedObjectContext, name: projectName)
+                project = Project.createInMOC(moc, name: projectName)
             }
         } else {
             return
         }
 
-        if let sessions = Session.findInMOC(managedObjectContext, name: templateName) {
+        if let sessions = Session.findInMOC(moc, name: templateName) {
             if sessions.count > 0 {
                 let sessionTemplate = sessions[0] as Session
-                /*1.2OK*/
                 taskList = sessionTemplate.tasks.array as! [Task]
             } else {
-                let sessionTemplate = Session.createInMOC(managedObjectContext, name: templateName)
+                let sessionTemplate = Session.createInMOC(moc, name: templateName, project: project)
                 sessionTemplate.project = project
+                for taskName in templateTask {
+                    let task = Task.createInMOC(moc, name: taskName)
+                    taskList.append(task)
+                }
                 sessionTemplate.tasks = NSOrderedSet(array: templateTasks)
                 taskList = templateTasks
             }
         }
 
-        session = Session.createInMOC(managedObjectContext, name: "\(sessionName) \(getString(NSDate()))")
-        session.project = project
-        project.addSession(session)
+        session = Session.createInMOC(moc, name: "\(sessionName) \(getString(NSDate()))", project: project)
 
         session.tasks = NSOrderedSet(array: taskList)
     }
@@ -828,117 +883,117 @@ class TestData {
     // TestData - addSessionToHome
     //---------------------------------------------
 
-    class func addSessionToHome(managedObjectContext: NSManagedObjectContext) {
+    class func addSessionToHome(moc: NSManagedObjectContext) {
 
         let taskList =  [
-            Task.createInMOC(managedObjectContext, name: "I F2F"),
-            Task.createInMOC(managedObjectContext, name: "I Eva"),
-            Task.createInMOC(managedObjectContext, name: "I Chat"),
+            Task.createInMOC(moc, name: "I F2F"),
+            Task.createInMOC(moc, name: "I Eva"),
+            Task.createInMOC(moc, name: "I Chat"),
 
-            Task.createInMOC(managedObjectContext, name: "I Email"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "I Blixt"),
+            Task.createInMOC(moc, name: "I Email"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "I Blixt"),
 
-            Task.createInMOC(managedObjectContext, name: "P OF"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "P Lista"),
+            Task.createInMOC(moc, name: "P OF"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "P Lista"),
 
-            Task.createInMOC(managedObjectContext, name: "P Hushåll"),
-            Task.createInMOC(managedObjectContext, name: "P Eva"),
-            Task.createInMOC(managedObjectContext, name: "P Other"),
+            Task.createInMOC(moc, name: "P Hushåll"),
+            Task.createInMOC(moc, name: "P Eva"),
+            Task.createInMOC(moc, name: "P Other"),
 
-            Task.createInMOC(managedObjectContext, name: "N Waste"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "N Not home"),
+            Task.createInMOC(moc, name: "N Waste"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "N Not home"),
 
-            Task.createInMOC(managedObjectContext, name: "N Connect"),
-            Task.createInMOC(managedObjectContext, name: "N Down"),
-            Task.createInMOC(managedObjectContext, name: "N Time-in"),
+            Task.createInMOC(moc, name: "N Connect"),
+            Task.createInMOC(moc, name: "N Down"),
+            Task.createInMOC(moc, name: "N Time-in"),
 
-            Task.createInMOC(managedObjectContext, name: "N Physical"),
-            Task.createInMOC(managedObjectContext, name: "N Coffe/WC"),
-            Task.createInMOC(managedObjectContext, name: "N Other"),
+            Task.createInMOC(moc, name: "N Physical"),
+            Task.createInMOC(moc, name: "N Coffe/WC"),
+            Task.createInMOC(moc, name: "N Other"),
         ]
 
-        addSession(managedObjectContext, projectName: "Home", templateName: "Template - Home", templateTasks: taskList, sessionName: "Home")
+        addSession(moc, projectName: "Home", templateName: "Template - Home", templateTasks: taskList, sessionName: "Home")
     }
 
     //---------------------------------------------
     // TestData - addSessionToWork
     //---------------------------------------------
 
-    class func addSessionToWork(managedObjectContext: NSManagedObjectContext) {
+    class func addSessionToWork(moc: NSManagedObjectContext) {
 
         let taskList = [
-            Task.createInMOC(managedObjectContext, name: "I F2F"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "I Lync"),
+            Task.createInMOC(moc, name: "I F2F"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "I Lync"),
             
-            Task.createInMOC(managedObjectContext, name: "I Email"),
-            Task.createInMOC(managedObjectContext, name: "I Ticket"),
-            Task.createInMOC(managedObjectContext, name: "I Blixt"),
+            Task.createInMOC(moc, name: "I Email"),
+            Task.createInMOC(moc, name: "I Ticket"),
+            Task.createInMOC(moc, name: "I Blixt"),
             
-            Task.createInMOC(managedObjectContext, name: "P OF"),
-            Task.createInMOC(managedObjectContext, name: "P Task"),
-            Task.createInMOC(managedObjectContext, name: "P Ticket"),
+            Task.createInMOC(moc, name: "P OF"),
+            Task.createInMOC(moc, name: "P Task"),
+            Task.createInMOC(moc, name: "P Ticket"),
             
-            Task.createInMOC(managedObjectContext, name: "P US"),
-            Task.createInMOC(managedObjectContext, name: "P Meeting"),
-            Task.createInMOC(managedObjectContext, name: "P Other"),
+            Task.createInMOC(moc, name: "P US"),
+            Task.createInMOC(moc, name: "P Meeting"),
+            Task.createInMOC(moc, name: "P Other"),
             
-            Task.createInMOC(managedObjectContext, name: "N Waste"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "N Not work"),
+            Task.createInMOC(moc, name: "N Waste"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "N Not work"),
             
-            Task.createInMOC(managedObjectContext, name: "N Connect"),
-            Task.createInMOC(managedObjectContext, name: "N Down"),
-            Task.createInMOC(managedObjectContext, name: "N Time-in"),
+            Task.createInMOC(moc, name: "N Connect"),
+            Task.createInMOC(moc, name: "N Down"),
+            Task.createInMOC(moc, name: "N Time-in"),
             
-            Task.createInMOC(managedObjectContext, name: "N Physical"),
-            Task.createInMOC(managedObjectContext, name: "N Coffe/WC"),
-            Task.createInMOC(managedObjectContext, name: "N Other"),
+            Task.createInMOC(moc, name: "N Physical"),
+            Task.createInMOC(moc, name: "N Coffe/WC"),
+            Task.createInMOC(moc, name: "N Other"),
         ]
         
-        addSession(managedObjectContext, projectName: "Work", templateName: "Template - Work", templateTasks: taskList, sessionName: "Work")
+        addSession(moc, projectName: "Work", templateName: "Template - Work", templateTasks: taskList, sessionName: "Work")
     }
     
     //---------------------------------------------
     // TestData - addSessionToDaytime
     //---------------------------------------------
 
-    class func addSessionToDaytime(managedObjectContext: NSManagedObjectContext) {
+    class func addSessionToDaytime(moc: NSManagedObjectContext) {
 
         let taskList = [
-            Task.createInMOC(managedObjectContext, name: "Sleep"),
-            Task.createInMOC(managedObjectContext, name: "Sleep in-out"),
-            Task.createInMOC(managedObjectContext, name: "---"),
+            Task.createInMOC(moc, name: "Sleep"),
+            Task.createInMOC(moc, name: "Sleep in-out"),
+            Task.createInMOC(moc, name: "---"),
             
-            Task.createInMOC(managedObjectContext, name: "Home"),
-            Task.createInMOC(managedObjectContext, name: "Home in-out"),
-            Task.createInMOC(managedObjectContext, name: "Home outside"),
+            Task.createInMOC(moc, name: "Home"),
+            Task.createInMOC(moc, name: "Home in-out"),
+            Task.createInMOC(moc, name: "Home outside"),
             
-            Task.createInMOC(managedObjectContext, name: "Work"),
-            Task.createInMOC(managedObjectContext, name: "---"),
-            Task.createInMOC(managedObjectContext, name: "Work outside"),
+            Task.createInMOC(moc, name: "Work"),
+            Task.createInMOC(moc, name: "---"),
+            Task.createInMOC(moc, name: "Work outside"),
                 
-            Task.createInMOC(managedObjectContext, name: "Car morning"),
-            Task.createInMOC(managedObjectContext, name: "T morning"),
-            Task.createInMOC(managedObjectContext, name: "P morning"),
+            Task.createInMOC(moc, name: "Car morning"),
+            Task.createInMOC(moc, name: "T morning"),
+            Task.createInMOC(moc, name: "P morning"),
 
-            Task.createInMOC(managedObjectContext, name: "Car evening"),
-            Task.createInMOC(managedObjectContext, name: "T evening"),
-            Task.createInMOC(managedObjectContext, name: "P evening"),
+            Task.createInMOC(moc, name: "Car evening"),
+            Task.createInMOC(moc, name: "T evening"),
+            Task.createInMOC(moc, name: "P evening"),
 
-            Task.createInMOC(managedObjectContext, name: "Lunch"),
-            Task.createInMOC(managedObjectContext, name: "Errand"),
-            Task.createInMOC(managedObjectContext, name: "F&S"),
+            Task.createInMOC(moc, name: "Lunch"),
+            Task.createInMOC(moc, name: "Errand"),
+            Task.createInMOC(moc, name: "F&S"),
 
-            Task.createInMOC(managedObjectContext, name: "1"),
-            Task.createInMOC(managedObjectContext, name: "2"),
-            Task.createInMOC(managedObjectContext, name: "3"),
+            Task.createInMOC(moc, name: "1"),
+            Task.createInMOC(moc, name: "2"),
+            Task.createInMOC(moc, name: "3"),
         ]
         
-        addSession(managedObjectContext, projectName: "Daytime", templateName: "Template - Daytime", templateTasks: taskList, sessionName: "Daytime")
+        addSession(moc, projectName: "Daytime", templateName: "Template - Daytime", templateTasks: taskList, sessionName: "Daytime")
     }
 
 

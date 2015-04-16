@@ -518,10 +518,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func taskSignIn(task: Task) {
         TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.taskSignIn(\(task.name))"))
 
-        let w = Work.createInMOC(self.moc, name: "")
-        w.task = task
-
-        session.appendWork(w)
+        let w = Work.createInMOC(self.moc, name: "", session: session, task: task)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -545,7 +542,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
                 sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
-                session.replaceLastWork(work)
+                // This should not be needed...
+                session.replaceLastWork(§)
 
                 TimePoliceModelUtils.save(moc)
             } else {

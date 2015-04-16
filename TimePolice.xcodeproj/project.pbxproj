@@ -107,12 +107,13 @@
 				CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */,
 				CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */,
 				CBDBCE531A8828DB00E33072 /* Model */,
-				CBD182BF1A08AAD2007BA9F7 /* TaskPickerViewController.swift */,
-				CB623C0C1A7ED728004AE917 /* TaskPickerTheme.swift */,
-				CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */,
-				CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */,
 				CBD182C11A08AAD2007BA9F7 /* Main.storyboard */,
 				CB0F97001AAE26A900E92C05 /* TaskPickerEditWorkViewController.swift */,
+				CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */,
+				CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */,
+				CB623C0C1A7ED728004AE917 /* TaskPickerTheme.swift */,
+				CBD182BF1A08AAD2007BA9F7 /* TaskPickerViewController.swift */,
+				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
 				CB0B0AF11A8177DA00D22A08 /* TimePoliceViewController.swift */,
 				CB0B0AEB1A815B0100D22A08 /* Utilities.swift */,
 				CBD182C41A08AAD2007BA9F7 /* Images.xcassets */,
@@ -158,7 +159,6 @@
 		CBDBCE531A8828DB00E33072 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
