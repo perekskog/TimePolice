@@ -788,7 +788,8 @@ class TimePoliceModelUtils {
                 s += ("    P: \(session.project.name)-\(session.project.id)\n")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
+                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as! Task
@@ -802,7 +803,8 @@ class TimePoliceModelUtils {
         fetchRequest = NSFetchRequest(entityName: "Work")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
             for work in fetchResults {
-                s += ("W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
+                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                s += ("W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
                 s += ("   S: \(work.session.name)\n")
                 s += ("   T: \(work.task.name)\n")
             }
@@ -819,7 +821,8 @@ class TimePoliceModelUtils {
                 }
                 task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)\n")
+                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
                 }
             }
         }
