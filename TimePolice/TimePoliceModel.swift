@@ -136,8 +136,8 @@ class Session: NSManagedObject {
     // Session - addTasks
     //---------------------------------------------
 
-    func addTasks(task: [Task]) {
-        for task in tasks {
+    func addTasks(taskList: [Task]) {
+        for task in taskList {
             addTask(task)
         }
     }
@@ -590,7 +590,7 @@ class Task: NSManagedObject {
     //---------------------------------------------
     
     func addWork(work: Work) {
-        let sw = work.mutableCopy() as! NSMutableOrderedSet
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.addObject(work)
         self.work = sw
     }
@@ -600,9 +600,9 @@ class Task: NSManagedObject {
     //---------------------------------------------
     
     func addSession(session: Session) {
-        let ss = self.sessions.mutableCopy() as! NSMutableOrderedSet
+        let ss = self.sessions.mutableCopy() as! NSMutableSet
         ss.addObject(session)
-        self.work = ss
+        self.sessions = ss
     }
 
 }
@@ -648,10 +648,11 @@ class Work: NSManagedObject {
         newItem.stopTime = now
 
         // Maintain relations
-        newItem.session = session
-        session.addWork(newItem)
         newItem.task = task
+        newItem.session = session
+
         task.addWork(newItem)
+        session.addWork(newItem)
 
         return newItem
     }
@@ -787,12 +788,10 @@ class TimePoliceModelUtils {
                 println("S: \(session.name)-\(session.id)")
                 println("    P: \(session.project.name)-\(session.project.id)")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    /*1.2OK*/
                     let work = elem as! Work
                     println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    /*1.2OK*/
                     let task = elem as! Task
                     println("    T: \(task.name)")
                 }
@@ -805,6 +804,8 @@ class TimePoliceModelUtils {
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
             for work in fetchResults {
                 println("W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
+                println("   S: \(work.session.name)")
+                println("   T: \(work.task.name)")
             }
         }
 
@@ -814,6 +815,13 @@ class TimePoliceModelUtils {
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
             for task in fetchResults {
                 println("T: \(task.name)")
+                task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    let work = elem as! Work
+                    println("   W: \(work.task.name) \(work.startTime)->\(work.stopTime)")
+                }
+                for session in task.sessions {
+                    println("    S: \(session.name)")
+                }
             }
         }
 
@@ -878,7 +886,7 @@ class TestData {
                     let task = Task.createInMOC(moc, name: taskName, session: sessionTemplate)
                     taskList.append(task)
                 }
-                taskList = sessionTemplate.tasks
+                taskList = sessionTemplate.tasks.array as! [Task]
             }
         }
 

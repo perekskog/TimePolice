@@ -543,7 +543,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
                 // This should not be needed...
-                session.replaceLastWork(§)
+                //session.replaceLastWork(§)
 
                 TimePoliceModelUtils.save(moc)
             } else {
