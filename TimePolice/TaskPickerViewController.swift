@@ -12,6 +12,9 @@
 - getSelectionAreaInfo
   Är det Theme som gr uträkning av tid för aktuell task? Kasnek inte så bra...
 
+- gestureRecognizer
+  Hur ska den implementeras, får kompileringsfel?
+
 */
 
 import UIKit
@@ -115,7 +118,7 @@ class TaskPickerViewController: UIViewController
             }
 
             let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
-            /*1.2OK*/
+            
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
                 vc.maximumDate = NSDate()
@@ -143,27 +146,14 @@ class TaskPickerViewController: UIViewController
         if unwindSegue.identifier == "OkEditWork" {
 
             let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
-            /*1.2OK*/
-            if let s = session {
-                if let w = session?.getLastWork() {
-                    if !w.isOngoing() {
-                        TextViewLogger.log(statusView!, message: "\nDon't change anything while signed out")
-                        return
-                    }
-                }
-            }
             
             if let t = vc.taskToUse {
                 // Change task if this attribute was set
 
                 TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
 
-                if let s = session {
-                    if let wl = s.work.array as? [Work] {
-                        if wl.count >= 1 {
-                            wl[wl.count-1].task = t
-                        }
-                    } 
+                if let w = session?.getLastWork() {
+                    w.task = t
                 }
             } else {
                 TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
@@ -288,8 +278,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPicker.setup")
 
 		backgroundView.theme = theme
-        /*1.2OK*/
         let taskList = session.tasks.array as! [Task]
+
 		// Setup task buttons
 		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
 		for i in 0..<numberOfButtonsToDraw {
@@ -353,21 +343,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                                    target: self,
                                  selector: "updateActiveTask:",
                                  userInfo: nil,
-                                  repeats: true)
-        
-        // Check last work item, is something ongoing?
-        if session.work.count > 0 {
-            // Found a work item, look at the last one
-            if let work = session.getLastWork() {
-                if work.isOngoing() {
-                    TextViewLogger.log(statusView, message: String("\nWork ongoing: \(work.task.name) \(work.startTime)->\(work.stopTime)"))
-                } else {
-                    TextViewLogger.log(statusView, message: String("\nNo ongoing work"))
-                }
-            }
-        } else {
-            TextViewLogger.log(statusView, message: String("\nWorklist empty"))
-        }        
+                                  repeats: true)        
     }
 
     //------------------------------------
@@ -427,7 +403,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTapSigninSignout"))
 
-        /*1.2OK*/
         let taskList = session.tasks.array as! [Task]
         
         if let work = session.getLastWork() {
@@ -459,7 +434,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTap(sender: UITapGestureRecognizer) {
         TextViewLogger.log(statusView, message: String("\n\(getString(NSDate())) TaskPicker.handleTap"))
 
-        /*1.2OK*/
         let taskList = session.tasks.array as! [Task]
         
         if let work = session.getLastWork() {
@@ -492,18 +466,20 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPress"))
 
-        if let work = session.getLastWork() {
+        if let work = session.getLastWork()
+            where work.isOngoing() {
             
-            /*1.2OK*/
             let taskList = session.tasks.array as! [Task]
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
             if work.task != task {
-                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) LongPress on inactive task"))
+                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) Work is ongoing, LongPress on inactive task"))
                 return
             }
 
             vc.performSegueWithIdentifier("EditWork", sender: vc)
+        } else {
+            TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No last work or signed out"))            
         }
 
     }
@@ -542,9 +518,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
                 sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
-                // This should not be needed...
-                //session.replaceLastWork(§)
-
                 TimePoliceModelUtils.save(moc)
             } else {
                 TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work ongoing"))
@@ -565,7 +538,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         //print(".")
         if let work = session.getLastWork() {
             let task = work.task
-            /*1.2OK*/
+            
             let taskList = session.tasks.array as! [Task]
             if let taskIndex = find(taskList, task as Task) {
                 let view = taskbuttonviews[taskIndex]
@@ -583,9 +556,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// SelectionAreaInfoDelegate
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        //print("gsl(\(selectionArea))")
 
-        /*1.2OK*/
         let taskList = session.tasks.array as! [Task]
         let task = taskList[selectionArea]
 

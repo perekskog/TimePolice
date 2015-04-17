@@ -444,9 +444,7 @@ Future extensions
             return
         }
 
-        /*1.2OK*/
         let workToModify = work[workIndex] as! Work
-        /*1.2OK*/
         let previousWork = work[workIndex-1] as! Work
         let startTime = previousWork.startTime
 
@@ -486,9 +484,7 @@ Future extensions
             return
         }
 
-        /*1.2OK*/
         let workToModify = work[workIndex] as! Work
-        /*1.2OK*/
         let nextWork = work[workIndex+1] as! Work
 
         if nextWork.isOngoing() {
@@ -523,7 +519,6 @@ Future extensions
             return
         }
 
-        /*1.2OK*/
         let workToModify = work[workIndex] as! Work
         moc.deleteObject(workToModify)
 
@@ -569,7 +564,7 @@ class Task: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session) -> Task {
-        /*1.2OK*/
+        
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
 
         let date = NSDate()
@@ -633,7 +628,7 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session, task: Task) -> Work {
-        /*1.2OK*/
+        
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
 
         let date = NSDate()
