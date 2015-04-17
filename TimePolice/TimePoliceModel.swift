@@ -612,6 +612,8 @@ class Task: NSManagedObject {
     create -> [Ongoing] <- setAsOngoing / setAsFinished(time) -> [Finished]
 */
 
+let stoptimeOngoing = NSDate(timeIntervalSince1970: 0)
+
 class Work: NSManagedObject {
 
     @NSManaged var id: String
@@ -623,7 +625,6 @@ class Work: NSManagedObject {
     @NSManaged var session: Session
     @NSManaged var task: Task
 
-    let stoptimeOngoing = NSDate()
 
     //---------------------------------------------
     // Work - createInMOC
@@ -642,7 +643,7 @@ class Work: NSManagedObject {
 
         let now = NSDate()
         newItem.startTime = now
-        newItem.stopTime = Work.stoptimeOngoing
+        newItem.stopTime = stoptimeOngoing
 
         // Maintain relations
         newItem.task = task
@@ -659,7 +660,7 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     func isOngoing() -> Bool {
-        if stopTime != stoptimeOngoing {
+        if stopTime == stoptimeOngoing {
             return true
         } else {
             return false
@@ -776,7 +777,8 @@ class TimePoliceModelUtils {
             }
         }
 
-        s += ("\n---------------------------\n")
+        s += "\n"
+        s += ("---------------------------\n")
         s += ("----------Session----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Session")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -785,41 +787,54 @@ class TimePoliceModelUtils {
                 s += ("    P: \(session.project.name)-\(session.project.id)\n")
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
+                    if work.isStopped() {
+                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                        s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+                    } else {
+                        s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                    }
                 }
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as! Task
-                    s += ("   T: \(task.name)\n")
+                    s += ("    T: \(task.name)\n")
                 }
             }
         }
-
-        s += ("\n------------------------\n")
+        s += "\n"
+        s += ("------------------------\n")
         s += ("----------Work----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Work")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
             for work in fetchResults {
-                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                s += ("W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
-                s += ("   S: \(work.session.name)\n")
-                s += ("   T: \(work.task.name)\n")
+                if work.isStopped() {
+                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                    s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+                } else {
+                    s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                }
+                s += ("        S: \(work.session.name)\n")
+                s += ("        T: \(work.task.name)\n")
             }
         }
 
-        s += ("\n------------------------\n")
+        s += "\n"
+        s += ("------------------------\n")
         s += ("----------Task----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Task")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
             for task in fetchResults {
                 s += ("T: \(task.name)\n")
                 for session in task.sessions {
-                    s += ("   S: \(session.name)\n")
+                    s += ("    S: \(session.name)\n")
                 }
                 task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
-                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                    s += ("   W: \(work.task.name) \(work.startTime)->\(work.stopTime) = \(getString(timeForWork))\n")
+                    if work.isStopped() {
+                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                        s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+                    } else {
+                        s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                    }
                 }
             }
         }
@@ -835,14 +850,17 @@ class TimePoliceModelUtils {
 
         var s: String
 
-        s = "\nCurrent Session:"
-        s += "\nS: \(session.name)-\(session.id)"
-        s += "\n    P: \(session.project.name)-\(session.project.id)"
+        s = "Current Session:\n"
+        s += "S: \(session.name)-\(session.id)\n"
+        s += "    P: \(session.project.name)-\(session.project.id)\n"
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            /*1.2OK*/
             let work = elem as! Work
-            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-            s += "\n    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))"
+            if work.isStopped() {
+                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+            } else {
+                s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+            }
         }
 
         return s
