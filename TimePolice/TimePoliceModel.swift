@@ -95,7 +95,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String, project: Project) -> Session {
-        /*1.2OK*/
+        
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
         let date = NSDate()
@@ -168,7 +168,7 @@ class Session: NSManagedObject {
         var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            /*1.2OK*/
+
             let work = elem as! Work
             // For all items but the last one, if it is ongoing
             if idx != self.work.count-1 || work.isStopped() {
@@ -623,6 +623,8 @@ class Work: NSManagedObject {
     @NSManaged var session: Session
     @NSManaged var task: Task
 
+    let stoptimeOngoing = NSDate()
+
     //---------------------------------------------
     // Work - createInMOC
     //---------------------------------------------
@@ -640,7 +642,7 @@ class Work: NSManagedObject {
 
         let now = NSDate()
         newItem.startTime = now
-        newItem.stopTime = now
+        newItem.stopTime = Work.stoptimeOngoing
 
         // Maintain relations
         newItem.task = task
@@ -657,7 +659,7 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     func isOngoing() -> Bool {
-        if startTime == stopTime {
+        if stopTime != stoptimeOngoing {
             return true
         } else {
             return false
@@ -689,7 +691,7 @@ class Work: NSManagedObject {
     }
 
     func setAsOngoing() {
-        self.stopTime = self.startTime
+        self.stopTime = stoptimeOngoing
     }
 
 }
