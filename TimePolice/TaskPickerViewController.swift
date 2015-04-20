@@ -146,38 +146,38 @@ class TaskPickerViewController: UIViewController
         if unwindSegue.identifier == "OkEditWork" {
 
             let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
-            
-            if let t = vc.taskToUse {
-                // Change task if this attribute was set
 
-                TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
+            if let moc = managedObjectContext,
+                     s = session {
 
-                if let w = session?.getLastWork() {
-                    w.task = t
+                if let t = vc.taskToUse {
+                    // Change task if this attribute was set
+                    TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
+                    if let w = session?.getLastWork() {
+                        w.task = t
+                    }
+                } else {
+                    TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
                 }
-            } else {
-                TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
-            }
-            
-            if let initialDate = vc.initialDate {
-                TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
-                TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
-            }
-            
-            if let s = session {
-                if let moc = managedObjectContext {
+                
+                if let initialDate = vc.initialDate {
+                    TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
+                    TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+                }
+                
+                if initialDate != vc.datePicker.date {
+                    // Change starttime is time has been changed
+                    TextViewLogger.log(statusView!, message: "\nSelected time != initial time, setting starttime")
                     s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
+                } else {
+                    TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
                 }
-            }
 
-            if let moc = managedObjectContext {
                 TimePoliceModelUtils.save(moc)
-            }
 
-            if let s = session {
-                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
             }
-
+            
             tp?.redraw()
         }
     }

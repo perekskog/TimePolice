@@ -678,7 +678,7 @@ class Work: NSManagedObject {
         }
         if isOngoing() {
             // Keep work as ongoing if it already is ongoing
-            self.stopTime = time
+            self.stopTime = stoptimeOngoing
         }
         self.startTime = time
     }

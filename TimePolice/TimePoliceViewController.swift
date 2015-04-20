@@ -1,4 +1,4 @@
-    //
+//
 //  TimePoliceViewController.swift
 //  TimePolice
 //
@@ -28,8 +28,12 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         logTableView.dataSource = self
         logTableView.delegate = self
         let fetchRequest = NSFetchRequest(entityName: "Session")
-        if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-            self.sessions = sessions
+        if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            for session in tmpSessions {
+                if session.project.name != "Templates" {
+                    self.sessions += session
+                }
+            }
         }
 
     }
