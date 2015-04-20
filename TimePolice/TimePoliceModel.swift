@@ -879,10 +879,21 @@ class TestData {
     // TestData - addSession
     //---------------------------------------------
 
-    class func addSession(moc: NSManagedObjectContext, projectName: String, templateName: String, templateTasks: [String], sessionName: String) {
+    class func addSession(moc: NSManagedObjectContext, projectName: String, sessionTemplateName: String, sessionTemplateTasks: [String], sessionName: String) {
         var project: Project
+        var projectTemplate: Project
         var session: Session
         var taskList: [Task] = []
+
+        if let projects = Project.findInMOC(moc, name: "Templates") {
+            if projects.count > 0 {
+                projectTemplate = projects[0]
+            } else {
+                projectTemplate = Project.createInMOC(moc, name: "Templates")
+            }
+        } else {
+            return
+        }
 
         if let projects = Project.findInMOC(moc, name: projectName) {
             if projects.count > 0 {
@@ -893,14 +904,14 @@ class TestData {
         } else {
             return
         }
-
-        if let sessions = Session.findInMOC(moc, name: templateName) {
+        
+        if let sessions = Session.findInMOC(moc, name: sessionTemplateName) {
             if sessions.count > 0 {
                 let sessionTemplate = sessions[0] as Session
                 taskList = sessionTemplate.tasks.array as! [Task]
             } else {
-                let sessionTemplate = Session.createInMOC(moc, name: templateName, project: project)
-                for taskName in templateTasks {
+                let sessionTemplate = Session.createInMOC(moc, name: sessionTemplateName, project: projectTemplate)
+                for taskName in sessionTemplateTasks {
                     let task = Task.createInMOC(moc, name: taskName, session: sessionTemplate)
                     taskList.append(task)
                 }
@@ -935,7 +946,7 @@ class TestData {
             "N Physical", "N Coffe/WC", "N Other"
         ]
 
-        addSession(moc, projectName: "Home", templateName: "Template - Home", templateTasks: taskList, sessionName: "Home")
+        addSession(moc, projectName: "Home", sessionTemplateName: "Template - Home", sessionTemplateTasks: taskList, sessionName: "Home")
     }
 
     //---------------------------------------------
@@ -960,7 +971,7 @@ class TestData {
             "N Physical", "N Coffe/WC", "N Other"
         ]
         
-        addSession(moc, projectName: "Work", templateName: "Template - Work", templateTasks: taskList, sessionName: "Work")
+        addSession(moc, projectName: "Work", sessionTemplateName: "Template - Work", sessionTemplateTasks: taskList, sessionName: "Work")
     }
     
     //---------------------------------------------
@@ -985,7 +996,7 @@ class TestData {
             "1", "2", "3"
         ]
         
-        addSession(moc, projectName: "Daytime", templateName: "Template - Daytime", templateTasks: taskList, sessionName: "Daytime")
+        addSession(moc, projectName: "Daytime", sessionTemplateName: "Template - Daytime", sessionTemplateTasks: taskList, sessionName: "Daytime")
     }
 
 
