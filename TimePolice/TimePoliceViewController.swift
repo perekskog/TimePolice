@@ -27,15 +27,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         logTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TimePoliceSessionCell")
         logTableView.dataSource = self
         logTableView.delegate = self
-        let fetchRequest = NSFetchRequest(entityName: "Session")
-        if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-            for session in tmpSessions {
-                if session.project.name != "Templates" {
-                    self.sessions += session
-                }
-            }
-        }
-
+        self.sessions = getSessions()
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,6 +46,21 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     func exitFromSegue() {
     }
 
+    func getSessions() -> [Session] {
+        let fetchRequest = NSFetchRequest(entityName: "Session")
+        if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            var nonTemplateSessions: [Session] = []
+            for session in tmpSessions {
+                if session.project.name != "Templates" {
+                    nonTemplateSessions.append(session)
+                }
+            }
+            return nonTemplateSessions
+        }
+        return []
+    }
+
+
     //----------------------------------------
     // TimePoliceViewController - Buttons
     //----------------------------------------
@@ -66,7 +73,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
             let fetchRequest = NSFetchRequest(entityName: "Session")
             if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-                self.sessions = sessions
+                self.sessions = getSessions()
             }
 
             logTableView.reloadData()
@@ -78,12 +85,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            
-            let fetchRequest = NSFetchRequest(entityName: "Session")
-            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-                self.sessions = sessions
-            }
-            
+            self.sessions = getSessions()
             logTableView.reloadData()
         }
     }
@@ -93,12 +95,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            
-            let fetchRequest = NSFetchRequest(entityName: "Session")
-            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-                self.sessions = sessions
-            }
-            
+            self.sessions = getSessions()
             logTableView.reloadData()
         }
     }
@@ -108,12 +105,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             TimePoliceModelUtils.clearAllData(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-
-            let fetchRequest = NSFetchRequest(entityName: "Session")
-            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-                self.sessions = sessions
-            }
-
+            self.sessions = getSessions()
             logTableView.reloadData()
         }
     }

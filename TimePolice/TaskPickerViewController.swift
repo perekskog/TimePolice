@@ -163,14 +163,14 @@ class TaskPickerViewController: UIViewController
                 if let initialDate = vc.initialDate {
                     TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
                     TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
-                }
-                
-                if initialDate != vc.datePicker.date {
-                    // Change starttime is time has been changed
-                    TextViewLogger.log(statusView!, message: "\nSelected time != initial time, setting starttime")
-                    s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
-                } else {
-                    TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
+
+                    if initialDate != vc.datePicker.date {
+                        // Change starttime is time has been changed
+                        TextViewLogger.log(statusView!, message: "\nSelected time != initial time, setting starttime")
+                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
+                    } else {
+                        TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
+                    }
                 }
 
                 TimePoliceModelUtils.save(moc)
