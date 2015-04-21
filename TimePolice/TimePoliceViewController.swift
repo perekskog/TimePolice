@@ -41,6 +41,11 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             vc.session = selectedSession
             vc.sourceController = self
         } 
+        if segue.identifier == "WorkList" {
+            let vc = segue.destinationViewController as! WorkListViewController
+            vc.session = selectedSession
+            vc.sourceController = self
+        } 
     }
 
     func exitFromSegue() {
@@ -140,7 +145,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let session = sessions?[indexPath.row] {
             selectedSession = session
         }
-        performSegueWithIdentifier("TaskPicker", sender: self)
+//        performSegueWithIdentifier("TaskPicker", sender: self)
+        performSegueWithIdentifier("WorkList", sender: self)
     }
 
     //---------------------------------------

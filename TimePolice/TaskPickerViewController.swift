@@ -43,7 +43,6 @@ class TaskPickerViewController: UIViewController
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
-        /*1.2OK*/
         (self.view as! TimePoliceBackgroundView).theme = theme
 
         var tpRect = self.view.bounds
