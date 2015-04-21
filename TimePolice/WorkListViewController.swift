@@ -14,6 +14,8 @@ class WorkListViewController: UIViewController {
     var session: Session?
     var sourceController: TimePoliceViewController?
 
+    var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
+
     var statusView: UITextView?
 
     override func viewDidLoad() {

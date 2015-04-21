@@ -24,6 +24,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         viewFrame.size.height -= 80
         logTableView.frame = viewFrame
         self.view.addSubview(logTableView)
+        
         logTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TimePoliceSessionCell")
         logTableView.dataSource = self
         logTableView.delegate = self
