@@ -50,6 +50,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func exitFromSegue() {
+        // Just need a method to call to return to this VC
     }
 
     func getSessions() -> [Session] {

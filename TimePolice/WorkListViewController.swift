@@ -6,6 +6,14 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/* TODO
+
+- Are both these lines needed? (func exit)
+        sourceController?.exitFromSegue()
+        self.navigationController?.popViewControllerAnimated(true)
+
+*/
+
 import UIKit
 import CoreData
 
@@ -65,7 +73,6 @@ class WorkListViewController: UIViewController {
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
 
-        /*1.2OK*/
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if let managedObjectContext = appDelegate.managedObjectContext {
             return managedObjectContext

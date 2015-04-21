@@ -15,6 +15,10 @@
 - gestureRecognizer
   Hur ska den implementeras, får kompileringsfel?
 
+- Are both these lines needed? (func exit)
+        sourceController?.exitFromSegue()
+        self.navigationController?.popViewControllerAnimated(true)
+
 */
 
 import UIKit
@@ -196,7 +200,6 @@ class TaskPickerViewController: UIViewController
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
 
-        /*1.2OK*/
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if let managedObjectContext = appDelegate.managedObjectContext {
             return managedObjectContext
