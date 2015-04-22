@@ -69,7 +69,7 @@ class TaskPickerViewController: UIViewController
         statusView!.editable = false
         self.view.addSubview(statusView!)
         
-        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-120), size: CGSize(width:70, height:30))
+        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = exitRect
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
@@ -188,7 +188,6 @@ class TaskPickerViewController: UIViewController
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
 
-        sourceController?.exitFromSegue()
         self.navigationController?.popViewControllerAnimated(true)
         tp?.updateActiveActivityTimer?.invalidate()
     }

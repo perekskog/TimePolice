@@ -11,6 +11,8 @@ import CoreData
 
 class TimePoliceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    @IBOutlet var defaultVC: UISegmentedControl!
+    
     var logTableView = UITableView(frame: CGRectZero, style: .Plain)
 
     var sessions: [Session]?
@@ -20,8 +22,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         
         var viewFrame = self.view.frame
-        viewFrame.origin.y += 80
-        viewFrame.size.height -= 80
+        viewFrame.origin.y += 120
+        viewFrame.size.height -= 120
         logTableView.frame = viewFrame
         self.view.addSubview(logTableView)
         
@@ -29,6 +31,9 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         logTableView.dataSource = self
         logTableView.delegate = self
         self.sessions = getSessions()
+        
+        defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
+        defaultVC.selectedSegmentIndex = 1
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,10 +54,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         } 
     }
 
-    func exitFromSegue() {
-        // Just need a method to call to return to this VC
-    }
-
     func getSessions() -> [Session] {
         let fetchRequest = NSFetchRequest(entityName: "Session")
         if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -65,6 +66,17 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             return nonTemplateSessions
         }
         return []
+    }
+    
+    func defaultVCChanged(sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            println("TaskSwitcher")
+        case 1:
+            println("WorkList")
+        default:
+            println("Some other value (\(sender.selectedSegmentIndex))")
+        }
     }
 
 
@@ -147,8 +159,14 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if let session = sessions?[indexPath.row] {
             selectedSession = session
         }
-//        performSegueWithIdentifier("TaskPicker", sender: self)
-        performSegueWithIdentifier("WorkList", sender: self)
+        switch defaultVC.selectedSegmentIndex {
+        case 0:
+            performSegueWithIdentifier("TaskPicker", sender: self)
+        case 1:
+            performSegueWithIdentifier("WorkList", sender: self)
+        default:
+            println("VC \(defaultVC.selectedSegmentIndex) is not implemented")
+        }
     }
 
     //---------------------------------------
