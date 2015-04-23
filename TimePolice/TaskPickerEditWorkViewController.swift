@@ -37,10 +37,10 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
         
         if let w = work {
             if w.isOngoing() {
-                initialDate = self.minimumDate
+                initialDate = w.startTime
                 editorLabel.text = "Starttime"
             } else {
-                initialDate = self.maximumDate
+                initialDate = w.stopTime
                 editorLabel.text = "Stoptime"
             }
         }
