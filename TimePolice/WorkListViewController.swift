@@ -109,6 +109,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             selectedWork = w
             TextViewLogger.log(statusView!,
                 message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
+
+            performSegueWithIdentifier("EditWork", sender: self)
         }
     }
 
@@ -125,6 +127,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             }
             Work.createInMOC(moc, name: "", session: s, task: task)
+            TimePoliceModelUtils.save(moc)
 
             workListTableView.reloadData()
         }
@@ -151,6 +154,79 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     // WorkListViewController - Segue handling
     //---------------------------------------------
 
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) WorkListVC.prepareForSegue(\(segue.identifier)"))
+
+        if segue.identifier == "EditWork" {
+            if let s = session {
+                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+            }
+
+            let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
+            
+            if let s = session {
+                vc.taskList = s.tasks.array as? [Task]
+                vc.maximumDate = NSDate()
+                if let wl = s.work.array as? [Work] {
+                    if wl.count >= 1 {
+                        // At least one item: Set as item to edit.
+                        vc.work = wl[wl.count-1]
+                    }
+                    if wl.count >= 2 {
+                        // If at least two items: Limit how far back in time the datepicker can go.
+                        vc.minimumDate = wl[wl.count-2].startTime
+                    }
+                }
+            }
+        }
+    }
+
+    @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.cancelEditWork")
+    }
+
+    @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.okEditWork")
+
+        if unwindSegue.identifier == "OkEditWork" {
+
+            let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+
+            if let moc = managedObjectContext,
+                     s = session {
+
+                if let t = vc.taskToUse {
+                    // Change task if this attribute was set
+                    TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
+                    if let w = session?.getLastWork() {
+                        w.task = t
+                    }
+                } else {
+                    TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
+                }
+                
+                if let initialDate = vc.initialDate {
+                    TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
+                    TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+
+                    if initialDate != vc.datePicker.date {
+                        // Change starttime is time has been changed
+                        TextViewLogger.log(statusView!, message: "\nSelected time != initial time, setting starttime")
+                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
+                    } else {
+                        TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
+                    }
+                }
+
+                TimePoliceModelUtils.save(moc)
+
+                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
+            }
+            
+            workListTableView.reloadData()
+        }
+    }
 
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
