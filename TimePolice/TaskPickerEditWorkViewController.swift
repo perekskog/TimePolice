@@ -10,6 +10,7 @@ import UIKit
 
 class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
     
+    @IBOutlet var editorLabel: UILabel!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var taskPickerTable: UITableView!
     
@@ -30,11 +31,22 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
 
         taskPickerTable.dataSource = self
         taskPickerTable.delegate = self
-        if let date = work?.startTime {
-            datePicker.date = date
-            datePicker.minimumDate = self.minimumDate
-            datePicker.maximumDate = self.maximumDate
-            initialDate = datePicker.date
+
+        datePicker.minimumDate = self.minimumDate
+        datePicker.maximumDate = self.maximumDate
+        
+        if let w = work {
+            if w.isOngoing() {
+                initialDate = self.minimumDate
+                editorLabel.text = "Starttime"
+            } else {
+                initialDate = self.maximumDate
+                editorLabel.text = "Stoptime"
+            }
+        }
+        
+        if let d = initialDate {
+            datePicker.date = d
         }
     }
 

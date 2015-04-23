@@ -206,6 +206,7 @@
                     </view>
                     <connections>
                         <outlet property="datePicker" destination="VXw-Th-ONd" id="lZr-nY-MXo"/>
+                        <outlet property="editorLabel" destination="hnW-cf-9dW" id="I7V-3E-Ncs"/>
                         <outlet property="taskPickerTable" destination="358-pG-lgP" id="67p-wy-hjq"/>
                     </connections>
                 </viewController>

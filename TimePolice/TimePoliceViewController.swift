@@ -33,7 +33,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         self.sessions = getSessions()
         
         defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
-        defaultVC.selectedSegmentIndex = 1
     }
 
     override func didReceiveMemoryWarning() {

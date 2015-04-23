@@ -167,9 +167,16 @@ class TaskPickerViewController: UIViewController
                     TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
-                        // Change starttime is time has been changed
-                        TextViewLogger.log(statusView!, message: "\nSelected time != initial time, setting starttime")
-                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
+                        // The initial time was changed
+                        if let w=s.getLastWork() {
+                            if w.isOngoing() {
+                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is ongoing, setting starttime")
+                                s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
+                            } else {
+                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is not ongoing, setting stoptime")
+                                s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
+                            }
+                        }
                     } else {
                         TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
                     }
@@ -466,20 +473,19 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) TaskPicker.handleLongPress"))
 
-        if let work = session.getLastWork()
-            where work.isOngoing() {
+        if let work = session.getLastWork() {
             
             let taskList = session.tasks.array as! [Task]
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
-            if work.task != task {
+            if work.isOngoing() && work.task != task {
                 TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) Work is ongoing, LongPress on inactive task"))
                 return
             }
 
             vc.performSegueWithIdentifier("EditWork", sender: vc)
         } else {
-            TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No last work or signed out"))            
+            TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No last work"))            
         }
 
     }
