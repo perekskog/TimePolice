@@ -15,9 +15,8 @@
 - gestureRecognizer
   Hur ska den implementeras, får kompileringsfel?
 
-- Are both these lines needed? (func exit)
-        sourceController?.exitFromSegue()
-        self.navigationController?.popViewControllerAnimated(true)
+- Sync okEditWork with WorkListVC (allwo for changig stoptime of last work when it is finished)
+- Still miss a way to segue when session is signed out.
 
 */
 
