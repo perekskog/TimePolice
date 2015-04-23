@@ -8,9 +8,11 @@
 
 /* TODO
 
-- Are both these lines needed? (func exit)
-        sourceController?.exitFromSegue()
-        self.navigationController?.popViewControllerAnimated(true)
+- Scroll to last line in tableview
+
+- Custom table cell with 2 labels? 1 = name, 2 = start/stop
+
+- Height of each cell in tableview (set for prototype cell?)
 
 */
 
@@ -36,12 +38,10 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         workListRect.size.height -= 200
         workListTableView.frame = workListRect
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
-
-        self.view.addSubview(workListTableView)
-        
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
+        self.view.addSubview(workListTableView)
 
         var statusRect = self.view.bounds
         statusRect.origin.x = 5
@@ -99,7 +99,12 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell") as! UITableViewCell
         if let w = session?.work[indexPath.row] as? Work {
-            cell.textLabel?.text = "\(indexPath.row) - " + w.task.name
+            var stopTime = getStringNoDate(w.stopTime)
+            if w.isOngoing() {
+                stopTime = "---"
+            }
+            cell.textLabel?.text = "\(w.task.name): \(getStringNoDate(w.startTime)) -> \(stopTime)"
+            
         }
         return cell
     }
