@@ -34,14 +34,15 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
 
         var workListRect = self.view.frame
-        workListRect.origin.y += 50
-        workListRect.size.height -= 200
+        workListRect.origin.y += 20
+        workListRect.size.height -= 175
         workListTableView.frame = workListRect
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
         self.view.addSubview(workListTableView)
+        scrollToEnd()
 
         var statusRect = self.view.bounds
         statusRect.origin.x = 5
@@ -64,6 +65,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
         
+        let signInOutRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:90, height:30))
+        let signInOutButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        signInOutButton.frame = signInOutRect
+        signInOutButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
+        signInOutButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        signInOutButton.setTitle("Sign in/out", forState: UIControlState.Normal)
+        signInOutButton.addTarget(self, action: "signInOut:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(signInOutButton)
 
         let addButton = UIButton.buttonWithType(.System) as! UIButton
         let addRect = CGRect(origin: CGPoint(x: 5, y: self.view.bounds.size.height-145), size: CGSize(width:self.view.bounds.size.width-10, height:30))
@@ -135,9 +144,22 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             TimePoliceModelUtils.save(moc)
 
             workListTableView.reloadData()
+            scrollToEnd()
         }
     }
 
+    func scrollToEnd() {
+        let numberOfSections = workListTableView.numberOfSections()
+        let numberOfRows = workListTableView.numberOfRowsInSection(numberOfSections-1)
+        
+        if numberOfRows > 0 {
+            println(numberOfSections)
+            println(numberOfRows)
+            let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
+            workListTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        }
+        
+    }
 
     //--------------------------------------------------
     // TaskPickerViewController - CoreData MOC
@@ -237,6 +259,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             workListTableView.reloadData()
+            scrollToEnd()
         }
     }
 
@@ -244,6 +267,21 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
 
         self.navigationController?.popViewControllerAnimated(true)
+    }
+
+    func signInOut(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
+
+        if let w = session?.getLastWork() {
+            if w.isOngoing() {
+                w.setStoppedAt(NSDate())
+            } else {
+                w.setAsOngoing()
+            }
+            workListTableView.reloadData()
+            scrollToEnd()
+        }
+
     }
     
 
