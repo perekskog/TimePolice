@@ -263,12 +263,17 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
+    @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.okEditWork")
+    }
+
+/*
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
 
         self.navigationController?.popViewControllerAnimated(true)
     }
-
+*/
     func signInOut(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
 

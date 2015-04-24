@@ -13,6 +13,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
     @IBOutlet var editorLabel: UILabel!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var taskPickerTable: UITableView!
+    @IBOutlet var fillEmptySpaceWith: UISegmentedControl!
     
     // Input values
     var work: Work?
