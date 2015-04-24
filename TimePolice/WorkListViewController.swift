@@ -279,11 +279,11 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         if unwindSegue.identifier == "DeleteWork" {
             let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
             switch fillEmptySpaceWith {
-                case 0: // Nothing
+                case 0: // Nothing, deleteWork
                     println("Fill with nothing")
-                case 1: // Previous item
+                case 1: // Previous item, deleteNextWorkAndAlignStop
                     println("Fill with previous")
-                case 2: // Next item
+                case 2: // Next item, deletePreviousWorkAndAlignStart
                     println("Fill with next")
                 default: // Not handled
                     println("Not handled")
