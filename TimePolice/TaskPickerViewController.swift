@@ -191,6 +191,13 @@ class TaskPickerViewController: UIViewController
         }
     }
 
+    @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.deleteWork")
+
+    }
+
+
+
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
 

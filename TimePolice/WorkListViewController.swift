@@ -264,16 +264,32 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.okEditWork")
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.deleteWork")
+
+        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+
+        if unwindSegue.identifier == "DeleteWork" {
+            let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
+            switch fillEmptySpaceWith {
+                case 0: // Nothing
+                    println("Fill with nothing")
+                case 1: // Previous item
+                    println("Fill with previous")
+                case 2: // Next item
+                    println("Fill with next")
+                default: // Not handled
+                    println("Not handled")
+            }
+        }
+
     }
 
-/*
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
 
         self.navigationController?.popViewControllerAnimated(true)
     }
-*/
+
     func signInOut(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
 
