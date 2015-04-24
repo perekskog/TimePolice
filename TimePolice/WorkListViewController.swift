@@ -29,6 +29,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var statusView: UITextView?
 
     var selectedWork: Work?
+    var selectedWorkIndex: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +122,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let w = session?.work[indexPath.row] as? Work {
             selectedWork = w
+            selectedWorkIndex = indexPath.row
+            
             TextViewLogger.log(statusView!,
                 message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
 
@@ -194,39 +197,44 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+                // Never set any time into the future
                 vc.maximumDate = NSDate()
-                if let wl = s.work.array as? [Work] {
-                    if wl.count >= 1 {
-                        // At least one item: Set as item to edit.
-                        vc.work = wl[wl.count-1]
+                if let wl = s.work.array as? [Work],
+                        i = selectedWorkIndex {
+                    vc.work = wl[i]
+                    if i > 0 {
+                        // Limit to starttime of previous item, if any
+                        vc.minimumDate = wl[i-1].startTime
                     }
-                    if wl.count >= 2 {
-                        // If at least two items: Limit how far back in time the datepicker can go.
-                        vc.minimumDate = wl[wl.count-2].startTime
+                    if i < wl.count {
+                        // Limit to stoptime of next item, if any
+                        vc.maximumDate = wl[i+1].stopTime
                     }
                 }
             }
+            TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) segue input values: \(vc.minimumDate), \(vc.maximumDate)"))
         }
     }
 
     @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.cancelEditWork")
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.cancelEditWork")
     }
 
     @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.okEditWork")
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.okEditWork")
 
         if unwindSegue.identifier == "OkEditWork" {
 
             let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
             if let moc = managedObjectContext,
-                     s = session {
+                     s = session,
+                     i = selectedWorkIndex {
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
                     TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
-                    if let w = session?.getLastWork() {
+                    if let w = session?.getWork(i) {
                         w.task = t
                     }
                 } else {
@@ -264,7 +272,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.deleteWork")
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.deleteWork")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 

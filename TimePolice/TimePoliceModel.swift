@@ -200,6 +200,18 @@ class Session: NSManagedObject {
     }
 
 
+    //---------------------------------------------
+    // Session - getWork
+    //---------------------------------------------
+
+    func getWork(index: Int) -> Work? {
+        if index >= 0 && work.count > index {
+            return work[index] as? Work
+        } else {
+            return nil
+        }
+    }
+
 
     //---------------------------------------------
     // Session - replaceLastWork
