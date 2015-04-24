@@ -206,7 +206,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                         // Limit to starttime of previous item, if any
                         vc.minimumDate = wl[i-1].startTime
                     }
-                    if i < wl.count {
+                    if i < wl.count-1 {
                         // Limit to stoptime of next item, if any
                         vc.maximumDate = wl[i+1].stopTime
                     }
@@ -267,7 +267,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             workListTableView.reloadData()
-            scrollToEnd()
         }
     }
 
@@ -276,18 +275,25 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
-        if unwindSegue.identifier == "DeleteWork" {
+        if let moc = managedObjectContext,
+                 i = selectedWorkIndex
+                where unwindSegue.identifier == "DeleteWork" {
+
             let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
             switch fillEmptySpaceWith {
                 case 0: // Nothing, deleteWork
                     println("Fill with nothing")
+                    session?.deleteWork(moc, workIndex: i)
                 case 1: // Previous item, deleteNextWorkAndAlignStop
                     println("Fill with previous")
+                    session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
                 case 2: // Next item, deletePreviousWorkAndAlignStart
                     println("Fill with next")
+                    session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
                 default: // Not handled
                     println("Not handled")
             }
+            workListTableView.reloadData()
         }
 
     }
