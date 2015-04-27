@@ -18,6 +18,9 @@ Session.insert*
 
 TestData
     Update according to relation maintaining methods
+
+Session.deleteWork
+    Ej implementerad, behövs inte för att ta bort en session.
 */
 
 
@@ -57,6 +60,16 @@ class Project: NSManagedObject {
     func addSession(session: Session) {
         let s = self.sessions.mutableCopy() as! NSMutableSet
         s.addObject(session)
+        self.sessions = s
+    }
+
+    //---------------------------------------------
+    // Project - deleteSession
+    //---------------------------------------------
+
+    func deleteSession(session: Session) {
+        let s = self.sessions.mutableCopy() as! NSMutableSet
+        s.removeObject(session)
         self.sessions = s
     }
 
@@ -112,6 +125,22 @@ class Session: NSManagedObject {
     }
 
     //---------------------------------------------
+    // Session - delete
+    //---------------------------------------------
+
+    class func deleteInMOC(moc: NSManagedObjectContext, session: Session) {
+        session.project.deleteSession(session)
+        for work in session.work {
+            Work.deleteInMOC(moc, work: work as! Work)
+        }
+        for task in session.tasks {
+            task.deleteSession(session)
+        }
+        moc.deleteObject(session)
+    }
+
+
+    //---------------------------------------------
     // Session - addWork
     //---------------------------------------------
 
@@ -119,6 +148,13 @@ class Session: NSManagedObject {
         let sw = self.work.mutableCopy() as! NSMutableOrderedSet
         sw.addObject(work)
         self.work = sw
+    }
+
+    //---------------------------------------------
+    // Session - deleteWork
+    //---------------------------------------------
+
+    func deleteWork(work: Work) {
     }
 
     //---------------------------------------------
@@ -603,12 +639,32 @@ class Task: NSManagedObject {
     }
     
     //---------------------------------------------
+    // Task - deleteWork
+    //---------------------------------------------
+    
+    func deleteWork(work: Work) {
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.removeObject(work)
+        self.work = sw
+    }
+    
+    //---------------------------------------------
     // Task - addSession
     //---------------------------------------------
     
     func addSession(session: Session) {
         let ss = self.sessions.mutableCopy() as! NSMutableSet
         ss.addObject(session)
+        self.sessions = ss
+    }
+
+    //---------------------------------------------
+    // Task - deleteSession
+    //---------------------------------------------
+    
+    func deleteSession(session: Session) {
+        let ss = self.sessions.mutableCopy() as! NSMutableSet
+        ss.removeObject(session)
         self.sessions = ss
     }
 
@@ -667,6 +723,17 @@ class Work: NSManagedObject {
         return newItem
     }
     
+    //---------------------------------------------
+    // Work - delete
+    //---------------------------------------------
+
+    class func deleteInMOC(moc: NSManagedObjectContext, work: Work) {
+        work.session.deleteWork(work)
+        work.task.deleteWork(work)
+        moc.deleteObject(work)
+    }
+
+
     //---------------------------------------------
     // Work - isOngoing
     //---------------------------------------------

@@ -167,6 +167,24 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             println("VC \(defaultVC.selectedSegmentIndex) is not implemented")
         }
     }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            if let moc = self.managedObjectContext,
+               session = sessions?[indexPath.row] {
+                println("Delete row \(indexPath.row)")
+                Session.deleteInMOC(moc, session: session)
+                TimePoliceModelUtils.save(moc)
+                moc.reset()
+                self.sessions = getSessions()
+                logTableView.reloadData()
+            }
+        }
+    }
 
     //---------------------------------------
     // TimePoliceViewController - CoreData
