@@ -35,7 +35,7 @@ class Project: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var sessions: NSSet
 
-   //---------------------------------------------
+    //---------------------------------------------
     // Project - createInMOC
     //---------------------------------------------
 
@@ -63,6 +63,7 @@ class Project: NSManagedObject {
         self.sessions = s
     }
 
+/*
     //---------------------------------------------
     // Project - deleteSession
     //---------------------------------------------
@@ -72,6 +73,7 @@ class Project: NSManagedObject {
         s.removeObject(session)
         self.sessions = s
     }
+*/
 
     //---------------------------------------------
     // Project - findInMOC
@@ -129,13 +131,16 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     class func deleteInMOC(moc: NSManagedObjectContext, session: Session) {
-        session.project.deleteSession(session)
+    
+        // session.project.deleteSession(session)
         for work in session.work {
             Work.deleteInMOC(moc, work: work as! Work)
         }
+        /*
         for task in session.tasks {
             task.deleteSession(session)
         }
+        */
         moc.deleteObject(session)
     }
 
@@ -150,12 +155,14 @@ class Session: NSManagedObject {
         self.work = sw
     }
 
+/*
     //---------------------------------------------
     // Session - deleteWork
     //---------------------------------------------
 
     func deleteWork(work: Work) {
     }
+*/
 
     //---------------------------------------------
     // Session - addTask
@@ -568,8 +575,7 @@ Future extensions
         }
 
         let workToModify = work[workIndex] as! Work
-        moc.deleteObject(workToModify)
-
+        Work.deleteInMOC(moc, work: workToModify)
         TimePoliceModelUtils.save(moc)        
     }
 
@@ -638,6 +644,7 @@ class Task: NSManagedObject {
         self.work = sw
     }
     
+/*
     //---------------------------------------------
     // Task - deleteWork
     //---------------------------------------------
@@ -647,6 +654,7 @@ class Task: NSManagedObject {
         sw.removeObject(work)
         self.work = sw
     }
+*/
     
     //---------------------------------------------
     // Task - addSession
@@ -658,6 +666,7 @@ class Task: NSManagedObject {
         self.sessions = ss
     }
 
+/*
     //---------------------------------------------
     // Task - deleteSession
     //---------------------------------------------
@@ -667,7 +676,7 @@ class Task: NSManagedObject {
         ss.removeObject(session)
         self.sessions = ss
     }
-
+*/
 }
 
 
@@ -728,8 +737,8 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     class func deleteInMOC(moc: NSManagedObjectContext, work: Work) {
-        work.session.deleteWork(work)
-        work.task.deleteWork(work)
+        //work.session.deleteWork(work)
+        //work.task.deleteWork(work)
         moc.deleteObject(work)
     }
 
@@ -848,8 +857,10 @@ class TimePoliceModelUtils {
         s += ("----------Project----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Project")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
+            s += "[Project container size=\(fetchResults.count)]\n"
             for project in fetchResults {
                 s += ("P: \(project.name)-\(project.id)\n")
+                s += "    [Session container size=\(project.sessions.count)]\n"
                 for session in project.sessions {
                     s += ("    S: \(session.name)-\(session.id)\n")
                 }
@@ -861,9 +872,11 @@ class TimePoliceModelUtils {
         s += ("----------Session----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Session")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+            s += "[Session container size=\(fetchResults.count)]\n"
             for session in fetchResults {
                 s += ("S: \(session.name)-\(session.id)\n")
                 s += ("    P: \(session.project.name)-\(session.project.id)\n")
+                s += "    [Work container size=\(session.work.count)]\n"
                 session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
                     if work.isStopped() {
@@ -873,26 +886,29 @@ class TimePoliceModelUtils {
                         s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
                     }
                 }
+                s += "    [Task container size=\(session.tasks.count)]\n"
                 session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let task = elem as! Task
                     s += ("    T: \(task.name)\n")
                 }
             }
         }
+
         s += "\n"
         s += ("------------------------\n")
         s += ("----------Work----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Work")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
+            s += "[Work container size=\(fetchResults.count)]\n"
             for work in fetchResults {
                 if work.isStopped() {
                     let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                    s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+                    s += "W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
                 } else {
-                    s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                    s += "W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
                 }
-                s += ("        S: \(work.session.name)\n")
-                s += ("        T: \(work.task.name)\n")
+                s += ("    S: \(work.session.name)\n")
+                s += ("    T: \(work.task.name)\n")
             }
         }
 
@@ -901,11 +917,14 @@ class TimePoliceModelUtils {
         s += ("----------Task----------\n\n")
         fetchRequest = NSFetchRequest(entityName: "Task")
         if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
+            s += "[Task container size=\(fetchResults.count)]\n"
             for task in fetchResults {
                 s += ("T: \(task.name)\n")
+                s += "    [Session container size=\(task.sessions.count)]\n"
                 for session in task.sessions {
                     s += ("    S: \(session.name)\n")
                 }
+                s += "    [Work container size=\(task.work.count)]\n"
                 task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                     let work = elem as! Work
                     if work.isStopped() {
@@ -1076,6 +1095,21 @@ class TestData {
         ]
         
         addSession(moc, projectName: "Daytime", sessionTemplateName: "Template - Daytime", sessionTemplateTasks: taskList, sessionName: "Daytime")
+    }
+
+    //---------------------------------------------
+    // TestData - addSessionToTest
+    //---------------------------------------------
+    
+    class func addSessionToTest(moc: NSManagedObjectContext) {
+        
+        let taskList = [
+            "Adam", "Bertil", "Ceasar",
+            
+            "Etta", "Tvåa", "Trea"
+        ]
+        
+        addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
     }
 
 

@@ -118,6 +118,16 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    @IBAction func loadDataTest(sender: UIButton) {
+        if let moc = self.managedObjectContext {
+            TestData.addSessionToTest(moc)
+            TimePoliceModelUtils.save(moc)
+            moc.reset()
+            self.sessions = getSessions()
+            logTableView.reloadData()
+        }
+    }
+    
     @IBAction func clearAllData(sender: UIButton) {
         if let moc = self.managedObjectContext {
             TimePoliceModelUtils.clearAllData(moc)
