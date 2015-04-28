@@ -54,6 +54,19 @@ class Project: NSManagedObject {
     }
 
     //---------------------------------------------
+    // Project - delete
+    //---------------------------------------------
+
+    class func deleteInMOC(moc: NSManagedObjectContext, project: Project) {
+    
+        for session in project.sessions {
+            Session.deleteInMOC(moc, session: session as! Session)
+        }
+        moc.deleteObject(project)
+    }
+
+
+    //---------------------------------------------
     // Project - addSession
     //---------------------------------------------
 
@@ -63,17 +76,6 @@ class Project: NSManagedObject {
         self.sessions = s
     }
 
-/*
-    //---------------------------------------------
-    // Project - deleteSession
-    //---------------------------------------------
-
-    func deleteSession(session: Session) {
-        let s = self.sessions.mutableCopy() as! NSMutableSet
-        s.removeObject(session)
-        self.sessions = s
-    }
-*/
 
     //---------------------------------------------
     // Project - findInMOC
@@ -132,15 +134,9 @@ class Session: NSManagedObject {
 
     class func deleteInMOC(moc: NSManagedObjectContext, session: Session) {
     
-        // session.project.deleteSession(session)
         for work in session.work {
             Work.deleteInMOC(moc, work: work as! Work)
         }
-        /*
-        for task in session.tasks {
-            task.deleteSession(session)
-        }
-        */
         moc.deleteObject(session)
     }
 
@@ -155,14 +151,6 @@ class Session: NSManagedObject {
         self.work = sw
     }
 
-/*
-    //---------------------------------------------
-    // Session - deleteWork
-    //---------------------------------------------
-
-    func deleteWork(work: Work) {
-    }
-*/
 
     //---------------------------------------------
     // Session - addTask
@@ -255,22 +243,6 @@ class Session: NSManagedObject {
         }
     }
 
-
-    //---------------------------------------------
-    // Session - replaceLastWork
-    //---------------------------------------------
-
-
-// Should not be needed, update the current item instead.
-
-/*
-    func replaceLastWork(work: Work) {
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.replaceObjectAtIndex(sw.count-1, withObject: work)
-        self.work = sw
-        work.session = self
-    }
-*/
 
     //---------------------------------------------
     // Session modifications - Rules to follow
@@ -633,6 +605,19 @@ class Task: NSManagedObject {
 
         return newItem
     }
+
+    //---------------------------------------------
+    // Task - delete
+    //---------------------------------------------
+
+    class func deleteInMOC(moc: NSManagedObjectContext, task: Task) {
+    
+        for work in task.work {
+            Work.deleteInMOC(moc, work: work as! Work)
+        }
+        moc.deleteObject(task)
+    }
+
     
     //---------------------------------------------
     // Task - addWork
@@ -644,18 +629,6 @@ class Task: NSManagedObject {
         self.work = sw
     }
     
-/*
-    //---------------------------------------------
-    // Task - deleteWork
-    //---------------------------------------------
-    
-    func deleteWork(work: Work) {
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.removeObject(work)
-        self.work = sw
-    }
-*/
-    
     //---------------------------------------------
     // Task - addSession
     //---------------------------------------------
@@ -666,7 +639,6 @@ class Task: NSManagedObject {
         self.sessions = ss
     }
 
-/*
     //---------------------------------------------
     // Task - deleteSession
     //---------------------------------------------
@@ -676,7 +648,7 @@ class Task: NSManagedObject {
         ss.removeObject(session)
         self.sessions = ss
     }
-*/
+
 }
 
 
@@ -737,8 +709,6 @@ class Work: NSManagedObject {
     //---------------------------------------------
 
     class func deleteInMOC(moc: NSManagedObjectContext, work: Work) {
-        //work.session.deleteWork(work)
-        //work.task.deleteWork(work)
         moc.deleteObject(work)
     }
 
