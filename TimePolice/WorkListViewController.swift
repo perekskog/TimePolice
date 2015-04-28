@@ -109,13 +109,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell") as! UITableViewCell
         if let w = session?.work[indexPath.row] as? Work {
-            var stopTime = getStringNoDate(w.stopTime)
-            if w.isOngoing() {
-                stopTime = "---"
-            }
-            cell.textLabel?.text = "\(w.task.name): \(getStringNoDate(w.startTime)) -> \(stopTime)"
-            
+            if w.isStopped() {
+                let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
+                cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
+            } else {
+                cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
+            }            
         }
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
         return cell
     }
 
