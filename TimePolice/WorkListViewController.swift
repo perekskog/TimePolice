@@ -27,6 +27,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
 
     var statusView: UITextView?
+    var sessionLabel: UILabel?
 
     var selectedWork: Work?
     var selectedWorkIndex: Int?
@@ -34,9 +35,21 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        var sessionLabelRect = self.view.frame
+        sessionLabelRect.origin.x = 5
+        sessionLabelRect.origin.y = 20
+        sessionLabelRect.size.height = 30
+        sessionLabelRect.size.width -= 10
+        sessionLabel = UILabel(frame: sessionLabelRect)
+        sessionLabel!.textColor = UIColor.whiteColor()
+        sessionLabel!.text = session?.name
+        sessionLabel!.textAlignment = .Center
+        sessionLabel!.adjustsFontSizeToFitWidth = true
+        self.view.addSubview(sessionLabel!)
+
         var workListRect = self.view.frame
-        workListRect.origin.y += 20
-        workListRect.size.height -= 175
+        workListRect.origin.y += 50
+        workListRect.size.height -= 205
         workListTableView.frame = workListRect
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
