@@ -228,6 +228,11 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) segue input values: \(vc.minimumDate), \(vc.maximumDate)"))
         }
+
+        if segue.identifier == "ExitVC" {
+            // Nothing to prepare
+        }
+
     }
 
     @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
@@ -314,8 +319,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
-
-        self.navigationController?.popViewControllerAnimated(true)
+        
+        performSegueWithIdentifier("Exit", sender: self)
     }
 
     func signInOut(sender: UIButton) {

@@ -39,19 +39,6 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "TaskPicker" {
-            let vc = segue.destinationViewController as! TaskPickerViewController
-            vc.session = selectedSession
-            vc.sourceController = self
-        } 
-        if segue.identifier == "WorkList" {
-            let vc = segue.destinationViewController as! WorkListViewController
-            vc.session = selectedSession
-            vc.sourceController = self
-        } 
-    }
 
     func getSessions() -> [Session] {
         let fetchRequest = NSFetchRequest(entityName: "Session")
@@ -76,6 +63,29 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         default:
             println("Some other value (\(sender.selectedSegmentIndex))")
         }
+    }
+
+    
+    //---------------------------------------------
+    // TimePOliceViewController - Segue handling
+    //---------------------------------------------
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "TaskPicker" {
+            let vc = segue.destinationViewController as! TaskPickerViewController
+            vc.session = selectedSession
+            vc.sourceController = self
+        } 
+        if segue.identifier == "WorkList" {
+            let vc = segue.destinationViewController as! WorkListViewController
+            vc.session = selectedSession
+            vc.sourceController = self
+        } 
+    }
+
+    @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
+        println("\nTimePoliceVC - exit")
+        logTableView.reloadData()
     }
 
 

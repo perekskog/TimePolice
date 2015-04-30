@@ -136,6 +136,11 @@ class TaskPickerViewController: UIViewController
                 }
             }
         }
+
+        if segue.identifier == "ExitVC" {
+            // Nothing to prepare
+        }
+
     }
 
     @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
@@ -201,8 +206,8 @@ class TaskPickerViewController: UIViewController
     func exit(sender: UIButton) {
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
 
-        self.navigationController?.popViewControllerAnimated(true)
         tp?.updateActiveActivityTimer?.invalidate()
+        performSegueWithIdentifier("Exit", sender: self)
     }
 
     
