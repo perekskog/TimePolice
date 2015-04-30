@@ -160,7 +160,18 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as! UITableViewCell
-        cell.textLabel?.text = sessions?[indexPath.row].name
+        if let session = sessions?[indexPath.row] {
+            if let work = session.getLastWork() {
+                if work.isOngoing() {
+                    cell.textLabel?.text = "\(session.name) (\(work.task.name))"
+                } else {
+                    cell.textLabel?.text = "\(session.name) (---)"
+                }
+            } else {
+                cell.textLabel?.text = "\(session.name) (empty)"                
+            }
+        }
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
         return cell
     }
 
