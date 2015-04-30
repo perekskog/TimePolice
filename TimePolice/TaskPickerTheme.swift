@@ -97,10 +97,12 @@ class ToolbarInfo {
     var signedIn: Bool
     var totalTimesActivatedForSession: Int
     var totalTimeActiveForSession: NSTimeInterval
-    init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval) {
+    var sessionName: String
+    init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval, sessionName: String) {
         self.signedIn = signedIn
         self.totalTimesActivatedForSession = totalTimesActivatedForSession
         self.totalTimeActiveForSession = totalTimeActiveForSession
+        self.sessionName = sessionName
     }
 }
 
@@ -221,6 +223,8 @@ class BasicTheme : Theme {
         var foregroundColor = foregroundColorBlack
         var text: String
         switch tool {
+        case SessionName:
+            text = toolbarInfo.sessionName
         case SignInSignOut:
             if toolbarInfo.signedIn {
                 text = "Sign out"
@@ -362,6 +366,8 @@ class BlackGreenTheme : Theme {
         var text: String
 
         switch tool {
+        case SessionName:
+            text = toolbarInfo.sessionName
         case SignInSignOut:
             if toolbarInfo.signedIn {
                 text = "Sign out"

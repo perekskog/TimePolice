@@ -279,6 +279,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     // Non presistent local attributes, setup when initialising the view
 	var updateActiveActivityTimer: NSTimer?
+    var sessionNameView: ToolView?
 	var signInSignOutView: ToolView?
 	var infoAreaView: ToolView?
 	var settingsView: ToolView?
@@ -318,17 +319,23 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 			backgroundView.addSubview(view)
 		}
 
+        // Setup sessionname
+        var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SessionName)
+        sessionNameView = ToolView(frame: viewRect)
+        sessionNameView!.theme = theme
+        sessionNameView!.toolbarInfoDelegate = self
+        sessionNameView!.tool = SessionName
+        backgroundView.addSubview(sessionNameView!)
+
 		// Setup sign in/out button
-		var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
+		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
 	    signInSignOutView = ToolView(frame: viewRect)
 		signInSignOutView!.theme = theme
 		signInSignOutView!.toolbarInfoDelegate = self
 		signInSignOutView!.tool = SignInSignOut
-
 		var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
 	    recognizer.delegate = self
 	    signInSignOutView!.addGestureRecognizer(recognizer)
-
 		backgroundView.addSubview(signInSignOutView!)
 
 		// Setup infoarea
@@ -337,7 +344,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		infoAreaView!.theme = theme
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
-
 		backgroundView.addSubview(infoAreaView!)
 
 		// Setup settings
@@ -346,11 +352,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		settingsView!.theme = theme
 		settingsView!.toolbarInfoDelegate = self
 		settingsView!.tool = Settings
-
 		recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSettings:"))
 	    recognizer.delegate = self
 	    settingsView!.addGestureRecognizer(recognizer)
-
 		backgroundView.addSubview(settingsView!)
         
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
@@ -627,7 +631,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     	let toolbarInfo = ToolbarInfo(
     		signedIn: signedIn, 
     		totalTimesActivatedForSession: totalActivations,
-    		totalTimeActiveForSession: totalTime)
+    		totalTimeActiveForSession: totalTime,
+            sessionName: session.name)
 
     	return toolbarInfo
     }
