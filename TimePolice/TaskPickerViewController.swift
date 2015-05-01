@@ -50,9 +50,9 @@ class TaskPickerViewController: UIViewController
 
         var tpRect = self.view.bounds
         tpRect.origin.x = 0
-        tpRect.size.width -= 0
+        tpRect.size.width -= 1
         tpRect.origin.y += 25
-        tpRect.size.height -= 158
+        tpRect.size.height -= 155
         let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
         self.view.addSubview(taskPickerBackgroundView)
 
