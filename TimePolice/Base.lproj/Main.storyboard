@@ -186,7 +186,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="CancelEditWork" unwindAction="cancelEditWork:" id="6a6-7T-XI5"/>
+                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="CancelEditWork" unwindAction="exitEditWork:" id="6a6-7T-XI5"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mLi-RH-NNl">
@@ -195,7 +195,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="OkEditWork" unwindAction="okEditWork:" id="dCt-zu-Gef"/>
+                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="OkEditWork" unwindAction="exitEditWork:" id="dCt-zu-Gef"/>
                                 </connections>
                             </button>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="VXw-Th-ONd">
@@ -225,7 +225,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="DeleteWork" unwindAction="deleteWork:" id="bRR-Fs-Pgi"/>
+                                    <segue destination="iYZ-ST-Apd" kind="unwind" identifier="DeleteWork" unwindAction="exitEditWork:" id="bRR-Fs-Pgi"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CBm-8j-yuP">

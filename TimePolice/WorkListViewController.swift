@@ -32,6 +32,11 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var selectedWork: Work?
     var selectedWorkIndex: Int?
 
+
+    //---------------------------------------------
+    // WorkListViewController - View lifecycle
+    //---------------------------------------------
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -79,21 +84,21 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
         
-        let signInOutRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:90, height:30))
-        let signInOutButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        signInOutButton.frame = signInOutRect
-        signInOutButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
-        signInOutButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        signInOutButton.setTitle("Sign in/out", forState: UIControlState.Normal)
-        signInOutButton.addTarget(self, action: "signInOut:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(signInOutButton)
+        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
+        let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        switchOngoingFinishedButton.frame = switchOngoingFinishedRect
+        switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
+        switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        switchOngoingFinishedButton.setTitle("Ongoing/Finished", forState: UIControlState.Normal)
+        switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(switchOngoingFinishedButton)
 
         let addButton = UIButton.buttonWithType(.System) as! UIButton
         let addRect = CGRect(origin: CGPoint(x: 5, y: self.view.bounds.size.height-145), size: CGSize(width:self.view.bounds.size.width-10, height:30))
         addButton.frame = addRect
         addButton.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         addButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        addButton.setTitle("Add work", forState: UIControlState.Normal)
+        addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
 
@@ -105,6 +110,52 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) WorkListVC.didReceiveMemoryWarning"))
     }
     
+
+    //-----------------------------------------
+    // WorkListViewController- VC button actions
+    //-----------------------------------------
+
+
+    func exit(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
+        
+        performSegueWithIdentifier("Exit", sender: self)
+    }
+
+    func switchOngoingFinished(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
+
+        if let w = session?.getLastWork() {
+            if w.isOngoing() {
+                w.setStoppedAt(NSDate())
+            } else {
+                w.setAsOngoing()
+            }
+            workListTableView.reloadData()
+            scrollToEnd()
+        }
+
+    }
+    
+    func addWork(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.addWork")
+        if let moc = managedObjectContext,
+                 s = session {
+            let now = NSDate()
+            var task = s.tasks[0] as! Task
+            if let lastWork = s.getLastWork() {
+                task = lastWork.task
+                if lastWork.isOngoing() {
+                    lastWork.setStoppedAt(now)
+                }
+            }
+            Work.createInMOC(moc, name: "", session: s, task: task)
+            TimePoliceModelUtils.save(moc)
+
+            workListTableView.reloadData()
+            scrollToEnd()
+        }
+    }
 
     
     //-----------------------------------------
@@ -142,26 +193,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
 
             performSegueWithIdentifier("EditWork", sender: self)
-        }
-    }
-
-    func addWork(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.addWork")
-        if let moc = managedObjectContext,
-                 s = session {
-            let now = NSDate()
-            var task = s.tasks[0] as! Task
-            if let lastWork = s.getLastWork() {
-                task = lastWork.task
-                if lastWork.isOngoing() {
-                    lastWork.setStoppedAt(now)
-                }
-            }
-            Work.createInMOC(moc, name: "", session: s, task: task)
-            TimePoliceModelUtils.save(moc)
-
-            workListTableView.reloadData()
-            scrollToEnd()
         }
     }
 
@@ -235,16 +266,16 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
     }
 
-    @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.cancelEditWork")
-    }
+    @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
+        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exitEditWork")
 
-    @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.okEditWork")
+        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+
+        if unwindSegue.identifier == "CancelEditWork" {
+            // Do nothing
+        }
 
         if unwindSegue.identifier == "OkEditWork" {
-
-            let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
             if let moc = managedObjectContext,
                      s = session,
@@ -287,57 +318,34 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             workListTableView.reloadData()
         }
-    }
 
-    @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.deleteWork")
 
-        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+        if unwindSegue.identifier == "OkEditWork" {
 
-        if let moc = managedObjectContext,
+            if let moc = managedObjectContext,
                  i = selectedWorkIndex
                 where unwindSegue.identifier == "DeleteWork" {
 
-            let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
-            switch fillEmptySpaceWith {
-                case 0: // Nothing, deleteWork
-                    println("Fill with nothing")
-                    session?.deleteWork(moc, workIndex: i)
-                case 1: // Previous item, deleteNextWorkAndAlignStop
-                    println("Fill with previous")
-                    session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-                case 2: // Next item, deletePreviousWorkAndAlignStart
-                    println("Fill with next")
-                    session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                default: // Not handled
-                    println("Not handled")
+                let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
+                switch fillEmptySpaceWith {
+                    case 0: // Nothing, deleteWork
+                        println("Fill with nothing")
+                        session?.deleteWork(moc, workIndex: i)
+                    case 1: // Previous item, deleteNextWorkAndAlignStop
+                        println("Fill with previous")
+                        session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                    case 2: // Next item, deletePreviousWorkAndAlignStart
+                        println("Fill with next")
+                        session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                    default: // Not handled
+                        println("Not handled")
+                }
+                workListTableView.reloadData()
             }
-            workListTableView.reloadData()
         }
 
     }
 
-    func exit(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
-        
-        performSegueWithIdentifier("Exit", sender: self)
-    }
-
-    func signInOut(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
-
-        if let w = session?.getLastWork() {
-            if w.isOngoing() {
-                w.setStoppedAt(NSDate())
-            } else {
-                w.setAsOngoing()
-            }
-            workListTableView.reloadData()
-            scrollToEnd()
-        }
-
-    }
-    
 
 
 }

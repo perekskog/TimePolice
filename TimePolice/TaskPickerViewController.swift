@@ -37,6 +37,12 @@ class TaskPickerViewController: UIViewController
     
     var statusView: UITextView?
 
+
+    //---------------------------------------------
+    // TaskPickerViewController - View lifecycle
+    //---------------------------------------------
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -106,6 +112,20 @@ class TaskPickerViewController: UIViewController
         nav?.tintColor = UIColor.whiteColor()
         nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
     }
+
+
+    //---------------------------------------------
+    // TaskPickerViewController - Button actions
+    //---------------------------------------------
+
+    func exit(sender: UIButton) {
+        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
+
+        tp?.updateActiveActivityTimer?.invalidate()
+        performSegueWithIdentifier("Exit", sender: self)
+    }
+
+
     
     //---------------------------------------------
     // TaskPickerViewController - Segue handling
@@ -143,16 +163,16 @@ class TaskPickerViewController: UIViewController
 
     }
 
-    @IBAction func cancelEditWork(unwindSegue: UIStoryboardSegue ) {
+    @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
         TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.cancelEditWork")
-    }
 
-    @IBAction func okEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.okEditWork")
+        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+
+        if unwindSegue.identifier == "CancelEditWork" {
+            // Do nothing
+        }
 
         if unwindSegue.identifier == "OkEditWork" {
-
-            let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
             if let moc = managedObjectContext,
                      s = session {
@@ -194,21 +214,9 @@ class TaskPickerViewController: UIViewController
             
             tp?.redraw()
         }
-    }
-
-    @IBAction func deleteWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) WorkListVC.deleteWork")
 
     }
 
-
-
-    func exit(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\(getString(NSDate())) TaskPickerVC.exit")
-
-        tp?.updateActiveActivityTimer?.invalidate()
-        performSegueWithIdentifier("Exit", sender: self)
-    }
 
     
     //--------------------------------------------------

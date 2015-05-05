@@ -41,17 +41,114 @@ func getStringNoDate(date: NSDate) -> String {
 	return timeString
 }
 
+
 class TextViewLogger {
-	class func log(textview: UITextView, message: String) {
-        textview.text! += message
+	class func log(statusView: UITextView, message: String) {
+		statusView.text! += "\n\(message)"
+        let numberOfElements = count(statusView.text)
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        statusView.scrollRangeToVisible(range)
+	    UIPasteboard.generalPasteboard().string = statusView.text
+	}
+}
+
+class SystemLog {
+	var logger: Logger!
+	var copyToConsole: Bool!
+	var copyToPasteboard: Bool!
+
+    init(logger: Logger, copyToConsole: Bool, copyToPasteboard: Bool) {
+		self.logger = logger
+		self.copyToConsole = copyToConsole
+		self.copyToPasteboard = copyToPasteboard
+	}
+
+	func log(message: String) {
+		let now = NSDate()
+		let logEntry = "\(getStringNoDate(now)): logger.getEntry(message)"
+		logger.appendEntry(logEntry)
+
+		if copyToConsole==true {
+			println(logEntry)
+		}
+
+		if copyToPasteboard==true {
+	        UIPasteboard.generalPasteboard().string = logger.getContent()
+		}
+	}
+
+	func reset() {
+        logger.reset()
+    }
+}
+
+protocol Logger {
+	func getEntry(message: String) -> String
+	func appendEntry(entry: String)
+	func getContent() -> String
+	func reset()
+}
+
+class TextViewLog {
+
+	var textview: UITextView!
+	var locator: String!
+
+	init(textview: UITextView, locator: String)
+	{
+		self.textview = textview
+		self.locator = locator
+	}
+
+	func getEntry(message: String) -> String {
+		let entry = "\(locator): \(message)"
+		return entry
+	}
+
+	func appendEntry(entry: String) {
+		textview.text! += "\n\(entry)"
         let numberOfElements = count(textview.text)
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         textview.scrollRangeToVisible(range)
-        print(message)
-        
-        UIPasteboard.generalPasteboard().string = textview.text
 	}
-    class func reset(textview: UITextView) {
+
+	func getContent() -> String {
+		return textview.text
+	}
+
+    func reset() {
         textview.text = ""
     }
+
 }
+
+class StringLog {
+
+	var logString: String!
+	var locator: String!
+
+	init(logString: String, locator: String)
+	{
+		self.logString = logString
+		self.locator = locator
+	}
+
+	func getEntry(message: String) -> String {
+		let entry = "\(locator): \(message)"
+		return entry
+	}
+
+	func appendEntry(entry: String) {
+//        logString += "\n\(entry)"
+	}
+
+	func getContent() -> String {
+		return logString
+	}
+
+	func reset() {
+        logString = ""
+    }
+
+}
+
