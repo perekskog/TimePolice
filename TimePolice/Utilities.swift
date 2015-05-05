@@ -52,44 +52,112 @@ class TextViewLogger {
 	}
 }
 
-class SystemLog {
-	var logger: Logger!
-	var copyToConsole: Bool!
-	var copyToPasteboard: Bool!
+/*
 
-    init(logger: Logger, copyToConsole: Bool, copyToPasteboard: Bool) {
-		self.logger = logger
-		self.copyToConsole = copyToConsole
-		self.copyToPasteboard = copyToPasteboard
+- Skicka med ett closure isf "message", då kan väl meddelandet byggas enbart när det behövs?
+
+*/
+
+enum LogType {
+	EnterExit,
+	CoreData
+}
+
+class SystemLog {
+
+    init() {
 	}
 
-	func log(message: String) {
+	func log(logger: Logger, loglevel: LogType, message: String) {
+		if excludeEntry(logger.getId(), loglevel) {
+			return
+		}
+
 		let now = NSDate()
-		let logEntry = "\(getStringNoDate(now)): logger.getEntry(message)"
+		let logEntry = "\(getStringNoDate(now)): \(logger.getEntry(message))"
 		logger.appendEntry(logEntry)
 
-		if copyToConsole==true {
+		if logger.copyToConsole() {
 			println(logEntry)
 		}
 
-		if copyToPasteboard==true {
+		if logger.copyToPasteboard() {
 	        UIPasteboard.generalPasteboard().string = logger.getContent()
 		}
 	}
 
-	func reset() {
-        logger.reset()
-    }
+	func excludeEntry(logger: Logger, loglevel: LogType) {
+		return !includeEntry(logger, loglevel)
+	}
+
+	func includeEntry(logger: Logger, loglevel: LogeType) {
+		return true
+	}
+
 }
+
+/*
+
+func log(prefix: String, message: () -> String) {
+	let msg = message()
+	println("\(prefix): \(msg))
+}
+
+log("pre") { "hej hopp" }
+log("pre") { () in "hej hopp"}
+let s1 = "god"
+log("pre") { "hej \(s1) hopp" }
+
+func log(prefix: String, message: String) {
+	let msg = message()
+	println("\(prefix): \(msg))
+}
+
+log("pre", "hej hopp")
+
+*/
 
 protocol Logger {
 	func getEntry(message: String) -> String
 	func appendEntry(entry: String)
 	func getContent() -> String
 	func reset()
+	func copyToConsole() -> Bool
+	func copyToPasteboard() -> Bool
+	func getId() -> String
 }
 
-class TextViewLog {
+class BasicLogger: Logger {
+	func getEntry(message: String) -> String {
+		return ""
+	}
+
+	func appendEntry(entry: String) {
+		// Do nothing
+	}
+
+	func getContent() -> String {
+		return ""
+	}
+
+	func reset() {
+		// Do nothing
+	}
+
+	func copyToConsole() -> Bool {
+		return false
+	}
+
+	func copyToPasteboard() -> Bool {
+		return false
+	}
+
+	func getId() -> String {
+		return "default"
+	}
+}
+
+class TextViewLog: BasicLogger {
 
 	var textview: UITextView!
 	var locator: String!
@@ -122,7 +190,7 @@ class TextViewLog {
 
 }
 
-class StringLog {
+class StringLog: BasicLogger {
 
 	var logString: String!
 	var locator: String!
