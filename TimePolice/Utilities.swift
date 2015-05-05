@@ -52,15 +52,13 @@ class TextViewLogger {
 	}
 }
 
-/*
 
-- Skicka med ett closure isf "message", då kan väl meddelandet byggas enbart när det behövs?
 
-*/
+
 
 enum LogType {
-	EnterExit,
-	CoreData
+	case EnterExit
+	case CoreData
 }
 
 class SystemLog {
@@ -69,12 +67,24 @@ class SystemLog {
 	}
 
 	func log(logger: Logger, loglevel: LogType, message: String) {
-		if excludeEntry(logger.getId(), loglevel) {
+		if excludeEntry(logger.getId(), loglevel: loglevel) {
 			return
 		}
 
+		doLog(logger, message: message)
+	}
+
+	func log(logger: Logger, loglevel: LogType, message: () -> String) {
+		if excludeEntry(logger.getId(), loglevel: loglevel) {
+			return
+		}
+
+		doLog(logger, message: message())
+	}
+
+	func doLog(logger: Logger, message: String) {
 		let now = NSDate()
-		let logEntry = "\(getStringNoDate(now)): \(logger.getEntry(message))"
+		let logEntry = "\(getStringNoDate(now)): \(logger.localize(message))"
 		logger.appendEntry(logEntry)
 
 		if logger.copyToConsole() {
@@ -86,11 +96,12 @@ class SystemLog {
 		}
 	}
 
-	func excludeEntry(logger: Logger, loglevel: LogType) {
-		return !includeEntry(logger, loglevel)
+
+	func excludeEntry(loggerId: String, loglevel: LogType) -> Bool {
+		return !includeEntry(loggerId, loglevel: loglevel)
 	}
 
-	func includeEntry(logger: Logger, loglevel: LogeType) {
+	func includeEntry(loggerId: String, loglevel: LogType) -> Bool {
 		return true
 	}
 
@@ -98,27 +109,21 @@ class SystemLog {
 
 /*
 
+From playground:
 func log(prefix: String, message: () -> String) {
-	let msg = message()
-	println("\(prefix): \(msg))
+    let msg = message()
+    println("\(prefix): \(msg)")
 }
 
 log("pre") { "hej hopp" }
-log("pre") { () in "hej hopp"}
 let s1 = "god"
 log("pre") { "hej \(s1) hopp" }
 
-func log(prefix: String, message: String) {
-	let msg = message()
-	println("\(prefix): \(msg))
-}
-
-log("pre", "hej hopp")
 
 */
 
 protocol Logger {
-	func getEntry(message: String) -> String
+	func localize(message: String) -> String
 	func appendEntry(entry: String)
 	func getContent() -> String
 	func reset()
@@ -128,7 +133,7 @@ protocol Logger {
 }
 
 class BasicLogger: Logger {
-	func getEntry(message: String) -> String {
+	func localize(message: String) -> String {
 		return ""
 	}
 
@@ -168,11 +173,13 @@ class TextViewLog: BasicLogger {
 		self.locator = locator
 	}
 
-	func getEntry(message: String) -> String {
+    override
+	func localize(message: String) -> String {
 		let entry = "\(locator): \(message)"
 		return entry
 	}
 
+    override
 	func appendEntry(entry: String) {
 		textview.text! += "\n\(entry)"
         let numberOfElements = count(textview.text)
@@ -180,10 +187,12 @@ class TextViewLog: BasicLogger {
         textview.scrollRangeToVisible(range)
 	}
 
+    override
 	func getContent() -> String {
 		return textview.text
 	}
 
+    override
     func reset() {
         textview.text = ""
     }
@@ -201,19 +210,23 @@ class StringLog: BasicLogger {
 		self.locator = locator
 	}
 
-	func getEntry(message: String) -> String {
+    override
+	func localize(message: String) -> String {
 		let entry = "\(locator): \(message)"
 		return entry
 	}
 
+    override
 	func appendEntry(entry: String) {
 //        logString += "\n\(entry)"
 	}
 
+    override
 	func getContent() -> String {
 		return logString
 	}
 
+    override
 	func reset() {
         logString = ""
     }
