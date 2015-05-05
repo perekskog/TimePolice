@@ -59,6 +59,7 @@ class TextViewLogger {
 enum LogType {
 	case EnterExit
 	case CoreData
+	case Debug
 }
 
 class SystemLog {
@@ -84,7 +85,7 @@ class SystemLog {
 
 	func doLog(logger: Logger, message: String) {
 		let now = NSDate()
-		let logEntry = "\(getStringNoDate(now)): \(logger.localize(message))"
+		let logEntry = "\(getString(now)): \(logger.localize(message))"
 		logger.appendEntry(logEntry)
 
 		if logger.copyToConsole() {
@@ -201,12 +202,12 @@ class TextViewLog: BasicLogger {
 
 class StringLog: BasicLogger {
 
-	var logString: String!
+	var logstring: String!
 	var locator: String!
 
-	init(logString: String, locator: String)
+	init(logstring: String, locator: String)
 	{
-		self.logString = logString
+		self.logstring = logstring
 		self.locator = locator
 	}
 
@@ -218,17 +219,17 @@ class StringLog: BasicLogger {
 
     override
 	func appendEntry(entry: String) {
-//        logString += "\n\(entry)"
+        logstring! += "\n\(entry)"
 	}
 
     override
 	func getContent() -> String {
-		return logString
+		return logstring
 	}
 
     override
 	func reset() {
-        logString = ""
+        logstring = ""
     }
 
 }

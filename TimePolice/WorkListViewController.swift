@@ -32,6 +32,11 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var selectedWork: Work?
     var selectedWorkIndex: Int?
 
+    var syslog: SystemLog?
+    var textviewlogger: Logger?
+    var stringlogger: Logger?
+    let log = String()
+
 
     //---------------------------------------------
     // WorkListViewController - View lifecycle
@@ -102,7 +107,16 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
 
-        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) WorkListVC.viewDidLoad"))
+        syslog = SystemLog()
+        
+        textviewlogger = TextViewLog(textview: statusView!, locator: "WorkListVC")
+        syslog?.log(textviewlogger!, loglevel: .Debug, message: "viewDidLoad")
+        syslog?.log(textviewlogger!, loglevel: .Debug) { "viewDidLoad2" }
+        
+        stringlogger = StringLog(logstring: log, locator: "WorkListVC2")
+        syslog?.log(stringlogger!, loglevel: .Debug, message: "viewDidLoad")
+        syslog?.log(stringlogger!, loglevel: .Debug) { "viewDidLoad2" }
+        println(stringlogger!.getContent())
     }
 
     override func didReceiveMemoryWarning() {
