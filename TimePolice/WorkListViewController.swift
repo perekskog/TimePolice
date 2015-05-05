@@ -32,9 +32,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var selectedWork: Work?
     var selectedWorkIndex: Int?
 
-    var syslog: SystemLog?
-    var textviewlogger: Logger?
-    var stringlogger: Logger?
+    var textviewlogger: AppLogger?
+    var stringlogger: AppLogger?
     let log = String()
 
 
@@ -106,16 +105,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
-
-        syslog = SystemLog()
         
-        textviewlogger = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        syslog?.log(textviewlogger!, loglevel: .Debug, message: "viewDidLoad")
-        syslog?.log(textviewlogger!, loglevel: .Debug) { "viewDidLoad2" }
+        textviewlogger = TextViewLog(textview: statusView!, locator: "WorkListVC3")
+        appLog.log(textviewlogger!, loglevel: .Debug, message: "viewDidLoad")
+        appLog.log(textviewlogger!, loglevel: .Debug) { "viewDidLoad2" }
         
-        stringlogger = StringLog(logstring: log, locator: "WorkListVC2")
-        syslog?.log(stringlogger!, loglevel: .Debug, message: "viewDidLoad")
-        syslog?.log(stringlogger!, loglevel: .Debug) { "viewDidLoad2" }
+        stringlogger = StringLog(logstring: appLog.logString, locator: "WorkListVC4")
+        appLog.log(stringlogger!, loglevel: .Debug, message: "viewDidLoad")
+        appLog.log(stringlogger!, loglevel: .Debug) { "viewDidLoad2" }
         println(stringlogger!.getContent())
     }
 
@@ -224,7 +221,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     //--------------------------------------------------
-    // TaskPickerViewController - CoreData MOC
+    // TaskPickerViewController - AppDelegate lazy properties
     //--------------------------------------------------
     
     lazy var managedObjectContext : NSManagedObjectContext? = {
@@ -238,6 +235,10 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         }()
 
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog        
+    }()
 
     //---------------------------------------------
     // WorkListViewController - Segue handling

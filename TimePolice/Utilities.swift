@@ -56,18 +56,21 @@ class TextViewLogger {
 
 
 
-enum LogType {
+enum AppLogType {
 	case EnterExit
 	case CoreData
 	case Debug
 }
 
-class SystemLog {
+class AppLog {
+
+	var logString: String!
 
     init() {
+    	logString = String()
 	}
 
-	func log(logger: Logger, loglevel: LogType, message: String) {
+	func log(logger: AppLogger, loglevel: AppLogType, message: String) {
 		if excludeEntry(logger.getId(), loglevel: loglevel) {
 			return
 		}
@@ -75,7 +78,7 @@ class SystemLog {
 		doLog(logger, message: message)
 	}
 
-	func log(logger: Logger, loglevel: LogType, message: () -> String) {
+	func log(logger: AppLogger, loglevel: AppLogType, message: () -> String) {
 		if excludeEntry(logger.getId(), loglevel: loglevel) {
 			return
 		}
@@ -83,7 +86,7 @@ class SystemLog {
 		doLog(logger, message: message())
 	}
 
-	func doLog(logger: Logger, message: String) {
+	func doLog(logger: AppLogger, message: String) {
 		let now = NSDate()
 		let logEntry = "\(getString(now)): \(logger.localize(message))"
 		logger.appendEntry(logEntry)
@@ -98,11 +101,11 @@ class SystemLog {
 	}
 
 
-	func excludeEntry(loggerId: String, loglevel: LogType) -> Bool {
+	func excludeEntry(loggerId: String, loglevel: AppLogType) -> Bool {
 		return !includeEntry(loggerId, loglevel: loglevel)
 	}
 
-	func includeEntry(loggerId: String, loglevel: LogType) -> Bool {
+	func includeEntry(loggerId: String, loglevel: AppLogType) -> Bool {
 		return true
 	}
 
@@ -123,7 +126,7 @@ log("pre") { "hej \(s1) hopp" }
 
 */
 
-protocol Logger {
+protocol AppLogger {
 	func localize(message: String) -> String
 	func appendEntry(entry: String)
 	func getContent() -> String
@@ -133,7 +136,7 @@ protocol Logger {
 	func getId() -> String
 }
 
-class BasicLogger: Logger {
+class BasicLogger: AppLogger {
 	func localize(message: String) -> String {
 		return ""
 	}

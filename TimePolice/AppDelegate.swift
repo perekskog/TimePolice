@@ -97,6 +97,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return managedObjectContext
     }()
 
+    lazy var appLog: AppLog = {
+        var appLog = AppLog()
+        return appLog
+    }()
+
+
     // MARK: - Core Data Saving support
 
     func saveContext () {
