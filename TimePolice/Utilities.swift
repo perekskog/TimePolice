@@ -62,7 +62,7 @@ enum AppLogType {
 	case Debug
 }
 
-class AppLog {
+class AppLog: AppLoggerDelegate {
 
 	var logString: String!
 
@@ -87,17 +87,21 @@ class AppLog {
 	}
 
 	func doLog(logger: AppLogger, message: String) {
-		let now = NSDate()
-		let logEntry = "\(getString(now)): \(logger.localize(message))"
-		logger.appendEntry(logEntry)
+		logger.localize(self, message: message)
+	}
 
-		if logger.copyToConsole() {
+	func entryLocalized(sender: AppLogger, localizedEntry: String) {
+		let now = NSDate()
+		let logEntry = "\(getString(now)): \(localizedEntry)"
+		sender.appendEntry(logEntry)
+
+		if sender.copyToConsole() {
 			println(logEntry)
 		}
 
-		if logger.copyToPasteboard() {
-	        UIPasteboard.generalPasteboard().string = logger.getContent()
-		}
+		if sender.copyToPasteboard() {
+	        UIPasteboard.generalPasteboard().string = sender.getContent()
+		}		
 	}
 
 
@@ -126,8 +130,12 @@ log("pre") { "hej \(s1) hopp" }
 
 */
 
+protocol AppLoggerDelegate {
+	func entryLocalized(sender: AppLogger, localizedEntry: String)
+}
+
 protocol AppLogger {
-	func localize(message: String) -> String
+	func localize(sender: AppLoggerDelegate, message: String)
 	func appendEntry(entry: String)
 	func getContent() -> String
 	func reset()
@@ -137,8 +145,8 @@ protocol AppLogger {
 }
 
 class BasicLogger: AppLogger {
-	func localize(message: String) -> String {
-		return ""
+	func localize(sender: AppLoggerDelegate, message: String) {
+        sender.entryLocalized(self, localizedEntry: message)
 	}
 
 	func appendEntry(entry: String) {
@@ -178,9 +186,9 @@ class TextViewLog: BasicLogger {
 	}
 
     override
-	func localize(message: String) -> String {
+	func localize(sender: AppLoggerDelegate, message: String) {
 		let entry = "\(locator): \(message)"
-		return entry
+		sender.entryLocalized(self, localizedEntry: entry)
 	}
 
     override
@@ -215,9 +223,9 @@ class StringLog: BasicLogger {
 	}
 
     override
-	func localize(message: String) -> String {
+	func localize(sender: AppLoggerDelegate, message: String) {
 		let entry = "\(locator): \(message)"
-		return entry
+		sender.entryLocalized(self, localizedEntry: entry)
 	}
 
     override
@@ -233,6 +241,36 @@ class StringLog: BasicLogger {
     override
 	func reset() {
         logstring = ""
+    }
+
+}
+
+class MultiLog: BasicLogger {
+	var logger1: AppLogger?
+	var logger2: AppLogger?
+
+	var locator: String!
+
+	init(locator: String) {
+		self.locator = locator
+	}
+
+	override
+	func localize(sender: AppLoggerDelegate, message: String) {
+		logger1?.localize(sender, message: message)
+		logger2?.localize(sender, message: message)
+	}
+
+    override
+	func appendEntry(entry: String) {
+        logger1?.appendEntry(entry)
+        logger2?.appendEntry(entry)
+	}
+
+    override
+	func reset() {
+        logger1?.reset()
+        logger2?.reset()
     }
 
 }

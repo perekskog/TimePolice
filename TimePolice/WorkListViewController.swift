@@ -32,9 +32,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     var selectedWork: Work?
     var selectedWorkIndex: Int?
 
-    var textviewlogger: AppLogger?
-    var stringlogger: AppLogger?
-    let log = String()
+    var logger: AppLogger?
 
 
     //---------------------------------------------
@@ -106,14 +104,18 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
         
-        textviewlogger = TextViewLog(textview: statusView!, locator: "WorkListVC3")
-        appLog.log(textviewlogger!, loglevel: .Debug, message: "viewDidLoad")
-        appLog.log(textviewlogger!, loglevel: .Debug) { "viewDidLoad2" }
+        let logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC5")
+        let logger2 = StringLog(logstring: appLog.logString, locator: "WorkListVC6")
+
+        logger = MultiLog(locator: "WorkListVC7")
+        (logger as! MultiLog).logger1 = logger1
+        (logger as! MultiLog).logger2 = logger2
+
+        appLog.log(logger!, loglevel: .Debug, message: "viewDidLoad")
+        appLog.log(logger!, loglevel: .Debug) { "viewDidLoad2" }
         
-        stringlogger = StringLog(logstring: appLog.logString, locator: "WorkListVC4")
-        appLog.log(stringlogger!, loglevel: .Debug, message: "viewDidLoad")
-        appLog.log(stringlogger!, loglevel: .Debug) { "viewDidLoad2" }
-        println(stringlogger!.getContent())
+        println(logger1.getContent())
+        println(logger2.getContent())
     }
 
     override func didReceiveMemoryWarning() {
