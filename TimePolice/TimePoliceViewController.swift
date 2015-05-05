@@ -156,6 +156,12 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
+    @IBAction func dumpApplog(sender: UIButton) {
+        let s = appLog.logString
+        println(s)
+        UIPasteboard.generalPasteboard().string = s
+    }
+
     //-----------------------------------------
     // TimePoliceViewController- UITableView
     //-----------------------------------------
@@ -218,7 +224,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     //---------------------------------------
-    // TimePoliceViewController - CoreData
+    // TimePoliceViewController - AppDelegate lazy properties
     //---------------------------------------
 
     lazy var managedObjectContext : NSManagedObjectContext? = {
@@ -230,4 +236,10 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
             return nil
         }
         }()
+
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog        
+    }()
+
 }

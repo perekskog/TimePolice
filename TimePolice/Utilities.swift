@@ -127,6 +127,10 @@ log("pre") { "hej hopp" }
 let s1 = "god"
 log("pre") { "hej \(s1) hopp" }
 
+Examples:
+        appLog.log(logger!, loglevel: .Debug, message: "viewDidLoad")
+        appLog.log(logger!, loglevel: .Debug) { "viewDidLoad2" }
+
 
 */
 

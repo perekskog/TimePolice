@@ -104,23 +104,21 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
         
-        let logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC5")
-        let logger2 = StringLog(logstring: appLog.logString, locator: "WorkListVC6")
+        let logger1 = TextViewLog(textview: statusView!, locator: "XXXX1")
+        let logger2 = StringLog(logstring: appLog.logString, locator: "XXXX2")
 
-        logger = MultiLog(locator: "WorkListVC7")
+        logger = MultiLog(locator: "XXXX")
         (logger as! MultiLog).logger1 = logger1
         (logger as! MultiLog).logger2 = logger2
 
-        appLog.log(logger!, loglevel: .Debug, message: "viewDidLoad")
-        appLog.log(logger!, loglevel: .Debug) { "viewDidLoad2" }
-        
-        println(logger1.getContent())
-        println(logger2.getContent())
+        logger = logger2
+
+        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) WorkListVC.didReceiveMemoryWarning"))
+        appLog.log(logger!, loglevel: .EnterExit, message: "didReceiveMemoryWarning")
     }
     
 
@@ -130,13 +128,13 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
     func exit(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exit")
+        appLog.log(logger!, loglevel: .EnterExit, message: "exit")
         
         performSegueWithIdentifier("Exit", sender: self)
     }
 
     func switchOngoingFinished(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.signInOut")
+        appLog.log(logger!, loglevel: .EnterExit, message: "switchOngoingFinished")
 
         if let w = session?.getLastWork() {
             if w.isOngoing() {
@@ -151,7 +149,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func addWork(sender: UIButton) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.addWork")
+        appLog.log(logger!, loglevel: .EnterExit, message: "addWork")
+
         if let moc = managedObjectContext,
                  s = session {
             let now = NSDate()
@@ -202,8 +201,10 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             selectedWork = w
             selectedWorkIndex = indexPath.row
             
-            TextViewLogger.log(statusView!,
-                message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
+            appLog.log(logger!, loglevel: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
+
+//            TextViewLogger.log(statusView!,
+//                message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
 
             performSegueWithIdentifier("EditWork", sender: self)
         }
@@ -248,7 +249,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) WorkListVC.prepareForSegue(\(segue.identifier)"))
+        appLog.log(logger!, loglevel: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditWork" {
             if let s = session {
@@ -274,7 +275,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                     }
                 }
             }
-            TextViewLogger.log(statusView!, message: String("\n\(getString(NSDate())) segue input values: \(vc.minimumDate), \(vc.maximumDate)"))
+            appLog.log(logger!, loglevel: .Debug) { "segue input values: \(vc.minimumDate), \(vc.maximumDate)" }
         }
 
         if segue.identifier == "ExitVC" {
@@ -284,7 +285,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        TextViewLogger.log(statusView!, message: "\n\(getString(NSDate())) WorkListVC.exitEditWork")
+        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
@@ -330,7 +331,9 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
                 TimePoliceModelUtils.save(moc)
 
-                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
+                appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+
+//                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
             }
             
             workListTableView.reloadData()
