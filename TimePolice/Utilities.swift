@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 func getString(timeInterval: NSTimeInterval) -> String {
     let h = Int(timeInterval / 3600)
@@ -64,7 +65,7 @@ enum AppLogType {
 
 class AppLog: AppLoggerDelegate {
 
-	var logString: String!
+	var logString: String
 
     init() {
     	logString = String()
@@ -270,52 +271,58 @@ class ApplogLog: BasicLogger {
 
     override
 	func appendEntry(entry: String) {
-        appLogString += "\n\(entry)"
+        appLog.logString += "\n\(entry)"
         println()
         println("entry=\(entry)")
-        println("appLogString=\(appLogString)")
+        println("appLog.logString=\(appLog.logString)")
         println()
 	}
 
     override
 	func getContent() -> String {
-		return appLogString
+		return appLog.logString
 	}
 
     override
 	func reset() {
-        appLogString = ""
+        appLog.logString = ""
     }
+
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog        
+    }()
+
 
 }
 
 class MultiLog: BasicLogger {
 	var logger1: AppLogger?
 	var logger2: AppLogger?
-
-	var locator: String!
-
-	init(locator: String) {
-		self.locator = locator
-	}
+	var logger3: AppLogger?
 
 	override
 	func localize(sender: AppLoggerDelegate, message: String) {
 		logger1?.localize(sender, message: message)
 		logger2?.localize(sender, message: message)
+		logger3?.localize(sender, message: message)
 	}
 
     override
 	func appendEntry(entry: String) {
         logger1?.appendEntry(entry)
         logger2?.appendEntry(entry)
+        logger3?.appendEntry(entry)
 	}
 
     override
 	func reset() {
         logger1?.reset()
         logger2?.reset()
+        logger3?.reset()
     }
 
 }
+
+
 

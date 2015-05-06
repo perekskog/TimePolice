@@ -157,7 +157,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     @IBAction func dumpApplog(sender: UIButton) {
-        let s = appLogString
+        let s = appLog.logString
         println(s)
         UIPasteboard.generalPasteboard().string = s
     }

@@ -104,15 +104,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
         
-        let logger1 = TextViewLog(textview: statusView!, locator: "XXXX1")
-        let logger2 = StringLog(locator: "XXXX2")
-        let logger3 = ApplogLog(locator: "XXXX3")
+        let logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC1")
+        let logger2 = StringLog(locator: "WorkListVC2")
+        let logger3 = ApplogLog(locator: "WorkListVC3")
 
-        logger = MultiLog(locator: "XXXX")
+        logger = MultiLog()
         (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger2 = logger3
-
-        logger = logger3
+        (logger as! MultiLog).logger1 = logger2
+        (logger as! MultiLog).logger3 = logger3
 
         appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
     }
