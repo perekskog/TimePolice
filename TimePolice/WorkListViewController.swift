@@ -110,7 +110,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
         logger = MultiLog()
         (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger1 = logger2
+        (logger as! MultiLog).logger2 = logger2
         (logger as! MultiLog).logger3 = logger3
 
         appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
@@ -203,9 +203,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             appLog.log(logger!, loglevel: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
-//            TextViewLogger.log(statusView!,
-//                message: String("\n\(getString(NSDate())) WorkListVC.selected(row=\(indexPath.row), work=\(w.task.name))"))
-
             performSegueWithIdentifier("EditWork", sender: self)
         }
     }
@@ -253,7 +250,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
         if segue.identifier == "EditWork" {
             if let s = session {
-                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+                appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
 
             let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
@@ -290,10 +287,12 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
         if unwindSegue.identifier == "CancelEditWork" {
+            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
             // Do nothing
         }
 
         if unwindSegue.identifier == "OkEditWork" {
+            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
 
             if let moc = managedObjectContext,
                      s = session,
@@ -301,39 +300,37 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
-                    TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
+                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork selected task=\(t.name)")
                     if let w = session?.getWork(i) {
                         w.task = t
                     }
                 } else {
-                    TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
+                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork no task selected")
                 }
                 
                 if let initialDate = vc.initialDate {
-                    TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
-                    TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, loglevel: .Debug, message: "\nSelected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, loglevel: .Debug, message: "\nSelected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
+                        appLog.log(logger!, loglevel: .Debug, message: "\nSelected time = initial time, don't set starttime")
                     }
                 }
 
                 TimePoliceModelUtils.save(moc)
 
                 appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-
-//                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
             }
             
             workListTableView.reloadData()
@@ -341,6 +338,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
         if unwindSegue.identifier == "OkEditWork" {
+            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
 
             if let moc = managedObjectContext,
                  i = selectedWorkIndex
@@ -365,7 +363,5 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
 
     }
-
-
 
 }

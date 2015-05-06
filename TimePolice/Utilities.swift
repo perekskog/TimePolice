@@ -55,8 +55,6 @@ class TextViewLogger {
 
 
 
-var appLogString = String()
-
 enum AppLogType {
 	case EnterExit
 	case CoreData
