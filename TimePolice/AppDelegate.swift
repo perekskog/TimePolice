@@ -99,6 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     lazy var appLog: AppLog = {
         var appLog = AppLog()
+        println("Created an applog")
         return appLog
     }()
 

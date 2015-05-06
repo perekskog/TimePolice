@@ -105,13 +105,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(addButton)
         
         let logger1 = TextViewLog(textview: statusView!, locator: "XXXX1")
-        let logger2 = StringLog(logstring: appLog.logString, locator: "XXXX2")
+        let logger2 = StringLog(locator: "XXXX2")
+        let logger3 = ApplogLog(locator: "XXXX3")
 
         logger = MultiLog(locator: "XXXX")
         (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger2 = logger2
+        (logger as! MultiLog).logger2 = logger3
 
-        logger = logger2
+        logger = logger3
 
         appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
     }

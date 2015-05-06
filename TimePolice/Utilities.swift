@@ -54,7 +54,7 @@ class TextViewLogger {
 
 
 
-
+var appLogString = String()
 
 enum AppLogType {
 	case EnterExit
@@ -220,9 +220,9 @@ class StringLog: BasicLogger {
 	var logstring: String!
 	var locator: String!
 
-	init(logstring: String, locator: String)
+	init(locator: String)
 	{
-		self.logstring = logstring
+		self.logstring = String()
 		self.locator = locator
 	}
 
@@ -235,6 +235,10 @@ class StringLog: BasicLogger {
     override
 	func appendEntry(entry: String) {
         logstring! += "\n\(entry)"
+        println()
+        println("entry=\(entry)")
+        println("logstring=\(logstring)")
+        println()
 	}
 
     override
@@ -245,6 +249,42 @@ class StringLog: BasicLogger {
     override
 	func reset() {
         logstring = ""
+    }
+
+}
+
+class ApplogLog: BasicLogger {
+
+	var locator: String!
+
+	init(locator: String)
+	{
+		self.locator = locator
+	}
+
+    override
+	func localize(sender: AppLoggerDelegate, message: String) {
+		let entry = "\(locator): \(message)"
+		sender.entryLocalized(self, localizedEntry: entry)
+	}
+
+    override
+	func appendEntry(entry: String) {
+        appLogString += "\n\(entry)"
+        println()
+        println("entry=\(entry)")
+        println("appLogString=\(appLogString)")
+        println()
+	}
+
+    override
+	func getContent() -> String {
+		return appLogString
+	}
+
+    override
+	func reset() {
+        appLogString = ""
     }
 
 }
