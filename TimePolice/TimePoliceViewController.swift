@@ -18,8 +18,14 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     var sessions: [Session]?
     var selectedSession: Session?
 
+    var logger: AppLogger?
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        logger = ApplogLog(locator: "TimePoliceVC")
+        
+        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
         
         var viewFrame = self.view.frame
         viewFrame.origin.y += 120
@@ -37,10 +43,13 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        appLog.log(logger!, loglevel: .EnterExit, message: "didReceiveMemoryWarning")
         // Dispose of any resources that can be recreated.
     }
 
     func getSessions() -> [Session] {
+        appLog.log(logger!, loglevel: .EnterExit, message: "getSessions")
+
         let fetchRequest = NSFetchRequest(entityName: "Session")
         if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
             var nonTemplateSessions: [Session] = []
@@ -55,6 +64,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func defaultVCChanged(sender: UISegmentedControl) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "defaultVCChanged")
+
         switch sender.selectedSegmentIndex {
         case 0:
             println("TaskSwitcher")
@@ -71,6 +82,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     //---------------------------------------------
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "prepareForSegue")
+
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as! TaskPickerViewController
             vc.session = selectedSession
@@ -84,7 +97,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
-        println("\nTimePoliceVC - exit")
+        appLog.log(logger!, loglevel: .EnterExit, message: "exitVC")
+
         logTableView.reloadData()
     }
 
@@ -94,6 +108,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     //----------------------------------------
     
     @IBAction func loadDataHome(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "loadDataHome")
+
         if let moc = self.managedObjectContext {
             TestData.addSessionToHome(moc)
             TimePoliceModelUtils.save(moc)
@@ -109,6 +125,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func loadDataWork(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "loadDataWork")
+
         if let moc = self.managedObjectContext {
             TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
@@ -119,6 +137,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func loadDataDaytime(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "loadDataDaytime")
+
         if let moc = self.managedObjectContext {
             TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
@@ -129,6 +149,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func loadDataTest(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "loadDataTest")
+
         if let moc = self.managedObjectContext {
             TestData.addSessionToTest(moc)
             TimePoliceModelUtils.save(moc)
@@ -139,6 +161,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func clearAllData(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "clearAllData")
+
         if let moc = self.managedObjectContext {
             TimePoliceModelUtils.clearAllData(moc)
             TimePoliceModelUtils.save(moc)
@@ -149,6 +173,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     @IBAction func dumpAllCoreData(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "dumpAllCoreData")
+
         if let moc = self.managedObjectContext {
             let s = TimePoliceModelUtils.dumpAllData(moc)
             println(s)
@@ -157,6 +183,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     @IBAction func dumpApplog(sender: UIButton) {
+        appLog.log(logger!, loglevel: .EnterExit, message: "dumpApplog")
+
         let s = appLog.logString
         println(s)
         UIPasteboard.generalPasteboard().string = s
@@ -239,7 +267,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
     lazy var appLog : AppLog = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog        
+        return appDelegate.appLog
     }()
 
 }

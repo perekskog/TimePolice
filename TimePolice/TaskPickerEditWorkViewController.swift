@@ -24,9 +24,15 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
     // Output values
     var taskToUse: Task?
     var initialDate: NSDate?
+    
+    var logger: AppLogger?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        logger = ApplogLog(locator: "EditWorkVC")
+        
+        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
 
         // Do any additional setup after loading the view.
 
@@ -49,10 +55,13 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
         if let d = initialDate {
             datePicker.date = d
         }
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
+
         // Dispose of any resources that can be recreated.
     }
 
@@ -79,5 +88,14 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
             taskToUse = task
         }
     }
+    
+    //--------------------------------------------------
+    // TaskPickerViewController - AppDelegate lazy properties
+    //--------------------------------------------------
+    
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+        }()
 
 }

@@ -234,10 +234,6 @@ class StringLog: BasicLogger {
     override
 	func appendEntry(entry: String) {
         logstring! += "\n\(entry)"
-        println()
-        println("entry=\(entry)")
-        println("logstring=\(logstring)")
-        println()
 	}
 
     override
@@ -270,10 +266,6 @@ class ApplogLog: BasicLogger {
     override
 	func appendEntry(entry: String) {
         appLog.logString += "\n\(entry)"
-        println()
-        println("entry=\(entry)")
-        println("appLog.logString=\(appLog.logString)")
-        println()
 	}
 
     override
