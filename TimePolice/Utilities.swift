@@ -43,16 +43,6 @@ func getStringNoDate(date: NSDate) -> String {
 }
 
 
-class TextViewLogger {
-	class func log(statusView: UITextView, message: String) {
-		statusView.text! += "\n\(message)"
-        let numberOfElements = count(statusView.text)
-        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-        statusView.scrollRangeToVisible(range)
-	    UIPasteboard.generalPasteboard().string = statusView.text
-	}
-}
-
 
 
 enum AppLogType {

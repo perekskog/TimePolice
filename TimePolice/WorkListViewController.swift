@@ -42,17 +42,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        let logger2 = StringLog(locator: "WorkListVC")
-        let logger3 = ApplogLog(locator: "WorkListVC")
-
-        logger = MultiLog()
-        (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger2 = logger2
-        (logger as! MultiLog).logger3 = logger3
-
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
-
         var sessionLabelRect = self.view.frame
         sessionLabelRect.origin.x = 5
         sessionLabelRect.origin.y = 20
@@ -115,6 +104,16 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
         
+        let logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
+        let logger2 = StringLog(locator: "WorkListVC")
+        let logger3 = ApplogLog(locator: "WorkListVC")
+        
+        logger = MultiLog()
+        (logger as! MultiLog).logger1 = logger1
+        (logger as! MultiLog).logger2 = logger2
+        (logger as! MultiLog).logger3 = logger3
+        
+        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
     }
 
     override func didReceiveMemoryWarning() {

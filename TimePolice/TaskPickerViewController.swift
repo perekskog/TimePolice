@@ -143,7 +143,7 @@ class TaskPickerViewController: UIViewController
 
         if segue.identifier == "EditWork" {
             if let s = session {
-                TextViewLogger.log(statusView!, message: TimePoliceModelUtils.getSessionWork(s))
+                appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
             }
 
             let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
@@ -186,37 +186,37 @@ class TaskPickerViewController: UIViewController
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
-                    TextViewLogger.log(statusView!, message: "\nEditWork selected task=\(t.name)")
+                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork selected task=\(t.name)")
                     if let w = session?.getLastWork() {
                         w.task = t
                     }
                 } else {
-                    TextViewLogger.log(statusView!, message: "\nEditWork no task selected")
+                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork no task selected")
                 }
                 
                 if let initialDate = vc.initialDate {
-                    TextViewLogger.log(statusView!, message: "\nEditWork initial date=\(getString(initialDate))")
-                    TextViewLogger.log(statusView!, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, loglevel: .EnterExit, message: "Selected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                TextViewLogger.log(statusView!, message: "\nSelected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, loglevel: .EnterExit, message: "Selected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        TextViewLogger.log(statusView!, message: "\nSelected time = initial time, don't set starttime")
+                        appLog.log(logger!, loglevel: .EnterExit, message: "Selected time = initial time, don't set starttime")
                     }
                 }
 
                 TimePoliceModelUtils.save(moc)
 
-                TextViewLogger.log(statusView!, message: "\n" + TimePoliceModelUtils.getSessionWork(s))
+                appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
             }
             
             tp?.redraw()
@@ -484,7 +484,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
 
-        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
+        appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
     }
 
 
@@ -512,7 +512,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
 
-        TextViewLogger.log(statusView, message: TimePoliceModelUtils.getSessionWork(session))
+        appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
     }
 
     // Long press on task, edit current work
@@ -530,13 +530,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
             if work.isOngoing() && work.task != task {
-                TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) Work is ongoing, LongPress on inactive task"))
+                appLog.log(logger!, loglevel: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
                 return
             }
 
             vc.performSegueWithIdentifier("EditWork", sender: vc)
         } else {
-            TextViewLogger.log(statusView,  message: String("\n\(getString(NSDate())) No last work"))            
+            appLog.log(logger!, loglevel: .EnterExit, message: "No last work")
         }
 
     }
@@ -577,10 +577,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
                 TimePoliceModelUtils.save(moc)
             } else {
-                TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work ongoing"))
+                appLog.log(logger!, loglevel: .EnterExit, message: "no work ongoing")
             }
         } else {
-            TextViewLogger.log(statusView, message:String("\n\(getString(NSDate())) TaskPicker.taskSignOut - no work"))
+            appLog.log(logger!, loglevel: .EnterExit, message: "no work")
         }
     }
 
