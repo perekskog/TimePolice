@@ -68,11 +68,11 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
 
         switch sender.selectedSegmentIndex {
         case 0:
-            println("TaskSwitcher")
+            appLog.log(logger!, loglevel: .Debug, message: "TaskSwitcher")
         case 1:
-            println("WorkList")
+            appLog.log(logger!, loglevel: .Debug, message: "WorkList")
         default:
-            println("Some other value (\(sender.selectedSegmentIndex))")
+            appLog.log(logger!, loglevel: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
         }
     }
 
@@ -225,11 +225,13 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         }
         switch defaultVC.selectedSegmentIndex {
         case 0:
+            appLog.log(logger!, loglevel: .Debug, message: "performSegue TaskPicker")
             performSegueWithIdentifier("TaskPicker", sender: self)
         case 1:
+            appLog.log(logger!, loglevel: .Debug, message: "performSegue WorkList")
             performSegueWithIdentifier("WorkList", sender: self)
         default:
-            println("VC \(defaultVC.selectedSegmentIndex) is not implemented")
+            appLog.log(logger!, loglevel: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
         }
     }
     
@@ -241,7 +243,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let moc = self.managedObjectContext,
                session = sessions?[indexPath.row] {
-                println("Delete row \(indexPath.row)")
+                appLog.log(logger!, loglevel: .Debug, message: "Delete row \(indexPath.row)")
                 Session.deleteInMOC(moc, session: session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()

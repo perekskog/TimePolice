@@ -212,8 +212,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         let numberOfRows = workListTableView.numberOfRowsInSection(numberOfSections-1)
         
         if numberOfRows > 0 {
-            println(numberOfSections)
-            println(numberOfRows)
             let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
             workListTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
         }
@@ -282,17 +280,17 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork")
+        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
         if unwindSegue.identifier == "CancelEditWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
+            appLog.log(logger!, loglevel: .Debug, message: "Handle CancelEditWork... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
+            appLog.log(logger!, loglevel: .Debug, message: "Handle OkEditWork")
 
             if let moc = managedObjectContext,
                      s = session,
@@ -300,31 +298,31 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
-                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork selected task=\(t.name)")
+                    appLog.log(logger!, loglevel: .Debug, message: "EditWork selected task=\(t.name)")
                     if let w = session?.getWork(i) {
                         w.task = t
                     }
                 } else {
-                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork no task selected")
+                    appLog.log(logger!, loglevel: .Debug, message: "EditWork no task selected")
                 }
                 
                 if let initialDate = vc.initialDate {
-                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, loglevel: .Debug, message: "\nEditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, loglevel: .Debug, message: "EditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, loglevel: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                appLog.log(logger!, loglevel: .Debug, message: "\nSelected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, loglevel: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                appLog.log(logger!, loglevel: .Debug, message: "\nSelected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, loglevel: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        appLog.log(logger!, loglevel: .Debug, message: "\nSelected time = initial time, don't set starttime")
+                        appLog.log(logger!, loglevel: .Debug, message: "Selected time = initial time, don't set starttime")
                     }
                 }
 
@@ -337,26 +335,25 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
 
 
-        if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "CancelEditWork")
+        if unwindSegue.identifier == "DeleteWork" {
+            appLog.log(logger!, loglevel: .Debug, message: "Handle DeleteWork")
 
             if let moc = managedObjectContext,
-                 i = selectedWorkIndex
-                where unwindSegue.identifier == "DeleteWork" {
+                 i = selectedWorkIndex {
 
                 let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
                 switch fillEmptySpaceWith {
                     case 0: // Nothing, deleteWork
-                        println("Fill with nothing")
+                        appLog.log(logger!, loglevel: .Debug, message: "Fill with nothing")
                         session?.deleteWork(moc, workIndex: i)
                     case 1: // Previous item, deleteNextWorkAndAlignStop
-                        println("Fill with previous")
+                        appLog.log(logger!, loglevel: .Debug, message: "Fill with previous")
                         session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
                     case 2: // Next item, deletePreviousWorkAndAlignStart
-                        println("Fill with next")
+                        appLog.log(logger!, loglevel: .Debug, message: "Fill with next")
                         session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
                     default: // Not handled
-                        println("Not handled")
+                        appLog.log(logger!, loglevel: .Debug, message: "Not handled")
                 }
                 workListTableView.reloadData()
             }

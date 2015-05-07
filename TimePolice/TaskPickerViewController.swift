@@ -171,15 +171,17 @@ class TaskPickerViewController: UIViewController
     }
 
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork")
+        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
         if unwindSegue.identifier == "CancelEditWork" {
+            appLog.log(logger!, loglevel: .EnterExit, message: "Handle CancelEditWork... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "OkEditWork" {
+            appLog.log(logger!, loglevel: .EnterExit, message: "Handle OkEditWork")
 
             if let moc = managedObjectContext,
                      s = session {
@@ -221,6 +223,13 @@ class TaskPickerViewController: UIViewController
             
             tp?.redraw()
         }
+
+        if unwindSegue.identifier == "DeleteWork" {
+            appLog.log(logger!, loglevel: .Debug, message: "Handle DeleteWork... Do nothing... Yet!")
+
+            // Do nothing, yet
+        }
+
 
     }
 
