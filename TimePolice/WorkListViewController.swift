@@ -113,12 +113,12 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         (logger as! MultiLog).logger2 = logger2
         (logger as! MultiLog).logger3 = logger3
         
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
+        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger!, loglevel: .EnterExit, message: "didReceiveMemoryWarning")
+        appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
     }
     
 
@@ -128,13 +128,13 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
     func exit(sender: UIButton) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exit")
+        appLog.log(logger!, logtype: .EnterExit, message: "exit")
         
         performSegueWithIdentifier("Exit", sender: self)
     }
 
     func switchOngoingFinished(sender: UIButton) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "switchOngoingFinished")
+        appLog.log(logger!, logtype: .EnterExit, message: "switchOngoingFinished")
 
         if let w = session?.getLastWork() {
             if w.isOngoing() {
@@ -149,7 +149,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func addWork(sender: UIButton) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "addWork")
+        appLog.log(logger!, logtype: .EnterExit, message: "addWork")
 
         if let moc = managedObjectContext,
                  s = session {
@@ -201,7 +201,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             selectedWork = w
             selectedWorkIndex = indexPath.row
             
-            appLog.log(logger!, loglevel: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
+            appLog.log(logger!, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
             performSegueWithIdentifier("EditWork", sender: self)
         }
@@ -244,11 +244,11 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger!, loglevel: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
+        appLog.log(logger!, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditWork" {
             if let s = session {
-                appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
 
             let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
@@ -270,7 +270,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                     }
                 }
             }
-            appLog.log(logger!, loglevel: .Debug) { "segue input values: \(vc.minimumDate), \(vc.maximumDate)" }
+            appLog.log(logger!, logtype: .Debug) { "segue input values: \(vc.minimumDate), \(vc.maximumDate)" }
         }
 
         if segue.identifier == "ExitVC" {
@@ -280,17 +280,17 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
+        appLog.log(logger!, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
         if unwindSegue.identifier == "CancelEditWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "Handle CancelEditWork... Do nothing")
+            appLog.log(logger!, logtype: .Debug, message: "Handle CancelEditWork... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "Handle OkEditWork")
+            appLog.log(logger!, logtype: .Debug, message: "Handle OkEditWork")
 
             if let moc = managedObjectContext,
                      s = session,
@@ -298,37 +298,37 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
-                    appLog.log(logger!, loglevel: .Debug, message: "EditWork selected task=\(t.name)")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected task=\(t.name)")
                     if let w = session?.getWork(i) {
                         w.task = t
                     }
                 } else {
-                    appLog.log(logger!, loglevel: .Debug, message: "EditWork no task selected")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork no task selected")
                 }
                 
                 if let initialDate = vc.initialDate {
-                    appLog.log(logger!, loglevel: .Debug, message: "EditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, loglevel: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                appLog.log(logger!, loglevel: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                appLog.log(logger!, loglevel: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        appLog.log(logger!, loglevel: .Debug, message: "Selected time = initial time, don't set starttime")
+                        appLog.log(logger!, logtype: .Debug, message: "Selected time = initial time, don't set starttime")
                     }
                 }
 
                 TimePoliceModelUtils.save(moc)
 
-                appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
             
             workListTableView.reloadData()
@@ -336,7 +336,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
 
 
         if unwindSegue.identifier == "DeleteWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "Handle DeleteWork")
+            appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
             if let moc = managedObjectContext,
                  i = selectedWorkIndex {
@@ -344,16 +344,16 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
                 switch fillEmptySpaceWith {
                     case 0: // Nothing, deleteWork
-                        appLog.log(logger!, loglevel: .Debug, message: "Fill with nothing")
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
                         session?.deleteWork(moc, workIndex: i)
                     case 1: // Previous item, deleteNextWorkAndAlignStop
-                        appLog.log(logger!, loglevel: .Debug, message: "Fill with previous")
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
                         session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
                     case 2: // Next item, deletePreviousWorkAndAlignStart
-                        appLog.log(logger!, loglevel: .Debug, message: "Fill with next")
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with next")
                         session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
                     default: // Not handled
-                        appLog.log(logger!, loglevel: .Debug, message: "Not handled")
+                        appLog.log(logger!, logtype: .Debug, message: "Not handled")
                 }
                 workListTableView.reloadData()
             }

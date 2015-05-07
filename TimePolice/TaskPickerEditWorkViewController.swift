@@ -32,7 +32,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
 
         logger = ApplogLog(locator: "EditWorkVC")
         
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
+        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
 
         // Do any additional setup after loading the view.
 
@@ -60,7 +60,7 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
+        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
 
         // Dispose of any resources that can be recreated.
     }

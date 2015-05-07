@@ -59,16 +59,16 @@ class AppLog: AppLoggerDelegate {
     	logString = String()
 	}
 
-	func log(logger: AppLogger, loglevel: AppLogType, message: String) {
-		if excludeEntry(logger.getId(), loglevel: loglevel) {
+	func log(logger: AppLogger, logtype: AppLogType, message: String) {
+		if excludeEntry(logger.getId(), logtype: logtype) {
 			return
 		}
 
 		doLog(logger, message: message)
 	}
 
-	func log(logger: AppLogger, loglevel: AppLogType, message: () -> String) {
-		if excludeEntry(logger.getId(), loglevel: loglevel) {
+	func log(logger: AppLogger, logtype: AppLogType, message: () -> String) {
+		if excludeEntry(logger.getId(), logtype: logtype) {
 			return
 		}
 
@@ -94,11 +94,11 @@ class AppLog: AppLoggerDelegate {
 	}
 
 
-	func excludeEntry(loggerId: String, loglevel: AppLogType) -> Bool {
-		return !includeEntry(loggerId, loglevel: loglevel)
+	func excludeEntry(loggerId: String, logtype: AppLogType) -> Bool {
+		return !includeEntry(loggerId, logtype: logtype)
 	}
 
-	func includeEntry(loggerId: String, loglevel: AppLogType) -> Bool {
+	func includeEntry(loggerId: String, logtype: AppLogType) -> Bool {
 		return true
 	}
 
@@ -117,8 +117,8 @@ let s1 = "god"
 log("pre") { "hej \(s1) hopp" }
 
 Examples:
-        appLog.log(logger!, loglevel: .Debug, message: "viewDidLoad")
-        appLog.log(logger!, loglevel: .Debug) { "viewDidLoad2" }
+        appLog.log(logger!, logtype: .Debug, message: "viewDidLoad")
+        appLog.log(logger!, logtype: .Debug) { "viewDidLoad2" }
 
 
 */

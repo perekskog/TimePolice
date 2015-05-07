@@ -92,7 +92,7 @@ class TaskPickerViewController: UIViewController
         (logger as! MultiLog).logger2 = logger2
         (logger as! MultiLog).logger3 = logger3
 
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewDidLoad")
+        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
         
         if let s = session {
             if let moc = self.managedObjectContext {
@@ -101,19 +101,19 @@ class TaskPickerViewController: UIViewController
                     session: s, moc: moc, appLog: appLog)
             
                 tp?.setup()
-                appLog.log(logger!, loglevel: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
         }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger!, loglevel: .EnterExit, message: "didReceiveMemoryWarning")
+        appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger!, loglevel: .EnterExit, message: "viewWillAppear")
+        appLog.log(logger!, logtype: .EnterExit, message: "viewWillAppear")
         var nav = self.navigationController?.navigationBar
         nav?.barStyle = UIBarStyle.Black
         nav?.tintColor = UIColor.whiteColor()
@@ -126,7 +126,7 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
 
     func exit(sender: UIButton) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exit")
+        appLog.log(logger!, logtype: .EnterExit, message: "exit")
 
         tp?.updateActiveActivityTimer?.invalidate()
         performSegueWithIdentifier("Exit", sender: self)
@@ -139,11 +139,11 @@ class TaskPickerViewController: UIViewController
     //---------------------------------------------
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "prepareForSegue")
+        appLog.log(logger!, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "EditWork" {
             if let s = session {
-                appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
             }
 
             let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
@@ -171,61 +171,61 @@ class TaskPickerViewController: UIViewController
     }
 
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
+        appLog.log(logger!, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
 
         if unwindSegue.identifier == "CancelEditWork" {
-            appLog.log(logger!, loglevel: .EnterExit, message: "Handle CancelEditWork... Do nothing")
+            appLog.log(logger!, logtype: .EnterExit, message: "Handle CancelEditWork... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger!, loglevel: .EnterExit, message: "Handle OkEditWork")
+            appLog.log(logger!, logtype: .EnterExit, message: "Handle OkEditWork")
 
             if let moc = managedObjectContext,
                      s = session {
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
-                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork selected task=\(t.name)")
+                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork selected task=\(t.name)")
                     if let w = session?.getLastWork() {
                         w.task = t
                     }
                 } else {
-                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork no task selected")
+                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork no task selected")
                 }
                 
                 if let initialDate = vc.initialDate {
-                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, loglevel: .EnterExit, message: "EditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                appLog.log(logger!, loglevel: .EnterExit, message: "Selected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, logtype: .EnterExit, message: "Selected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                appLog.log(logger!, loglevel: .EnterExit, message: "Selected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, logtype: .EnterExit, message: "Selected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        appLog.log(logger!, loglevel: .EnterExit, message: "Selected time = initial time, don't set starttime")
+                        appLog.log(logger!, logtype: .EnterExit, message: "Selected time = initial time, don't set starttime")
                     }
                 }
 
                 TimePoliceModelUtils.save(moc)
 
-                appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
             }
             
             tp?.redraw()
         }
 
         if unwindSegue.identifier == "DeleteWork" {
-            appLog.log(logger!, loglevel: .Debug, message: "Handle DeleteWork... Do nothing... Yet!")
+            appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork... Do nothing... Yet!")
 
             // Do nothing, yet
         }
@@ -306,7 +306,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         (logger as! MultiLog).logger2 = logger2
         (logger as! MultiLog).logger3 = logger3
 
-        appLog.log(logger!, loglevel: .EnterExit, message: "init")
+        appLog.log(logger!, logtype: .EnterExit, message: "init")
 
         self.session = session
 
@@ -339,7 +339,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     //--------------------------------------------------
 
 	func setup() {
-        appLog.log(logger!, loglevel: .EnterExit, message: "setup")
+        appLog.log(logger!, logtype: .EnterExit, message: "setup")
 
 		backgroundView.theme = theme
         let taskList = session.tasks.array as! [Task]
@@ -418,7 +418,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     //------------------------------------
 
     func redraw() {
-        appLog.log(logger!, loglevel: .EnterExit, message: "redraw")
+        appLog.log(logger!, logtype: .EnterExit, message: "redraw")
 
         sessionSummary = session.getSessionSummary(moc)
 
@@ -462,14 +462,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Tap on settings    
 
     func handleTapSettings(sender: UITapGestureRecognizer) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "handleTapSettings")
+        appLog.log(logger!, logtype: .EnterExit, message: "handleTapSettings")
     }
 
 
     // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "handleTapSigninSignout")
+        appLog.log(logger!, logtype: .EnterExit, message: "handleTapSigninSignout")
 
         let taskList = session.tasks.array as! [Task]
         
@@ -493,14 +493,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
 
-        appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
+        appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
     }
 
 
     // Tap on new task, call taskSignIn/taskSignOut and update views
 
     func handleTap(sender: UITapGestureRecognizer) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "handleTap")
+        appLog.log(logger!, logtype: .EnterExit, message: "handleTap")
 
         let taskList = session.tasks.array as! [Task]
         
@@ -521,13 +521,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
 
-        appLog.log(logger!, loglevel: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
+        appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
     }
 
     // Long press on task, edit current work
 
     func handleLongPress(sender: UILongPressGestureRecognizer) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "handleLongPress")
+        appLog.log(logger!, logtype: .EnterExit, message: "handleLongPress")
 
         if sender.state != UIGestureRecognizerState.Began {
             return
@@ -539,13 +539,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
             if work.isOngoing() && work.task != task {
-                appLog.log(logger!, loglevel: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
+                appLog.log(logger!, logtype: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
                 return
             }
 
             vc.performSegueWithIdentifier("EditWork", sender: vc)
         } else {
-            appLog.log(logger!, loglevel: .EnterExit, message: "No last work")
+            appLog.log(logger!, logtype: .EnterExit, message: "No last work")
         }
 
     }
@@ -558,7 +558,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork when sign in to a task
 
     func taskSignIn(task: Task) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "taskSignIn")
+        appLog.log(logger!, logtype: .EnterExit, message: "taskSignIn")
 
         let w = Work.createInMOC(self.moc, name: "", session: session, task: task)
 
@@ -568,7 +568,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
 
     func taskSignOut(task: Task) {
-        appLog.log(logger!, loglevel: .EnterExit, message: "taskSignOut")
+        appLog.log(logger!, logtype: .EnterExit, message: "taskSignOut")
 
         //if let work = currentWork {
         if let work = session.getLastWork() {
@@ -586,10 +586,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
                 TimePoliceModelUtils.save(moc)
             } else {
-                appLog.log(logger!, loglevel: .EnterExit, message: "no work ongoing")
+                appLog.log(logger!, logtype: .EnterExit, message: "no work ongoing")
             }
         } else {
-            appLog.log(logger!, loglevel: .EnterExit, message: "no work")
+            appLog.log(logger!, logtype: .EnterExit, message: "no work")
         }
     }
 
@@ -622,7 +622,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// SelectionAreaInfoDelegate
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-//        appLog.log(logger!, loglevel: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
+//        appLog.log(logger!, logtype: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
 
         let taskList = session.tasks.array as! [Task]
         let task = taskList[selectionArea]
@@ -656,7 +656,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// ToolbarInfoDelegate
 
     func getToolbarInfo() -> ToolbarInfo {
-//        appLog.log(logger!, loglevel: .EnterExit, message: "getToolbarInfo")
+//        appLog.log(logger!, logtype: .EnterExit, message: "getToolbarInfo")
 
         var totalActivations: Int = 1 // The first task is active when first selected
         var totalTime: NSTimeInterval = 0
