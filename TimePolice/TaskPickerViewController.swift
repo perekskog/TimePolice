@@ -34,7 +34,7 @@ class TaskPickerViewController: UIViewController
     var sourceController: TimePoliceViewController?
     var tp: TaskPicker?
     
-    var statusView: UITextView?
+//    var statusView: UITextView?
 
     var logger: AppLogger?
 
@@ -47,6 +47,17 @@ class TaskPickerViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        let logger1 = TextViewLog(textview: statusView!, locator: "TaskPickerVC")
+        let logger2 = StringLog(locator: "TaskPickerVC")
+        let logger3 = ApplogLog(locator: "TaskPickerVC")
+
+        logger = MultiLog()
+//        (logger as! MultiLog).logger1 = logger1
+        (logger as! MultiLog).logger2 = logger2
+        (logger as! MultiLog).logger3 = logger3
+
+        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
+
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
@@ -62,6 +73,7 @@ class TaskPickerViewController: UIViewController
         let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
         self.view.addSubview(taskPickerBackgroundView)
 
+/*
         var statusRect = self.view.bounds
         statusRect.origin.x = 5
         statusRect.origin.y = statusRect.size.height-110
@@ -73,7 +85,8 @@ class TaskPickerViewController: UIViewController
         statusView!.font = UIFont.systemFontOfSize(8)
         statusView!.editable = false
         self.view.addSubview(statusView!)
-        
+*/
+
         let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = exitRect
@@ -82,21 +95,10 @@ class TaskPickerViewController: UIViewController
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
-
-        let logger1 = TextViewLog(textview: statusView!, locator: "TaskPickerVC")
-        let logger2 = StringLog(locator: "TaskPickerVC")
-        let logger3 = ApplogLog(locator: "TaskPickerVC")
-
-        logger = MultiLog()
-        (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger2 = logger2
-        (logger as! MultiLog).logger3 = logger3
-
-        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
         
         if let s = session {
             if let moc = self.managedObjectContext {
-                tp = TaskPicker(vc: self, statusView: statusView!, backgroundView: taskPickerBackgroundView,
+                tp = TaskPicker(vc: self, backgroundView: taskPickerBackgroundView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc, appLog: appLog)
             
@@ -271,7 +273,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 	// Views, set at creation time
     var vc: TaskPickerViewController!
-    var statusView: UITextView!
+//    var statusView: UITextView!
     var backgroundView:TaskPickerBackgroundView!
 
     // Preferences, set at creation time
@@ -290,19 +292,19 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var appLog: AppLog!
     var logger: AppLogger?
 	
-    init(vc: TaskPickerViewController, statusView: UITextView, backgroundView:TaskPickerBackgroundView,
+    init(vc: TaskPickerViewController, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext, appLog: AppLog) {
 
         self.appLog = appLog
 
-        let logger1 = TextViewLog(textview: statusView, locator: "TaskPicker")
+//        let logger1 = TextViewLog(textview: statusView, locator: "TaskPicker")
         let logger2 = StringLog(locator: "TaskPicker")
         let logger3 = ApplogLog(locator: "TaskPicker")
 
         self.logger = MultiLog()
-        (logger as! MultiLog).logger1 = logger1
+//        (logger as! MultiLog).logger1 = logger1
         (logger as! MultiLog).logger2 = logger2
         (logger as! MultiLog).logger3 = logger3
 
@@ -311,7 +313,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         self.session = session
 
         self.vc = vc
-        self.statusView = statusView
+//        self.statusView = statusView
         self.backgroundView = backgroundView
 
 		self.layout = layout
