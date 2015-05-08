@@ -38,6 +38,10 @@ class TaskPickerViewController: UIViewController
 
     var logger: AppLogger?
 
+    var selectedWork: Work?
+    var selectedWorkIndex: Int?
+
+
 
     //---------------------------------------------
     // TaskPickerViewController - View lifecycle
@@ -152,15 +156,18 @@ class TaskPickerViewController: UIViewController
             
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+                // Never set any time into the future
                 vc.maximumDate = NSDate()
-                if let wl = s.work.array as? [Work] {
-                    if wl.count >= 1 {
-                        // At least one item: Set as item to edit.
-                        vc.work = wl[wl.count-1]
+                if let wl = s.work.array as? [Work],
+                        i = selectedWorkIndex {
+                    vc.work = wl[i]
+                    if i > 0 {
+                        // Limit to starttime of previous item, if any
+                        vc.minimumDate = wl[i-1].startTime
                     }
-                    if wl.count >= 2 {
-                        // If at least two items: Limit how far back in time the datepicker can go.
-                        vc.minimumDate = wl[wl.count-2].startTime
+                    if i < wl.count-1 {
+                        // Limit to stoptime of next item, if any
+                        vc.maximumDate = wl[i+1].stopTime
                     }
                 }
             }
@@ -186,12 +193,13 @@ class TaskPickerViewController: UIViewController
             appLog.log(logger!, logtype: .EnterExit, message: "Handle OkEditWork")
 
             if let moc = managedObjectContext,
-                     s = session {
+                     s = session,
+                     i = selectedWorkIndex {
 
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
                     appLog.log(logger!, logtype: .EnterExit, message: "EditWork selected task=\(t.name)")
-                    if let w = session?.getLastWork() {
+                    if let w = session?.getWork(i) {
                         w.task = t
                     }
                 } else {
@@ -199,22 +207,22 @@ class TaskPickerViewController: UIViewController
                 }
                 
                 if let initialDate = vc.initialDate {
-                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, logtype: .EnterExit, message: "EditWork selected date=\(getString(vc.datePicker.date))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
 
                     if initialDate != vc.datePicker.date {
                         // The initial time was changed
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
-                                appLog.log(logger!, logtype: .EnterExit, message: "Selected time != initial time, work is ongoing, setting starttime")
+                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
                                 s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
                             } else {
-                                appLog.log(logger!, logtype: .EnterExit, message: "Selected time != initial time, work is not ongoing, setting stoptime")
+                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
                     } else {
-                        appLog.log(logger!, logtype: .EnterExit, message: "Selected time = initial time, don't set starttime")
+                        appLog.log(logger!, logtype: .Debug, message: "Selected time = initial time, don't set starttime")
                     }
                 }
 
@@ -227,11 +235,29 @@ class TaskPickerViewController: UIViewController
         }
 
         if unwindSegue.identifier == "DeleteWork" {
-            appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork... Do nothing... Yet!")
+            appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
-            // Do nothing, yet
+            if let moc = managedObjectContext,
+                 i = selectedWorkIndex {
+
+                let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
+                switch fillEmptySpaceWith {
+                    case 0: // Nothing, deleteWork
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
+                        session?.deleteWork(moc, workIndex: i)
+                    case 1: // Previous item, deleteNextWorkAndAlignStop
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
+                        session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                    case 2: // Next item, deletePreviousWorkAndAlignStart
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with next")
+                        session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                    default: // Not handled
+                        appLog.log(logger!, logtype: .Debug, message: "Not handled")
+                }
+                tp?.redraw()
+            }
+
         }
-
 
     }
 
@@ -544,6 +570,9 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 appLog.log(logger!, logtype: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
                 return
             }
+
+            vc.selectedWork = work
+            vc.selectedWorkIndex = session.work.count-1
 
             vc.performSegueWithIdentifier("EditWork", sender: vc)
         } else {
