@@ -12,6 +12,7 @@ import CoreData
 class TimePoliceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var defaultVC: UISegmentedControl!
+    @IBOutlet var appLogSize: UILabel!
     
     var logTableView = UITableView(frame: CGRectZero, style: .Plain)
 
@@ -28,8 +29,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
         
         var viewFrame = self.view.frame
-        viewFrame.origin.y += 120
-        viewFrame.size.height -= 120
+        viewFrame.origin.y += 200
+        viewFrame.size.height -= 200
         logTableView.frame = viewFrame
         self.view.addSubview(logTableView)
         
@@ -39,6 +40,8 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         self.sessions = getSessions()
         
         defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
+
+        appLogSize.text = "\(count(appLog.logString))"
     }
 
     override func didReceiveMemoryWarning() {
@@ -99,6 +102,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger!, logtype: .EnterExit, message: "exitVC")
 
+        appLogSize.text = "\(count(appLog.logString))"
         logTableView.reloadData()
     }
 
@@ -160,7 +164,7 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    @IBAction func clearAllData(sender: UIButton) {
+    @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger!, logtype: .EnterExit, message: "clearAllData")
 
         if let moc = self.managedObjectContext {
@@ -172,7 +176,13 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
-    @IBAction func dumpAllCoreData(sender: UIButton) {
+    @IBAction func clearApplog(sender: UIButton) {
+        appLog.log(logger!, logtype: .EnterExit, message: "clearApplog")
+        appLog.logString = ""
+        appLogSize.text = "\(count(appLog.logString))"
+    }
+
+    @IBAction func dumpCoreData(sender: UIButton) {
         appLog.log(logger!, logtype: .EnterExit, message: "dumpAllCoreData")
 
         if let moc = self.managedObjectContext {
