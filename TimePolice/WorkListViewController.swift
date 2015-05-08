@@ -206,7 +206,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             appLog.log(logger!, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
-            performSegueWithIdentifier("EditWork", sender: self)
+            performSegueWithIdentifier("EditWorkScrollable", sender: self)
         }
     }
 
@@ -274,6 +274,10 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             }
             appLog.log(logger!, logtype: .Debug) { "segue input values: \(vc.minimumDate), \(vc.maximumDate)" }
+        }
+
+        if segue.identifier == "EditWorkScrollable" {
+            // Nothing to prepare
         }
 
         if segue.identifier == "ExitVC" {

@@ -34,8 +34,6 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
         
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
 
-        // Do any additional setup after loading the view.
-
         taskPickerTable.dataSource = self
         taskPickerTable.delegate = self
 
@@ -61,8 +59,6 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
-
-        // Dispose of any resources that can be recreated.
     }
 
     //-----------------------------------------
@@ -89,9 +85,9 @@ class TaskPickerEditWorkViewController: UIViewController, UITableViewDataSource,
         }
     }
     
-    //--------------------------------------------------
-    // TaskPickerViewController - AppDelegate lazy properties
-    //--------------------------------------------------
+    //----------------------------------------------------------------
+    // TaskPickerEditWorkViewController - AppDelegate lazy properties
+    //----------------------------------------------------------------
     
     lazy var appLog : AppLog = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
