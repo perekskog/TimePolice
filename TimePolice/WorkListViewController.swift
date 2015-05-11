@@ -206,6 +206,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             appLog.log(logger!, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
+//            performSegueWithIdentifier("EditWork", sender: self)
             performSegueWithIdentifier("EditWorkScrollable", sender: self)
         }
     }
