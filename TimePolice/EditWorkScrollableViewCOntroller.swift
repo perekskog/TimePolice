@@ -18,6 +18,8 @@ class EditWorkScrollableViewCOntroller: UIViewController {
         logger = ApplogLog(locator: "EditWorkScrollableVC")
         
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
+        
+        var lastView: UIView
 
         var scrollViewRect = self.view.frame
         scrollViewRect.origin.y += 10
@@ -37,9 +39,10 @@ class EditWorkScrollableViewCOntroller: UIViewController {
         exitButton2.setTitle("EXIT", forState: UIControlState.Normal)
 //        exitButton2.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         scrollView.addSubview(exitButton2)
+        lastView = exitButton2
 
         let datePicker = UIDatePicker()
-        addBelow(scrollView, reference: exitButton2, newView: datePicker)
+        addBelow(scrollView, reference: lastView, newView: datePicker)
         
         let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
