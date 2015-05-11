@@ -21,41 +21,71 @@ class EditWorkScrollableViewCOntroller: UIViewController {
         
         var lastView: UIView
 
+        let width = CGRectGetWidth(self.view.frame)
+
         var scrollViewRect = self.view.frame
         scrollViewRect.origin.y += 10
-        scrollViewRect.origin.x += 10
-        scrollViewRect.size.width -= 20
         scrollViewRect.size.height -= 150
         let scrollView = UIScrollView()
         scrollView.frame = scrollViewRect
-        scrollView.contentSize = CGSizeMake(scrollViewRect.size.width, 2000)
+        scrollView.contentSize = CGSizeMake(width, 2000)
         self.view.addSubview(scrollView)
 
-        let exitRect2 = CGRect(origin: CGPoint(x: 0, y: 20), size: CGSize(width:scrollViewRect.size.width, height:30))
+//        let exitRect2 = CGRect(origin: CGPoint(x: 0, y: 20), size: CGSize(width:scrollViewRect.size.width, height:30))
+        let exitRect2 = CGRectMake(0, 20, width, 30)
         let exitButton2 = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton2.frame = exitRect2
         exitButton2.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton2.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton2.setTitle("EXIT", forState: UIControlState.Normal)
-//        exitButton2.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         scrollView.addSubview(exitButton2)
         lastView = exitButton2
 
-        let datePicker = UIDatePicker()
-        addBelow(scrollView, reference: lastView, newView: datePicker)
+        // Title - change
+
+        let labelTitle = UILabel()
+        labelTitle.text = "Change workitem"
+        lastview = labelTitle
+
+        // Starttime
+
+        let labelStart = UILabel()
+        labelStart.text = "Start"
+        lastview = addViewCenteredBelow(scrollView, lastview: lastview, newView: labelStart)
+
+        let datepickerStart = UIDatePicker()
+        lastview = addViewCenteredBelow(scrollView, lastView: lastView, newView: datepickerStart)
         
-        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
-        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = exitRect
-        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(exitButton)
+        // Stoptime
+
+        let labelStop = UILabel()
+        labelStop.text = "Stop"
+        lastview = addViewCenteredBelow(scrollView, lastview: lastview, newView: labelStop)
+
+        let datepickerStart = UIDatePicker()
+        addViewBelow(scrollView, lastView: lastView, newView: datepickerStop)
+
+        // Task
+
+        let labelTask = UILabel()
+        labelTask.text = "New task"
+        lastview = addViewCenteredBelow(scrollView, lastview: lastview, newView: labelTask)
+
+        // A table
+
+
+
+        // Title - delete
+
+        let labelDelete = UILabel()
+        labelDelete.text = "Delete workitem"
+        lastview = addViewCenteredBelow(scrollView, lastview: lastview, newView: labelDelete)
+
     }
     
-    func addBelow(view: UIView, reference: UIView, newView: UIView) {
-        newView.frame.origin.y = reference.frame.origin.y + reference.frame.size.height
+    func addViewCenteredBelow(view: UIView, lastView: UIView, newView: UIView) {
+        newView.frame.origin.y = CGRectGetMaxY(reference.frame)
+        newView.center.x = CGRectGetWidth(view.frame)/2
         view.addSubview(newView)
     }
 
