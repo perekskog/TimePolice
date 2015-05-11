@@ -22,6 +22,7 @@
 		CB623C0E1A7ED728004AE917 /* TaskPickerTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0C1A7ED728004AE917 /* TaskPickerTheme.swift */; };
 		CB623C101A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */; };
 		CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */; };
+		CB867F501B0134AA00AA8C8A /* EditWorkScrollableViewCOntroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA1A47A1AFD02F7005403F7 /* EditWorkScrollableViewCOntroller.swift */; };
 		CBA1A47B1AFD02F7005403F7 /* EditWorkScrollableViewCOntroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA1A47A1AFD02F7005403F7 /* EditWorkScrollableViewCOntroller.swift */; };
 		CBCC3EE51AE61F3C0058AE6C /* WorkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* WorkListViewController.swift */; };
 		CBCC3EE61AE61F3C0058AE6C /* WorkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* WorkListViewController.swift */; };
@@ -298,6 +299,7 @@
 				CB0B0AEA1A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
 				CBCC3EE61AE61F3C0058AE6C /* WorkListViewController.swift in Sources */,
 				CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
+				CB867F501B0134AA00AA8C8A /* EditWorkScrollableViewCOntroller.swift in Sources */,
 				CB0F97021AAE2D5800E92C05 /* TaskPickerEditWorkViewController.swift in Sources */,
 				CB623C0E1A7ED728004AE917 /* TaskPickerTheme.swift in Sources */,
 				CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */,

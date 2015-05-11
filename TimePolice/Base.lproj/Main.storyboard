@@ -237,12 +237,6 @@
                                     <segue destination="iYZ-ST-Apd" kind="unwind" identifier="OkEditWork" unwindAction="exitEditWork:" id="dCt-zu-Gef"/>
                                 </connections>
                             </button>
-                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="VXw-Th-ONd">
-                                <rect key="frame" x="0.0" y="51" width="320" height="162"/>
-                                <date key="date" timeIntervalSinceReferenceDate="447623164.77497798">
-                                    <!--2015-03-09 19:46:04 +0000-->
-                                </date>
-                            </datePicker>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="24" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="358-pG-lgP">
                                 <rect key="frame" x="16" y="266" width="288" height="165"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -299,6 +293,12 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="VXw-Th-ONd">
+                                <rect key="frame" x="0.0" y="57" width="320" height="164"/>
+                                <date key="date" timeIntervalSinceReferenceDate="447623164.77497798">
+                                    <!--2015-03-09 19:46:04 +0000-->
+                                </date>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -328,7 +328,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="M0I-sT-UhI"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="CancelEditWork" unwindAction="exitEditWork:" id="Af4-DQ-And"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="OkEditWork" unwindAction="exitEditWork:" id="fTC-ee-ZR0"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteWork" unwindAction="exitEditWork:" id="nAc-LQ-DHj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yei-av-ysS" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -278,7 +278,10 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
 
         if segue.identifier == "EditWorkScrollable" {
-            // Nothing to prepare
+            let vc = segue.destinationViewController as! EditWorkScrollableViewCOntroller
+            if let s = session {
+                vc.taskList = s.tasks.array as? [Task]
+            }
         }
 
         if segue.identifier == "ExitVC" {
@@ -290,7 +293,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger!, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
-        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+        let vc = unwindSegue.sourceViewController as! EditWorkScrollableViewCOntroller
 
         if unwindSegue.identifier == "CancelEditWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle CancelEditWork... Do nothing")
@@ -300,6 +303,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         if unwindSegue.identifier == "OkEditWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle OkEditWork")
 
+/*
             if let moc = managedObjectContext,
                      s = session,
                      i = selectedWorkIndex {
@@ -340,12 +344,14 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             workListTableView.reloadData()
+*/
         }
 
 
         if unwindSegue.identifier == "DeleteWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
+/*
             if let moc = managedObjectContext,
                  i = selectedWorkIndex {
 
@@ -365,8 +371,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 workListTableView.reloadData()
             }
+*/
         }
-
     }
 
 }
