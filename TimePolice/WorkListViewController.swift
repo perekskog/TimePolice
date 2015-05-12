@@ -259,6 +259,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+
                 // Never set any time into the future
                 vc.maximumDate = NSDate()
                 if let wl = s.work.array as? [Work],
@@ -281,6 +282,27 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             let vc = segue.destinationViewController as! EditWorkVC
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
+
+                // Never set any time into the future
+                vc.maximumDate = NSDate()
+                if let wl = s.work.array as? [Work],
+                        i = selectedWorkIndex {
+                    vc.work = wl[i]
+                    if i > 0 {
+                        // Limit to starttime of previous item, if any
+                        vc.minimumDate = wl[i-1].startTime
+                    }
+                    if i < wl.count-1 {
+                        // Limit to stoptime of next item, if any
+                        vc.maximumDate = wl[i+1].stopTime
+                    }
+                    if vc.work.isOngoing() {
+                        vc.isOngoing = true
+                    } else {
+                        vc.isOngoing = false
+                    }
+                }
+
             }
         }
 
@@ -303,7 +325,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         if unwindSegue.identifier == "OkEditWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle OkEditWork")
 
-/*
             if let moc = managedObjectContext,
                      s = session,
                      i = selectedWorkIndex {
@@ -318,12 +339,17 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                     appLog.log(logger!, logtype: .Debug, message: "EditWork no task selected")
                 }
                 
-                if let initialDate = vc.initialDate {
-                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
+                if let initialDate = vc.initialStartDate,
+                        datepickerStart = vc.datepickerStart {
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected start date=\(getString(datepickerStart.date))")
 
-                    if initialDate != vc.datePicker.date {
-                        // The initial time was changed
+                    if initialDate != datepickerStart.date {
+                        // The initial starttime was changed
+                        appLog.log(logger!, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
+                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: datepickerStart.date)
+
+/*
                         if let w=s.getLastWork() {
                             if w.isOngoing() {
                                 appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
@@ -333,8 +359,23 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                                 s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
                             }
                         }
+*/
                     } else {
-                        appLog.log(logger!, logtype: .Debug, message: "Selected time = initial time, don't set starttime")
+                        appLog.log(logger!, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
+                    }
+                }
+
+                if let initialDate = vc.initialStopDate,
+                        datepickerStop = vc.datepickerStop {
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected stop date=\(getString(datepickerStop.date))")
+
+                    if initialDate != datepickerStop.date {
+                        // The initial stoptime was changed
+                        appLog.log(logger!, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
+                        s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: datepickerStop.date)
+                    } else {
+                        appLog.log(logger!, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
                     }
                 }
 
@@ -344,34 +385,33 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             workListTableView.reloadData()
-*/
         }
 
 
         if unwindSegue.identifier == "DeleteWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
-/*
             if let moc = managedObjectContext,
                  i = selectedWorkIndex {
 
-                let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
-                switch fillEmptySpaceWith {
-                    case 0: // Nothing, deleteWork
-                        appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
-                        session?.deleteWork(moc, workIndex: i)
-                    case 1: // Previous item, deleteNextWorkAndAlignStop
-                        appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
-                        session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-                    case 2: // Next item, deletePreviousWorkAndAlignStart
-                        appLog.log(logger!, logtype: .Debug, message: "Fill with next")
-                        session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                    default: // Not handled
-                        appLog.log(logger!, logtype: .Debug, message: "Not handled")
-                }
+                    if let fillEmptySpaceWith = vc.fillEmptySpaceWith?.selectedSegmentIndex {
+                        switch fillEmptySpaceWith {
+                        case 0: // Nothing, deleteWork
+                            appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
+                            session?.deleteWork(moc, workIndex: i)
+                        case 1: // Previous item, deleteNextWorkAndAlignStop
+                            appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
+                            session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                        case 2: // Next item, deletePreviousWorkAndAlignStart
+                            appLog.log(logger!, logtype: .Debug, message: "Fill with next")
+                            session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                        default: // Not handled
+                            appLog.log(logger!, logtype: .Debug, message: "Not handled")
+                        }
+                    }
                 workListTableView.reloadData()
             }
-*/
+
         }
     }
 

@@ -1,5 +1,5 @@
 //
-//  EditWorkScrollableViewCOntroller.swift
+//  EditWorkVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-05-08.
@@ -10,15 +10,21 @@ import UIKit
 
 class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
+    var datepickerStart: UIDatePicker?
+    var datepickerStop: UIDatePicker?
+    var fillEmptySpaceWith: UISegmentedControl?
+
     // Input values
-    var work: Work?
+    var work: Work!
     var minimumDate: NSDate?
     var maximumDate: NSDate?
     var taskList: [Task]?
+    var isOngoing: Bool?
 
     // Output values
     var taskToUse: Task?
-    var initialDate: NSDate?
+    var initialStartDate: NSDate?
+    var initialStopDate: NSDate?
     
     var logger: AppLogger?
 
@@ -30,7 +36,6 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
         
         var lastview: UIView
-        var viewrect: CGRect
 
         let width = CGRectGetWidth(self.view.frame)
         
@@ -68,26 +73,40 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         scrollView.addSubview(labelStart)
         lastview = labelStart
 
-        let datepickerStart = UIDatePicker()
-        datepickerStart.frame.origin = CGPoint(x: 0, y: CGRectGetMaxY(lastview.frame))
-        datepickerStart.frame.size.height = 162
-        scrollView.addSubview(datepickerStart)
-        lastview = datepickerStart
+        datepickerStart = UIDatePicker()
+        datepickerStart!.frame.origin = CGPoint(x: 0, y: CGRectGetMaxY(lastview.frame))
+        datepickerStart!.frame.size.height = 162
+        datepickerStart!.minimumDate = self.minimumDate
+        datepickerStart!.maximumDate = self.maximumDate
+        datepickerStart!.date = work.startTime
+        initialStartDate = work.startTime
+        scrollView.addSubview(datepickerStart!)
+        lastview = datepickerStart!
+
+
 
         // Stoptime
 
-        let labelStop = UILabel()
-        labelStop.text = "Stop"
-        labelStop.textAlignment = NSTextAlignment.Center
-        labelStop.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
-        scrollView.addSubview(labelStop)
-        lastview = labelStop
+        if isOngoing == false {
 
-        let datepickerStop = UIDatePicker()
-        datepickerStop.frame.origin = CGPoint(x: 0, y: CGRectGetMaxY(lastview.frame))
-        datepickerStop.frame.size.height = 162
-        scrollView.addSubview(datepickerStop)
-        lastview = datepickerStop
+            let labelStop = UILabel()
+            labelStop.text = "Stop"
+            labelStop.textAlignment = NSTextAlignment.Center
+            labelStop.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+            scrollView.addSubview(labelStop)
+            lastview = labelStop
+
+            datepickerStop = UIDatePicker()
+            datepickerStop!.frame.origin = CGPoint(x: 0, y: CGRectGetMaxY(lastview.frame))
+            datepickerStop!.frame.size.height = 162
+            datepickerStop!.minimumDate = self.minimumDate
+            datepickerStop!.maximumDate = self.maximumDate
+            datepickerStop!.date = work.stopTime
+            initialStopDate = work.stopTime
+            scrollView.addSubview(datepickerStop!)
+            lastview = datepickerStop!
+
+        }
 
         // Task
 
@@ -97,8 +116,6 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         labelTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
         scrollView.addSubview(labelTask)
         lastview = labelTask
-
-        // A table
 
         let tableTask = UITableView()
         tableTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 150)
@@ -132,10 +149,6 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         lastview = buttonSave
 
         
-        
-        
-        
-        
 
         // Delete work section
         
@@ -153,12 +166,12 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         scrollView.addSubview(labelFillWith)
         lastview = labelFillWith
         
-        let segmentedFillWith = UISegmentedControl(items: ["None", "Previous", "Next"])
-        segmentedFillWith.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width/3*2, 30)
-        segmentedFillWith.center.x = width/2
-        segmentedFillWith.selectedSegmentIndex = 0
-        scrollView.addSubview(segmentedFillWith)
-        lastview = segmentedFillWith
+        fillEmptySpaceWith = UISegmentedControl(items: ["None", "Previous", "Next"])
+        fillEmptySpaceWith!.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width/3*2, 30)
+        fillEmptySpaceWith!.center.x = width/2
+        fillEmptySpaceWith!.selectedSegmentIndex = 0
+        scrollView.addSubview(fillEmptySpaceWith!)
+        lastview = fillEmptySpaceWith!
         
 
         let buttonDelete = UIButton.buttonWithType(.System) as! UIButton
@@ -170,11 +183,9 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         buttonDelete.setTitle("Delete work", forState: UIControlState.Normal)
         buttonDelete.addTarget(self, action: "deleteWork:", forControlEvents: UIControlEvents.TouchUpInside)
         scrollView.addSubview(buttonDelete)
-        lastview = segmentedFillWith
-
-    
-    
+        lastview = buttonDelete
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
