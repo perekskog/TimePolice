@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditWorkScrollableViewCOntroller: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
     // Input values
     var work: Work?
@@ -25,7 +25,7 @@ class EditWorkScrollableViewCOntroller: UIViewController, UITableViewDataSource,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        logger = ApplogLog(locator: "EditWorkScrollableVC")
+        logger = ApplogLog(locator: "EditWorkVC")
         
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
         

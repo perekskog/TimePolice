@@ -278,7 +278,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
 
         if segue.identifier == "EditWorkScrollable" {
-            let vc = segue.destinationViewController as! EditWorkScrollableViewCOntroller
+            let vc = segue.destinationViewController as! EditWorkVC
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
             }
@@ -293,7 +293,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger!, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
-        let vc = unwindSegue.sourceViewController as! EditWorkScrollableViewCOntroller
+        let vc = unwindSegue.sourceViewController as! EditWorkVC
 
         if unwindSegue.identifier == "CancelEditWork" {
             appLog.log(logger!, logtype: .Debug, message: "Handle CancelEditWork... Do nothing")

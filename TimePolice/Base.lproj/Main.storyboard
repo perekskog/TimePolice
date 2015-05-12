@@ -314,10 +314,10 @@
             </objects>
             <point key="canvasLocation" x="2914" y="667"/>
         </scene>
-        <!--Edit Work Scrollable ViewC Ontroller-->
+        <!--Edit WorkVC-->
         <scene sceneID="d2u-oH-QeM">
             <objects>
-                <viewController id="dzU-1d-OfS" customClass="EditWorkScrollableViewCOntroller" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dzU-1d-OfS" customClass="EditWorkVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Fsg-Qu-mhy"/>
                         <viewControllerLayoutGuide type="bottom" id="OC8-9I-IBs"/>
