@@ -6,10 +6,18 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+TODO
+
+- Make sure that starttime <= stoptime, whenever some change is done
+
+*/
+
 import UIKit
 
 class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
+    // UI elements
     var datepickerStart: UIDatePicker?
     var datepickerStop: UIDatePicker?
     var fillEmptySpaceWith: UISegmentedControl?
@@ -40,16 +48,19 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         let width = CGRectGetWidth(self.view.frame)
         
         let font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        let textColor = UIColor(red: 0.175, green: 0.458, blue: 0.831, alpha: 1)
-        let attributes = [
-            NSForegroundColorAttributeName : textColor,
-//            NSFontAttributeName : font,
+        let attributesTitle = [
+            NSForegroundColorAttributeName : UIColor(red: 0.175, green: 0.458, blue: 0.831, alpha: 1),
+            NSFontAttributeName : font,
+            NSTextEffectAttributeName : NSTextEffectLetterpressStyle
+        ]
+        let attributesBody = [
+            NSForegroundColorAttributeName : UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1),
             NSTextEffectAttributeName : NSTextEffectLetterpressStyle
         ]
 
         var scrollViewRect = self.view.frame
         scrollViewRect.origin.y += 10
-        scrollViewRect.size.height -= 150
+        scrollViewRect.size.height -= 10
         let scrollView = UIScrollView()
         scrollView.frame = scrollViewRect
         scrollView.contentSize = CGSizeMake(width, 2000)
@@ -58,18 +69,18 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         // Change work section
 
         let labelTitleChange = UILabel()
-        labelTitleChange.attributedText = NSMutableAttributedString(string: "Change workitem", attributes: attributes)
+        labelTitleChange.attributedText = NSMutableAttributedString(string: "Change workitem", attributes: attributesTitle)
         labelTitleChange.textAlignment = NSTextAlignment.Center
-        labelTitleChange.frame = CGRectMake(0, 20, width, 30)
+        labelTitleChange.frame = CGRectMake(0, 20, width, 20)
         scrollView.addSubview(labelTitleChange)
         lastview = labelTitleChange
 
         // Starttime
 
         let labelStart = UILabel()
-        labelStart.text = "Start"
+        labelStart.attributedText = NSMutableAttributedString(string: "Start", attributes: attributesBody)
         labelStart.textAlignment = NSTextAlignment.Center
-        labelStart.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+        labelStart.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, 20)
         scrollView.addSubview(labelStart)
         lastview = labelStart
 
@@ -90,9 +101,9 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         if isOngoing == false {
 
             let labelStop = UILabel()
-            labelStop.text = "Stop"
+            labelStop.attributedText = NSMutableAttributedString(string: "Stop", attributes: attributesBody)
             labelStop.textAlignment = NSTextAlignment.Center
-            labelStop.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+            labelStop.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 20)
             scrollView.addSubview(labelStop)
             lastview = labelStop
 
@@ -111,15 +122,15 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         // Task
 
         let labelTask = UILabel()
-        labelTask.text = "Task"
+        labelTask.attributedText = NSMutableAttributedString(string: "Task", attributes: attributesBody)
         labelTask.textAlignment = NSTextAlignment.Center
-        labelTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+        labelTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 20)
         scrollView.addSubview(labelTask)
         lastview = labelTask
 
         let tableTask = UITableView()
         tableTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 150)
-        tableTask.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "EditWorkScrollableCell")
+        tableTask.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "EditWorkVCCell")
         tableTask.dataSource = self
         tableTask.delegate = self
         tableTask.rowHeight = 20
@@ -153,21 +164,21 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         // Delete work section
         
         let labelTitleDelete = UILabel()
-        labelTitleDelete.attributedText = NSMutableAttributedString(string: "Delete workitem", attributes: attributes)
+        labelTitleDelete.attributedText = NSMutableAttributedString(string: "Delete workitem", attributes: attributesTitle)
         labelTitleDelete.textAlignment = NSTextAlignment.Center
-        labelTitleDelete.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+        labelTitleDelete.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 30, width, 20)
         scrollView.addSubview(labelTitleDelete)
         lastview = labelTitleDelete
 
         let labelFillWith = UILabel()
-        labelFillWith.text = "Fill empty space with"
+        labelFillWith.attributedText = NSMutableAttributedString(string: "Fill empty space with", attributes: attributesBody)
         labelFillWith.textAlignment = NSTextAlignment.Center
-        labelFillWith.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 30)
+        labelFillWith.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, 20)
         scrollView.addSubview(labelFillWith)
         lastview = labelFillWith
         
         fillEmptySpaceWith = UISegmentedControl(items: ["None", "Previous", "Next"])
-        fillEmptySpaceWith!.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width/3*2, 30)
+        fillEmptySpaceWith!.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width/3*2, 30)
         fillEmptySpaceWith!.center.x = width/2
         fillEmptySpaceWith!.selectedSegmentIndex = 0
         scrollView.addSubview(fillEmptySpaceWith!)
@@ -227,7 +238,7 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("EditWorkScrollableCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("EditWorkVCCell") as! UITableViewCell
         cell.textLabel?.text = taskList?[indexPath.row].name
         return cell
     }
