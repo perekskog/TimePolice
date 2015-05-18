@@ -58,7 +58,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         let width = CGRectGetWidth(self.view.frame)
 
         sessionLabel = UILabel()
-        sessionLabel!.frame = CGRectMake(5, 20, 30, width)
+        sessionLabel!.frame = CGRectMake(0, 20, width, 30)
         sessionLabel!.textColor = UIColor.whiteColor()
         sessionLabel!.text = session?.name
         sessionLabel!.textAlignment = .Center
@@ -66,13 +66,15 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(sessionLabel!)
         lastview = sessionLabel!
 
-        workListTableView.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, self.view.frame.height - 100)
+        workListTableView.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, self.view.frame.height - 190)
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
+        workListTableView.rowHeight = 25
+        workListTableView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         self.view.addSubview(workListTableView)
-        scrollToEnd()
+        scrollToEnd(workListTableView)
         lastview = workListTableView
 
 /*
@@ -89,38 +91,34 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(statusView!)
 */
 
-//        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
-        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame.size = CGSize(width: 70, height:30)
-        exitButton.frame.origin.y = CGRectGetMaxY(lastview.frame)+10
-        exitButton.center.x = width/4
-        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(exitButton)
-        
-//        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
-        let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        switchOngoingFinishedButton.frame.size = CGSize(width: 140, height:30)
-        switchOngoingFinishedButton.frame.origin.y = CGRectGetMaxY(lastview.frame)+10
-        switchOngoingFinishedButton.center.x = 3*width/4
-        switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
-        switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        switchOngoingFinishedButton.setTitle("Ongoing/Finished", forState: UIControlState.Normal)
-        switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(switchOngoingFinishedButton)
-        lastview = workListTableView
-
-
         let addButton = UIButton.buttonWithType(.System) as! UIButton
-        let addRect = CGRect(origin: CGPoint(x: 5, y: self.view.bounds.size.height-145), size: CGSize(width:self.view.bounds.size.width-10, height:30))
-        addButton.frame = addRect
+        addButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
         addButton.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         addButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(addButton)
+        lastview = addButton
+        
+//        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
+        let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        switchOngoingFinishedButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
+        switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
+        switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        switchOngoingFinishedButton.setTitle("Ongoing/Finished", forState: UIControlState.Normal)
+        switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(switchOngoingFinishedButton)
+        lastview = switchOngoingFinishedButton
+
+//        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
+        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        exitButton.frame = CGRectMake(width - 80, CGRectGetMaxY(lastview.frame) + 10, 70, 30)
+        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(exitButton)
+
         
     }
 
@@ -151,7 +149,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 w.setAsOngoing()
             }
             workListTableView.reloadData()
-            scrollToEnd()
+            scrollToEnd(workListTableView)
         }
 
     }
@@ -173,7 +171,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             TimePoliceModelUtils.save(moc)
 
             workListTableView.reloadData()
-            scrollToEnd()
+            scrollToEnd(workListTableView)
         }
     }
 
@@ -200,6 +198,9 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
             }            
         }
+        cell.backgroundColor = UIColor(white:0.25, alpha:1.0)
+        cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
+//        cell.textLabel?.textColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
         return cell
     }
@@ -211,18 +212,17 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             
             appLog.log(logger!, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
-//            performSegueWithIdentifier("EditWork", sender: self)
-            performSegueWithIdentifier("EditWorkScrollable", sender: self)
+            performSegueWithIdentifier("EditWork", sender: self)
         }
     }
 
-    func scrollToEnd() {
-        let numberOfSections = workListTableView.numberOfSections()
-        let numberOfRows = workListTableView.numberOfRowsInSection(numberOfSections-1)
+    func scrollToEnd(tableView: UITableView) {
+        let numberOfSections = tableView.numberOfSections()
+        let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
         
         if numberOfRows > 0 {
             let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
-            workListTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
         }
         
     }
@@ -256,34 +256,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         appLog.log(logger!, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditWork" {
-            if let s = session {
-                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-            }
-
-            let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
-            
-            if let s = session {
-                vc.taskList = s.tasks.array as? [Task]
-
-                // Never set any time into the future
-                vc.maximumDate = NSDate()
-                if let wl = s.work.array as? [Work],
-                        i = selectedWorkIndex {
-                    vc.work = wl[i]
-                    if i > 0 {
-                        // Limit to starttime of previous item, if any
-                        vc.minimumDate = wl[i-1].startTime
-                    }
-                    if i < wl.count-1 {
-                        // Limit to stoptime of next item, if any
-                        vc.maximumDate = wl[i+1].stopTime
-                    }
-                }
-            }
-            appLog.log(logger!, logtype: .Debug) { "segue input values: \(vc.minimumDate), \(vc.maximumDate)" }
-        }
-
-        if segue.identifier == "EditWorkScrollable" {
             let vc = segue.destinationViewController as! EditWorkVC
             if let s = session {
                 vc.taskList = s.tasks.array as? [Task]
@@ -337,9 +309,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
                     appLog.log(logger!, logtype: .Debug, message: "EditWork selected task=\(t.name)")
-                    if let w = session?.getWork(i) {
-                        w.task = t
-                    }
+                    s.getWork(i)!.task = t
                 } else {
                     appLog.log(logger!, logtype: .Debug, message: "EditWork no task selected")
                 }
@@ -353,18 +323,6 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                         // The initial starttime was changed
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
                         s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: datepickerStart.date)
-
-/*
-                        if let w=s.getLastWork() {
-                            if w.isOngoing() {
-                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
-                                s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
-                            } else {
-                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
-                                s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
-                            }
-                        }
-*/
                     } else {
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
                     }
@@ -397,19 +355,20 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
             appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
             if let moc = managedObjectContext,
-                 i = selectedWorkIndex {
+                     s = session,
+                     i = selectedWorkIndex {
 
                     if let fillEmptySpaceWith = vc.fillEmptySpaceWith?.selectedSegmentIndex {
                         switch fillEmptySpaceWith {
                         case 0: // Nothing, deleteWork
                             appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
-                            session?.deleteWork(moc, workIndex: i)
+                            s.deleteWork(moc, workIndex: i)
                         case 1: // Previous item, deleteNextWorkAndAlignStop
                             appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
-                            session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                            s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
                         case 2: // Next item, deletePreviousWorkAndAlignStart
                             appLog.log(logger!, logtype: .Debug, message: "Fill with next")
-                            session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                            s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
                         default: // Not handled
                             appLog.log(logger!, logtype: .Debug, message: "Not handled")
                         }
