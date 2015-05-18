@@ -53,28 +53,27 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
 
-        var sessionLabelRect = self.view.frame
-        sessionLabelRect.origin.x = 5
-        sessionLabelRect.origin.y = 20
-        sessionLabelRect.size.height = 30
-        sessionLabelRect.size.width -= 10
-        sessionLabel = UILabel(frame: sessionLabelRect)
+        var lastview: UIView
+
+        let width = CGRectGetWidth(self.view.frame)
+
+        sessionLabel = UILabel()
+        sessionLabel!.frame = CGRectMake(5, 20, 30, width)
         sessionLabel!.textColor = UIColor.whiteColor()
         sessionLabel!.text = session?.name
         sessionLabel!.textAlignment = .Center
         sessionLabel!.adjustsFontSizeToFitWidth = true
         self.view.addSubview(sessionLabel!)
+        lastview = sessionLabel!
 
-        var workListRect = self.view.frame
-        workListRect.origin.y += 50
-        workListRect.size.height -= 205
-        workListTableView.frame = workListRect
+        workListTableView.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, self.view.frame.height - 100)
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
         self.view.addSubview(workListTableView)
         scrollToEnd()
+        lastview = workListTableView
 
 /*
         var statusRect = self.view.bounds
@@ -90,23 +89,29 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(statusView!)
 */
 
-        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
+//        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = exitRect
+        exitButton.frame.size = CGSize(width: 70, height:30)
+        exitButton.frame.origin.y = CGRectGetMaxY(lastview.frame)+10
+        exitButton.center.x = width/4
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
         
-        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
+//        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
         let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        switchOngoingFinishedButton.frame = switchOngoingFinishedRect
+        switchOngoingFinishedButton.frame.size = CGSize(width: 140, height:30)
+        switchOngoingFinishedButton.frame.origin.y = CGRectGetMaxY(lastview.frame)+10
+        switchOngoingFinishedButton.center.x = 3*width/4
         switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
         switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         switchOngoingFinishedButton.setTitle("Ongoing/Finished", forState: UIControlState.Normal)
         switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(switchOngoingFinishedButton)
+        lastview = workListTableView
+
 
         let addButton = UIButton.buttonWithType(.System) as! UIButton
         let addRect = CGRect(origin: CGPoint(x: 5, y: self.view.bounds.size.height-145), size: CGSize(width:self.view.bounds.size.width-10, height:30))
