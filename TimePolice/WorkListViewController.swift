@@ -258,6 +258,8 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
         if segue.identifier == "EditWork" {
             let vc = segue.destinationViewController as! EditWorkVC
             if let s = session {
+                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+
                 vc.taskList = s.tasks.array as? [Task]
 
                 // Never set any time into the future
@@ -315,7 +317,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 
                 if let initialDate = vc.initialStartDate,
-                        datepickerStart = vc.datepickerStart {
+                   datepickerStart = vc.datepickerStart {
                     appLog.log(logger!, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
                     appLog.log(logger!, logtype: .Debug, message: "EditWork selected start date=\(getString(datepickerStart.date))")
 
@@ -329,7 +331,7 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
 
                 if let initialDate = vc.initialStopDate,
-                        datepickerStop = vc.datepickerStop {
+                    datepickerStop = vc.datepickerStop {
                     appLog.log(logger!, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
                     appLog.log(logger!, logtype: .Debug, message: "EditWork selected stop date=\(getString(datepickerStop.date))")
 
@@ -358,25 +360,26 @@ class WorkListViewController: UIViewController, UITableViewDataSource, UITableVi
                      s = session,
                      i = selectedWorkIndex {
 
-                    if let fillEmptySpaceWith = vc.fillEmptySpaceWith?.selectedSegmentIndex {
-                        switch fillEmptySpaceWith {
-                        case 0: // Nothing, deleteWork
-                            appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
-                            s.deleteWork(moc, workIndex: i)
-                        case 1: // Previous item, deleteNextWorkAndAlignStop
-                            appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
-                            s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-                        case 2: // Next item, deletePreviousWorkAndAlignStart
-                            appLog.log(logger!, logtype: .Debug, message: "Fill with next")
-                            s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                        default: // Not handled
-                            appLog.log(logger!, logtype: .Debug, message: "Not handled")
-                        }
+                if let fillEmptySpaceWith = vc.fillEmptySpaceWith?.selectedSegmentIndex {
+                    switch fillEmptySpaceWith {
+                    case 0: // Nothing, deleteWork
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
+                        s.deleteWork(moc, workIndex: i)
+                    case 1: // Previous item, deleteNextWorkAndAlignStop
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
+                        s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                    case 2: // Next item, deletePreviousWorkAndAlignStart
+                        appLog.log(logger!, logtype: .Debug, message: "Fill with next")
+                        s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                    default: // Not handled
+                        appLog.log(logger!, logtype: .Debug, message: "Not handled")
                     }
+                }
                 workListTableView.reloadData()
             }
 
         }
+        
     }
 
 }

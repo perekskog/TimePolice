@@ -62,6 +62,7 @@ class TaskPickerViewController: UIViewController
 
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
 
+
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
@@ -69,13 +70,14 @@ class TaskPickerViewController: UIViewController
         
         (self.view as! TimePoliceBackgroundView).theme = theme
 
-        var tpRect = self.view.bounds
-        tpRect.origin.x = 0
-        tpRect.size.width -= 1
-        tpRect.origin.y += 25
-        tpRect.size.height -= 155
-        let taskPickerBackgroundView = TaskPickerBackgroundView(frame: tpRect)
+        var lastview : UIView
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+
+        let taskPickerBackgroundView = TaskPickerBackgroundView()
+        taskPickerBackgroundView.frame = CGRectMake(0, 25, width - 1, height - 155)
         self.view.addSubview(taskPickerBackgroundView)
+        lastview = taskPickerBackgroundView
 
 /*
         var statusRect = self.view.bounds
@@ -91,14 +93,14 @@ class TaskPickerViewController: UIViewController
         self.view.addSubview(statusView!)
 */
 
-        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = exitRect
+        exitButton.frame = CGRectMake(width - 80, height - 45, 70, 30)
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
+        lastview = exitButton
         
         if let s = session {
             if let moc = self.managedObjectContext {
@@ -148,14 +150,13 @@ class TaskPickerViewController: UIViewController
         appLog.log(logger!, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "EditWork" {
-            if let s = session {
-                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
-            }
-
-            let vc = segue.destinationViewController as! TaskPickerEditWorkViewController
+            let vc = segue.destinationViewController as! EditWorkVC
             
             if let s = session {
+                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+
                 vc.taskList = s.tasks.array as? [Task]
+
                 // Never set any time into the future
                 vc.maximumDate = NSDate()
                 if let wl = s.work.array as? [Work],
@@ -168,6 +169,11 @@ class TaskPickerViewController: UIViewController
                     if i < wl.count-1 {
                         // Limit to stoptime of next item, if any
                         vc.maximumDate = wl[i+1].stopTime
+                    }
+                    if vc.work.isOngoing() {
+                        vc.isOngoing = true
+                    } else {
+                        vc.isOngoing = false
                     }
                 }
             }
@@ -182,7 +188,7 @@ class TaskPickerViewController: UIViewController
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger!, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
-        let vc = unwindSegue.sourceViewController as! TaskPickerEditWorkViewController
+        let vc = unwindSegue.sourceViewController as! EditWorkVC
 
         if unwindSegue.identifier == "CancelEditWork" {
             appLog.log(logger!, logtype: .EnterExit, message: "Handle CancelEditWork... Do nothing")
@@ -199,36 +205,43 @@ class TaskPickerViewController: UIViewController
                 if let t = vc.taskToUse {
                     // Change task if this attribute was set
                     appLog.log(logger!, logtype: .EnterExit, message: "EditWork selected task=\(t.name)")
-                    if let w = session?.getWork(i) {
-                        w.task = t
-                    }
+                    s.getWork(i)!.task = t
                 } else {
                     appLog.log(logger!, logtype: .EnterExit, message: "EditWork no task selected")
                 }
                 
-                if let initialDate = vc.initialDate {
-                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial date=\(getString(initialDate))")
-                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected date=\(getString(vc.datePicker.date))")
+                if let initialDate = vc.initialStartDate,
+                   datepickerStart = vc.datepickerStart {
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected start date=\(getString(datepickerStart.date))")
 
-                    if initialDate != vc.datePicker.date {
-                        // The initial time was changed
-                        if let w=s.getLastWork() {
-                            if w.isOngoing() {
-                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is ongoing, setting starttime")
-                                s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: vc.datePicker.date)
-                            } else {
-                                appLog.log(logger!, logtype: .Debug, message: "Selected time != initial time, work is not ongoing, setting stoptime")
-                                s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: vc.datePicker.date)
-                            }
-                        }
+                    if initialDate != datepickerStart.date {
+                        // The initial starttime was changed
+                        appLog.log(logger!, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
+                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: datepickerStart.date)
                     } else {
-                        appLog.log(logger!, logtype: .Debug, message: "Selected time = initial time, don't set starttime")
+                        appLog.log(logger!, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
                     }
                 }
 
+                if let initialDate = vc.initialStopDate,
+                    datepickerStop = vc.datepickerStop {
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
+                    appLog.log(logger!, logtype: .Debug, message: "EditWork selected stop date=\(getString(datepickerStop.date))")
+
+                    if initialDate != datepickerStop.date {
+                        // The initial stoptime was changed
+                        appLog.log(logger!, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
+                        s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: datepickerStop.date)
+                    } else {
+                        appLog.log(logger!, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
+                    }
+                }
+
+
                 TimePoliceModelUtils.save(moc)
 
-                appLog.log(logger!, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
             
             tp?.redraw()
@@ -238,21 +251,23 @@ class TaskPickerViewController: UIViewController
             appLog.log(logger!, logtype: .Debug, message: "Handle DeleteWork")
 
             if let moc = managedObjectContext,
-                 i = selectedWorkIndex {
+                     s = session,
+                     i = selectedWorkIndex {
 
-                let fillEmptySpaceWith = vc.fillEmptySpaceWith.selectedSegmentIndex
-                switch fillEmptySpaceWith {
+                if let fillEmptySpaceWith = vc.fillEmptySpaceWith?.selectedSegmentIndex {
+                    switch fillEmptySpaceWith {
                     case 0: // Nothing, deleteWork
                         appLog.log(logger!, logtype: .Debug, message: "Fill with nothing")
-                        session?.deleteWork(moc, workIndex: i)
+                        s.deleteWork(moc, workIndex: i)
                     case 1: // Previous item, deleteNextWorkAndAlignStop
                         appLog.log(logger!, logtype: .Debug, message: "Fill with previous")
-                        session?.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+                        s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
                     case 2: // Next item, deletePreviousWorkAndAlignStart
                         appLog.log(logger!, logtype: .Debug, message: "Fill with next")
-                        session?.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                        s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
                     default: // Not handled
                         appLog.log(logger!, logtype: .Debug, message: "Not handled")
+                    }
                 }
                 tp?.redraw()
             }

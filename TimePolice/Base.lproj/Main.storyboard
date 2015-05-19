@@ -163,9 +163,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="lIo-Le-7fv"/>
                     <connections>
-                        <segue destination="Hmp-2V-xHL" kind="modal" identifier="EditWork" id="Ueo-Iv-xYT"/>
                         <segue destination="Ts8-bs-c8R" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="nDQ-cN-cBa"/>
-                        <segue destination="dzU-1d-OfS" kind="modal" identifier="EditWorkScrollable" id="I7g-5x-ylG"/>
+                        <segue destination="dzU-1d-OfS" kind="modal" identifier="EditWork" id="I7g-5x-ylG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -365,6 +364,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="I7g-5x-ylG"/>
     </inferredMetricsTieBreakers>
 </document>
