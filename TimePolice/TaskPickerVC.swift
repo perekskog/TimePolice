@@ -27,11 +27,11 @@ import CoreData
 //  TaskPickerViewController
 //==================================================
 
-class TaskPickerViewController: UIViewController
+class TaskPickerVC: UIViewController
 	{
 
     var session: Session?
-    var sourceController: TimePoliceViewController?
+    var sourceController: TimePoliceVC?
     var tp: TaskPicker?
     
 //    var statusView: UITextView?
@@ -313,7 +313,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var session: Session
 
 	// Views, set at creation time
-    var vc: TaskPickerViewController!
+    var vc: TaskPickerVC!
 //    var statusView: UITextView!
     var backgroundView:TaskPickerBackgroundView!
 
@@ -333,7 +333,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var appLog: AppLog!
     var logger: AppLogger?
 	
-    init(vc: TaskPickerViewController, backgroundView:TaskPickerBackgroundView,
+    init(vc: TaskPickerVC, backgroundView:TaskPickerBackgroundView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext, appLog: AppLog) {

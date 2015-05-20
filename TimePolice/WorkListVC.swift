@@ -19,10 +19,10 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     var session: Session?
-    var sourceController: TimePoliceViewController?
+    var sourceController: TimePoliceVC?
 
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
 

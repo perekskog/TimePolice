@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TimePoliceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var defaultVC: UISegmentedControl!
     @IBOutlet var appLogSize: UILabel!
@@ -88,12 +88,12 @@ class TimePoliceViewController: UIViewController, UITableViewDataSource, UITable
         appLog.log(logger!, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "TaskPicker" {
-            let vc = segue.destinationViewController as! TaskPickerViewController
+            let vc = segue.destinationViewController as! TaskPickerVC
             vc.session = selectedSession
             vc.sourceController = self
         } 
         if segue.identifier == "WorkList" {
-            let vc = segue.destinationViewController as! WorkListViewController
+            let vc = segue.destinationViewController as! WorkListVC
             vc.session = selectedSession
             vc.sourceController = self
         } 
