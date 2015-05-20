@@ -227,10 +227,10 @@ class BasicTheme : Theme {
             text = toolbarInfo.sessionName
         case SignInSignOut:
             if toolbarInfo.signedIn {
-                text = "Sign out"
+                text = "Finished"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
             } else {
-                text = "Sign in"
+                text = "Ongoing"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
                 foregroundColor = foregroundColorWhite
             }
@@ -370,10 +370,10 @@ class BlackGreenTheme : Theme {
             text = toolbarInfo.sessionName
         case SignInSignOut:
             if toolbarInfo.signedIn {
-                text = "Sign out"
+                text = "Finished"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
             } else {
-                text = "Sign in"
+                text = "Ongoing"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
             }
         case InfoArea:
