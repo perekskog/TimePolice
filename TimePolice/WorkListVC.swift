@@ -105,7 +105,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         switchOngoingFinishedButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
         switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
         switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        switchOngoingFinishedButton.setTitle("Ongoing/Finished", forState: UIControlState.Normal)
+        switchOngoingFinishedButton.setTitle("Start/stop", forState: UIControlState.Normal)
         switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(switchOngoingFinishedButton)
         lastview = switchOngoingFinishedButton

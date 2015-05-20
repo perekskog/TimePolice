@@ -1,5 +1,5 @@
 //
-//  TimePoliceViewController.swift
+//  TimePoliceVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-02-03.
@@ -37,18 +37,33 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         logTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TimePoliceSessionCell")
         logTableView.dataSource = self
         logTableView.delegate = self
-        self.sessions = getSessions()
         
         defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
 
-        appLogSize.text = "\(count(appLog.logString))"
+        redrawAll(true)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
-        // Dispose of any resources that can be recreated.
     }
+
+    func defaultVCChanged(sender: UISegmentedControl) {
+        appLog.log(logger!, logtype: .EnterExit, message: "defaultVCChanged")
+
+        switch sender.selectedSegmentIndex {
+        case 0:
+            appLog.log(logger!, logtype: .Debug, message: "TaskSwitcher")
+        case 1:
+            appLog.log(logger!, logtype: .Debug, message: "WorkList")
+        default:
+            appLog.log(logger!, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
+        }
+    }
+
+    //---------------------------------------------
+    // TimePoliceVC - Data and GUI updates
+    //---------------------------------------------
 
     func getSessions() -> [Session] {
         appLog.log(logger!, logtype: .EnterExit, message: "getSessions")
@@ -66,22 +81,16 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         return []
     }
     
-    func defaultVCChanged(sender: UISegmentedControl) {
-        appLog.log(logger!, logtype: .EnterExit, message: "defaultVCChanged")
-
-        switch sender.selectedSegmentIndex {
-        case 0:
-            appLog.log(logger!, logtype: .Debug, message: "TaskSwitcher")
-        case 1:
-            appLog.log(logger!, logtype: .Debug, message: "WorkList")
-        default:
-            appLog.log(logger!, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
+    func redrawAll(refreshCoreData: Bool) {
+        if refreshCoreData==true {
+            self.sessions = getSessions()
         }
+        appLogSize.text = "\(count(appLog.logString))"
+        logTableView.reloadData()
     }
-
     
     //---------------------------------------------
-    // TimePOliceViewController - Segue handling
+    // TimePoliceVC - Segue handling
     //---------------------------------------------
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -102,13 +111,12 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger!, logtype: .EnterExit, message: "exitVC")
 
-        appLogSize.text = "\(count(appLog.logString))"
-        logTableView.reloadData()
+        redrawAll(false)
     }
 
 
     //----------------------------------------
-    // TimePoliceViewController - Buttons
+    // TimePoliceVC - Buttons
     //----------------------------------------
     
     @IBAction func loadDataHome(sender: UIButton) {
@@ -119,12 +127,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             TimePoliceModelUtils.save(moc)
             moc.reset()
 
-            let fetchRequest = NSFetchRequest(entityName: "Session")
-            if let sessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-                self.sessions = getSessions()
-            }
-
-            logTableView.reloadData()
+            redrawAll(true)
         }
     }
     
@@ -135,8 +138,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             TestData.addSessionToWork(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            self.sessions = getSessions()
-            logTableView.reloadData()
+
+            redrawAll(true)
         }
     }
     
@@ -147,8 +150,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             TestData.addSessionToDaytime(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            self.sessions = getSessions()
-            logTableView.reloadData()
+
+            redrawAll(true)
         }
     }
     
@@ -159,8 +162,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             TestData.addSessionToTest(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            self.sessions = getSessions()
-            logTableView.reloadData()
+
+            redrawAll(true)
         }
     }
     
@@ -171,8 +174,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             TimePoliceModelUtils.clearAllData(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
-            self.sessions = getSessions()
-            logTableView.reloadData()
+
+            redrawAll(true)
         }
     }
 
@@ -201,7 +204,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     //-----------------------------------------
-    // TimePoliceViewController- UITableView
+    // TimePoliceVC- UITableView
     //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -257,14 +260,14 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
                 Session.deleteInMOC(moc, session: session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()
-                self.sessions = getSessions()
-                logTableView.reloadData()
+
+                redrawAll(true)
             }
         }
     }
 
     //---------------------------------------
-    // TimePoliceViewController - AppDelegate lazy properties
+    // TimePoliceVC - AppDelegate lazy properties
     //---------------------------------------
 
     lazy var managedObjectContext : NSManagedObjectContext? = {
