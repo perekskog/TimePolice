@@ -545,10 +545,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let taskList = session.tasks.array as! [Task]
         
         if let work = session.getLastWork() {
+            let taskIndex = find(taskList, work.task as Task)
+            taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             if work.isOngoing() {
                 setLastWorkAsFinished()
-                let taskIndex = find(taskList, work.task as Task)
-                taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             }
         }
 
@@ -667,9 +667,17 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     // TaskPicker - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
 
+    var updateN = 0
+
     @objc
     func updateActiveTask(timer: NSTimer) {
-        //print(".")
+        updateN++
+        if updateN == 5 {
+            updateN = 0
+        }
+        if updateN==0 {
+            appLog.log(logger!, logtype: .Debug, message: "updateActiveTask")
+        }
         if let work = session.getLastWork() {
             let task = work.task
             
@@ -702,12 +710,14 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let (numberOfTimesActivated, totalTimeActive) = taskSummary
 
         var active = false
+        var ongoing = false
         var activatedAt = NSDate()
         if let work = session.getLastWork() {
-            if work.isOngoing() {
-                if taskList[selectionArea] == work.task {
-                    active = true
-                    activatedAt = work.startTime
+            if taskList[selectionArea] == work.task {
+                active = true
+                activatedAt = work.startTime
+                if work.isOngoing() {
+                    ongoing = true
                 }
             }
         }
@@ -717,7 +727,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             numberOfTimesActivated: numberOfTimesActivated,
             totalTimeActive: totalTimeActive,
             active: active,
-            activatedAt: activatedAt)
+            activatedAt: activatedAt,
+            ongoing: ongoing)
  		return selectionAreaInfo
 	}
 

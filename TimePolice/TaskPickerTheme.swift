@@ -80,12 +80,14 @@ class SelectionAreaInfo {
     var totalTimeActive: NSTimeInterval
     var active: Bool
     var activatedAt: NSDate
-    init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool, activatedAt: NSDate) {
+    var ongoing: Bool
+    init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool, activatedAt: NSDate, ongoing: Bool) {
         self.task = task
         self.numberOfTimesActivated = numberOfTimesActivated
         self.totalTimeActive = totalTimeActive
         self.active = active
         self.activatedAt = activatedAt
+        self.ongoing = ongoing
     }
 }
 
@@ -321,8 +323,13 @@ class BlackGreenTheme : Theme {
         var colors = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
         if selectionAreaInfo.active {
-            colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0]),
-                CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])]
+            if selectionAreaInfo.ongoing {
+                colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0]),
+                    CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])]
+            } else {
+                colors = [CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0]),
+                    CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])]
+            }
         }
         let gradient = CGGradientCreateWithColors(colorSpaceRGB,
             colors, locations)
