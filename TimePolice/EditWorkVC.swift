@@ -42,6 +42,9 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         logger = ApplogLog(locator: "EditWorkVC")
         
         appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
+        applog.log(logger!, logtype: .Debug, message: "work=\(work.task.name)|\(getString(work.startTime))|\(getString(work.stopTime))")
+        applog.log(logger!, logtype: .Debug, message: "minimumDate=\(getString(minimumDate))|maximumDate=\(getString(maximumDate))")
+        applog.log(logger!, logtype: .Debug, message: "isOngoing=\(isOngoing)")
         
         var lastview: UIView
 
