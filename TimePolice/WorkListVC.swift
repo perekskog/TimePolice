@@ -216,6 +216,28 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            if let moc = self.managedObjectContext,
+                     s = session {
+                appLog.log(logger!, logtype: .Debug, message: "Delete row \(indexPath.row)")
+
+                s.deleteWork(moc, workIndex: indexPath.row)
+                TimePoliceModelUtils.save(moc)
+                
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+
+                workListTableView.reloadData()
+            }
+        }
+    }
+
+
+
     func scrollToEnd(tableView: UITableView) {
         let numberOfSections = tableView.numberOfSections()
         let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
@@ -375,6 +397,10 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         appLog.log(logger!, logtype: .Debug, message: "Not handled")
                     }
                 }
+
+                TimePoliceModelUtils.save(moc)
+                appLog.log(logger!, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+
                 workListTableView.reloadData()
             }
 
