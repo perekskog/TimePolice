@@ -271,7 +271,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         // Limit to starttime of previous item, if any
                         vc.minimumDate = wl[i-1].startTime
                     }
-                    if i < wl.count-1 {
+                    if i < wl.count-1 && !wl[i+1].isOngoing() {
                         // Limit to stoptime of next item, if any
                         vc.maximumDate = wl[i+1].stopTime
                     }
@@ -324,7 +324,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                     if initialDate != datepickerStart.date {
                         // The initial starttime was changed
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
-                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: datepickerStart.date)
+                        s.setStartTime(moc, workIndex: i, desiredStartTime: datepickerStart.date)
                     } else {
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
                     }
@@ -338,7 +338,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                     if initialDate != datepickerStop.date {
                         // The initial stoptime was changed
                         appLog.log(logger!, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
-                        s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: datepickerStop.date)
+                        s.setStopTime(moc, workIndex: i, desiredStopTime: datepickerStop.date)
                     } else {
                         appLog.log(logger!, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
                     }

@@ -218,7 +218,7 @@ class TaskPickerVC: UIViewController
                     if initialDate != datepickerStart.date {
                         // The initial starttime was changed
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
-                        s.setStartTime(moc, workIndex: s.work.count-1, desiredStartTime: datepickerStart.date)
+                        s.setStartTime(moc, workIndex: i, desiredStartTime: datepickerStart.date)
                     } else {
                         appLog.log(logger!, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
                     }
@@ -232,7 +232,7 @@ class TaskPickerVC: UIViewController
                     if initialDate != datepickerStop.date {
                         // The initial stoptime was changed
                         appLog.log(logger!, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
-                        s.setStopTime(moc, workIndex: s.work.count-1, desiredStopTime: datepickerStop.date)
+                        s.setStopTime(moc, workIndex: i, desiredStopTime: datepickerStop.date)
                     } else {
                         appLog.log(logger!, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
                     }

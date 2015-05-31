@@ -730,7 +730,7 @@ class Work: NSManagedObject {
     }
 
     func setStartedAt(time: NSDate) {
-        if isStopped() && time.compare(self.startTime) == .OrderedDescending {
+        if isStopped() && time.compare(self.stopTime) == .OrderedDescending {
             // Don't set a stopped item's starttime > stoptime
             return
         }

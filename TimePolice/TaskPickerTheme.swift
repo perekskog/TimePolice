@@ -340,7 +340,7 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         ThemeUtilities.addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
-        if selectionAreaInfo.active {
+        if selectionAreaInfo.ongoing {
             let now = NSDate()
             let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
             ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
