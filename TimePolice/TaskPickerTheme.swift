@@ -380,7 +380,7 @@ class BlackGreenTheme : Theme {
                 text = "Stop"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
             } else {
-                text = "Start"
+                text = "Continue"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
             }
         case InfoArea:
