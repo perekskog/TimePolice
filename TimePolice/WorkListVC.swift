@@ -32,10 +32,68 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var selectedWork: Work?
     var selectedWorkIndex: Int?
 
+    //--------------------------------------------------------
+    // WorkListVC - Lazy properties
+    //--------------------------------------------------------
+    
+    lazy var managedObjectContext : NSManagedObjectContext? = {
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if let managedObjectContext = appDelegate.managedObjectContext {
+            return managedObjectContext
+        }
+        else {
+            return nil
+        }
+        }()
+
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog        
+    }()
+    
+    lazy var logger: AppLogger = {
+        let logger = MultiLog()
+        //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
+        logger.logger2 = StringLog(locator: "WorkListVC")
+        logger.logger3 = ApplogLog(locator: "WorkListVC")
+        
+        return logger
+    }()
 
     //---------------------------------------------
-    // WorkListViewController - View lifecycle
+    // WorkListVC - View lifecycle
     //---------------------------------------------
+
+    override func viewWillAppear() {
+        super.viewWIllAppear()
+        appLog.log(logger, logtype: .EnterExit, message: "viewWillAppear")
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        appLog.log(logger, logtype: .EnterExit, message: "viewDidAppear")
+    }
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        appLog.log(logger, logtype: .EnterExit, message: "viewWillDisappear")
+    }
+
+    override func viewDidDisappear() {
+        super.viewDidDisappear()
+        appLog.log(logger, logtype: .EnterExit, message: "viewDidDisappear")
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .EnterExit, message: "viewWillLayoutSubviews")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        appLog.log(logger, logtype: .EnterExit, message: "viewDidLayoutSubviews")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,7 +177,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
 
     //-----------------------------------------
-    // WorkListViewController- VC button actions
+    // WorkListVC - VC button actions
     //-----------------------------------------
 
 
@@ -167,7 +225,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     
     //-----------------------------------------
-    // WorkListViewController- UITableView
+    // WorkListVC - UITableView
     //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -239,37 +297,9 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
     }
 
-    //--------------------------------------------------------
-    // TaskPickerViewController - AppDelegate lazy properties
-    //--------------------------------------------------------
-    
-    lazy var managedObjectContext : NSManagedObjectContext? = {
-
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
-        }()
-
-    lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog        
-    }()
-    
-    lazy var logger: AppLogger = {
-        let logger = MultiLog()
-        //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "WorkListVC")
-        logger.logger3 = ApplogLog(locator: "WorkListVC")
-        
-        return logger
-    }()
 
     //---------------------------------------------
-    // WorkListViewController - Segue handling
+    // WorkListVC - Segue handling
     //---------------------------------------------
 
 
