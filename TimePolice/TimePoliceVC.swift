@@ -102,27 +102,6 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
 
-
-
-
-
-
-
-
-
-    func defaultVCChanged(sender: UISegmentedControl) {
-        appLog.log(logger, logtype: .EnterExit, message: "defaultVCChanged")
-
-        switch sender.selectedSegmentIndex {
-        case 0:
-            appLog.log(logger, logtype: .Debug, message: "TaskSwitcher")
-        case 1:
-            appLog.log(logger, logtype: .Debug, message: "WorkList")
-        default:
-            appLog.log(logger, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
-        }
-    }
-
     //---------------------------------------------
     // TimePoliceVC - Data and GUI updates
     //---------------------------------------------
@@ -181,6 +160,20 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     // TimePoliceVC - Buttons
     //----------------------------------------
     
+    func defaultVCChanged(sender: UISegmentedControl) {
+        appLog.log(logger, logtype: .EnterExit, message: "defaultVCChanged")
+
+        switch sender.selectedSegmentIndex {
+        case 0:
+            appLog.log(logger, logtype: .Debug, message: "TaskSwitcher")
+        case 1:
+            appLog.log(logger, logtype: .Debug, message: "WorkList")
+        default:
+            appLog.log(logger, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
+        }
+    }
+
+
     @IBAction func loadDataHome(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataHome")
 
