@@ -19,15 +19,69 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     var sessions: [Session]?
     var selectedSession: Session?
 
-    var logger: AppLogger?
+    //---------------------------------------
+    // TimePoliceVC - Lazy properties
+    //---------------------------------------
+
+    lazy var managedObjectContext : NSManagedObjectContext? = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if let managedObjectContext = appDelegate.managedObjectContext {
+            return managedObjectContext
+        }
+        else {
+            return nil
+        }
+        }()
+
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+    }()
+
+    lazy var logger: AppLogger = {
+        return ApplogLog(locator: "TimePoliceVC")
+    }()
+
+
+    //---------------------------------------------
+    // TimePoliceVC - View lifecycle
+    //---------------------------------------------
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        logger = ApplogLog(locator: "TimePoliceVC")
-        
-        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
-        
+        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+
         var viewFrame = self.view.frame
         viewFrame.origin.y += 200
         viewFrame.size.height -= 200
@@ -45,19 +99,27 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
 
+
+
+
+
+
+
+
+
     func defaultVCChanged(sender: UISegmentedControl) {
-        appLog.log(logger!, logtype: .EnterExit, message: "defaultVCChanged")
+        appLog.log(logger, logtype: .EnterExit, message: "defaultVCChanged")
 
         switch sender.selectedSegmentIndex {
         case 0:
-            appLog.log(logger!, logtype: .Debug, message: "TaskSwitcher")
+            appLog.log(logger, logtype: .Debug, message: "TaskSwitcher")
         case 1:
-            appLog.log(logger!, logtype: .Debug, message: "WorkList")
+            appLog.log(logger, logtype: .Debug, message: "WorkList")
         default:
-            appLog.log(logger!, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
+            appLog.log(logger, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
         }
     }
 
@@ -66,7 +128,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     //---------------------------------------------
 
     func getSessions() -> [Session] {
-        appLog.log(logger!, logtype: .EnterExit, message: "getSessions")
+        appLog.log(logger, logtype: .EnterExit, message: "getSessions")
 
         let fetchRequest = NSFetchRequest(entityName: "Session")
         if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
@@ -94,7 +156,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     //---------------------------------------------
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger!, logtype: .EnterExit, message: "prepareForSegue")
+        appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as! TaskPickerVC
@@ -109,7 +171,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger!, logtype: .EnterExit, message: "exitVC")
+        appLog.log(logger, logtype: .EnterExit, message: "exitVC")
 
         redrawAll(false)
     }
@@ -120,7 +182,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     //----------------------------------------
     
     @IBAction func loadDataHome(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "loadDataHome")
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataHome")
 
         if let moc = self.managedObjectContext {
             TestData.addSessionToHome(moc)
@@ -132,7 +194,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
     
     @IBAction func loadDataWork(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "loadDataWork")
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataWork")
 
         if let moc = self.managedObjectContext {
             TestData.addSessionToWork(moc)
@@ -144,7 +206,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
     
     @IBAction func loadDataDaytime(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "loadDataDaytime")
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataDaytime")
 
         if let moc = self.managedObjectContext {
             TestData.addSessionToDaytime(moc)
@@ -156,7 +218,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
     
     @IBAction func loadDataTest(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "loadDataTest")
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataTest")
 
         if let moc = self.managedObjectContext {
             TestData.addSessionToTest(moc)
@@ -168,7 +230,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
     
     @IBAction func clearCoreData(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "clearAllData")
+        appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
 
         if let moc = self.managedObjectContext {
             TimePoliceModelUtils.clearAllData(moc)
@@ -180,13 +242,13 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     @IBAction func clearApplog(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "clearApplog")
+        appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
         appLog.logString = ""
         appLogSize.text = "\(count(appLog.logString))"
     }
 
     @IBAction func dumpCoreData(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "dumpAllCoreData")
+        appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
 
         if let moc = self.managedObjectContext {
             let s = TimePoliceModelUtils.dumpAllData(moc)
@@ -196,7 +258,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     @IBAction func dumpApplog(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "dumpApplog")
+        appLog.log(logger, logtype: .EnterExit, message: "dumpApplog")
 
         let s = appLog.logString
         println(s)
@@ -238,13 +300,13 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         }
         switch defaultVC.selectedSegmentIndex {
         case 0:
-            appLog.log(logger!, logtype: .Debug, message: "performSegue TaskPicker")
+            appLog.log(logger, logtype: .Debug, message: "performSegue TaskPicker")
             performSegueWithIdentifier("TaskPicker", sender: self)
         case 1:
-            appLog.log(logger!, logtype: .Debug, message: "performSegue WorkList")
+            appLog.log(logger, logtype: .Debug, message: "performSegue WorkList")
             performSegueWithIdentifier("WorkList", sender: self)
         default:
-            appLog.log(logger!, logtype: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
+            appLog.log(logger, logtype: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
         }
     }
     
@@ -256,7 +318,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let moc = self.managedObjectContext,
                session = sessions?[indexPath.row] {
-                appLog.log(logger!, logtype: .Debug, message: "Delete row \(indexPath.row)")
+                appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
                 Session.deleteInMOC(moc, session: session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()
@@ -265,24 +327,4 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             }
         }
     }
-
-    //---------------------------------------
-    // TimePoliceVC - AppDelegate lazy properties
-    //---------------------------------------
-
-    lazy var managedObjectContext : NSManagedObjectContext? = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
-        }()
-
-    lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog
-    }()
-
 }

@@ -49,6 +49,7 @@ enum AppLogType {
 	case EnterExit
 	case CoreData
 	case Debug
+	case iOS
 }
 
 class AppLog: AppLoggerDelegate {

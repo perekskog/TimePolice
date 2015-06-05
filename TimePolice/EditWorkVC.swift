@@ -34,15 +34,58 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     var initialStartDate: NSDate?
     var initialStopDate: NSDate?
     
-    var logger: AppLogger?
+    //----------------------------------------------------------------
+    // EditWorkVC - Lazy properties
+    //----------------------------------------------------------------
+    
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+        }()
+
+    lazy var logger : AppLogger = {
+        return ApplogLog(locator: "EditWorkVC")
+    }()
+
+    //---------------------------------------------
+    // EditWorkVC - View lifecycle
+    //---------------------------------------------
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        logger = ApplogLog(locator: "EditWorkVC")
-        
-        appLog.log(logger!, logtype: .EnterExit, message: "viewDidLoad")
-        appLog.log(logger!, logtype: .Debug, message: "work=\(work.task.name)|\(getString(work.startTime))|\(getString(work.stopTime))")
+        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+        appLog.log(logger, logtype: .Debug, message: "work=\(work.task.name)|\(getString(work.startTime))|\(getString(work.stopTime))")
         var d1 = "---"
         var d2 = "---"
         if let d = minimumDate {
@@ -51,8 +94,8 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         if let d = maximumDate {
             d2 = getString(d)
         }
-        appLog.log(logger!, logtype: .Debug, message: "minimumDate=\(d1)|maximumDate=\(d2)")
-        appLog.log(logger!, logtype: .Debug, message: "isOngoing=\(isOngoing)")
+        appLog.log(logger, logtype: .Debug, message: "minimumDate=\(d1)|maximumDate=\(d2)")
+        appLog.log(logger, logtype: .Debug, message: "isOngoing=\(isOngoing)")
         
         var lastview: UIView
 
@@ -210,34 +253,34 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger!, logtype: .EnterExit, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
 
     //-----------------------------------------
-    // EditWorkScrollableViewController- VC button actions
+    // EditWorkVC- VC button actions
     //-----------------------------------------
 
 
     func cancelEditWork(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "cancelEditWork")
+        appLog.log(logger, logtype: .EnterExit, message: "cancelEditWork")
         
         performSegueWithIdentifier("CancelEditWork", sender: self)
     }
 
     func saveEditWork(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "saveEditWork")
+        appLog.log(logger, logtype: .EnterExit, message: "saveEditWork")
         
         performSegueWithIdentifier("OkEditWork", sender: self)
     }
 
     func deleteWork(sender: UIButton) {
-        appLog.log(logger!, logtype: .EnterExit, message: "deleteWork")
+        appLog.log(logger, logtype: .EnterExit, message: "deleteWork")
         
         performSegueWithIdentifier("DeleteWork", sender: self)
     }
 
     //-----------------------------------------
-    // EditWorkScrollableViewController- UITableView
+    // EditWorkVC - UITableView
     //-----------------------------------------
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -259,16 +302,4 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
             taskToUse = task
         }
     }
-    
-
-    
-    //----------------------------------------------------------------
-    // EditWorkScrollableViewController - AppDelegate lazy properties
-    //----------------------------------------------------------------
-    
-    lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog
-        }()
-
 }

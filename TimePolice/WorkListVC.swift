@@ -65,41 +65,41 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     // WorkListVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillAppear() {
-        super.viewWIllAppear()
-        appLog.log(logger, logtype: .EnterExit, message: "viewWillAppear")
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear() {
-        super.viewDidAppear()
-        appLog.log(logger, logtype: .EnterExit, message: "viewDidAppear")
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
     }
 
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        appLog.log(logger, logtype: .EnterExit, message: "viewWillDisappear")
-    }
-
-    override func viewDidDisappear() {
-        super.viewDidDisappear()
-        appLog.log(logger, logtype: .EnterExit, message: "viewDidDisappear")
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .EnterExit, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .EnterExit, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         
-        appLog.log(logger, logtype: .EnterExit, message: "viewDidLoad")
+        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
 
         var lastview: UIView
 
@@ -172,7 +172,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .EnterExit, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
     
 
