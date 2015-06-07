@@ -1003,9 +1003,9 @@ class TestData {
 
             "I Email", "---", "I Blixt",
 
-            "P OF", "P Projekt", "P Lista",
+            "Projekt P", "Media P", "Hem P",
 
-            "P Hushåll", "P Eva", "P Other",
+            "Projekt U", "Media D", "Hem U",
 
             "N Waste", "---", "N Not home",
 
