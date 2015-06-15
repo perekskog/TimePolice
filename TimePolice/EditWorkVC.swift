@@ -144,6 +144,7 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         datepickerStart!.minimumDate = self.minimumDate
         datepickerStart!.maximumDate = self.maximumDate
         datepickerStart!.date = work.startTime
+        datepickerStart!.addTarget(self, action: Selector("datePickerChanged:"), forControlEvents: UIControlEvents.ValueChanged)
         initialStartDate = work.startTime
         scrollView.addSubview(datepickerStart!)
         lastview = datepickerStart!
@@ -167,6 +168,7 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
             datepickerStop!.minimumDate = self.minimumDate
             datepickerStop!.maximumDate = self.maximumDate
             datepickerStop!.date = work.stopTime
+            datepickerStop!.addTarget(self, action: Selector("datePickerChanged:"), forControlEvents: UIControlEvents.ValueChanged)
             initialStopDate = work.stopTime
             scrollView.addSubview(datepickerStop!)
             lastview = datepickerStop!
@@ -277,6 +279,23 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         appLog.log(logger, logtype: .EnterExit, message: "deleteWork")
         
         performSegueWithIdentifier("DeleteWork", sender: self)
+    }
+
+    func datePickerChanged(sender: UIDatePicker) {
+        if isOngoing == true {
+            // Only one datepicker shown, othig to keep in sync
+            return
+        }
+        if sender == datepickerStart {
+            if datepickerStart!.date.compare(datepickerStop!.date) == .OrderedDescending {
+                datepickerStop!.date = datepickerStart!.date
+            }
+        }
+        if sender == datepickerStop {
+            if datepickerStop!.date.compare(datepickerStart!.date) == .OrderedAscending {
+                datepickerStart!.date = datepickerStop!.date
+            }
+        }
     }
 
     //-----------------------------------------
