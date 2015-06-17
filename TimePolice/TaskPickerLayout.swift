@@ -60,6 +60,7 @@ class GridLayout : Layout {
             let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolbarHeight, width:columnWidth-padding, height:toolbarHeight)
             return rect
         default:
+            // A button
             let row = selectionArea / columns
             let column = selectionArea % columns
             let rowHeight = (Int(parentViewRect.height)-2*toolbarHeight-padding) / rows

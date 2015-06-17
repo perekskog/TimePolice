@@ -117,16 +117,16 @@ class TaskPickerVC: UIViewController
         let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
-        (self.view as! TimePoliceBackgroundView).theme = theme
+        (self.view as! TimePoliceBGView).theme = theme
 
         var lastview : UIView
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
-        let taskPickerBackgroundView = TaskPickerBackgroundView()
-        taskPickerBackgroundView.frame = CGRectMake(0, 25, width - 1, height - 155)
-        self.view.addSubview(taskPickerBackgroundView)
-        lastview = taskPickerBackgroundView
+        let taskPickerBGView = TaskPickerBGView()
+        taskPickerBGView.frame = CGRectMake(0, 25, width - 1, height - 155)
+        self.view.addSubview(taskPickerBGView)
+        lastview = taskPickerBGView
 
 /*
         var statusRect = self.view.bounds
@@ -153,7 +153,7 @@ class TaskPickerVC: UIViewController
         
         if let s = session {
             if let moc = self.managedObjectContext {
-                tp = TaskPicker(vc: self, backgroundView: taskPickerBackgroundView,
+                tp = TaskPicker(vc: self, backgroundView: taskPickerBGView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc, appLog: appLog)
             
@@ -332,7 +332,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	// Views, set at creation time
     var vc: TaskPickerVC!
 //    var statusView: UITextView!
-    var backgroundView:TaskPickerBackgroundView!
+    var backgroundView:TaskPickerBGView!
 
     // Preferences, set at creation time
 	var layout: Layout!
@@ -350,7 +350,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var appLog: AppLog!
     var logger: AppLogger!
 	
-    init(vc: TaskPickerVC, backgroundView:TaskPickerBackgroundView,
+    init(vc: TaskPickerVC, backgroundView:TaskPickerBGView,
         layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
         session: Session,
         moc: NSManagedObjectContext, appLog: AppLog) {
@@ -388,10 +388,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
     // Non presistent local attributes, setup when initialising the view
 	var updateActiveActivityTimer: NSTimer?
-    var sessionNameView: ToolView?
-	var signInSignOutView: ToolView?
-	var infoAreaView: ToolView?
-	var settingsView: ToolView?
+    var sessionNameView: TaskPickerToolView?
+	var signInSignOutView: TaskPickerToolView?
+	var infoAreaView: TaskPickerToolView?
+	var settingsView: TaskPickerToolView?
 
 
     //--------------------------------------------------
@@ -430,7 +430,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
         // Setup sessionname
         var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SessionName)
-        sessionNameView = ToolView(frame: viewRect)
+        sessionNameView = TaskPickerToolView(frame: viewRect)
         sessionNameView!.theme = theme
         sessionNameView!.toolbarInfoDelegate = self
         sessionNameView!.tool = SessionName
@@ -438,7 +438,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 		// Setup sign in/out button
 		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
-	    signInSignOutView = ToolView(frame: viewRect)
+	    signInSignOutView = TaskPickerToolView(frame: viewRect)
 		signInSignOutView!.theme = theme
 		signInSignOutView!.toolbarInfoDelegate = self
 		signInSignOutView!.tool = SignInSignOut
@@ -449,7 +449,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 		// Setup infoarea
 		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: InfoArea)
-	    infoAreaView = ToolView(frame: viewRect)
+	    infoAreaView = TaskPickerToolView(frame: viewRect)
 		infoAreaView!.theme = theme
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
@@ -457,7 +457,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 		// Setup settings
 		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: Settings)
-	    settingsView = ToolView(frame: viewRect)
+	    settingsView = TaskPickerToolView(frame: viewRect)
 		settingsView!.theme = theme
 		settingsView!.toolbarInfoDelegate = self
 		settingsView!.tool = Settings

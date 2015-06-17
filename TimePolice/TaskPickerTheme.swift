@@ -11,25 +11,36 @@ import UIKit
 
 /////////////// --- Views --- //////////////////
 
-class TimePoliceBackgroundView: UIView {
+class TimePoliceBGView: UIView {
 
     var theme: Theme?
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         let context = UIGraphicsGetCurrentContext()
-        theme?.drawDesktop(context, parent: rect)
+        theme?.drawTimePoliceBG(context, parent: rect)
     }
 }
 
-class TaskPickerBackgroundView: UIView {
+class TaskPickerBGView: UIView {
 
     var theme: Theme?
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         let context = UIGraphicsGetCurrentContext()
-        theme?.drawBackground(context, parent: rect)
+        theme?.drawTaskPickerBG(context, parent: rect)
+    }
+}
+
+class WorkListBGView: UIView {
+
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        let context = UIGraphicsGetCurrentContext()
+        theme?.drawWorkListBG(context, parent: rect)
     }
 }
 
@@ -44,13 +55,13 @@ class TaskPickerButtonView: UIView {
         let context = UIGraphicsGetCurrentContext()
         if let i = taskPosition {
             if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
-                theme?.drawButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
+                theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
             }
         }
     }
 }
 
-class ToolView: UIView {
+class TaskPickerToolView: UIView {
     
     var tool: Int?
     var toolbarInfoDelegate: ToolbarInfoDelegate?
@@ -61,7 +72,7 @@ class ToolView: UIView {
         let context = UIGraphicsGetCurrentContext()
         if let i = tool {
             if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                theme?.drawTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
+                theme?.drawTaskPickerTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
             }
         }
     }
@@ -111,10 +122,11 @@ class ToolbarInfo {
 /////////////// --- Visuals --- //////////////////
 
 protocol Theme {
-    func drawDesktop(context: CGContextRef, parent: CGRect)
-    func drawBackground(context: CGContextRef, parent: CGRect)
-    func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
-    func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
+    func drawTimePoliceBG(context: CGContextRef, parent: CGRect)
+    func drawTaskPickerBG(context: CGContextRef, parent: CGRect)
+    func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
+    func drawWorkListBG(context: CGContextRef, parent: CGRect)
 }
 
 
@@ -132,7 +144,7 @@ class BasicTheme : Theme {
     let bigSize:CGFloat = 13.0
     let smallSize:CGFloat = 11.0
     
-    func drawDesktop(context: CGContextRef, parent: CGRect) {
+    func drawTimePoliceBG(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         
         // Gradient
@@ -153,7 +165,7 @@ class BasicTheme : Theme {
         
     }
     
-    func drawBackground(context: CGContextRef, parent: CGRect) {
+    func drawTaskPickerBG(context: CGContextRef, parent: CGRect) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -171,8 +183,12 @@ class BasicTheme : Theme {
         CGContextDrawLinearGradient(context, gradient,
             startPoint, endPoint, 0)
     }
-    
-    func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
+
+    func drawWorkListBG(context: CGContextRef, parent: CGRect) {
+        drawTaskPickerBG(context, parent: parent)
+    }
+
+    func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -206,7 +222,7 @@ class BasicTheme : Theme {
         }
     }
     
-    func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -273,7 +289,7 @@ class BlackGreenTheme : Theme {
     let bigSize:CGFloat = 13.0
     let smallSize:CGFloat = 11.0
     
-    func drawDesktop(context: CGContextRef, parent: CGRect) {
+    func drawTimePoliceBG(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         
         // Top area
@@ -297,11 +313,9 @@ class BlackGreenTheme : Theme {
         var endPoint2 =  CGPoint(x:0.0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient2,
             startPoint2, endPoint2, 0)
-  
-
     }
     
-    func drawBackground(context: CGContextRef, parent: CGRect) {
+    func drawTaskPickerBG(context: CGContextRef, parent: CGRect) {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
 
         // Gradient
@@ -316,7 +330,11 @@ class BlackGreenTheme : Theme {
             startPoint, endPoint, 0)
     }
     
-    func drawButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
+    func drawWorkListBG(context: CGContextRef, parent: CGRect) {
+        drawTaskPickerBG(context, parent: parent)
+    }
+    
+    func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -350,7 +368,7 @@ class BlackGreenTheme : Theme {
         }
     }
     
-    func drawTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
