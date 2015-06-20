@@ -11,6 +11,13 @@
 
 TODO
 
+- SessionName ska vara en del av VC, ej TimePolice
+- Settings ska bort från layout
+- VC ska skapa TaskPickerToolView för Exit och SessionName, då funkar THeme med dessa också.
+- (Summary och stop/continue ska fortfarande vara en del av "Layout")
+
+
+
 - getSelectionAreaInfo
   Är det Theme som gör uträkning av tid för aktuell task? Kasnek inte så bra...
 
@@ -114,7 +121,7 @@ class TaskPickerVC: UIViewController
 
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
-        let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolbarHeight: 30)
+        let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
         
         (self.view as! TimePoliceBGView).theme = theme
@@ -128,22 +135,8 @@ class TaskPickerVC: UIViewController
         self.view.addSubview(taskPickerBGView)
         lastview = taskPickerBGView
 
-/*
-        var statusRect = self.view.bounds
-        statusRect.origin.x = 5
-        statusRect.origin.y = statusRect.size.height-110
-        statusRect.size.height = 100
-        statusRect.size.width -= 10
-        statusView = UITextView(frame: statusRect)
-        statusView!.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
-        statusView!.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
-        statusView!.font = UIFont.systemFontOfSize(8)
-        statusView!.editable = false
-        self.view.addSubview(statusView!)
-*/
-
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = CGRectMake(width - 80, height - 45, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)

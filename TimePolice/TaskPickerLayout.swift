@@ -24,13 +24,13 @@ class GridLayout : Layout {
     var rows: Int
     var columns: Int
     var padding: Int
-    var toolbarHeight: Int
+    var toolHeight: Int
     
-    init(rows: Int, columns: Int, padding: Int, toolbarHeight: Int) {
+    init(rows: Int, columns: Int, padding: Int, toolHeight: Int) {
         self.rows = rows
         self.columns = columns
         self.padding = padding
-        self.toolbarHeight = toolbarHeight
+        self.toolHeight = toolHeight
     }
     
     func numberOfSelectionAreas() -> Int {
@@ -42,30 +42,30 @@ class GridLayout : Layout {
         case SessionName:
             let column = 0
             let columnWidth = Int(parentViewRect.width)
-            let rect = CGRect(x:0, y:padding, width:columnWidth, height:toolbarHeight)
+            let rect = CGRect(x:70, y:padding, width:columnWidth-70, height:toolHeight)
             return rect
         case SignInSignOut:
             let column = 0
             let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolbarHeight, width:columnWidth-padding, height:toolbarHeight)
+            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
             return rect
         case InfoArea:
             let column = 1
             let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolbarHeight, width:columnWidth-padding, height:toolbarHeight)
+            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
             return rect
         case Settings:
             let column = 2
             let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolbarHeight, width:columnWidth-padding, height:toolbarHeight)
+            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
             return rect
         default:
             // A button
             let row = selectionArea / columns
             let column = selectionArea % columns
-            let rowHeight = (Int(parentViewRect.height)-2*toolbarHeight-padding) / rows
+            let rowHeight = (Int(parentViewRect.height)-2*toolHeight-padding) / rows
             let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+2*toolbarHeight+3*padding, width:columnWidth-padding, height:rowHeight-padding)
+            let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+2*toolHeight+3*padding, width:columnWidth-padding, height:rowHeight-padding)
             
             return rect
         }
