@@ -148,8 +148,8 @@ class TaskPickerVC: UIViewController
         lastview = sessionNameView
         
         let taskPickerBGView = TaskPickerBGView()
-        taskPickerBGView.frame = CGRectMake(0, 25, parentWidth, parentHeight - 25)
-        taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
+        taskPickerBGView.frame = CGRectMake(0, 55, parentWidth, parentHeight - 55)
+        //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
         self.view.addSubview(taskPickerBGView)
         lastview = taskPickerBGView
 

@@ -71,9 +71,16 @@ class GridLayout : Layout {
             // A button
             let row = selectionArea / columns
             let column = selectionArea % columns
+            /*
             let rowHeight = (parentViewRect.height-2*toolHeight-padding) / CGFloat(rows)
             let columnWidth = parentViewRect.width / CGFloat(columns)
             let rect = CGRect(x:CGFloat(column)*columnWidth+padding, y:CGFloat(row)*rowHeight+2*toolHeight+3*padding, width:columnWidth-padding, height:rowHeight-padding)
+            */
+            let rowHeight = (parentViewRect.height-2*toolHeight-(3+CGFloat(rows))*padding) / CGFloat(rows)
+            let columnWidth = (parentViewRect.width - (1+CGFloat(columns))*padding) / CGFloat(columns)
+            let x = padding+(columnWidth+padding)*CGFloat(column)
+            let y = 2*toolHeight+3*padding+(rowHeight+padding)*CGFloat(row)
+            let rect = CGRectMake(x, y, columnWidth, rowHeight)
             
             return rect
         }
