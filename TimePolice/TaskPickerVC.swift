@@ -133,7 +133,7 @@ class TaskPickerVC: UIViewController
 
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = CGRectMake(0, 25, 70, 30)
-        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
+        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)

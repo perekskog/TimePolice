@@ -105,8 +105,17 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
         let width = CGRectGetWidth(self.view.frame)
 
+        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(exitButton)
+        lastview = exitButton
+
         sessionLabel = UILabel()
-        sessionLabel!.frame = CGRectMake(0, 20, width, 30)
+        sessionLabel!.frame = CGRectMake(70, 25, width-70, 30)
         sessionLabel!.textColor = UIColor.whiteColor()
         sessionLabel!.text = session?.name
         sessionLabel!.textAlignment = .Center
@@ -158,14 +167,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         self.view.addSubview(switchOngoingFinishedButton)
         lastview = switchOngoingFinishedButton
 
-//        let exitRect = CGRect(origin: CGPoint(x: self.view.bounds.size.width - 80, y: self.view.bounds.size.height-45), size: CGSize(width:70, height:30))
-        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = CGRectMake(width - 80, CGRectGetMaxY(lastview.frame) + 10, 70, 30)
-        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(exitButton)
 
         
     }
