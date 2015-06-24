@@ -11,7 +11,7 @@
 
 TODO
 
-- SessionName ska vara en del av VC, ej TimePolice
+- SessionName ska vara en del av VC, ej TimePolice. Den ska läggas i TaskPickerBGView (?)
 - Settings ska bort från layout
 - VC ska skapa TaskPickerToolView för Exit och SessionName, då funkar THeme med dessa också.
 - (Summary och stop/continue ska fortfarande vara en del av "Layout")
@@ -121,19 +121,15 @@ class TaskPickerVC: UIViewController
 
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
-        let layout = GridLayout(rows: 7, columns: 3, padding: 1, toolHeight: 30)
         let taskSelectionStrategy = TaskSelectAny()
+        let padding: CGFloat = 1
+        let layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
         
         (self.view as! TimePoliceBGView).theme = theme
 
         var lastview : UIView
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
-
-        let taskPickerBGView = TaskPickerBGView()
-        taskPickerBGView.frame = CGRectMake(0, 25, width - 1, height - 155)
-        self.view.addSubview(taskPickerBGView)
-        lastview = taskPickerBGView
+        let parentWidth = CGRectGetWidth(self.view.frame)
+        let parentHeight = CGRectGetHeight(self.view.frame)
 
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = CGRectMake(0, 25, 70, 30)
@@ -143,7 +139,21 @@ class TaskPickerVC: UIViewController
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
         lastview = exitButton
+
+        var viewRect = CGRectMake(70, 25, parentWidth-70, 30)
+        let sessionNameView = TaskPickerToolView(frame: viewRect)
+        sessionNameView.theme = theme
+        sessionNameView.tool = SessionName
+        self.view.addSubview(sessionNameView)
+        lastview = sessionNameView
         
+        let taskPickerBGView = TaskPickerBGView()
+        taskPickerBGView.frame = CGRectMake(0, 25, parentWidth, parentHeight - 25)
+        taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
+        self.view.addSubview(taskPickerBGView)
+        lastview = taskPickerBGView
+
+
         if let s = session {
             if let moc = self.managedObjectContext {
                 tp = TaskPicker(vc: self, backgroundView: taskPickerBGView,
@@ -151,6 +161,9 @@ class TaskPickerVC: UIViewController
                     session: s, moc: moc, appLog: appLog)
             
                 tp?.setup()
+
+                sessionNameView.toolbarInfoDelegate = tp
+
                 appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
             }
         }
@@ -421,6 +434,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 			backgroundView.addSubview(view)
 		}
 
+/*
         // Setup sessionname
         var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SessionName)
         sessionNameView = TaskPickerToolView(frame: viewRect)
@@ -428,9 +442,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         sessionNameView!.toolbarInfoDelegate = self
         sessionNameView!.tool = SessionName
         backgroundView.addSubview(sessionNameView!)
+*/
 
 		// Setup sign in/out button
-		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
+		var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
 	    signInSignOutView = TaskPickerToolView(frame: viewRect)
 		signInSignOutView!.theme = theme
 		signInSignOutView!.toolbarInfoDelegate = self
@@ -448,6 +463,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		infoAreaView!.tool = InfoArea
 		backgroundView.addSubview(infoAreaView!)
 
+/*
 		// Setup settings
 		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: Settings)
 	    settingsView = TaskPickerToolView(frame: viewRect)
@@ -458,6 +474,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 	    recognizer.delegate = self
 	    settingsView!.addGestureRecognizer(recognizer)
 		backgroundView.addSubview(settingsView!)
+*/
         
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                                    target: self,

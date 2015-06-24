@@ -23,10 +23,10 @@ protocol Layout {
 class GridLayout : Layout {
     var rows: Int
     var columns: Int
-    var padding: Int
-    var toolHeight: Int
+    var padding: CGFloat
+    var toolHeight: CGFloat
     
-    init(rows: Int, columns: Int, padding: Int, toolHeight: Int) {
+    init(rows: Int, columns: Int, padding: CGFloat, toolHeight: CGFloat) {
         self.rows = rows
         self.columns = columns
         self.padding = padding
@@ -36,36 +36,44 @@ class GridLayout : Layout {
     func numberOfSelectionAreas() -> Int {
         return rows * columns;
     }
+
+    func adjustedFrame(originalFrame: CGRect) -> CGRect {
+        let adjustedWidth = (originalFrame.width / CGFloat(columns)) * CGFloat(columns)
+        let adjustedHeight = (originalFrame.height / CGFloat(rows)) * CGFloat(rows)
+        return CGRectMake(originalFrame.origin.x, originalFrame.origin.y, adjustedWidth, adjustedHeight)
+    }
     
     func getViewRect(parentViewRect: CGRect, selectionArea: Int) -> CGRect {
         switch selectionArea {
+        /*
         case SessionName:
             let column = 0
-            let columnWidth = Int(parentViewRect.width)
+            let columnWidth = parentViewRect.width
             let rect = CGRect(x:70, y:padding, width:columnWidth-70, height:toolHeight)
             return rect
-        case SignInSignOut:
-            let column = 0
-            let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
-            return rect
+        */
         case InfoArea:
-            let column = 1
-            let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
+            let columnWidth = parentViewRect.width
+            let rect = CGRectMake(padding, padding, columnWidth-2*padding, toolHeight)
             return rect
+        case SignInSignOut:
+            let columnWidth = parentViewRect.width
+            let rect = CGRectMake(padding, padding*2+toolHeight, columnWidth-2*padding, toolHeight)
+            return rect
+        /*
         case Settings:
-            let column = 2
-            let columnWidth = Int(parentViewRect.width) / columns
+            let column: CGFloat = 2
+            let columnWidth = parentViewRect.width / CGFloat(columns)
             let rect = CGRect(x:column*columnWidth+padding, y:padding*2+toolHeight, width:columnWidth-padding, height:toolHeight)
             return rect
+        */
         default:
             // A button
             let row = selectionArea / columns
             let column = selectionArea % columns
-            let rowHeight = (Int(parentViewRect.height)-2*toolHeight-padding) / rows
-            let columnWidth = Int(parentViewRect.width) / columns
-            let rect = CGRect(x:column*columnWidth+padding, y:row*rowHeight+2*toolHeight+3*padding, width:columnWidth-padding, height:rowHeight-padding)
+            let rowHeight = (parentViewRect.height-2*toolHeight-padding) / CGFloat(rows)
+            let columnWidth = parentViewRect.width / CGFloat(columns)
+            let rect = CGRect(x:CGFloat(column)*columnWidth+padding, y:CGFloat(row)*rowHeight+2*toolHeight+3*padding, width:columnWidth-padding, height:rowHeight-padding)
             
             return rect
         }
