@@ -101,6 +101,11 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
 
+        let theme = BlackGreenTheme()
+//        let theme = BasicTheme()
+
+        (self.view as! TimePoliceBGView).theme = theme
+
         var lastview: UIView
 
         let width = CGRectGetWidth(self.view.frame)

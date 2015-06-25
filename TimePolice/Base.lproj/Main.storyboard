@@ -180,17 +180,9 @@
                         <viewControllerLayoutGuide type="top" id="9VG-A1-ay2"/>
                         <viewControllerLayoutGuide type="bottom" id="9gW-V1-TPd"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf">
+                    <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Emc-XT-Ksi">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="25"/>
-                                <color key="backgroundColor" red="0.25098040699958801" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="dxa-gD-taX"/>
@@ -253,6 +245,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="I7g-5x-ylG"/>
+        <segue reference="hjh-eJ-Q4q"/>
     </inferredMetricsTieBreakers>
 </document>
