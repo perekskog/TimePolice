@@ -1,5 +1,5 @@
 //
-//  TaskPickerTheme.swift
+//  TimePoliceTheme.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-02-01.
