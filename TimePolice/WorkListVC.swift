@@ -19,7 +19,7 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, ToolbarInfoDelegate {
+class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
 
     var session: Session?
     var sourceController: TimePoliceVC?
@@ -31,6 +31,9 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
     var selectedWork: Work?
     var selectedWorkIndex: Int?
+
+    var signInSignOutView: WorkListToolView?
+
 
     //--------------------------------------------------------
     // WorkListVC - Lazy properties
@@ -158,6 +161,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         workListBGView.addSubview(addButton)
         lastview = addButton
         
+/*
         let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         switchOngoingFinishedButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
         switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
@@ -166,6 +170,19 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
         workListBGView.addSubview(switchOngoingFinishedButton)
         lastview = switchOngoingFinishedButton
+*/
+
+        // Setup sign in/out button
+        viewRect = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
+        signInSignOutView = WorkListToolView(frame: viewRect)
+        signInSignOutView!.theme = theme
+        signInSignOutView!.toolbarInfoDelegate = self
+        signInSignOutView!.tool = SignInSignOut
+        var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
+        recognizer.delegate = self
+        signInSignOutView!.addGestureRecognizer(recognizer)
+        workListBGView.addSubview(signInSignOutView!)
+
         
     }
 
@@ -198,7 +215,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             workListTableView.reloadData()
             scrollToEnd(workListTableView)
         }
-
+        
+        signInSignOutView?.setNeedsDisplay()
     }
     
     func addWork(sender: UIButton) {
@@ -220,6 +238,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             workListTableView.reloadData()
             scrollToEnd(workListTableView)
         }
+
+        signInSignOutView?.setNeedsDisplay()
     }
 
     
@@ -456,25 +476,24 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 */
 
         var signedIn = false
+        var sessionName = "---"
 
-/*
-        if let work = session.getLastWork() {
-            if work.isOngoing() {
-                signedIn = true
+        if let s = session {
+            sessionName = s.name
 
-                let now = NSDate()
-                if(now.compare(work.startTime) == .OrderedDescending) {
-                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
-                    totalTime += timeForActiveTask
+            if let work = s.getLastWork() {
+                if work.isOngoing() {
+                    signedIn = true
+
+                    let now = NSDate()
+                    if(now.compare(work.startTime) == .OrderedDescending) {
+                        let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                        totalTime += timeForActiveTask
+                    }
                 }
             }
         }
-*/
 
-        var sessionName = "---"
-        if let s = session {
-            sessionName = s.name
-        }
         let toolbarInfo = ToolbarInfo(
             signedIn: signedIn,
             totalTimesActivatedForSession: totalActivations,
