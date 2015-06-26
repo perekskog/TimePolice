@@ -101,6 +101,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         
         appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
 
+        let padding = 1
+        
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
 
@@ -109,6 +111,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         var lastview: UIView
 
         let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
 
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = CGRectMake(0, 25, 70, 30)
@@ -119,17 +122,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         self.view.addSubview(exitButton)
         lastview = exitButton
 
-/*
-        sessionLabel = UILabel()
-        sessionLabel!.frame = CGRectMake(70, 25, width-70, 30)
-        sessionLabel!.textColor = UIColor.whiteColor()
-        sessionLabel!.text = session?.name
-        sessionLabel!.textAlignment = .Center
-        sessionLabel!.adjustsFontSizeToFitWidth = true
-        self.view.addSubview(sessionLabel!)
-        lastview = sessionLabel!
-*/
-
         var viewRect = CGRectMake(70, 25, width-70, 30)
         let sessionNameView = WorkListToolView(frame: viewRect)
         sessionNameView.theme = theme
@@ -138,31 +130,24 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         self.view.addSubview(sessionNameView)
         lastview = sessionNameView
 
+        
 
-        workListTableView.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, self.view.frame.height - 190)
+        let workListBGView = WorkListBGView()
+        workListBGView.frame = CGRectMake(0, 55, width, height - 55)
+        workListBGView.theme = theme
+        self.view.addSubview(workListBGView)
+        lastview = workListBGView
+
+        workListTableView.frame = CGRectMake(1, 1, width - 2*CGFloat(padding), self.view.frame.height - 190 - 2*CGFloat(padding))
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
         workListTableView.rowHeight = 25
         workListTableView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
-        self.view.addSubview(workListTableView)
+        workListBGView.addSubview(workListTableView)
         scrollToEnd(workListTableView)
         lastview = workListTableView
-
-/*
-        var statusRect = self.view.bounds
-        statusRect.origin.x = 5
-        statusRect.origin.y = statusRect.size.height-110
-        statusRect.size.height = 100
-        statusRect.size.width -= 10
-        statusView = UITextView(frame: statusRect)
-        statusView!.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
-        statusView!.textColor = UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0)
-        statusView!.font = UIFont.systemFontOfSize(8)
-        statusView!.editable = false
-        self.view.addSubview(statusView!)
-*/
 
         let addButton = UIButton.buttonWithType(.System) as! UIButton
         addButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
@@ -170,20 +155,17 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         addButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(addButton)
+        workListBGView.addSubview(addButton)
         lastview = addButton
         
-//        let switchOngoingFinishedRect = CGRect(origin: CGPoint(x: 10, y: self.view.bounds.size.height-45), size: CGSize(width:140, height:30))
         let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         switchOngoingFinishedButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
         switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
         switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         switchOngoingFinishedButton.setTitle("Stop/continue", forState: UIControlState.Normal)
         switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(switchOngoingFinishedButton)
+        workListBGView.addSubview(switchOngoingFinishedButton)
         lastview = switchOngoingFinishedButton
-
-
         
     }
 
