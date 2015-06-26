@@ -19,7 +19,7 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, ToolbarInfoDelegate {
 
     var session: Session?
     var sourceController: TimePoliceVC?
@@ -119,6 +119,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         self.view.addSubview(exitButton)
         lastview = exitButton
 
+/*
         sessionLabel = UILabel()
         sessionLabel!.frame = CGRectMake(70, 25, width-70, 30)
         sessionLabel!.textColor = UIColor.whiteColor()
@@ -127,6 +128,16 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         sessionLabel!.adjustsFontSizeToFitWidth = true
         self.view.addSubview(sessionLabel!)
         lastview = sessionLabel!
+*/
+
+        var viewRect = CGRectMake(70, 25, width-70, 30)
+        let sessionNameView = WorkListToolView(frame: viewRect)
+        sessionNameView.theme = theme
+        sessionNameView.tool = SessionName
+        sessionNameView.toolbarInfoDelegate = self
+        self.view.addSubview(sessionNameView)
+        lastview = sessionNameView
+
 
         workListTableView.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, self.view.frame.height - 190)
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
@@ -443,4 +454,53 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
     }
 
+    //----------------------------------------------
+    //  WorkListVC - Button info
+    //----------------------------------------------
+
+    // ToolbarInfoDelegate
+
+    func getToolbarInfo() -> ToolbarInfo {
+        appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
+
+        var totalActivations: Int = 1 // The first task is active when first selected
+        var totalTime: NSTimeInterval = 0
+
+/*        
+        for (task, (activations, time)) in sessionSummary {
+            totalActivations += activations
+            totalTime += time
+        }
+*/
+
+        var signedIn = false
+
+/*
+        if let work = session.getLastWork() {
+            if work.isOngoing() {
+                signedIn = true
+
+                let now = NSDate()
+                if(now.compare(work.startTime) == .OrderedDescending) {
+                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                    totalTime += timeForActiveTask
+                }
+            }
+        }
+*/
+
+        var sessionName = "---"
+        if let s = session {
+            sessionName = s.name
+        }
+        let toolbarInfo = ToolbarInfo(
+            signedIn: signedIn,
+            totalTimesActivatedForSession: totalActivations,
+            totalTimeActiveForSession: totalTime,
+            sessionName: sessionName)
+
+        return toolbarInfo
+    }
+
 }
+

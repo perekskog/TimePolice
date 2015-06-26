@@ -462,19 +462,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		infoAreaView!.toolbarInfoDelegate = self
 		infoAreaView!.tool = InfoArea
 		backgroundView.addSubview(infoAreaView!)
-
-/*
-		// Setup settings
-		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: Settings)
-	    settingsView = TaskPickerToolView(frame: viewRect)
-		settingsView!.theme = theme
-		settingsView!.toolbarInfoDelegate = self
-		settingsView!.tool = Settings
-		recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSettings:"))
-	    recognizer.delegate = self
-	    settingsView!.addGestureRecognizer(recognizer)
-		backgroundView.addSubview(settingsView!)
-*/
         
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                                    target: self,
