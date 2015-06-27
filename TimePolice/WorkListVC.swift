@@ -33,6 +33,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     var selectedWorkIndex: Int?
 
     var signInSignOutView: WorkListToolView?
+    var infoAreaView: WorkListToolView?
+
 
 
     //--------------------------------------------------------
@@ -104,8 +106,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         
         appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
 
-        let padding = 1
-        
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
 
@@ -113,8 +113,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
         var lastview: UIView
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        var width = CGRectGetWidth(self.view.frame)
+        var height = CGRectGetHeight(self.view.frame)
 
         let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         exitButton.frame = CGRectMake(0, 25, 70, 30)
@@ -141,7 +141,34 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         self.view.addSubview(workListBGView)
         lastview = workListBGView
 
-        workListTableView.frame = CGRectMake(1, 1, width - 2*CGFloat(padding), self.view.frame.height - 190 - 2*CGFloat(padding))
+        width = CGRectGetWidth(workListBGView.frame)
+        height = CGRectGetHeight(workListBGView.frame)
+        let padding = 1
+
+
+        // Setup info view
+        viewRect = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), 30)
+        infoAreaView = WorkListToolView(frame: viewRect)
+        infoAreaView!.theme = theme
+        infoAreaView!.toolbarInfoDelegate = self
+        infoAreaView!.tool = InfoArea
+        workListBGView.addSubview(infoAreaView!)
+        lastview = infoAreaView!
+
+        // Setup sign in/out button
+        viewRect = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        signInSignOutView = WorkListToolView(frame: viewRect)
+        signInSignOutView!.theme = theme
+        signInSignOutView!.toolbarInfoDelegate = self
+        signInSignOutView!.tool = SignInSignOut
+        var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
+        recognizer.delegate = self
+        signInSignOutView!.addGestureRecognizer(recognizer)
+        workListBGView.addSubview(signInSignOutView!)
+        lastview = signInSignOutView!
+
+
+        workListTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
         workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
@@ -153,37 +180,14 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         lastview = workListTableView
 
         let addButton = UIButton.buttonWithType(.System) as! UIButton
-        addButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
+        addButton.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
         addButton.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         addButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         workListBGView.addSubview(addButton)
         lastview = addButton
-        
-/*
-        let switchOngoingFinishedButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        switchOngoingFinishedButton.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
-        switchOngoingFinishedButton.backgroundColor = UIColor(red: 0.7, green: 0.7, blue: 0.0, alpha: 1.0)
-        switchOngoingFinishedButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        switchOngoingFinishedButton.setTitle("Stop/continue", forState: UIControlState.Normal)
-        switchOngoingFinishedButton.addTarget(self, action: "switchOngoingFinished:", forControlEvents: UIControlEvents.TouchUpInside)
-        workListBGView.addSubview(switchOngoingFinishedButton)
-        lastview = switchOngoingFinishedButton
-*/
 
-        // Setup sign in/out button
-        viewRect = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 30)
-        signInSignOutView = WorkListToolView(frame: viewRect)
-        signInSignOutView!.theme = theme
-        signInSignOutView!.toolbarInfoDelegate = self
-        signInSignOutView!.tool = SignInSignOut
-        var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
-        recognizer.delegate = self
-        signInSignOutView!.addGestureRecognizer(recognizer)
-        workListBGView.addSubview(signInSignOutView!)
-
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -217,6 +221,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }
         
         signInSignOutView?.setNeedsDisplay()
+        infoAreaView?.setNeedsDisplay()
     }
     
     func addWork(sender: UIButton) {
@@ -240,6 +245,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }
 
         signInSignOutView?.setNeedsDisplay()
+        infoAreaView?.setNeedsDisplay()
     }
 
     
