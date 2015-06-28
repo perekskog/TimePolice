@@ -408,7 +408,7 @@ class BlackGreenTheme : Theme {
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
             }
         case InfoArea:
-            text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
+            text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(getString(toolbarInfo.totalTimeActiveForSession))"
         case Settings:
             text = "Settings"
         default:

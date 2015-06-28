@@ -346,7 +346,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     var taskSelectionStrategy: TaskSelectionStrategy!
 
     // Cached values, calculated at startup
-	var sessionSummary: [Task: (Int, NSTimeInterval)]!
+	var sessionTaskSummary: [Task: (Int, NSTimeInterval)]!
 
     // Non persitent data, initialized in init(), then set in setup()
     var recognizers: [UIGestureRecognizer: Int]!
@@ -384,7 +384,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 		self.theme = theme
         self.taskSelectionStrategy = taskSelectionStrategy
 
-        self.sessionSummary = session.getSessionSummary(moc)
+        self.sessionTaskSummary = session.getSessionTaskSummary(moc)
             
         self.moc = moc
 
@@ -434,16 +434,6 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 			backgroundView.addSubview(view)
 		}
 
-/*
-        // Setup sessionname
-        var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SessionName)
-        sessionNameView = TaskPickerToolView(frame: viewRect)
-        sessionNameView!.theme = theme
-        sessionNameView!.toolbarInfoDelegate = self
-        sessionNameView!.tool = SessionName
-        backgroundView.addSubview(sessionNameView!)
-*/
-
 		// Setup sign in/out button
 		var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
 	    signInSignOutView = TaskPickerToolView(frame: viewRect)
@@ -477,7 +467,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func redraw() {
         appLog.log(logger, logtype: .EnterExit, message: "redraw")
 
-        sessionSummary = session.getSessionSummary(moc)
+        sessionTaskSummary = session.getSessionTaskSummary(moc)
 
         signInSignOutView?.setNeedsDisplay()
         infoAreaView?.setNeedsDisplay()
@@ -633,13 +623,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 work.setStoppedAt(NSDate())
 
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
-                if let t = sessionSummary[work.task] {
+                if let t = sessionTaskSummary[work.task] {
                     taskSummary = t
                 }
                 var (numberOfTimesActivated, totalTimeActive) = taskSummary
                 numberOfTimesActivated++
                 totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
-                sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+                sessionTaskSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
                 TimePoliceModelUtils.save(moc)
             } else {
@@ -657,13 +647,13 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         if let work = session.getLastWork() {
             if !work.isOngoing() {
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
-                if let t = sessionSummary[work.task] {
+                if let t = sessionTaskSummary[work.task] {
                     taskSummary = t
                 }
                 var (numberOfTimesActivated, totalTimeActive) = taskSummary
                 numberOfTimesActivated--
                 totalTimeActive -= work.stopTime.timeIntervalSinceDate(work.startTime)
-                sessionSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+                sessionTaskSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
 
                 work.setAsOngoing()
 
@@ -718,7 +708,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         let task = taskList[selectionArea]
 
         var taskSummary: (Int, NSTimeInterval) = (0, 0)
-        if let t = sessionSummary[task] {
+        if let t = sessionTaskSummary[task] {
             taskSummary = t
         }
         let (numberOfTimesActivated, totalTimeActive) = taskSummary
@@ -751,10 +741,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func getToolbarInfo() -> ToolbarInfo {
         appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
 
-        var totalActivations: Int = 1 // The first task is active when first selected
+        var totalActivations: Int = 0 // The first task is active when first selected
         var totalTime: NSTimeInterval = 0
         
-        for (task, (activations, time)) in sessionSummary {
+        for (task, (activations, time)) in sessionTaskSummary {
             totalActivations += activations
             totalTime += time
         }

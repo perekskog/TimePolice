@@ -35,6 +35,10 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     var signInSignOutView: WorkListToolView?
     var infoAreaView: WorkListToolView?
 
+    // Cached values, calculated at startup
+    var sessionSummary: (Int, NSTimeInterval)!
+
+    var updateActiveActivityTimer: NSTimer?
 
 
     //--------------------------------------------------------
@@ -188,6 +192,17 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         workListBGView.addSubview(addButton)
         lastview = addButton
 
+        self.sessionSummary = (0,0)
+        if let moc = managedObjectContext {
+           self.sessionSummary = session?.getSessionSummary(moc)
+        }
+
+        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+                target: self,
+              selector: "updateActiveTask:",
+              userInfo: nil,
+               repeats: true)        
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -213,7 +228,15 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         if let w = session?.getLastWork() {
             if w.isOngoing() {
                 w.setStoppedAt(NSDate())
+                var (activations, totalTime) = sessionSummary
+                activations++
+                totalTime += w.stopTime.timeIntervalSinceDate(w.startTime)
+                sessionSummary = (activations, totalTime)
             } else {
+                var (activations, totalTime) = sessionSummary
+                activations--
+                totalTime -= w.stopTime.timeIntervalSinceDate(w.startTime)
+                sessionSummary = (activations, totalTime)
                 w.setAsOngoing()
             }
             workListTableView.reloadData()
@@ -235,6 +258,10 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                 task = lastWork.task
                 if lastWork.isOngoing() {
                     lastWork.setStoppedAt(now)
+                    var (activations, totalTime) = sessionSummary
+                    activations++
+                    totalTime += lastWork.stopTime.timeIntervalSinceDate(lastWork.startTime)
+                    sessionSummary = (activations, totalTime)
                 }
             }
             Work.createInMOC(moc, name: "", session: s, task: task)
@@ -462,6 +489,24 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         
     }
 
+    //--------------------------------------------------------------
+    // WorkListVC - Periodic update of views, triggered by timeout
+    //--------------------------------------------------------------
+
+    var updateN = 0
+
+    @objc
+    func updateActiveTask(timer: NSTimer) {
+        updateN++
+        if updateN == 5 {
+            updateN = 0
+        }
+        if updateN==0 {
+            appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
+        }
+        infoAreaView?.setNeedsDisplay()
+    }
+
     //----------------------------------------------
     //  WorkListVC - Button info
     //----------------------------------------------
@@ -471,15 +516,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     func getToolbarInfo() -> ToolbarInfo {
         appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
 
-        var totalActivations: Int = 1 // The first task is active when first selected
-        var totalTime: NSTimeInterval = 0
-
-/*        
-        for (task, (activations, time)) in sessionSummary {
-            totalActivations += activations
-            totalTime += time
-        }
-*/
+        var (totalActivations, totalTime) = sessionSummary
 
         var signedIn = false
         var sessionName = "---"

@@ -192,11 +192,11 @@ class Session: NSManagedObject {
 
     
     //---------------------------------------------
-    // Session - getSessionSummary
+    // Session - getSessionTaskSummary
     //---------------------------------------------
 
-    func getSessionSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
-        var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
+    func getSessionTaskSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
+        var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
@@ -205,13 +205,35 @@ class Session: NSManagedObject {
             if idx != self.work.count-1 || work.isStopped() {
                 let task = work.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
-                if let t = sessionSummary[task] {
+                if let t = sessionTaskSummary[task] {
                     taskSummary = t
                 }
                 var (activations, totalTime) = taskSummary
                 activations++
                 totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
-                sessionSummary[task] = (activations, totalTime)
+                sessionTaskSummary[task] = (activations, totalTime)
+            }
+        }
+
+        return sessionTaskSummary
+    }
+
+    //---------------------------------------------
+    // Session - getSessionSummary
+    //---------------------------------------------
+
+    func getSessionSummary(moc: NSManagedObjectContext) -> (Int, NSTimeInterval) {
+        var sessionSummary: (Int, NSTimeInterval) = (0,0)
+
+        self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+
+            let work = elem as! Work
+            // For all items but the last one, if it is ongoing
+            if idx != self.work.count-1 || work.isStopped() {
+                var (activations, totalTime) = sessionSummary
+                activations++
+                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                sessionSummary = (activations, totalTime)
             }
         }
 
