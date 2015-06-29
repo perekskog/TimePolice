@@ -183,6 +183,18 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         scrollToEnd(workListTableView)
         lastview = workListTableView
 
+        // Setup add button
+        viewRect = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        let addView = WorkListToolView(frame: viewRect)
+        addView.theme = theme
+        addView.toolbarInfoDelegate = self
+        addView.tool = Add
+        recognizer = UITapGestureRecognizer(target:self, action:Selector("addWork:"))
+        recognizer.delegate = self
+        addView.addGestureRecognizer(recognizer)
+        workListBGView.addSubview(addView)
+        lastview = addView
+/*
         let addButton = UIButton.buttonWithType(.System) as! UIButton
         addButton.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
         addButton.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
@@ -191,7 +203,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
         workListBGView.addSubview(addButton)
         lastview = addButton
-
+*/
         self.sessionSummary = (0,0)
         if let moc = managedObjectContext {
            self.sessionSummary = session?.getSessionSummary(moc)

@@ -13,6 +13,7 @@ let SignInSignOut = -1	// Active button for signing in/out of a session
 let InfoArea = -2		// Display area for ongoing work
 let Settings = -3		// Segue to settings, configurations etc
 let SessionName = -4    // Display of current sessionname
+let Add = -5
 
 
 protocol Layout {

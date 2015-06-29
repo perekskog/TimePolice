@@ -411,6 +411,8 @@ class BlackGreenTheme : Theme {
             text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(getString(toolbarInfo.totalTimeActiveForSession))"
         case Settings:
             text = "Settings"
+        case Add:
+            text = "Add"
         default:
             text = "---"
         }
