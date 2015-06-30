@@ -77,6 +77,11 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+
+        if let indexPath = workListTableView.indexPathForSelectedRow() {
+            workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+        }
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -173,12 +178,12 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
 
         workListTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
-        workListTableView.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
         workListTableView.rowHeight = 25
-        workListTableView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
+        workListTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
+        workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         workListBGView.addSubview(workListTableView)
         scrollToEnd(workListTableView)
         lastview = workListTableView
@@ -194,16 +199,7 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         addView.addGestureRecognizer(recognizer)
         workListBGView.addSubview(addView)
         lastview = addView
-/*
-        let addButton = UIButton.buttonWithType(.System) as! UIButton
-        addButton.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
-        addButton.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
-        addButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        addButton.setTitle("Add/duplicate work", forState: UIControlState.Normal)
-        addButton.addTarget(self, action: "addWork:", forControlEvents: UIControlEvents.TouchUpInside)
-        workListBGView.addSubview(addButton)
-        lastview = addButton
-*/
+
         self.sessionSummary = (0,0)
         if let moc = managedObjectContext {
            self.sessionSummary = session?.getSessionSummary(moc)
@@ -310,10 +306,11 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                 cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
             }            
         }
-        cell.backgroundColor = UIColor(white:0.25, alpha:1.0)
+        cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
-//        cell.textLabel?.textColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
+        cell.layoutMargins = UIEdgeInsetsZero
+        cell.preservesSuperviewLayoutMargins = false
         return cell
     }
 

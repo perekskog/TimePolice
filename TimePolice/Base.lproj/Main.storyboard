@@ -183,7 +183,7 @@
                     <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.064999889510000006" green="0.74704583899999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="dxa-gD-taX"/>
                     <connections>
