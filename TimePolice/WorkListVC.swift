@@ -107,6 +107,9 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+
+        workListTableView.separatorInset = UIEdgeInsetsZero
+        workListTableView.layoutMargins = UIEdgeInsetsZero
     }
 
     override func viewDidLoad() {
@@ -309,8 +312,10 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
+
+        cell.separatorInset = UIEdgeInsetsZero
         cell.layoutMargins = UIEdgeInsetsZero
-        cell.preservesSuperviewLayoutMargins = false
+
         return cell
     }
 
