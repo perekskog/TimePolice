@@ -33,6 +33,8 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     var taskToUse: Task?
     var initialStartDate: NSDate?
     var initialStopDate: NSDate?
+
+    var tableTask = UITableView()
     
     //----------------------------------------------------------------
     // EditWorkVC - Lazy properties
@@ -79,6 +81,9 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+
+        tableTask.separatorInset = UIEdgeInsetsZero
+        tableTask.layoutMargins = UIEdgeInsetsZero
     }
 
     override func viewDidLoad() {
@@ -125,16 +130,33 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         let labelTitleChange = UILabel()
         labelTitleChange.attributedText = NSMutableAttributedString(string: "Change workitem", attributes: attributesTitle)
         labelTitleChange.textAlignment = NSTextAlignment.Center
-        labelTitleChange.frame = CGRectMake(0, 20, width, 20)
+        labelTitleChange.frame = CGRectMake(00, 20, width, 20)
         scrollView.addSubview(labelTitleChange)
         lastview = labelTitleChange
 
         // Starttime
 
+        let buttonCancel = UIButton.buttonWithType(.System) as! UIButton
+        buttonCancel.frame = CGRectMake(10, 20, 80, 20)
+        buttonCancel.setTitleColor(UIColor(red:1.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: UIControlState.Normal)
+        buttonCancel.setTitle("Cancel", forState: UIControlState.Normal)
+        buttonCancel.addTarget(self, action: "cancelEditWork:", forControlEvents: UIControlEvents.TouchUpInside)
+        scrollView.addSubview(buttonCancel)
+        lastview = buttonCancel
+
+        let buttonSave = UIButton.buttonWithType(.System) as! UIButton
+        buttonSave.frame = CGRectMake(width-10-80, 20, 80, 20)
+        buttonSave.setTitleColor(UIColor(red:1.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: UIControlState.Normal)
+        buttonSave.setTitle("Save", forState: UIControlState.Normal)
+        buttonSave.titleLabel!.textAlignment = NSTextAlignment.Left
+        buttonSave.addTarget(self, action: "saveEditWork:", forControlEvents: UIControlEvents.TouchUpInside)
+        scrollView.addSubview(buttonSave)
+        lastview = buttonSave
+
         let labelStart = UILabel()
         labelStart.attributedText = NSMutableAttributedString(string: "Start", attributes: attributesBody)
-        labelStart.textAlignment = NSTextAlignment.Center
-        labelStart.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, 20)
+        labelStart.textAlignment = NSTextAlignment.Left
+        labelStart.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame) + 20, width-10, 20)
         scrollView.addSubview(labelStart)
         lastview = labelStart
 
@@ -157,8 +179,8 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
             let labelStop = UILabel()
             labelStop.attributedText = NSMutableAttributedString(string: "Stop", attributes: attributesBody)
-            labelStop.textAlignment = NSTextAlignment.Center
-            labelStop.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 20)
+            labelStop.textAlignment = NSTextAlignment.Left
+            labelStop.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame), width-10, 20)
             scrollView.addSubview(labelStop)
             lastview = labelStop
 
@@ -179,13 +201,12 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
         let labelTask = UILabel()
         labelTask.attributedText = NSMutableAttributedString(string: "Task", attributes: attributesBody)
-        labelTask.textAlignment = NSTextAlignment.Center
-        labelTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 20)
+        labelTask.textAlignment = NSTextAlignment.Left
+        labelTask.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame), width-10, 20)
         scrollView.addSubview(labelTask)
         lastview = labelTask
 
-        let tableTask = UITableView()
-        tableTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame), width, 150)
+        tableTask.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width, 150)
         tableTask.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "EditWorkVCCell")
         tableTask.dataSource = self
         tableTask.delegate = self
@@ -193,27 +214,6 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         scrollView.addSubview(tableTask)
         lastview = tableTask
         
-        let buttonCancel = UIButton.buttonWithType(.System) as! UIButton
-        buttonCancel.frame.size = CGSize(width: 140, height:30)
-        buttonCancel.frame.origin.y = CGRectGetMaxY(lastview.frame)+10
-        buttonCancel.center.x = width/4
-        buttonCancel.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
-        buttonCancel.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        buttonCancel.setTitle("Cancel", forState: UIControlState.Normal)
-        buttonCancel.addTarget(self, action: "cancelEditWork:", forControlEvents: UIControlEvents.TouchUpInside)
-        scrollView.addSubview(buttonCancel)
-        lastview = buttonCancel
-
-        let buttonSave = UIButton.buttonWithType(.System) as! UIButton
-        buttonSave.frame.size = CGSize(width: 140, height:30)
-        buttonSave.frame.origin.y = lastview.frame.origin.y
-        buttonSave.center.x = width/4*3
-        buttonSave.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
-        buttonSave.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        buttonSave.setTitle("Save", forState: UIControlState.Normal)
-        buttonSave.addTarget(self, action: "saveEditWork:", forControlEvents: UIControlEvents.TouchUpInside)
-        scrollView.addSubview(buttonSave)
-        lastview = buttonSave
 
         
 
@@ -222,19 +222,19 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         let labelTitleDelete = UILabel()
         labelTitleDelete.attributedText = NSMutableAttributedString(string: "Delete workitem", attributes: attributesTitle)
         labelTitleDelete.textAlignment = NSTextAlignment.Center
-        labelTitleDelete.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 30, width, 20)
+        labelTitleDelete.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame) + 30, width-10, 20)
         scrollView.addSubview(labelTitleDelete)
         lastview = labelTitleDelete
 
         let labelFillWith = UILabel()
         labelFillWith.attributedText = NSMutableAttributedString(string: "Fill empty space with", attributes: attributesBody)
-        labelFillWith.textAlignment = NSTextAlignment.Center
-        labelFillWith.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 20, width, 20)
+        labelFillWith.textAlignment = NSTextAlignment.Left
+        labelFillWith.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame) + 20, width-10, 20)
         scrollView.addSubview(labelFillWith)
         lastview = labelFillWith
         
         fillEmptySpaceWith = UISegmentedControl(items: ["None", "Previous", "Next"])
-        fillEmptySpaceWith!.frame = CGRectMake(0, CGRectGetMaxY(lastview.frame) + 10, width/3*2, 30)
+        fillEmptySpaceWith!.frame = CGRectMake(10, CGRectGetMaxY(lastview.frame) + 10, width/3*2, 30)
         fillEmptySpaceWith!.center.x = width/2
         fillEmptySpaceWith!.selectedSegmentIndex = 0
         scrollView.addSubview(fillEmptySpaceWith!)
@@ -247,7 +247,7 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         buttonDelete.center.x = width/2
         buttonDelete.backgroundColor = UIColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         buttonDelete.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        buttonDelete.setTitle("Delete work", forState: UIControlState.Normal)
+        buttonDelete.setTitle("Delete workitem", forState: UIControlState.Normal)
         buttonDelete.addTarget(self, action: "deleteWork:", forControlEvents: UIControlEvents.TouchUpInside)
         scrollView.addSubview(buttonDelete)
         lastview = buttonDelete
@@ -313,6 +313,10 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("EditWorkVCCell") as! UITableViewCell
         cell.textLabel?.text = taskList?[indexPath.row].name
+
+        cell.separatorInset = UIEdgeInsetsZero
+        cell.layoutMargins = UIEdgeInsetsZero
+
         return cell
     }
     
