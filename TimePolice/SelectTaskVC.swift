@@ -8,28 +8,84 @@
 
 import UIKit
 
-class SelectTaskVC: UIViewController {
+class SelectTaskVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    // Input data
+    var tasks: [Task]?
+    
+    // Output data
+    var taskIndexSelected: Int?
+    
+    
+    // Internal
+    
+    let cellReuseId = "SelectTask"
+    
+    let table = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.title = "Select Task"
+        
+        table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
+        table.dataSource = self
+        table.delegate = self
+        self.view.addSubview(table)
     }
+
+    override func viewWillAppear(animated: Bool) {
+        if let indexPath = table.indexPathForSelectedRow() {
+            table.deselectRowAtIndexPath(indexPath, animated: true)
+        }
+    }
+
+    override func viewWillLayoutSubviews() {
+        let width = self.view.frame.size.width
+        let height = self.view.frame.size.height
+        
+        table.frame = CGRectMake(5, 0, width-10, height-25)        
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // UITableViewDelegate
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        taskIndexSelected = indexPath.row
+        performSegueWithIdentifier("DoneSelectTask", sender: self)
     }
-    */
+    
+    // UITableViewDataSource
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell: UITableViewCell!
+        if let c = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath) as? UITableViewCell {
+            cell = c
+        } else {
+            cell = UITableViewCell(style: .Default, reuseIdentifier: cellReuseId)
+        }
 
+        if let t = tasks?[indexPath.row] {
+            cell.textLabel?.text = t.name
+        }
+
+        return cell
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let t = tasks {
+            return t.count
+        } else {
+            return 0
+        }
+    }
 }

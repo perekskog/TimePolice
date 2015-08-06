@@ -373,7 +373,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditWork" {
-            let vc = segue.destinationViewController as! EditWorkVC
+            let nvc = segue.destinationViewController as! UINavigationController
+            let vc = nvc.topViewController as! EditWorkVC
             if let s = session {
                 appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
 
