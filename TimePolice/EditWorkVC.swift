@@ -259,6 +259,16 @@ class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     }
 
     //-----------------------------------------
+    // EditWorkVC- Segue handling
+    //-----------------------------------------
+
+    @IBAction func exitSelectTask(unwindSegue: UIStoryboardSegue) {
+        if unwindSegue.identifier == "DoneSelectTask" {
+            
+        }
+    }
+    
+    //-----------------------------------------
     // EditWorkVC- VC button actions
     //-----------------------------------------
 
