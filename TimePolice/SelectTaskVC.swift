@@ -1,15 +1,20 @@
 //
-//  SelectTaskVC.swift
-//  TimePolice
+//  SelectTaskFromListVC.swift
+//  ProgrammaticPropertyTable
 //
-//  Created by Per Ekskog on 2015-08-06.
+//  Created by Per Ekskog on 2015-07-06.
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+Todo:
+
+*/
+
 import UIKit
 
-class SelectTaskVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+class SelectTaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
     // Input data
     var tasks: [Task]?
     
@@ -88,4 +93,5 @@ class SelectTaskVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             return 0
         }
     }
+    
 }
