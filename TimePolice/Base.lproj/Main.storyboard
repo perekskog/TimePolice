@@ -196,10 +196,10 @@
             </objects>
             <point key="canvasLocation" x="2267" y="838"/>
         </scene>
-        <!--Edit WorkVC-->
+        <!--WorkPropVC-->
         <scene sceneID="d2u-oH-QeM">
             <objects>
-                <viewController id="dzU-1d-OfS" customClass="EditWorkVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dzU-1d-OfS" userLabel="WorkPropVC" customClass="WorkPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Fsg-Qu-mhy"/>
                         <viewControllerLayoutGuide type="bottom" id="OC8-9I-IBs"/>
@@ -222,10 +222,10 @@
             </objects>
             <point key="canvasLocation" x="3438" y="431"/>
         </scene>
-        <!--SelectTaskVC-->
+        <!--TaskSelectVC-->
         <scene sceneID="VvP-X4-uFq">
             <objects>
-                <viewController id="tNe-a1-HVm" userLabel="SelectTaskVC" customClass="SelectTaskVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="tNe-a1-HVm" userLabel="TaskSelectVC" customClass="TaskSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="J9v-GY-g7w"/>
                         <viewControllerLayoutGuide type="bottom" id="A1c-Qb-ihc"/>

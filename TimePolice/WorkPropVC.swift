@@ -15,7 +15,7 @@ TODO
 
 import UIKit
 
-class EditWorkVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
     // Input data
     var workTemplate: Work?

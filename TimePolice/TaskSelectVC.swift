@@ -1,8 +1,8 @@
 //
-//  SelectTaskFromListVC.swift
-//  ProgrammaticPropertyTable
+//  TaskSelectVC.swift
+//  TimePolice
 //
-//  Created by Per Ekskog on 2015-07-06.
+//  Created by Per Ekskog on 2015-08-11.
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ Todo:
 
 import UIKit
 
-class SelectTaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // Input data
     var tasks: [Task]?
