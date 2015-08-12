@@ -1,5 +1,5 @@
 //
-//  EditWorkVC.swift
+//  WorkPropVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-05-08.
@@ -11,6 +11,10 @@ TODO
 
 - Make sure that starttime <= stoptime, whenever some change is done
 
+- Migrate code to programmatic table
+
+- 3 sections/groups: Datepickers, task, delete buttons
+
 */
 
 import UIKit
@@ -20,17 +24,22 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     // Input data
     var workTemplate: Work?
     var segue: String?
-    let taskList = [Task]?
+    var taskList: [Task]?
+    var minimumDate: NSDate?
+    var maximumDate: NSDate?
+    var isOngoing: Bool?
     
     // Output data
-    var workResult: TaskEntry?
+    var taskToUse: Task?
+    var initialStartDate: NSDate?
+    var initialStopDate: NSDate?
 
     // Local data
     var editStart = false
     var editStop = false
     
     // Table and table cells
-    var table: UITableView!
+    var table: UITableView = UITableView(frame: self.view.frame, style: .Grouped)
     
     let cellStartTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type1")
     let cellStopTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type2")
@@ -61,8 +70,6 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
                     self.title = "???"
             }
         }
-        
-        self.table = UITableView(frame: self.view.frame, style: .Grouped)
 
         buttonCancel.setTitleColor(UIColor(red:1.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: UIControlState.Normal)
         buttonCancel.setTitle("Cancel", forState: UIControlState.Normal)
@@ -330,6 +337,9 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
     var tableTask = UITableView()
     
+
+>>>>>>>>>>
+
     //----------------------------------------------------------------
     // EditWorkVC - Lazy properties
     //----------------------------------------------------------------

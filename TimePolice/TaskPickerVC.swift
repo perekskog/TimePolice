@@ -196,7 +196,7 @@ class TaskPickerVC: UIViewController
         appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "EditWork" {
-            let vc = segue.destinationViewController as! EditWorkVC
+            let vc = segue.destinationViewController as! WorkPropVC
             
             if let s = session {
                 appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
