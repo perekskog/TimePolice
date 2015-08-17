@@ -373,34 +373,35 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditWork" {
-            let nvc = segue.destinationViewController as! UINavigationController
-            let vc = nvc.topViewController as! WorkPropVC
-            if let s = session,
-                tl = s.tasks.array as? [Task] {
-                appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+            if let nvc = segue.destinationViewController as? UINavigationController,
+                vc = nvc.topViewController as? WorkPropVC {
+                    if let s = session,
+                    tl = s.tasks.array as? [Task] {
+                        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
 
-                vc.taskList = tl
+                        vc.taskList = tl
 
-                // Never set any time into the future
-                vc.maximumDate = NSDate()
-                if let wl = s.work.array as? [Work],
-                        i = selectedWorkIndex {
-                    vc.taskEntryTemplate = wl[i]
-                    if i > 0 {
-                        // Limit to starttime of previous item, if any
-                        vc.minimumDate = wl[i-1].startTime
-                    }
-                    if i < wl.count-1 && !wl[i+1].isOngoing() {
-                        // Limit to stoptime of next item, if any
-                        vc.maximumDate = wl[i+1].stopTime
-                    }
-                    if vc.taskEntryTemplate!.isOngoing() {
-                        vc.isOngoing = true
-                    } else {
-                        vc.isOngoing = false
-                    }
-                }
+                        // Never set any time into the future
+                        vc.maximumDate = NSDate()
+                        if let wl = s.work.array as? [Work],
+                           i = selectedWorkIndex {
+                            vc.taskEntryTemplate = wl[i]
+                            if i > 0 {
+                                // Limit to starttime of previous item, if any
+                                vc.minimumDate = wl[i-1].startTime
+                            }
+                            if i < wl.count-1 && !wl[i+1].isOngoing() {
+                                // Limit to stoptime of next item, if any
+                                vc.maximumDate = wl[i+1].stopTime
+                            }
+                            if vc.taskEntryTemplate!.isOngoing() {
+                                vc.isOngoing = true
+                            } else {
+                                    vc.isOngoing = false
+                            }
+                        }
 
+                    }
             }
         }
 
@@ -415,13 +416,13 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
         let vc = unwindSegue.sourceViewController as! WorkPropVC
 
-        if unwindSegue.identifier == "CancelEditWork" {
-            appLog.log(logger, logtype: .Debug, message: "Handle CancelEditWork... Do nothing")
+        if unwindSegue.identifier == "CancelTaskEntry" {
+            appLog.log(logger, logtype: .Debug, message: "Handle CancelTaskEntry... Do nothing")
             // Do nothing
         }
 
-        if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger, logtype: .Debug, message: "Handle OkEditWork")
+        if unwindSegue.identifier == "SaveTaskEntry" {
+            appLog.log(logger, logtype: .Debug, message: "Handle SaveTaskEntry")
 
             if let moc = managedObjectContext,
                      s = session,
@@ -472,8 +473,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }
 
 
-        if unwindSegue.identifier == "DeleteWork" {
-            appLog.log(logger, logtype: .Debug, message: "Handle DeleteWork")
+        if unwindSegue.identifier == "DeleteTaskEntry" {
+            appLog.log(logger, logtype: .Debug, message: "Handle DeleteTaskEntry")
 
             if let moc = managedObjectContext,
                      s = session,

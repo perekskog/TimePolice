@@ -196,33 +196,35 @@ class TaskPickerVC: UIViewController
         appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "EditWork" {
-            let vc = segue.destinationViewController as! WorkPropVC
+            if let nvc = segue.destinationViewController as? UINavigationController,
+                vc = nvc.topViewController as? WorkPropVC {
             
-            if let s = session,
-                tl = s.tasks.array as? [Task] {
-                appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
-
-                vc.taskList = tl
-
-                // Never set any time into the future
-                vc.maximumDate = NSDate()
-                if let wl = s.work.array as? [Work],
-                        i = selectedWorkIndex {
-                    vc.taskEntryTemplate = wl[i]
-                    if i > 0 {
-                        // Limit to starttime of previous item, if any
-                        vc.minimumDate = wl[i-1].startTime
+                    if let s = session,
+                        tl = s.tasks.array as? [Task] {
+                            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+                            
+                            vc.taskList = tl
+                            
+                            // Never set any time into the future
+                            vc.maximumDate = NSDate()
+                            if let wl = s.work.array as? [Work],
+                                i = selectedWorkIndex {
+                                    vc.taskEntryTemplate = wl[i]
+                                    if i > 0 {
+                                        // Limit to starttime of previous item, if any
+                                        vc.minimumDate = wl[i-1].startTime
+                                    }
+                                    if i < wl.count-1 {
+                                        // Limit to stoptime of next item, if any
+                                        vc.maximumDate = wl[i+1].stopTime
+                                    }
+                                    if vc.taskEntryTemplate!.isOngoing() {
+                                        vc.isOngoing = true
+                                    } else {
+                                        vc.isOngoing = false
+                                    }
+                            }
                     }
-                    if i < wl.count-1 {
-                        // Limit to stoptime of next item, if any
-                        vc.maximumDate = wl[i+1].stopTime
-                    }
-                    if vc.taskEntryTemplate!.isOngoing() {
-                        vc.isOngoing = true
-                    } else {
-                        vc.isOngoing = false
-                    }
-                }
             }
         }
 
