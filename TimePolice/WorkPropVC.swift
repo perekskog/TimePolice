@@ -53,8 +53,44 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     let buttonCancel = UIButton.buttonWithType(.System) as! UIButton
     let buttonSave = UIButton.buttonWithType(.System) as! UIButton
 
-    // View lifecycle
+    //----------------------------------------------------------------
+    // EditWorkVC - Lazy properties
+    //----------------------------------------------------------------
     
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+        }()
+
+    lazy var logger : AppLogger = {
+        return ApplogLog(locator: "EditWorkVC")
+    }()
+
+
+    //---------------------------------------------
+    // EditWorkVC - View lifecycle
+    //---------------------------------------------
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,7 +137,8 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+
         if let indexPath = table.indexPathForSelectedRow() {
             table.deselectRowAtIndexPath(indexPath, animated: true)
         }
@@ -109,6 +146,7 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     }
 
     override func viewWillLayoutSubviews() {
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
 
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
@@ -124,12 +162,26 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         table.frame = CGRectMake(5,CGRectGetMaxY(lastview.frame), width-10, height-CGRectGetMaxY(lastview.frame))
         
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+
+        tableTask.separatorInset = UIEdgeInsetsZero
+        tableTask.layoutMargins = UIEdgeInsetsZero
+    }
+    
+
+
+
+
     
     
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
 
     // GUI actions
@@ -340,55 +392,6 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
 
 >>>>>>>>>>
 
-    //----------------------------------------------------------------
-    // EditWorkVC - Lazy properties
-    //----------------------------------------------------------------
-    
-    lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog
-        }()
-
-    lazy var logger : AppLogger = {
-        return ApplogLog(locator: "EditWorkVC")
-    }()
-
-    //---------------------------------------------
-    // EditWorkVC - View lifecycle
-    //---------------------------------------------
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
-
-        tableTask.separatorInset = UIEdgeInsetsZero
-        tableTask.layoutMargins = UIEdgeInsetsZero
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -555,11 +558,6 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         buttonDelete.addTarget(self, action: "deleteWork:", forControlEvents: UIControlEvents.TouchUpInside)
         scrollView.addSubview(buttonDelete)
         lastview = buttonDelete
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
     }
 
     //-----------------------------------------
