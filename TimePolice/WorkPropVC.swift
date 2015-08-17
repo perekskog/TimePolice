@@ -9,22 +9,28 @@
 /*
 TODO
 
-- Make sure that starttime <= stoptime, whenever some change is done
+v Make sure that starttime <= stoptime, whenever some change is done
 
-- Migrate code to programmatic table
++ Migrate code to programmatic table
 
-- 3 sections/groups: Datepickers, task, delete buttons
++ 3 sections/groups: Datepickers, task, delete buttons
+
+- Ska ge en TaskEntry som taskEntryResult, inte kolla enskilda attribut
 
 */
 
 import UIKit
 
+enum FillWith: Int {
+    case FillWithNone, FillWithPrevious, FillWithNext
+}
+
 class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
     // Input data
-    var workTemplate: Work?
+    var taskEntryTemplate: Work?
     var segue: String?
-    var taskList: [Task]?
+    var taskList: [Task] = []
     var minimumDate: NSDate?
     var maximumDate: NSDate?
     var isOngoing: Bool?
@@ -33,13 +39,14 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     var taskToUse: Task?
     var initialStartDate: NSDate?
     var initialStopDate: NSDate?
+    var delete: FillWith?
 
     // Local data
     var editStart = false
     var editStop = false
     
     // Table and table cells
-    var table: UITableView = UITableView(frame: self.view.frame, style: .Grouped)
+    var table: UITableView!
     
     let cellStartTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type1")
     let cellStopTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type2")
@@ -71,11 +78,6 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     // EditWorkVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
-    }
-    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
@@ -107,17 +109,12 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
             }
         }
 
-        buttonCancel.setTitleColor(UIColor(red:1.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: UIControlState.Normal)
-        buttonCancel.setTitle("Cancel", forState: UIControlState.Normal)
-        buttonCancel.addTarget(self, action: "cancel:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(buttonCancel)
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
+        self.navigationItem.leftBarButtonItem = buttonCancel
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: "save:")
+        self.navigationItem.rightBarButtonItem = buttonSave
 
-        buttonSave.setTitleColor(UIColor(red:1.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: UIControlState.Normal)
-        buttonSave.setTitle("Save", forState: UIControlState.Normal)
-        buttonSave.titleLabel!.textAlignment = NSTextAlignment.Left
-        buttonSave.addTarget(self, action: "save:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(buttonSave)
-        
+        table = UITableView(frame: self.view.frame, style: .Grouped)
         table.dataSource = self
         table.delegate = self
         self.view.addSubview(table)
@@ -127,10 +124,14 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         datePickerStop.date = now
         datePickerStart.addTarget(self, action: "datePickerChanged:", forControlEvents: UIControlEvents.ValueChanged)
         datePickerStop.addTarget(self, action: "datePickerChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        datePickerStart.minimumDate = minimumDate
+        datePickerStart.maximumDate = maximumDate
+        datePickerStop.minimumDate = minimumDate
+        datePickerStop.maximumDate = maximumDate
 
         if let t = taskEntryTemplate {
-            datePickerStart.date = t.starttime
-            datePickerStop.date = t.stoptime
+            datePickerStart.date = t.startTime
+            datePickerStop.date = t.stopTime
             taskSelected = t.task
         }
     }
@@ -153,13 +154,7 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         
         var lastview: UIView
 
-        buttonCancel.frame = CGRectMake(10, 0, 80, 20)
-        lastview = buttonCancel
-
-        buttonSave.frame = CGRectMake(width-10-80, 0, 80, 20)
-        lastview = buttonSave
-
-        table.frame = CGRectMake(5,CGRectGetMaxY(lastview.frame), width-10, height-CGRectGetMaxY(lastview.frame))
+        table.frame = CGRectMake(5, 0, width-10, height)
         
     }
 
@@ -167,16 +162,9 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
 
-        tableTask.separatorInset = UIEdgeInsetsZero
-        tableTask.layoutMargins = UIEdgeInsetsZero
+        table.separatorInset = UIEdgeInsetsZero
+        table.layoutMargins = UIEdgeInsetsZero
     }
-    
-
-
-
-
-    
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -263,6 +251,20 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
             default: 
                 performSegueWithIdentifier("SelectTask", sender: self)
             }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                self.delete = .FillWithNone
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            case 1:
+                self.delete = .FillWithPrevious
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            case 2:
+                self.delete = .FillWithNext
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            default:
+                let x = 1
+            }
         default:
             let x = 1
         }
@@ -273,15 +275,24 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     // UITableViewDataSource
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 4
+            if let i = self.isOngoing {
+                if i {
+                    return 2
+                } else {
+                    return 4
+                }
+            }
+            return 0
         case 1:
             return 1
+        case 2:
+            return 3
         default:
             return 0
         }
@@ -328,6 +339,18 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
                 cell = UITableViewCell()
                 cell.textLabel?.text = "Configuration error"
             }
+        case 2:
+            cell = UITableViewCell()
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Delete"
+            case 0:
+                cell.textLabel?.text = "Delete, fill with previous"
+            case 0:
+                cell.textLabel?.text = "Delete, fill with next"
+            default:
+                cell.textLabel?.text = "Configuration error"
+            }
         default:    
             cell = UITableViewCell()
             cell.textLabel?.text = "Configuration error"
@@ -340,29 +363,23 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "SelectTask" {
-            if let vc = segue.destinationViewController as? SelectTaskVC {
-                vc.tasks = tasks
+            if let vc = segue.destinationViewController as? TaskSelectVC {
+                vc.tasks = taskList
             }
         }
         if segue.identifier == "CancelTaskEntry" {
             // Do nothing
         }
         if segue.identifier == "SaveTaskEntry" {
-            // Fill in TaskEntryResult
-            taskEntryResult = TaskEntry(
-                starttime: datePickerStart.date, 
-                stoptime: datePickerStop.date,
-                task: taskSelected!,
-                description: "description...")
-
+            // Do nothing
         }
     }
     
     @IBAction func exitSelectTask(unwindSegue: UIStoryboardSegue ) {
         if unwindSegue.identifier == "DoneSelectTask" {
-            if let vc = unwindSegue.sourceViewController as? SelectTaskVC,
+            if let vc = unwindSegue.sourceViewController as? TaskSelectVC,
                 i = vc.taskIndexSelected {
-                taskSelected = tasks[i]
+                taskToUse = taskList[i]
                 cellTask.detailTextLabel?.text = taskSelected!.name
             }
         }
