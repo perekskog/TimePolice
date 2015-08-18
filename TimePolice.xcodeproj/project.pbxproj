@@ -113,13 +113,13 @@
 		CBD182BA1A08AAD2007BA9F7 /* TimePolice */ = {
 			isa = PBXGroup;
 			children = (
-				CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */,
 				CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */,
 				CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */,
 				CBD182C11A08AAD2007BA9F7 /* Main.storyboard */,
 				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
 				CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */,
 				CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */,
+				CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */,
 				CBD182BF1A08AAD2007BA9F7 /* TaskPickerVC.swift */,
 				CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */,
 				CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */,
