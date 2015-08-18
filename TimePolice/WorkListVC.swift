@@ -19,9 +19,13 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, ToolbarInfoDelegate {
+class WorkListVC: 
+        TaskEntryCreatorBase,
+        UITableViewDataSource, 
+        UITableViewDelegate, 
+        UIGestureRecognizerDelegate, 
+        ToolbarInfoDelegate {
 
-    var session: Session?
     var sourceController: TimePoliceVC?
 
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
@@ -30,7 +34,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     var sessionLabel: UILabel?
 
     var selectedWork: Work?
-    var selectedWorkIndex: Int?
 
     var signInSignOutView: WorkListToolView?
     var infoAreaView: WorkListToolView?
@@ -44,23 +47,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     //--------------------------------------------------------
     // WorkListVC - Lazy properties
     //--------------------------------------------------------
-    
-    lazy var managedObjectContext : NSManagedObjectContext? = {
 
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
-        }()
-
-    lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.appLog        
-    }()
-    
+    /*
     lazy var logger: AppLogger = {
         let logger = MultiLog()
         //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
@@ -69,14 +57,13 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         
         return logger
     }()
-
+*/
     //---------------------------------------------
     // WorkListVC - View lifecycle
     //---------------------------------------------
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
 
         if let indexPath = workListTableView.indexPathForSelectedRow() {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
@@ -84,29 +71,8 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
 
         workListTableView.separatorInset = UIEdgeInsetsZero
         workListTableView.layoutMargins = UIEdgeInsetsZero
@@ -114,9 +80,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
-        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
 
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
@@ -216,11 +179,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
-    }
-    
 
     //-----------------------------------------
     // WorkListVC - VC button actions
@@ -364,148 +322,6 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     }
 
 
-    //---------------------------------------------
-    // WorkListVC - Segue handling
-    //---------------------------------------------
-
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
-
-        if segue.identifier == "EditWork" {
-            if let nvc = segue.destinationViewController as? UINavigationController,
-                vc = nvc.topViewController as? WorkPropVC {
-                    if let s = session,
-                    tl = s.tasks.array as? [Task] {
-                        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
-
-                        vc.taskList = tl
-
-                        // Never set any time into the future
-                        vc.maximumDate = NSDate()
-                        if let wl = s.work.array as? [Work],
-                           i = selectedWorkIndex {
-                            vc.taskEntryTemplate = wl[i]
-                            if i > 0 {
-                                // Limit to starttime of previous item, if any
-                                vc.minimumDate = wl[i-1].startTime
-                            }
-                            if i < wl.count-1 && !wl[i+1].isOngoing() {
-                                // Limit to stoptime of next item, if any
-                                vc.maximumDate = wl[i+1].stopTime
-                            }
-                            if vc.taskEntryTemplate!.isOngoing() {
-                                vc.isOngoing = true
-                            } else {
-                                    vc.isOngoing = false
-                            }
-                        }
-
-                    }
-            }
-        }
-
-        if segue.identifier == "ExitVC" {
-            // Nothing to prepare
-        }
-
-    }
-
-    @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
-
-        let vc = unwindSegue.sourceViewController as! WorkPropVC
-
-        if unwindSegue.identifier == "CancelTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "Handle CancelTaskEntry... Do nothing")
-            // Do nothing
-        }
-
-        if unwindSegue.identifier == "SaveTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "Handle SaveTaskEntry")
-
-            if let moc = managedObjectContext,
-                     s = session,
-                     i = selectedWorkIndex {
-
-                if let t = vc.taskToUse {
-                    // Change task if this attribute was set
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected task=\(t.name)")
-                    s.getWork(i)!.task = t
-                } else {
-                    appLog.log(logger, logtype: .Debug, message: "EditWork no task selected")
-                }
-                
-                if let initialDate = vc.initialStartDate {
-                   let datepickerStart = vc.datePickerStart
-                    appLog.log(logger, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected start date=\(getString(datepickerStart.date))")
-
-                    if initialDate != datepickerStart.date {
-                        // The initial starttime was changed
-                        appLog.log(logger, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
-                        s.setStartTime(moc, workIndex: i, desiredStartTime: datepickerStart.date)
-                    } else {
-                        appLog.log(logger, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
-                    }
-                }
-
-                if let initialDate = vc.initialStopDate {
-                    let datepickerStop = vc.datePickerStop
-                    appLog.log(logger, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected stop date=\(getString(datepickerStop.date))")
-
-                    if initialDate != datepickerStop.date {
-                        // The initial stoptime was changed
-                        appLog.log(logger, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
-                        s.setStopTime(moc, workIndex: i, desiredStopTime: datepickerStop.date)
-                    } else {
-                        appLog.log(logger, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
-                    }
-                }
-
-                TimePoliceModelUtils.save(moc)
-
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-            }
-            
-            workListTableView.reloadData()
-        }
-
-
-        if unwindSegue.identifier == "DeleteTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "Handle DeleteTaskEntry")
-
-            if let moc = managedObjectContext,
-                     s = session,
-                     i = selectedWorkIndex {
-
-                if let delete = vc.delete {
-                    switch delete {
-                    case .FillWithNone: // Nothing, deleteWork
-                        appLog.log(logger, logtype: .Debug, message: "Fill with nothing")
-                        s.deleteWork(moc, workIndex: i)
-                    case .FillWithPrevious: // Previous item, deleteNextWorkAndAlignStop
-                        appLog.log(logger, logtype: .Debug, message: "Fill with previous")
-                        s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-                    case .FillWithNext: // Next item, deletePreviousWorkAndAlignStart
-                        appLog.log(logger, logtype: .Debug, message: "Fill with next")
-                        s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                    default: // Not handled
-                        appLog.log(logger, logtype: .Debug, message: "Not handled")
-                    }
-                }
-
-                TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-
-                workListTableView.reloadData()
-            }
-
-        }
-        
-    }
-
     //--------------------------------------------------------------
     // WorkListVC - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
@@ -562,6 +378,15 @@ class WorkListVC: UIViewController, UITableViewDataSource, UITableViewDelegate, 
 
         return toolbarInfo
     }
+
+    //---------------------------------------------
+    // WorkListVC - Segue handling
+    //---------------------------------------------
+    
+    override func redrawAfterSegue() {
+        workListTableView.reloadData()
+    }
+
 
 }
 
