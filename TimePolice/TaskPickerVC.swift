@@ -239,13 +239,13 @@ class TaskPickerVC: UIViewController
 
         let vc = unwindSegue.sourceViewController as! WorkPropVC
 
-        if unwindSegue.identifier == "CancelEditWork" {
-            appLog.log(logger, logtype: .EnterExit, message: "Handle CancelEditWork... Do nothing")
+        if unwindSegue.identifier == "CancelTaskEntry" {
+            appLog.log(logger, logtype: .EnterExit, message: "Handle CancelTaskEntry... Do nothing")
             // Do nothing
         }
 
-        if unwindSegue.identifier == "OkEditWork" {
-            appLog.log(logger, logtype: .EnterExit, message: "Handle OkEditWork")
+        if unwindSegue.identifier == "SaveTaskEntry" {
+            appLog.log(logger, logtype: .EnterExit, message: "Handle SaveTaskEntry")
 
             if let moc = managedObjectContext,
                      s = session,
