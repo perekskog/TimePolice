@@ -1022,13 +1022,13 @@ class TestData {
         // 24
         let taskList =  [
             "RC", "Dev", "Media",
-            "Läsa/Titta", "Hemprojekt", "Bortaprojekt",
-            "Fysiskt", "Mindfulness", "---",
+            "Läsa/Titta", "Hemprojekt", "Utflykt",
+            "Fysiskt", "Mindfulness", "Gemenskap",
             
-            "U Personligt", "U Hem", "U Hus/tomt",
-            "U Bil", "U Borta", "---",
+            "B Personligt", "B Hem", "B Hus/tomt",
+            "B Bil", "B Borta", "---",
             
-            "S Läsa/titta", "S Köra bil", "---",
+            "S Läsa/titta", "S Köra bil", "S Diverse",
             
             "I F2F", "I Eva", "I Chat",
             "I Email", "I Blixt", "---"
@@ -1046,12 +1046,12 @@ class TestData {
         let taskList = [
             "Koda", "WoW", "Strategi",
             "Kommunicera", "Personlit utv", "---",
-            "Fysiskt", "Mindfulness", "---",
+            "Fysiskt", "Mindfulness", "Gemenskap",
             
-            "U Tickets", "U Backlog", "U Epost",
-            "U Adm", "---", "---",
+            "B Tickets", "B Backlog", "B Epost",
+            "B Adm", "B Annat", "---",
             
-            "S Skräp", "---", "---",
+            "S Diverse", "---", "---",
             
             "I F2F", "I Lync", "I Email",
             "I Ticket", "I Blixt", "---"

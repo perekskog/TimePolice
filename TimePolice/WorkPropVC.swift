@@ -137,7 +137,11 @@ class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  
         }
         
         initialStartDate = datePickerStart.date
-        initialStopDate = datePickerStop.date
+        if let o = isOngoing {
+            if !o {
+                self.initialStopDate = datePickerStop.date
+            }
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
