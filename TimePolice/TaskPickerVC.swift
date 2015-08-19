@@ -79,7 +79,6 @@ class TaskPickerVC:
 //        let theme = BasicTheme()
         let taskSelectionStrategy = TaskSelectAny()
         let padding: CGFloat = 1
-        let layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
         
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -112,6 +111,19 @@ class TaskPickerVC:
 
         if let s = session {
             if let moc = self.managedObjectContext {
+                var layout: Layout!
+                if s.tasks.count <= 6 {
+                    layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
+                } else if s.tasks.count <= 12 {
+                    layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
+                } else if s.tasks.count <= 21 {
+                    layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
+                } else if s.tasks.count <= 24 {
+                    layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
+                } else {
+                    layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
+                }
+                
                 tp = TaskPicker(vc: self, backgroundView: taskPickerBGView,
                     layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
                     session: s, moc: moc, appLog: appLog)
