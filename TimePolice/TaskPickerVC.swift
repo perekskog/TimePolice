@@ -24,6 +24,8 @@ TODO
 - gestureRecognizer
   Hur ska den implementeras, får kompileringsfel?
 
+- Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
+
 */
 
 import UIKit
@@ -120,6 +122,8 @@ class TaskPickerVC:
                     layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
                 } else if s.tasks.count <= 24 {
                     layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
+                } else if s.tasks.count <= 27 {
+                    layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
                 } else {
                     layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
                 }

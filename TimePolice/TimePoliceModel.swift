@@ -1009,7 +1009,7 @@ class TestData {
             }
         }
 
-        session = Session.createInMOC(moc, name: "\(sessionName) \(getString(NSDate()))", project: project)
+        session = Session.createInMOC(moc, name: "\(sessionName)", project: project)
 
         session.addTasks(taskList)
     }
@@ -1018,23 +1018,23 @@ class TestData {
     // TestData - addSessionToHome
     //---------------------------------------------
 
-    class func addSessionToHome(moc: NSManagedObjectContext) {
+    class func addSessionToPrivate(moc: NSManagedObjectContext) {
         // 24
         let taskList =  [
             "RC", "Dev", "Media",
-            "Läsa/Titta", "Hemprojekt", "Utflykt",
-            "Fysiskt", "Mindfulness", "Gemenskap",
+            "Läsa/Titta", "Proj hemma", "Proj borta",
+            "Fysiskt", "Mindful", "Gemenskap",
             
-            "B Personligt", "B Hem", "B Hus/tomt",
-            "B Bil", "B Borta", "---",
+            "B Person", "B Hem", "B Hus/tomt",
+            "B Bil", "B Annat", "---",
             
-            "S Läsa/titta", "S Köra bil", "S Diverse",
+            "S Läsa/titta", "S Bunden", "S Fri",
             
             "I F2F", "I Eva", "I Chat",
-            "I Email", "I Blixt", "---"
+            "I Email", "---", "I Blixt"
         ]
 
-        addSession(moc, projectName: "Home", sessionTemplateName: "Template - Home", sessionTemplateTasks: taskList, sessionName: "Home")
+        addSession(moc, projectName: "Private", sessionTemplateName: "Template - Private", sessionTemplateTasks: taskList, sessionName: "Private")
     }
 
     //---------------------------------------------
@@ -1042,19 +1042,20 @@ class TestData {
     //---------------------------------------------
 
     class func addSessionToWork(moc: NSManagedObjectContext) {
-        // 24
+        // 27
         let taskList = [
-            "Koda", "WoW", "Strategi",
-            "Kommunicera", "Personlit utv", "---",
-            "Fysiskt", "Mindfulness", "Gemenskap",
+            "Dev", "WoW", "Strategi",
+            "Lära ut", "Personlig utv", "---",
+            "Fysisk", "Mindful", "Gemenskap",
             
             "B Tickets", "B Backlog", "B Epost",
+            "B Assignment", "Support", "---",
             "B Adm", "B Annat", "---",
             
-            "S Diverse", "---", "---",
+            "S Bunden", "S Fri", "S Privat",
             
-            "I F2F", "I Lync", "I Email",
-            "I Ticket", "I Blixt", "---"
+            "I F2F", "---", "I Chat", 
+            "I Email", "I Ticket", "I Blixt"
             
         ]
         

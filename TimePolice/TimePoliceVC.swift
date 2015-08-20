@@ -174,11 +174,11 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
 
-    @IBAction func loadDataHome(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "loadDataHome")
+    @IBAction func loadDataPrivate(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataPrivate")
 
         if let moc = self.managedObjectContext {
-            TestData.addSessionToHome(moc)
+            TestData.addSessionToPrivate(moc)
             TimePoliceModelUtils.save(moc)
             moc.reset()
 
