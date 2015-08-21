@@ -10,9 +10,7 @@
 
 TODO
 
-- Custom table cell with 2 labels? 1 = name, 2 = start/stop
-
-- Height of each cell in tableview (set for prototype cell?)
+- Vad är skillnaden mellan commitEditingStyle och canEditRowAtIndexPath? Behövs båda?
 
 */
 
@@ -30,7 +28,6 @@ class WorkListVC:
 
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
 
-//    var statusView: UITextView?
     var sessionLabel: UILabel?
 
     var selectedWork: Work?
@@ -98,13 +95,11 @@ class WorkListVC:
         workListBGView.theme = theme
         self.view.addSubview(workListBGView)
 
-        // Setup info view
         infoAreaView.theme = theme
         infoAreaView.toolbarInfoDelegate = self
         infoAreaView.tool = InfoArea
         workListBGView.addSubview(infoAreaView)
 
-        // Setup sign in/out button
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = SignInSignOut
@@ -123,7 +118,6 @@ class WorkListVC:
         workListBGView.addSubview(workListTableView)
         scrollToEnd(workListTableView)
 
-        // Setup add button
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = Add
@@ -191,10 +185,8 @@ class WorkListVC:
         workListTableView.layoutMargins = UIEdgeInsetsZero
     }
 
-
-
     //-----------------------------------------
-    // WorkListVC - VC button actions
+    // WorkListVC - GUI actions
     //-----------------------------------------
 
 
@@ -257,9 +249,29 @@ class WorkListVC:
         infoAreaView.setNeedsDisplay()
     }
 
+    //-----------------------------------------
+    // WorkListVC - UITableViewDelegate
+    //-----------------------------------------
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let w = session?.work[indexPath.row] as? Work {
+            selectedWork = w
+            selectedWorkIndex = indexPath.row
+            
+            appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
+
+            performSegueWithIdentifier("EditWork", sender: self)
+        }
+    }
+
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+
     
     //-----------------------------------------
-    // WorkListVC - UITableView
+    // WorkListVC - UITableViewDataSource
     //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -290,21 +302,6 @@ class WorkListVC:
         return cell
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let w = session?.work[indexPath.row] as? Work {
-            selectedWork = w
-            selectedWorkIndex = indexPath.row
-            
-            appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
-
-            performSegueWithIdentifier("EditWork", sender: self)
-        }
-    }
-
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let moc = self.managedObjectContext,
@@ -323,41 +320,9 @@ class WorkListVC:
 
 
 
-    func scrollToEnd(tableView: UITableView) {
-        let numberOfSections = tableView.numberOfSections()
-        let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
-        
-        if numberOfRows > 0 {
-            let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
-            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-        }
-        
-    }
-
-
-    //--------------------------------------------------------------
-    // WorkListVC - Periodic update of views, triggered by timeout
-    //--------------------------------------------------------------
-
-    var updateN = 0
-
-    @objc
-    func updateActiveTask(timer: NSTimer) {
-        updateN++
-        if updateN == 5 {
-            updateN = 0
-        }
-        if updateN==0 {
-            appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
-        }
-        infoAreaView.setNeedsDisplay()
-    }
-
     //----------------------------------------------
-    //  WorkListVC - Button info
+    //  WorkListVC - ToolbarInfoDelegate
     //----------------------------------------------
-
-    // ToolbarInfoDelegate
 
     func getToolbarInfo() -> ToolbarInfo {
         appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
@@ -392,14 +357,51 @@ class WorkListVC:
         return toolbarInfo
     }
 
+
     //---------------------------------------------
     // WorkListVC - Segue handling
     //---------------------------------------------
     
+    // See base class
+
     override func redrawAfterSegue() {
         workListTableView.reloadData()
     }
+        
 
+    //--------------------------------------------------------------
+    // WorkListVC - Periodic update of views, triggered by timeout
+    //--------------------------------------------------------------
+
+    var updateN = 0
+
+    @objc
+    func updateActiveTask(timer: NSTimer) {
+        updateN++
+        if updateN == 5 {
+            updateN = 0
+        }
+        if updateN==0 {
+            appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
+        }
+        infoAreaView.setNeedsDisplay()
+    }
+
+    //---------------------------------------------
+    // WorkListVC - Utility functions
+    //---------------------------------------------
+
+
+    func scrollToEnd(tableView: UITableView) {
+        let numberOfSections = tableView.numberOfSections()
+        let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
+        
+        if numberOfRows > 0 {
+            let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
+            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        }
+        
+    }
 
 }
 
