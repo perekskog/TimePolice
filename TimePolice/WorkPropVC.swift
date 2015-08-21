@@ -9,13 +9,7 @@
 /*
 TODO
 
-v Make sure that starttime <= stoptime, whenever some change is done
-
-+ Migrate code to programmatic table
-
-+ 3 sections/groups: Datepickers, task, delete buttons
-
-- Ska ge en TaskEntry som taskEntryResult, inte kolla enskilda attribut
+- Redigera Work.name. Behöver bara vara synligt i WorkProp (så jag kan kolla i efterhand varför jag valde en diverse-task)
 
 */
 
