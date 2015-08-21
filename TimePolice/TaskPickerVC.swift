@@ -11,12 +11,8 @@
 
 TODO
 
-- SessionName ska vara en del av VC, ej TimePolice. Den ska läggas i TaskPickerBGView (?)
-- Settings ska bort från layout
-- VC ska skapa TaskPickerToolView för Exit och SessionName, då funkar THeme med dessa också.
-- (Summary och stop/continue ska fortfarande vara en del av "Layout")
-
-
+- Borde jag inte kunna använda navigationbar?
+  Sätt left = EXIT och titel till sessionsnamnet.
 
 - getSelectionAreaInfo
   Är det Theme som gör uträkning av tid för aktuell task? Kasnek inte så bra...
@@ -43,9 +39,12 @@ class TaskPickerVC:
     var sourceController: TimePoliceVC?
     var tp: TaskPicker?
     
-//    var statusView: UITextView?
-
     var selectedWork: Work?
+
+    let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+    let sessionNameView = TaskPickerToolView()
+    let taskPickerBGView = TaskPickerBGView()
+
 
     //--------------------------------------------------------
     // TaskPickerVC - Lazy properties
@@ -84,30 +83,30 @@ class TaskPickerVC:
         
         (self.view as! TimePoliceBGView).theme = theme
 
-        var lastview : UIView
-        let parentWidth = CGRectGetWidth(self.view.frame)
-        let parentHeight = CGRectGetHeight(self.view.frame)
-
-        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
-        lastview = exitButton
 
-        var viewRect = CGRectMake(70, 25, parentWidth-70, 30)
-        let sessionNameView = TaskPickerToolView(frame: viewRect)
         sessionNameView.theme = theme
         sessionNameView.tool = SessionName
         self.view.addSubview(sessionNameView)
+        
+        self.view.addSubview(taskPickerBGView)
+
+        var lastview : UIView
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+        
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        lastview = exitButton
+        
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
         lastview = sessionNameView
         
-        let taskPickerBGView = TaskPickerBGView()
-        taskPickerBGView.frame = CGRectMake(0, 55, parentWidth, parentHeight - 55)
+        taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
         //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
-        self.view.addSubview(taskPickerBGView)
         lastview = taskPickerBGView
 
 
@@ -141,9 +140,17 @@ class TaskPickerVC:
         }
     }
 
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+
+    }
+
+
+
 
     //---------------------------------------------
-    // TaskPickerVC - Button actions
+    // TaskPickerVC - GUI actions
     //---------------------------------------------
 
     func exit(sender: UIButton) {
