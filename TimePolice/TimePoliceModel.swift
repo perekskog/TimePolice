@@ -1021,20 +1021,20 @@ class TestData {
     class func addSessionToPrivate(moc: NSManagedObjectContext) {
         // 24
         let taskList =  [
-            "RC", "Dev", "Media",
-            "Läsa/Titta", "Proj hemma", "Proj borta",
-            "Fysiskt", "Mindful", "Gemenskap",
+            "+ RC", "+ Dev", "+ Media",
+            "+ Läsa/Titta", "+ Proj hemma", "+ Proj borta",
+            "+ Fysiskt", "+ Mindful", "+ Gemenskap",
             
-            "B Person", "B Hem", "B Hus/tomt",
-            "B Bil", "B Annat", "---",
+            "- Person", "- Hem", "- Hus/tomt",
+            "- Bil", "- Annat", "",
             
-            "S Läsa/titta", "S Bunden", "S Fri",
+            "0 Läsa/titta", "0 Bunden", "0 Fri",
             
-            "I F2F", "I Eva", "I Chat",
-            "I Email", "---", "I Blixt"
+            "* F2F", "* Eva", "* Chat",
+            "* Email", "", "* Blixt"
         ]
 
-        addSession(moc, projectName: "Private", sessionTemplateName: "Template - Private", sessionTemplateTasks: taskList, sessionName: "Private")
+        addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")
     }
 
     //---------------------------------------------
@@ -1044,22 +1044,22 @@ class TestData {
     class func addSessionToWork(moc: NSManagedObjectContext) {
         // 27
         let taskList = [
-            "Dev", "WoW", "Strategi",
-            "Lära ut", "Personlig utv", "---",
-            "Fysisk", "Mindful", "Gemenskap",
+            "+ Dev", "+ WoW", "+ Strategi",
+            "+ Lära ut", "+ Personlig utv", "---",
+            "+ Fysisk", "+ Mindful", "+ Gemenskap",
             
-            "B Tickets", "B Backlog", "B Epost",
-            "B Assignment", "Support", "---",
-            "B Adm", "B Annat", "---",
+            "- Tickets", "- Epost", "- Tasks", 
+            "- Backlog", "- Assigna", "- Supporta",
+            "- Adm", "- Möte", "- Annat",
             
-            "S Bunden", "S Fri", "S Privat",
+            "0 Bunden", "0 Fri", "0 Privat",
             
-            "I F2F", "---", "I Chat", 
-            "I Email", "I Ticket", "I Blixt"
+            "* F2F", "---", "* Chat",
+            "* Email", "* Ticket", "* Blixt"
             
         ]
         
-        addSession(moc, projectName: "Work", sessionTemplateName: "Template - Work", sessionTemplateTasks: taskList, sessionName: "Work")
+        addSession(moc, projectName: "Jobb", sessionTemplateName: "Template - Jobb", sessionTemplateTasks: taskList, sessionName: "Jobb")
     }
     
     //---------------------------------------------
@@ -1069,22 +1069,22 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
         // 21
         let taskList = [
-            "Sleep", "Sleep in-out", "---",
+            "Sova", "", "---",
             
-            "Home", "Home in-out", "Home outside",
+            "Hemma", "", "Hemma ute",
             
-            "Work", "---", "Work outside",
+            "Jobb", "", "Jobb ute",
                 
-            "Car morning", "T morning", "P morning",
+            "Bil morgon", "T morgon", "P morgon",
 
-            "Car evening", "T evening", "P evening",
+            "Bil kväll", "T kväll", "P kväll",
 
-            "Lunch", "Errand", "F&S",
+            "Lunch", "Ärende", "F&S",
 
-            "1", "2", "3"
+            "Div 1", "Div 2", "Div 3"
         ]
         
-        addSession(moc, projectName: "Daytime", sessionTemplateName: "Template - Daytime", sessionTemplateTasks: taskList, sessionName: "Daytime")
+        addSession(moc, projectName: "Ett dygn", sessionTemplateName: "Template - Ett dygn", sessionTemplateTasks: taskList, sessionName: "Ett dygn")
     }
 
     //---------------------------------------------
