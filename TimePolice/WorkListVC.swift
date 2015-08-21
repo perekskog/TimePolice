@@ -35,13 +35,18 @@ class WorkListVC:
 
     var selectedWork: Work?
 
-    var signInSignOutView: WorkListToolView?
-    var infoAreaView: WorkListToolView?
 
     // Cached values, calculated at startup
     var sessionSummary: (Int, NSTimeInterval)!
 
     var updateActiveActivityTimer: NSTimer?
+
+    let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+    let sessionNameView = WorkListToolView()
+    let workListBGView = WorkListBGView()
+    let signInSignOutView = WorkListToolView()
+    let addView = WorkListToolView()
+    let infoAreaView = WorkListToolView()
 
 
     //--------------------------------------------------------
@@ -71,13 +76,6 @@ class WorkListVC:
 
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        workListTableView.separatorInset = UIEdgeInsetsZero
-        workListTableView.layoutMargins = UIEdgeInsetsZero
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -86,64 +84,36 @@ class WorkListVC:
 
         (self.view as! TimePoliceBGView).theme = theme
 
-        var lastview: UIView
-
-        var width = CGRectGetWidth(self.view.frame)
-        var height = CGRectGetHeight(self.view.frame)
-
-        let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
-        lastview = exitButton
 
-        var viewRect = CGRectMake(70, 25, width-70, 30)
-        let sessionNameView = WorkListToolView(frame: viewRect)
         sessionNameView.theme = theme
         sessionNameView.tool = SessionName
         sessionNameView.toolbarInfoDelegate = self
         self.view.addSubview(sessionNameView)
-        lastview = sessionNameView
 
-        
-
-        let workListBGView = WorkListBGView()
-        workListBGView.frame = CGRectMake(0, 55, width, height - 55)
         workListBGView.theme = theme
         self.view.addSubview(workListBGView)
-        lastview = workListBGView
-
-        width = CGRectGetWidth(workListBGView.frame)
-        height = CGRectGetHeight(workListBGView.frame)
-        let padding = 1
-
 
         // Setup info view
-        viewRect = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), 30)
-        infoAreaView = WorkListToolView(frame: viewRect)
-        infoAreaView!.theme = theme
-        infoAreaView!.toolbarInfoDelegate = self
-        infoAreaView!.tool = InfoArea
-        workListBGView.addSubview(infoAreaView!)
-        lastview = infoAreaView!
+        infoAreaView.theme = theme
+        infoAreaView.toolbarInfoDelegate = self
+        infoAreaView.tool = InfoArea
+        workListBGView.addSubview(infoAreaView)
 
         // Setup sign in/out button
-        viewRect = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
-        signInSignOutView = WorkListToolView(frame: viewRect)
-        signInSignOutView!.theme = theme
-        signInSignOutView!.toolbarInfoDelegate = self
-        signInSignOutView!.tool = SignInSignOut
+        signInSignOutView.theme = theme
+        signInSignOutView.toolbarInfoDelegate = self
+        signInSignOutView.tool = SignInSignOut
         var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
         recognizer.delegate = self
-        signInSignOutView!.addGestureRecognizer(recognizer)
-        workListBGView.addSubview(signInSignOutView!)
-        lastview = signInSignOutView!
+        signInSignOutView.addGestureRecognizer(recognizer)
+        workListBGView.addSubview(signInSignOutView)
 
 
-        workListTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
@@ -152,11 +122,8 @@ class WorkListVC:
         workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         workListBGView.addSubview(workListTableView)
         scrollToEnd(workListTableView)
-        lastview = workListTableView
 
         // Setup add button
-        viewRect = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
-        let addView = WorkListToolView(frame: viewRect)
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = Add
@@ -164,7 +131,6 @@ class WorkListVC:
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         workListBGView.addSubview(addView)
-        lastview = addView
 
         self.sessionSummary = (0,0)
         if let moc = managedObjectContext {
@@ -178,6 +144,53 @@ class WorkListVC:
                repeats: true)        
 
     }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+
+        var width = CGRectGetWidth(self.view.frame)
+        var height = CGRectGetHeight(self.view.frame)
+
+        var lastview: UIView
+
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        lastview = exitButton
+
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        lastview = sessionNameView
+
+        workListBGView.frame = CGRectMake(0, 55, width, height - 55)
+        lastview = workListBGView
+
+        width = CGRectGetWidth(workListBGView.frame)
+        height = CGRectGetHeight(workListBGView.frame)
+        let padding = 1
+
+        infoAreaView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), 30)
+        lastview = infoAreaView
+
+        signInSignOutView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        lastview = signInSignOutView
+
+        workListTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
+        lastview = workListTableView
+
+        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        lastview = addView
+
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // Inset to left edge on cells with text
+        workListTableView.separatorInset = UIEdgeInsetsZero
+
+        // Inset to left edge on empty cells
+        workListTableView.layoutMargins = UIEdgeInsetsZero
+    }
+
 
 
     //-----------------------------------------
@@ -212,8 +225,8 @@ class WorkListVC:
             scrollToEnd(workListTableView)
         }
         
-        signInSignOutView?.setNeedsDisplay()
-        infoAreaView?.setNeedsDisplay()
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
     }
     
     func addWork(sender: UIButton) {
@@ -240,8 +253,8 @@ class WorkListVC:
             scrollToEnd(workListTableView)
         }
 
-        signInSignOutView?.setNeedsDisplay()
-        infoAreaView?.setNeedsDisplay()
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
     }
 
     
@@ -337,7 +350,7 @@ class WorkListVC:
         if updateN==0 {
             appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
         }
-        infoAreaView?.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
     }
 
     //----------------------------------------------
