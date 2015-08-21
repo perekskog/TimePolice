@@ -1054,8 +1054,8 @@ class TestData {
             
             "0 Bunden", "0 Fri", "0 Privat",
             
-            "I F2F", "---", "I Chat", 
-            "I Email", "I Ticket", "I Blixt"
+            "* F2F", "---", "* Chat",
+            "* Email", "* Ticket", "* Blixt"
             
         ]
         
