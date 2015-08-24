@@ -22,6 +22,8 @@ TODO
 
 - Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
 
+- Behöver översyn angående optionals
+
 */
 
 import UIKit
@@ -33,17 +35,33 @@ import CoreData
 //==================================================
 
 class TaskPickerVC: 
-        TaskEntryCreatorBase
+        TaskEntryCreatorBase,
+        ToolbarInfoDelegate,
+        SelectionAreaInfoDelegate
 	{
 
     var sourceController: TimePoliceVC?
-    var tp: TaskPicker?
     
     var selectedWork: Work?
 
     let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
     let sessionNameView = TaskPickerToolView()
     let taskPickerBGView = TaskPickerBGView()
+    let signInSignOutView = TaskPickerToolView()
+    let infoAreaView = TaskPickerToolView()
+
+    var layout: Layout?
+
+    // Cached values, calculated at startup
+    var sessionTaskSummary: [Task: (Int, NSTimeInterval)]!
+
+    // Non persitent data, initialized in init(), then set in setup()
+    var recognizers: [UIGestureRecognizer: Int] = [:]
+    var taskbuttonviews: [Int: TaskPickerButtonView] = [:]
+
+    var updateActiveActivityTimer: NSTimer?
+    
+
 
 
     //--------------------------------------------------------
@@ -78,8 +96,30 @@ class TaskPickerVC:
 
         let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
+
         let taskSelectionStrategy = TaskSelectAny()
+
         let padding: CGFloat = 1
+
+        if let s = session,
+            moc = managedObjectContext {
+            if s.tasks.count <= 6 {
+                layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 12 {
+                layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 21 {
+                layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 24 {
+                layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 27 {
+                layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
+            } else {
+                layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
+            }
+
+            self.sessionTaskSummary = s.getSessionTaskSummary(moc)
+        }
+
         
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -103,41 +143,67 @@ class TaskPickerVC:
         lastview = exitButton
         
         sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        sessionNameView.toolbarInfoDelegate = self
         lastview = sessionNameView
         
         taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
+        taskPickerBGView.theme = theme
         //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
         lastview = taskPickerBGView
 
 
-        if let s = session {
-            if let moc = self.managedObjectContext {
-                var layout: Layout!
-                if s.tasks.count <= 6 {
-                    layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
-                } else if s.tasks.count <= 12 {
-                    layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
-                } else if s.tasks.count <= 21 {
-                    layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
-                } else if s.tasks.count <= 24 {
-                    layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
-                } else if s.tasks.count <= 27 {
-                    layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
-                } else {
-                    layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
-                }
+        if let tl = session?.tasks.array as? [Task],
+            l = layout {
+            // Setup task buttons
+            let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
+            for i in 0..<numberOfButtonsToDraw {
+                let viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
+                let view = TaskPickerButtonView(frame: viewRect)
+                view.theme = theme
+                view.selectionAreaInfoDelegate = self
+                view.taskPosition = i
                 
-                tp = TaskPicker(vc: self, backgroundView: taskPickerBGView,
-                    layout: layout, theme: theme, taskSelectionStrategy: taskSelectionStrategy,
-                    session: s, moc: moc, appLog: appLog)
-            
-                tp?.setup()
-
-                sessionNameView.toolbarInfoDelegate = tp
-
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+                view.addGestureRecognizer(tapRecognizer)
+                recognizers[tapRecognizer] = i
+                
+                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+                view.addGestureRecognizer(longPressRecognizer)
+                recognizers[longPressRecognizer] = i
+                
+                taskbuttonviews[i] = view
+                
+                taskPickerBGView.addSubview(view)
             }
+                
+            // Setup sign in/out button
+            var viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: SignInSignOut)
+            signInSignOutView.frame = viewRect
+            signInSignOutView.theme = theme
+            signInSignOutView.toolbarInfoDelegate = self
+            signInSignOutView.tool = SignInSignOut
+            var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+                signInSignOutView.addGestureRecognizer(recognizer)
+            taskPickerBGView.addSubview(signInSignOutView)
+                
+            // Setup infoarea
+            viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: InfoArea)
+            infoAreaView.frame = viewRect
+            infoAreaView.theme = theme
+            infoAreaView.toolbarInfoDelegate = self
+            infoAreaView.tool = InfoArea
+            taskPickerBGView.addSubview(infoAreaView)
+
+            updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+                    target: self,
+                    selector: "updateActiveTask:",
+                    userInfo: nil,
+                    repeats: true)
         }
+
+
+        
+
     }
 
     override func viewWillLayoutSubviews() {
@@ -156,7 +222,7 @@ class TaskPickerVC:
     func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
 
-        tp?.updateActiveActivityTimer?.invalidate()
+        updateActiveActivityTimer?.invalidate()
         performSegueWithIdentifier("Exit", sender: self)
     }
 
@@ -167,159 +233,23 @@ class TaskPickerVC:
     //---------------------------------------------
     
     override func redrawAfterSegue() {
-        tp?.redraw()
+        redraw()
     }
     
-}
-
-
-//==================================================
-//==================================================
-//  TaskPicker
-//==================================================
-
-
-class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, SelectionAreaInfoDelegate {
-    // Persistent data form the model, set at creation time
-    var session: Session
-
-	// Views, set at creation time
-    var vc: TaskPickerVC!
-//    var statusView: UITextView!
-    var backgroundView:TaskPickerBGView!
-
-    // Preferences, set at creation time
-	var layout: Layout!
-	var theme: Theme!
-    var taskSelectionStrategy: TaskSelectionStrategy!
-
-    // Cached values, calculated at startup
-	var sessionTaskSummary: [Task: (Int, NSTimeInterval)]!
-
-    // Non persitent data, initialized in init(), then set in setup()
-    var recognizers: [UIGestureRecognizer: Int]!
-    var taskbuttonviews: [Int: TaskPickerButtonView]!
-    var moc: NSManagedObjectContext!
-
-    var appLog: AppLog!
-    var logger: AppLogger!
-	
-    init(vc: TaskPickerVC, backgroundView:TaskPickerBGView,
-        layout: Layout, theme: Theme, taskSelectionStrategy: TaskSelectionStrategy, 
-        session: Session,
-        moc: NSManagedObjectContext, appLog: AppLog) {
-
-        self.appLog = appLog
-
-//        let logger1 = TextViewLog(textview: statusView, locator: "TaskPicker")
-        let logger2 = StringLog(locator: "TaskPicker")
-        let logger3 = ApplogLog(locator: "TaskPicker")
-
-        self.logger = MultiLog()
-//        (logger as! MultiLog).logger1 = logger1
-        (logger as! MultiLog).logger2 = logger2
-        (logger as! MultiLog).logger3 = logger3
-
-        appLog.log(logger, logtype: .EnterExit, message: "init")
-
-        self.session = session
-
-        self.vc = vc
-//        self.statusView = statusView
-        self.backgroundView = backgroundView
-
-		self.layout = layout
-		self.theme = theme
-        self.taskSelectionStrategy = taskSelectionStrategy
-
-        self.sessionTaskSummary = session.getSessionTaskSummary(moc)
-            
-        self.moc = moc
-
-        self.recognizers = [:]
-        self.taskbuttonviews = [:]
-	}
-
-    // Non presistent local attributes, setup when initialising the view
-	var updateActiveActivityTimer: NSTimer?
-    var sessionNameView: TaskPickerToolView?
-	var signInSignOutView: TaskPickerToolView?
-	var infoAreaView: TaskPickerToolView?
-	var settingsView: TaskPickerToolView?
-
-
-    //--------------------------------------------------
-	// TaskPicker - setup
-    //--------------------------------------------------
-
-	func setup() {
-        appLog.log(logger, logtype: .EnterExit, message: "setup")
-
-		backgroundView.theme = theme
-        let taskList = session.tasks.array as! [Task]
-
-		// Setup task buttons
-		let numberOfButtonsToDraw = min(taskList.count, layout.numberOfSelectionAreas())
-		for i in 0..<numberOfButtonsToDraw {
-			let viewRect = layout.getViewRect(backgroundView.frame, selectionArea: i)
-            let view = TaskPickerButtonView(frame: viewRect)
-			view.theme = theme
-			view.selectionAreaInfoDelegate = self
-			view.taskPosition = i
-
-			let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
-            tapRecognizer.delegate = self
-            view.addGestureRecognizer(tapRecognizer)
-			recognizers[tapRecognizer] = i
-
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
-            longPressRecognizer.delegate = self
-            view.addGestureRecognizer(longPressRecognizer)
-            recognizers[longPressRecognizer] = i
-
-            taskbuttonviews[i] = view
-
-			backgroundView.addSubview(view)
-		}
-
-		// Setup sign in/out button
-		var viewRect = layout.getViewRect(backgroundView.frame, selectionArea: SignInSignOut)
-	    signInSignOutView = TaskPickerToolView(frame: viewRect)
-		signInSignOutView!.theme = theme
-		signInSignOutView!.toolbarInfoDelegate = self
-		signInSignOutView!.tool = SignInSignOut
-		var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
-	    recognizer.delegate = self
-	    signInSignOutView!.addGestureRecognizer(recognizer)
-		backgroundView.addSubview(signInSignOutView!)
-
-		// Setup infoarea
-		viewRect = layout.getViewRect(backgroundView.frame, selectionArea: InfoArea)
-	    infoAreaView = TaskPickerToolView(frame: viewRect)
-		infoAreaView!.theme = theme
-		infoAreaView!.toolbarInfoDelegate = self
-		infoAreaView!.tool = InfoArea
-		backgroundView.addSubview(infoAreaView!)
-        
-        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
-                                   target: self,
-                                 selector: "updateActiveTask:",
-                                 userInfo: nil,
-                                  repeats: true)        
-    }
 
     //------------------------------------
-    //  TaskPicker - redraw
+    //  TaskPickerVC - redraw
     //------------------------------------
 
     func redraw() {
         appLog.log(logger, logtype: .EnterExit, message: "redraw")
 
-        sessionTaskSummary = session.getSessionTaskSummary(moc)
+        if let moc = managedObjectContext {
+            sessionTaskSummary = session?.getSessionTaskSummary(moc)
+        }
 
-        signInSignOutView?.setNeedsDisplay()
-        infoAreaView?.setNeedsDisplay()
-        settingsView?.setNeedsDisplay()
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
 
         for (_, view) in taskbuttonviews {
             view.setNeedsDisplay()
@@ -328,7 +258,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
     //------------------------------------
-    //  TaskPicker - SelectionStrategy
+    //  TaskPickerVC - SelectionStrategy
     //------------------------------------
 
 	// Gesture recognizer delegate
@@ -350,7 +280,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
     //-------------------------------------
-    //  TaskPicker - Tap on buttons
+    //  TaskPickerVC - Tap on buttons
     //-------------------------------------
 
 
@@ -366,9 +296,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
 
-        let taskList = session.tasks.array as! [Task]
-        
-        if let work = session.getLastWork() {
+        if let taskList = session?.tasks.array as? [Task],
+            work = session?.getLastWork() {
             if work.isOngoing() {
                // Last work ongoing -> finished
                 setLastWorkAsFinished()
@@ -382,10 +311,12 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             // Empty worklist => do nothing
         }
 
-        signInSignOutView?.setNeedsDisplay()
-        infoAreaView?.setNeedsDisplay()
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
 
-        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
+        if let s = session {
+            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+        }
     }
 
 
@@ -394,26 +325,31 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func handleTap(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTap")
 
-        let taskList = session.tasks.array as! [Task]
-        
-        if let work = session.getLastWork() {
+        // Handle ongoing task
+        if let taskList = session?.tasks.array as? [Task],
+            work = session?.getLastWork() {
             let taskIndex = find(taskList, work.task as Task)
             taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             if work.isOngoing() {
                 setLastWorkAsFinished()
             }
+                
         }
 
-        let taskIndex = recognizers[sender]
-        let task = taskList[taskIndex!]
+        // Handle new task
+        if let taskList = session?.tasks.array as? [Task] {
+            let taskIndex = recognizers[sender]
+            let task = taskList[taskIndex!]
+            addNewWork(task)
+            taskbuttonviews[taskIndex!]?.setNeedsDisplay()
+        }
 
-        addNewWork(task)
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
 
-        taskbuttonviews[taskIndex!]?.setNeedsDisplay()
-        signInSignOutView?.setNeedsDisplay()
-        infoAreaView?.setNeedsDisplay()
-
-        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(self.session) }
+        if let s = session {
+            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+        }
     }
 
     // Long press on task, edit current work
@@ -425,9 +361,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
             return
         }
 
-        if let work = session.getLastWork() {
-            
-            let taskList = session.tasks.array as! [Task]
+        if let work = session?.getLastWork(),
+            taskList = session?.tasks.array as? [Task] {
             let taskIndex = recognizers[sender]
             let task = taskList[taskIndex!]
             if work.isOngoing() && work.task != task {
@@ -435,10 +370,10 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
                 return
             }
 
-            vc.selectedWork = work
-            vc.selectedWorkIndex = session.work.count-1
+            selectedWork = work
+            selectedWorkIndex = session?.work.count-1
 
-            vc.performSegueWithIdentifier("EditWork", sender: vc)
+            performSegueWithIdentifier("EditWork", sender: self)
         } else {
             appLog.log(logger, logtype: .EnterExit, message: "No last work")
         }
@@ -447,7 +382,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
     //--------------------------------------------
-    //  TaskPicker - Sign int/out
+    //  TaskPickerVC - Sign int/out
     //--------------------------------------------
 
     // Update currentWork when sign in to a task
@@ -455,9 +390,11 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
     func addNewWork(task: Task) {
         appLog.log(logger, logtype: .EnterExit, message: "addWork")
 
-        let w = Work.createInMOC(self.moc, name: "", session: session, task: task)
-
-        TimePoliceModelUtils.save(moc)
+        if let moc = managedObjectContext,
+            s = session {
+            let w = Work.createInMOC(moc, name: "", session: s, task: task)
+            TimePoliceModelUtils.save(moc)
+        }
     }
 
     // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
@@ -466,7 +403,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkFinished")
 
         //if let work = currentWork {
-        if let work = session.getLastWork() {
+        if let work = session?.getLastWork(),
+            moc = managedObjectContext {
             if work.isOngoing() {
                 work.setStoppedAt(NSDate())
 
@@ -492,7 +430,8 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkOngoing")
 
         //if let work = currentWork {
-        if let work = session.getLastWork() {
+        if let work = session?.getLastWork(),
+            moc = managedObjectContext {
             if !work.isOngoing() {
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionTaskSummary[work.task] {
@@ -516,7 +455,7 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
 
 
     //--------------------------------------------------------------
-    // TaskPicker - Periodic update of views, triggered by timeout
+    // TaskPickerVC - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
 
     var updateN = 0
@@ -530,21 +469,21 @@ class TaskPicker: NSObject, UIGestureRecognizerDelegate, ToolbarInfoDelegate, Se
         if updateN==0 {
             appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
         }
-        if let work = session.getLastWork() {
+        if let work = session?.getLastWork() {
             let task = work.task
             
-            let taskList = session.tasks.array as! [Task]
-            if let taskIndex = find(taskList, task as Task) {
+            if let taskList = session?.tasks.array as? [Task],
+                taskIndex = find(taskList, task as Task) {
                 let view = taskbuttonviews[taskIndex]
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
-                infoAreaView?.setNeedsDisplay()
+                infoAreaView.setNeedsDisplay()
             }
         }
     }
 
 
     //----------------------------------------------
-    //  TaskPicker - Button info
+    //  TaskPickerVC - Button info
     //----------------------------------------------
 
 	// SelectionAreaInfoDelegate
