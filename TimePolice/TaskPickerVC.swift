@@ -35,9 +35,6 @@ TODO
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
 
-+ Anpassa till mitt standardformat
-    viewWillLayoutSubviews
-
 */
 
 import UIKit
@@ -143,31 +140,15 @@ class TaskPickerVC:
         sessionNameView.tool = SessionName
         self.view.addSubview(sessionNameView)
         
-        self.view.addSubview(taskPickerBGView)
-
-        var lastview : UIView
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
-        
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
-        lastview = exitButton
-        
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
-        sessionNameView.toolbarInfoDelegate = self
-        lastview = sessionNameView
-        
-        taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
         taskPickerBGView.theme = theme
-        //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
-        lastview = taskPickerBGView
+        self.view.addSubview(taskPickerBGView)
 
 
         if let tl = session?.tasks.array as? [Task],
             l = layout {
             let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
             for i in 0..<numberOfButtonsToDraw {
-                let viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
-                let view = TaskPickerButtonView(frame: viewRect)
+                let view = TaskPickerButtonView()
                 view.theme = theme
                 view.selectionAreaInfoDelegate = self
                 view.taskPosition = i
@@ -185,19 +166,13 @@ class TaskPickerVC:
                 taskPickerBGView.addSubview(view)
             }
                 
-            // Setup sign in/out button
-            var viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: SignInSignOut)
-            signInSignOutView.frame = viewRect
             signInSignOutView.theme = theme
             signInSignOutView.toolbarInfoDelegate = self
             signInSignOutView.tool = SignInSignOut
             var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
-                signInSignOutView.addGestureRecognizer(recognizer)
+            signInSignOutView.addGestureRecognizer(recognizer)
             taskPickerBGView.addSubview(signInSignOutView)
                 
-            // Setup infoarea
-            viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: InfoArea)
-            infoAreaView.frame = viewRect
             infoAreaView.theme = theme
             infoAreaView.toolbarInfoDelegate = self
             infoAreaView.tool = InfoArea
@@ -215,6 +190,35 @@ class TaskPickerVC:
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+
+        var lastview : UIView
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        lastview = exitButton
+        
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        sessionNameView.toolbarInfoDelegate = self
+        lastview = sessionNameView
+        
+        taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
+        //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
+        lastview = taskPickerBGView
+
+        if let tl = session?.tasks.array as? [Task],
+            l = layout {
+            let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
+            for i in 0..<numberOfButtonsToDraw {
+                if let v = taskbuttonviews[i] {
+                    v.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
+                }
+            }
+            signInSignOutView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: SignInSignOut)
+
+            infoAreaView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: InfoArea)
+        }
+
 
     }
 
@@ -261,9 +265,6 @@ class TaskPickerVC:
             appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
         }
     }
-
-
-    // Tap on new task, call taskSignIn/taskSignOut and update views
 
     func handleTapTask(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTap")
@@ -429,8 +430,6 @@ class TaskPickerVC:
     //  TaskPickerVC - Sign int/out, add new work
     //--------------------------------------------
 
-    // Update currentWork when sign in to a task
-
     func addNewWork(task: Task) {
         appLog.log(logger, logtype: .EnterExit, message: "addWork")
 
@@ -441,12 +440,9 @@ class TaskPickerVC:
         }
     }
 
-    // Update currentWork, previousTask, numberOfTimesActivated and totalTimeActive when sign out from a task
-
     func setLastWorkAsFinished() {
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkFinished")
 
-        //if let work = currentWork {
         if let work = session?.getLastWork(),
             moc = managedObjectContext {
             if work.isOngoing() {
@@ -473,7 +469,6 @@ class TaskPickerVC:
     func setLastWorkAsOngoing() {
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkOngoing")
 
-        //if let work = currentWork {
         if let work = session?.getLastWork(),
             moc = managedObjectContext {
             if !work.isOngoing() {
