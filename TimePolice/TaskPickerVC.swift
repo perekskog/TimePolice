@@ -17,12 +17,26 @@ TODO
 - getSelectionAreaInfo
   Är det Theme som gör uträkning av tid för aktuell task? Kasnek inte så bra...
 
-- gestureRecognizer
+- gestureRecognizer, TaskPickerStrategy
   Hur ska den implementeras, får kompileringsfel?
+    // Gesture recognizer delegate
+    
+    func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
+        shouldReceiveTouch touch: UITouch) -> Bool {
+            if let taskNumber = recognizers[gestureRecognizer] {
+                return taskIsSelectable(taskNumber)
+            } else {
+                return true
+            }
+    }
 
 - Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
 
 - Behöver översyn angående optionals
+    If there is no session, sessionTaskSummary will not be set
+
++ Anpassa till mitt standardformat
+    viewWillLayoutSubviews
 
 */
 
@@ -50,10 +64,8 @@ class TaskPickerVC:
 
     var layout: Layout?
 
-    // Cached values, calculated at startup
     var sessionTaskSummary: [Task: (Int, NSTimeInterval)]!
 
-    // Non persitent data, initialized in init(), then set in setup()
     var recognizers: [UIGestureRecognizer: Int] = [:]
     var taskbuttonviews: [Int: TaskPickerButtonView] = [:]
 
@@ -152,7 +164,6 @@ class TaskPickerVC:
 
         if let tl = session?.tasks.array as? [Task],
             l = layout {
-            // Setup task buttons
             let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
             for i in 0..<numberOfButtonsToDraw {
                 let viewRect = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
@@ -161,11 +172,11 @@ class TaskPickerVC:
                 view.selectionAreaInfoDelegate = self
                 view.taskPosition = i
                 
-                let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTap:"))
+                let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
                 view.addGestureRecognizer(tapRecognizer)
                 recognizers[tapRecognizer] = i
                 
-                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
                 view.addGestureRecognizer(longPressRecognizer)
                 recognizers[longPressRecognizer] = i
                 
@@ -199,9 +210,6 @@ class TaskPickerVC:
                     repeats: true)
         }
 
-
-        
-
     }
 
     override func viewWillLayoutSubviews() {
@@ -224,72 +232,9 @@ class TaskPickerVC:
         performSegueWithIdentifier("Exit", sender: self)
     }
 
-
-    
-    //---------------------------------------------
-    // TaskPickerVC - Segue handling
-    //---------------------------------------------
-    
-    override func redrawAfterSegue() {
-        redraw()
-    }
-    
-
-    //------------------------------------
-    //  TaskPickerVC - redraw
-    //------------------------------------
-
-    func redraw() {
-        appLog.log(logger, logtype: .EnterExit, message: "redraw")
-
-        if let moc = managedObjectContext {
-            sessionTaskSummary = session?.getSessionTaskSummary(moc)
-        }
-
-        signInSignOutView.setNeedsDisplay()
-        infoAreaView.setNeedsDisplay()
-
-        for (_, view) in taskbuttonviews {
-            view.setNeedsDisplay()
-        }
-    }
-
-
-    //------------------------------------
-    //  TaskPickerVC - SelectionStrategy
-    //------------------------------------
-
-	// Gesture recognizer delegate
-/*1.2*/
-    /*
-    func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
-        shouldReceiveTouch touch: UITouch) -> Bool {
-            if let taskNumber = recognizers[gestureRecognizer] {
-                return taskIsSelectable(taskNumber)
-            } else {
-                return true
-            }
-	}*/
-
-    func taskIsSelectable(taskNumber: Int) -> Bool {
-        // Should use taskSelectionStrategy
-        return true
-    }
-
-
-    //-------------------------------------
-    //  TaskPickerVC - Tap on buttons
-    //-------------------------------------
-
-
-    // Tap on settings    
-
     func handleTapSettings(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSettings")
     }
-
-
-    // Tap on sign in/sign out, call taskSignIn/taskSignOut and update views
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
@@ -320,7 +265,7 @@ class TaskPickerVC:
 
     // Tap on new task, call taskSignIn/taskSignOut and update views
 
-    func handleTap(sender: UITapGestureRecognizer) {
+    func handleTapTask(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTap")
 
         // Handle ongoing task
@@ -350,9 +295,7 @@ class TaskPickerVC:
         }
     }
 
-    // Long press on task, edit current work
-
-    func handleLongPress(sender: UILongPressGestureRecognizer) {
+    func handleLongPressTask(sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleLongPress")
 
         if sender.state != UIGestureRecognizerState.Began {
@@ -377,9 +320,113 @@ class TaskPickerVC:
 
     }
 
+    
+    //---------------------------------------------
+    // TaskPickerVC - Segue handling (from base class)
+    //---------------------------------------------
+    
+    override func redrawAfterSegue() {
+        appLog.log(logger, logtype: .EnterExit, message: "redraw")
+
+        if let moc = managedObjectContext {
+            sessionTaskSummary = session?.getSessionTaskSummary(moc)
+        }
+
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
+
+        for (_, view) in taskbuttonviews {
+            view.setNeedsDisplay()
+        }
+    }
+
+
+    //----------------------------------------------
+    //  TaskPickerVC - SelectionAreaInfoDelegate
+    //----------------------------------------------
+
+	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
+        appLog.log(logger, logtype: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
+
+        // This will only be called when there are selection areas setup 
+        //  => there _is_ a session
+        //  => There _is_ a task in the taskList
+        
+        let taskList = session!.tasks.array as! [Task]
+        let task = taskList[selectionArea]
+        
+        var taskSummary: (Int, NSTimeInterval) = (0, 0)
+        if let t = sessionTaskSummary[task] {
+            taskSummary = t
+        }
+        let (numberOfTimesActivated, totalTimeActive) = taskSummary
+        
+        var active = false
+        var ongoing = false
+        var activatedAt = NSDate()
+        if let work = session?.getLastWork() {
+            if taskList[selectionArea] == work.task {
+                active = true
+                activatedAt = work.startTime
+                if work.isOngoing() {
+                    ongoing = true
+                }
+            }
+        }
+        let selectionAreaInfo = SelectionAreaInfo(
+            task: task,
+            numberOfTimesActivated: numberOfTimesActivated,
+            totalTimeActive: totalTimeActive,
+            active: active,
+            activatedAt: activatedAt,
+            ongoing: ongoing)
+        
+        return selectionAreaInfo
+	}
+
+    //----------------------------------------------
+    //  TaskPickerVC - ToolbarInfoDelegate
+    //----------------------------------------------
+
+    func getToolbarInfo() -> ToolbarInfo {
+        appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
+        
+        var totalActivations: Int = 0 // The first task is active when first selected
+        var totalTime: NSTimeInterval = 0
+        
+        for (task, (activations, time)) in sessionTaskSummary {
+            totalActivations += activations
+            totalTime += time
+        }
+        
+        var signedIn = false
+        if let work = session?.getLastWork() {
+            if work.isOngoing() {
+                signedIn = true
+                
+                let now = NSDate()
+                if(now.compare(work.startTime) == .OrderedDescending) {
+                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                    totalTime += timeForActiveTask
+                }
+            }
+        }
+        
+        var sessionName = ""
+        if let s = session {
+            sessionName = s.name
+        }
+        let toolbarInfo = ToolbarInfo(
+            signedIn: signedIn,
+            totalTimesActivatedForSession: totalActivations,
+            totalTimeActiveForSession: totalTime,
+            sessionName: sessionName)
+        
+        return toolbarInfo
+    }
 
     //--------------------------------------------
-    //  TaskPickerVC - Sign int/out
+    //  TaskPickerVC - Sign int/out, add new work
     //--------------------------------------------
 
     // Update currentWork when sign in to a task
@@ -451,6 +498,7 @@ class TaskPickerVC:
     }
 
 
+
     //--------------------------------------------------------------
     // TaskPickerVC - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
@@ -476,91 +524,6 @@ class TaskPickerVC:
                 infoAreaView.setNeedsDisplay()
             }
         }
-    }
-
-
-    //----------------------------------------------
-    //  TaskPickerVC - Button info
-    //----------------------------------------------
-
-	// SelectionAreaInfoDelegate
-
-	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        appLog.log(logger, logtype: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
-
-        // This will only be called when there are selection areas setup 
-        //  => there _is_ a session
-        //  => There _is_ a task in the taskList
-        
-        let taskList = session!.tasks.array as! [Task]
-        let task = taskList[selectionArea]
-        
-        var taskSummary: (Int, NSTimeInterval) = (0, 0)
-        if let t = sessionTaskSummary[task] {
-            taskSummary = t
-        }
-        let (numberOfTimesActivated, totalTimeActive) = taskSummary
-        
-        var active = false
-        var ongoing = false
-        var activatedAt = NSDate()
-        if let work = session?.getLastWork() {
-            if taskList[selectionArea] == work.task {
-                active = true
-                activatedAt = work.startTime
-                if work.isOngoing() {
-                    ongoing = true
-                }
-            }
-        }
-        let selectionAreaInfo = SelectionAreaInfo(
-            task: task,
-            numberOfTimesActivated: numberOfTimesActivated,
-            totalTimeActive: totalTimeActive,
-            active: active,
-            activatedAt: activatedAt,
-            ongoing: ongoing)
-        
-        return selectionAreaInfo
-	}
-
-	// ToolbarInfoDelegate
-
-    func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
-        
-        var totalActivations: Int = 0 // The first task is active when first selected
-        var totalTime: NSTimeInterval = 0
-        
-        for (task, (activations, time)) in sessionTaskSummary {
-            totalActivations += activations
-            totalTime += time
-        }
-        
-        var signedIn = false
-        if let work = session?.getLastWork() {
-            if work.isOngoing() {
-                signedIn = true
-                
-                let now = NSDate()
-                if(now.compare(work.startTime) == .OrderedDescending) {
-                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
-                    totalTime += timeForActiveTask
-                }
-            }
-        }
-        
-        var sessionName = ""
-        if let s = session {
-            sessionName = s.name
-        }
-        let toolbarInfo = ToolbarInfo(
-            signedIn: signedIn,
-            totalTimesActivatedForSession: totalActivations,
-            totalTimeActiveForSession: totalTime,
-            sessionName: sessionName)
-        
-        return toolbarInfo
     }
 
 }
