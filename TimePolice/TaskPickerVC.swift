@@ -42,8 +42,6 @@ class TaskPickerVC:
 
     var sourceController: TimePoliceVC?
     
-    var selectedWork: Work?
-
     let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
     let sessionNameView = TaskPickerToolView()
     let taskPickerBGView = TaskPickerBGView()
@@ -370,8 +368,7 @@ class TaskPickerVC:
                 return
             }
 
-            selectedWork = work
-            selectedWorkIndex = session?.work.count-1
+            selectedWorkIndex = session!.work.count - 1
 
             performSegueWithIdentifier("EditWork", sender: self)
         } else {
@@ -491,19 +488,23 @@ class TaskPickerVC:
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
         appLog.log(logger, logtype: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
 
-        let taskList = session.tasks.array as! [Task]
+        // This will only be called when there are selection areas setup 
+        //  => there _is_ a session
+        //  => There _is_ a task in the taskList
+        
+        let taskList = session!.tasks.array as! [Task]
         let task = taskList[selectionArea]
-
+        
         var taskSummary: (Int, NSTimeInterval) = (0, 0)
         if let t = sessionTaskSummary[task] {
             taskSummary = t
         }
         let (numberOfTimesActivated, totalTimeActive) = taskSummary
-
+        
         var active = false
         var ongoing = false
         var activatedAt = NSDate()
-        if let work = session.getLastWork() {
+        if let work = session?.getLastWork() {
             if taskList[selectionArea] == work.task {
                 active = true
                 activatedAt = work.startTime
@@ -512,7 +513,6 @@ class TaskPickerVC:
                 }
             }
         }
-
         let selectionAreaInfo = SelectionAreaInfo(
             task: task,
             numberOfTimesActivated: numberOfTimesActivated,
@@ -520,14 +520,15 @@ class TaskPickerVC:
             active: active,
             activatedAt: activatedAt,
             ongoing: ongoing)
- 		return selectionAreaInfo
+        
+        return selectionAreaInfo
 	}
 
 	// ToolbarInfoDelegate
 
     func getToolbarInfo() -> ToolbarInfo {
         appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
-
+        
         var totalActivations: Int = 0 // The first task is active when first selected
         var totalTime: NSTimeInterval = 0
         
@@ -535,36 +536,31 @@ class TaskPickerVC:
             totalActivations += activations
             totalTime += time
         }
-
+        
         var signedIn = false
-    	if let work = session.getLastWork() {
+        if let work = session?.getLastWork() {
             if work.isOngoing() {
                 signedIn = true
-
+                
                 let now = NSDate()
                 if(now.compare(work.startTime) == .OrderedDescending) {
                     let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
                     totalTime += timeForActiveTask
                 }
             }
-    	}
-
-    	let toolbarInfo = ToolbarInfo(
-    		signedIn: signedIn, 
-    		totalTimesActivatedForSession: totalActivations,
-    		totalTimeActiveForSession: totalTime,
-            sessionName: session.name)
-
-    	return toolbarInfo
+        }
+        
+        var sessionName = ""
+        if let s = session {
+            sessionName = s.name
+        }
+        let toolbarInfo = ToolbarInfo(
+            signedIn: signedIn,
+            totalTimesActivatedForSession: totalActivations,
+            totalTimeActiveForSession: totalTime,
+            sessionName: sessionName)
+        
+        return toolbarInfo
     }
 
 }
-
-
- 
-
-
-
-
-
-
