@@ -1045,7 +1045,7 @@ class TestData {
         // 27
         let taskList = [
             "+ Dev", "+ WoW", "+ Strategi",
-            "+ Lära ut", "+ Personlig utv", "---",
+            "+ Lära ut", "+ Personlig utv", "",
             "+ Fysisk", "+ Mindful", "+ Gemenskap",
             
             "- Tickets", "- Epost", "- Tasks", 
@@ -1054,7 +1054,7 @@ class TestData {
             
             "0 Bunden", "0 Fri", "0 Privat",
             
-            "* F2F", "---", "* Chat",
+            "* F2F", "", "* Chat",
             "* Email", "* Ticket", "* Blixt"
             
         ]
@@ -1069,7 +1069,7 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
         // 21
         let taskList = [
-            "Sova", "", "---",
+            "Sova", "", "",
             
             "Hemma", "", "Hemma ute",
             

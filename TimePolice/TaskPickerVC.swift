@@ -123,15 +123,15 @@ class TaskPickerVC:
         if let s = session,
             moc = managedObjectContext {
             if s.tasks.count <= 6 {
-                layout = GridLayout(rows: 7, columns: 1, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 12 {
-                layout = GridLayout(rows: 7, columns: 2, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 21 {
-                layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 24 {
-                layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 27 {
-                layout = GridLayout(rows: 10, columns: 3, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
             } else {
                 layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
             }
