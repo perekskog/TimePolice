@@ -63,7 +63,7 @@ class TaskPickerButtonView: UIView {
 
 class TaskPickerToolView: UIView {
     
-    var tool: Int?
+    var tool: ViewType?
     var toolbarInfoDelegate: ToolbarInfoDelegate?
     var theme: Theme?
 
@@ -72,7 +72,7 @@ class TaskPickerToolView: UIView {
         let context = UIGraphicsGetCurrentContext()
         if let i = tool {
             if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                theme?.drawTaskPickerTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
+                theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
             }
         }
     }
@@ -80,7 +80,7 @@ class TaskPickerToolView: UIView {
 
 class WorkListToolView: UIView {
     
-    var tool: Int?
+    var tool: ViewType?
     var toolbarInfoDelegate: ToolbarInfoDelegate?
     var theme: Theme?
 
@@ -89,7 +89,7 @@ class WorkListToolView: UIView {
         let context = UIGraphicsGetCurrentContext()
         if let i = tool {
             if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                theme?.drawWorkListTool(context, parent: rect, tool: i, toolbarInfo: toolbarInfo)
+                theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
             }
         }
     }
@@ -142,11 +142,11 @@ protocol Theme {
     func drawTimePoliceBG(context: CGContextRef, parent: CGRect)
 
     func drawTaskPickerBG(context: CGContextRef, parent: CGRect)
-    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
     func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
     
     func drawWorkListBG(context: CGContextRef, parent: CGRect)
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo)
+    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
 }
 
 
@@ -213,11 +213,11 @@ class BasicTheme : Theme {
 
 
 
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
-        drawTaskPickerTool(context, parent: parent, tool: tool, toolbarInfo: toolbarInfo)
+    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
+        drawTaskPickerTool(context, parent: parent, viewType: viewType, toolbarInfo: toolbarInfo)
     }
     
-    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -235,10 +235,10 @@ class BasicTheme : Theme {
         var gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGrey, locations)
         var foregroundColor = foregroundColorBlack
         var text: String
-        switch tool {
-        case SessionName:
+        switch viewType {
+        case .SessionName:
             text = toolbarInfo.sessionName
-        case SignInSignOut:
+        case .SignInSignOut:
             if toolbarInfo.signedIn {
                 text = "Stop"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
@@ -247,12 +247,10 @@ class BasicTheme : Theme {
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
                 foregroundColor = foregroundColorWhite
             }
-        case InfoArea:
+        case .InfoArea:
             text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
-        case Settings:
-            text = "Settings"
-        default:
-            text = "---"
+        case .Add:
+            text = "Add"
         }
         
         var startPoint = CGPoint()
@@ -370,11 +368,11 @@ class BlackGreenTheme : Theme {
 
 
 
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
-        drawTaskPickerTool(context, parent: parent, tool: tool, toolbarInfo: toolbarInfo)
+    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
+        drawTaskPickerTool(context, parent: parent, viewType: viewType, toolbarInfo: toolbarInfo)
     }
     
-    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, tool: Int, toolbarInfo: ToolbarInfo) {
+    func drawTaskPickerTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
@@ -396,10 +394,10 @@ class BlackGreenTheme : Theme {
         var foregroundColor = foregroundColorWhite
         var text: String
 
-        switch tool {
-        case SessionName:
+        switch viewType {
+        case .SessionName:
             text = toolbarInfo.sessionName
-        case SignInSignOut:
+        case .SignInSignOut:
             if toolbarInfo.signedIn {
                 text = "Stop"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGreen, locations)
@@ -407,11 +405,9 @@ class BlackGreenTheme : Theme {
                 text = "Continue"
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
             }
-        case InfoArea:
+        case .InfoArea:
             text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(getString(toolbarInfo.totalTimeActiveForSession))"
-        case Settings:
-            text = "Settings"
-        case Add:
+        case .Add:
             text = "Add"
         default:
             text = "---"

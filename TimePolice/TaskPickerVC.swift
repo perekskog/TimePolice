@@ -144,7 +144,7 @@ class TaskPickerVC:
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
-        sessionNameView.tool = SessionName
+        sessionNameView.tool = .SessionName
         self.view.addSubview(sessionNameView)
         
         taskPickerBGView.theme = theme
@@ -179,14 +179,14 @@ class TaskPickerVC:
                 
             signInSignOutView.theme = theme
             signInSignOutView.toolbarInfoDelegate = self
-            signInSignOutView.tool = SignInSignOut
+            signInSignOutView.tool = .SignInSignOut
             var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
             signInSignOutView.addGestureRecognizer(recognizer)
             taskPickerBGView.addSubview(signInSignOutView)
                 
             infoAreaView.theme = theme
             infoAreaView.toolbarInfoDelegate = self
-            infoAreaView.tool = InfoArea
+            infoAreaView.tool = .InfoArea
             taskPickerBGView.addSubview(infoAreaView)
 
             updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
@@ -221,12 +221,12 @@ class TaskPickerVC:
             let numberOfButtonsToDraw = l.numberOfSelectionAreas()
             for i in 0..<numberOfButtonsToDraw {
                 if let v = taskbuttonviews[i] {
-                    v.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
+                    v.frame = l.getViewRect(taskPickerBGView.frame, buttonNumber: i)
                 }
             }
-            signInSignOutView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: SignInSignOut)
+            signInSignOutView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: .SignInSignOut)
 
-            infoAreaView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: InfoArea)
+            infoAreaView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: .InfoArea)
         }
 
 

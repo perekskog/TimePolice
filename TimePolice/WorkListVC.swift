@@ -88,7 +88,7 @@ class WorkListVC:
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
-        sessionNameView.tool = SessionName
+        sessionNameView.tool = .SessionName
         sessionNameView.toolbarInfoDelegate = self
         self.view.addSubview(sessionNameView)
 
@@ -97,12 +97,12 @@ class WorkListVC:
 
         infoAreaView.theme = theme
         infoAreaView.toolbarInfoDelegate = self
-        infoAreaView.tool = InfoArea
+        infoAreaView.tool = .InfoArea
         workListBGView.addSubview(infoAreaView)
 
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
-        signInSignOutView.tool = SignInSignOut
+        signInSignOutView.tool = .SignInSignOut
         var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
         recognizer.delegate = self
         signInSignOutView.addGestureRecognizer(recognizer)
@@ -120,7 +120,7 @@ class WorkListVC:
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
-        addView.tool = Add
+        addView.tool = .Add
         recognizer = UITapGestureRecognizer(target:self, action:Selector("addWork:"))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
