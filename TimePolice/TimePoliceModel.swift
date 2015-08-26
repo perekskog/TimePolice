@@ -1098,7 +1098,7 @@ class TestData {
             
             "Etta", "Tvåa", "Trea"
         ]
-        
+
         addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
     }
 

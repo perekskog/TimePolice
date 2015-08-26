@@ -115,14 +115,6 @@ class SelectionAreaInfo {
     var active: Bool?
     var activatedAt: NSDate?
     var ongoing: Bool?
-    init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool, activatedAt: NSDate, ongoing: Bool) {
-        self.task = task
-        self.numberOfTimesActivated = numberOfTimesActivated
-        self.totalTimeActive = totalTimeActive
-        self.active = active
-        self.activatedAt = activatedAt
-        self.ongoing = ongoing
-    }
 }
 
 protocol ToolbarInfoDelegate {

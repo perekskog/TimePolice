@@ -123,15 +123,15 @@ class TaskPickerVC:
         if let s = session,
             moc = managedObjectContext {
             if s.tasks.count <= 6 {
-                layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 7, columns: 1, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 12 {
-                layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 7, columns: 2, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 21 {
-                layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
-            } else if s.tasks.count <= 24 {
                 layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
-            } else if s.tasks.count <= 27 {
+            } else if s.tasks.count <= 24 {
                 layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 27 {
+                layout = GridLayout(rows: 10, columns: 3, padding: padding, toolHeight: 30)
             } else {
                 layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
             }
@@ -367,36 +367,39 @@ class TaskPickerVC:
         //  => there _is_ a session
         //  => There _is_ a task in the taskList
         
-        let taskList = session!.tasks.array as! [Task]
-        let task = taskList[selectionArea]
+        let sai = SelectionAreaInfo()
         
-        var taskSummary: (Int, NSTimeInterval) = (0, 0)
-        if let t = sessionTaskSummary[task] {
-            taskSummary = t
-        }
-        let (numberOfTimesActivated, totalTimeActive) = taskSummary
-        
-        var active = false
-        var ongoing = false
-        var activatedAt = NSDate()
-        if let work = session?.getLastWork() {
-            if taskList[selectionArea] == work.task {
-                active = true
-                activatedAt = work.startTime
-                if work.isOngoing() {
-                    ongoing = true
+        if let taskList = session?.tasks.array as? [Task] {
+            if selectionArea >= 0 && selectionArea < taskList.count {
+                let task = taskList[selectionArea]
+                sai.task = task
+                if let t = sessionTaskSummary[task] {
+                    let (numberOfTimesActivated, totalTimeActive) = t
+                    sai.numberOfTimesActivated = numberOfTimesActivated
+                    sai.totalTimeActive = totalTimeActive
                 }
             }
         }
-        let selectionAreaInfo = SelectionAreaInfo(
-            task: task,
-            numberOfTimesActivated: numberOfTimesActivated,
-            totalTimeActive: totalTimeActive,
-            active: active,
-            activatedAt: activatedAt,
-            ongoing: ongoing)
         
-        return selectionAreaInfo
+        if let work = session?.getLastWork(),
+            taskList = session?.tasks.array as? [Task] {
+                if selectionArea >= 0 && selectionArea < taskList.count {
+                    if taskList[selectionArea] == work.task {
+                        sai.active = true
+                        sai.activatedAt = work.startTime
+                        if work.isOngoing() {
+                            sai.ongoing = true
+                        } else {
+                            sai.ongoing = false
+                        }
+                    } else {
+                        sai.active = false
+                        sai.ongoing = false
+                    }
+                }
+        }
+        
+        return sai
 	}
 
     //----------------------------------------------
