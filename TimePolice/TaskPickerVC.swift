@@ -35,6 +35,9 @@ TODO
 
 - Kan inte hantera fall då antal tasks < antal rutor
 
+- Lägg SessionName i NavigationController
+    - Ta då också bort SessionName från enum ViewType
+
 
 DONE
 

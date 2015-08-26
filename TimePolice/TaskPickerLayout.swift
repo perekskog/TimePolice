@@ -6,17 +6,19 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+TODO
+
+- Flytta ViewType till Theme när jag införlivat Layout i TaskPicker (det är bara där den används)
+
+*/
+
 import Foundation
 import UIKit
 
 enum ViewType: Int {
     case SignInSignOut, InfoArea, Add, SessionName
 }
-/*
-let SignInSignOut = -1	// Active button for signing in/out of a session
-let InfoArea = -2		// Display area for ongoing work
-let Add = -5
-*/
 
 protocol Layout {
     func numberOfSelectionAreas() -> Int
