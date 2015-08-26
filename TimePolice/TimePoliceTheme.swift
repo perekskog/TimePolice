@@ -109,12 +109,12 @@ protocol SelectionAreaInfoDelegate {
 }
 
 class SelectionAreaInfo {
-    var task: Task
-    var numberOfTimesActivated: Int
-    var totalTimeActive: NSTimeInterval
-    var active: Bool
-    var activatedAt: NSDate
-    var ongoing: Bool
+    var task: Task?
+    var numberOfTimesActivated: Int?
+    var totalTimeActive: NSTimeInterval?
+    var active: Bool?
+    var activatedAt: NSDate?
+    var ongoing: Bool?
     init(task: Task, numberOfTimesActivated: Int, totalTimeActive: NSTimeInterval, active: Bool, activatedAt: NSDate, ongoing: Bool) {
         self.task = task
         self.numberOfTimesActivated = numberOfTimesActivated
@@ -279,9 +279,11 @@ class BasicTheme : Theme {
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.5, 0.5, 1.0, 1.0])]
-        if selectionAreaInfo.active {
-            colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-                CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+        if let a = selectionAreaInfo.active {
+            if a==true {
+                colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
+                    CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+            }
         }
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
@@ -296,14 +298,25 @@ class BasicTheme : Theme {
             startPoint, endPoint, 0)
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
-        ThemeUtilities.addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
-        if selectionAreaInfo.active {
-            let now = NSDate()
-            let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-            ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-        } else {
-            ThemeUtilities.addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-            ThemeUtilities.addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+        if let t = selectionAreaInfo.task {
+            ThemeUtilities.addText(context, text: t.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+        }
+        if let active = selectionAreaInfo.active {
+            if active == true {
+                if let activatedAt = selectionAreaInfo.activatedAt {
+                    let now = NSDate()
+                    let activeTime = now.timeIntervalSinceDate(activatedAt)
+                    ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+            } else {
+                if let numberOfTimesActivated = selectionAreaInfo.numberOfTimesActivated {
+                    ThemeUtilities.addText(context, text: String(numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+                if let totalTimeActive = selectionAreaInfo.totalTimeActive {
+                    ThemeUtilities.addText(context, text: getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+            
+            }
         }
     }
 }
@@ -439,13 +452,17 @@ class BlackGreenTheme : Theme {
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         var colors = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
             CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
-        if selectionAreaInfo.active {
-            if selectionAreaInfo.ongoing {
-                colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0]),
-                    CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])]
-            } else {
-                colors = [CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0]),
-                    CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])]
+        if let active = selectionAreaInfo.active {
+            if active {
+                if let ongoing = selectionAreaInfo.ongoing {
+                    if ongoing {
+                        colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0]),
+                            CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])]
+                    } else {
+                        colors = [CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0]),
+                            CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])]
+                    }
+                }
             }
         }
         let gradient = CGGradientCreateWithColors(colorSpaceRGB,
@@ -456,14 +473,25 @@ class BlackGreenTheme : Theme {
             startPoint, endPoint, 0)
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
-        ThemeUtilities.addText(context, text: selectionAreaInfo.task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
-        if selectionAreaInfo.ongoing {
-            let now = NSDate()
-            let activeTime = now.timeIntervalSinceDate(selectionAreaInfo.activatedAt)
-            ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-        } else {
-            ThemeUtilities.addText(context, text: String(selectionAreaInfo.numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
-            ThemeUtilities.addText(context, text: getString(selectionAreaInfo.totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+        if let task = selectionAreaInfo.task {
+            ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+        }
+        
+        if let ongoing = selectionAreaInfo.ongoing {
+            if ongoing {
+                if let activatedAt = selectionAreaInfo.activatedAt {
+                    let now = NSDate()
+                    let activeTime = now.timeIntervalSinceDate(activatedAt)
+                    ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+            } else {
+                if let numberOfTimesActivated = selectionAreaInfo.numberOfTimesActivated {
+                    ThemeUtilities.addText(context, text: String(numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+                if let totalTimeActive = selectionAreaInfo.totalTimeActive {
+                    ThemeUtilities.addText(context, text: getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                }
+            }
         }
     }
 
