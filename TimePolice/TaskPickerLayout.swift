@@ -9,20 +9,18 @@
 /*
 TODO
 
-- Flytta ViewType till Theme när jag införlivat Layout i TaskPicker (det är bara där den används)
+x Flytta ViewType till Theme när jag införlivat Layout i TaskPicker (det är bara där den används)
+    => Nja, den passar väl bra så här?
 
 */
 
 import Foundation
 import UIKit
 
-enum ViewType: Int {
-    case SignInSignOut, InfoArea, Add, SessionName
-}
-
 protocol Layout {
     func numberOfSelectionAreas() -> Int
-    func getViewRect(parentViewRect: CGRect, selectionArea: ViewType) -> CGRect
+    func getViewRectInfo(parentViewRect: CGRect) -> CGRect
+    func getViewRectSignInSignOut(parentViewRect: CGRect) -> CGRect
     func getViewRect(parentViewRect: CGRect, buttonNumber: Int) -> CGRect
 }
 
@@ -49,20 +47,16 @@ class GridLayout : Layout {
         return CGRectMake(originalFrame.origin.x, originalFrame.origin.y, adjustedWidth, adjustedHeight)
     }
     
-    func getViewRect(parentViewRect: CGRect, selectionArea: ViewType) -> CGRect {
-        switch selectionArea {
-        case .InfoArea:
+    func getViewRectInfo(parentViewRect: CGRect) -> CGRect {
             let columnWidth = parentViewRect.width
             let rect = CGRectMake(padding, padding, columnWidth-2*padding, toolHeight)
             return rect
-        case .SignInSignOut:
+    }
+
+    func getViewRectSignInSignOut(parentViewRect: CGRect) -> CGRect {
             let columnWidth = parentViewRect.width
             let rect = CGRectMake(padding, padding*2+toolHeight, columnWidth-2*padding, toolHeight)
             return rect
-        default:
-            return CGRectMake(0, 0, 0, 0)
-        }
-        
     }
 
     func getViewRect(parentViewRect: CGRect, buttonNumber: Int) -> CGRect {

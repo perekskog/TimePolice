@@ -229,9 +229,9 @@ class TaskPickerVC:
                     v.frame = l.getViewRect(taskPickerBGView.frame, buttonNumber: i)
                 }
             }
-            signInSignOutView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: .SignInSignOut)
-
-            infoAreaView.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: .InfoArea)
+            
+            signInSignOutView.frame = l.getViewRectSignInSignOut(taskPickerBGView.frame)
+            infoAreaView.frame = l.getViewRectInfo(taskPickerBGView.frame)
         }
 
 

@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+
+enum ViewType: Int {
+    case SignInSignOut, InfoArea, Add, SessionName
+}
+
+
 /////////////// --- Views --- //////////////////
 
 class TimePoliceBGView: UIView {
