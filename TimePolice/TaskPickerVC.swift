@@ -33,6 +33,8 @@ TODO
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
 
+- Kan inte hantera fall då antal tasks < antal rutor
+
 
 DONE
 
@@ -118,7 +120,7 @@ class TaskPickerVC:
         if let s = session,
             moc = managedObjectContext {
             if s.tasks.count <= 6 {
-                layout = GridLayout(rows: 7, columns: 1, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 12 {
                 layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 21 {
