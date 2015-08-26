@@ -14,9 +14,6 @@ TODO
 - Borde jag inte kunna använda navigationbar?
   Sätt left = EXIT och titel till sessionsnamnet.
 
-- getSelectionAreaInfo
-  Är det Theme som gör uträkning av tid för aktuell task? Kasnek inte så bra...
-
 - gestureRecognizer, TaskPickerStrategy
   Hur ska den implementeras, får kompileringsfel?
     // Gesture recognizer delegate
@@ -30,10 +27,20 @@ TODO
             }
     }
 
-- Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
++ Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
+    Ska SelectionAreaInfo innehålla optionals? Känns ganska praktiskt...
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
+
+
+DONE
+
+v getSelectionAreaInfo
+  Theme ska inte räkna ut tid för pågående task.
+  Lägg till timeSinceLastActivation, i fallet med active blir det bra, men annars?
+    => Men jag har ju redan activatedAt...
+
 
 */
 
@@ -111,7 +118,7 @@ class TaskPickerVC:
         if let s = session,
             moc = managedObjectContext {
             if s.tasks.count <= 6 {
-                layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
+                layout = GridLayout(rows: 7, columns: 1, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 12 {
                 layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 21 {
@@ -146,23 +153,27 @@ class TaskPickerVC:
 
         if let tl = session?.tasks.array as? [Task],
             l = layout {
-            let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
+            let numberOfButtonsToDraw = l.numberOfSelectionAreas()
+            let numberOfTasksInSession = tl.count
             for i in 0..<numberOfButtonsToDraw {
                 let view = TaskPickerButtonView()
                 view.theme = theme
+
                 view.selectionAreaInfoDelegate = self
                 view.taskPosition = i
-                
-                let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
-                view.addGestureRecognizer(tapRecognizer)
-                recognizers[tapRecognizer] = i
-                
-                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
-                view.addGestureRecognizer(longPressRecognizer)
-                recognizers[longPressRecognizer] = i
-                
+
+                if i < numberOfTasksInSession {
+                    
+                    let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
+                    view.addGestureRecognizer(tapRecognizer)
+                    recognizers[tapRecognizer] = i
+                    
+                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
+                    view.addGestureRecognizer(longPressRecognizer)
+                    recognizers[longPressRecognizer] = i
+                }
+                    
                 taskbuttonviews[i] = view
-                
                 taskPickerBGView.addSubview(view)
             }
                 
@@ -206,9 +217,8 @@ class TaskPickerVC:
         //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
         lastview = taskPickerBGView
 
-        if let tl = session?.tasks.array as? [Task],
-            l = layout {
-            let numberOfButtonsToDraw = min(tl.count, l.numberOfSelectionAreas())
+        if let l = layout {
+            let numberOfButtonsToDraw = l.numberOfSelectionAreas()
             for i in 0..<numberOfButtonsToDraw {
                 if let v = taskbuttonviews[i] {
                     v.frame = l.getViewRect(taskPickerBGView.frame, selectionArea: i)
