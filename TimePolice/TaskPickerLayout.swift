@@ -40,13 +40,7 @@ class GridLayout : Layout {
     func numberOfSelectionAreas() -> Int {
         return rows * columns;
     }
-
-    func adjustedFrame(originalFrame: CGRect) -> CGRect {
-        let adjustedWidth = (originalFrame.width / CGFloat(columns)) * CGFloat(columns)
-        let adjustedHeight = (originalFrame.height / CGFloat(rows)) * CGFloat(rows)
-        return CGRectMake(originalFrame.origin.x, originalFrame.origin.y, adjustedWidth, adjustedHeight)
-    }
-    
+  
     func getViewRectInfo(parentViewRect: CGRect) -> CGRect {
             let columnWidth = parentViewRect.width
             let rect = CGRectMake(padding, padding, columnWidth-2*padding, toolHeight)

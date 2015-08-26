@@ -219,7 +219,6 @@ class TaskPickerVC:
         lastview = sessionNameView
         
         taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
-        //taskPickerBGView.frame = layout.adjustedFrame(taskPickerBGView.frame)
         lastview = taskPickerBGView
 
         if let l = layout {
@@ -229,7 +228,7 @@ class TaskPickerVC:
                     v.frame = l.getViewRect(taskPickerBGView.frame, buttonNumber: i)
                 }
             }
-            
+
             signInSignOutView.frame = l.getViewRectSignInSignOut(taskPickerBGView.frame)
             infoAreaView.frame = l.getViewRectInfo(taskPickerBGView.frame)
         }
