@@ -11,36 +11,12 @@
 
 TODO
 
-- Borde jag inte kunna använda navigationbar?
+- Använd NavigationBar
   Sätt left = EXIT och titel till sessionsnamnet.
-
-- gestureRecognizer, TaskPickerStrategy
-  Hur ska den implementeras, får kompileringsfel?
-    // Gesture recognizer delegate
-    
-    func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
-        shouldReceiveTouch touch: UITouch) -> Bool {
-            if let taskNumber = recognizers[gestureRecognizer] {
-                return taskIsSelectable(taskNumber)
-            } else {
-                return true
-            }
-    }
+  Ta då också bort SessionName från enum ViewType
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
-
-- Lägg EXIT och SessionName i NavigationController
-    - Ta då också bort SessionName från enum ViewType
-
-
-DONE
-
-v getSelectionAreaInfo
-  Theme ska inte räkna ut tid för pågående task.
-  Lägg till timeSinceLastActivation, i fallet med active blir det bra, men annars?
-    => Men jag har ju redan activatedAt...
-
 
 */
 
@@ -55,7 +31,8 @@ import CoreData
 class TaskEntryCreatorByPickTaskVC:
         TaskEntryCreatorBase,
         ToolbarInfoDelegate,
-        SelectionAreaInfoDelegate
+        SelectionAreaInfoDelegate,
+        UIGestureRecognizerDelegate
 	{
 
     var sourceController: TimePoliceVC?
@@ -170,10 +147,12 @@ class TaskEntryCreatorByPickTaskVC:
                 if i < numberOfTasksInSession {
                     
                     let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
+                    tapRecognizer.delegate = self
                     view.addGestureRecognizer(tapRecognizer)
                     recognizers[tapRecognizer] = i
                     
                     let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
+                    tapRecognizer.delegate = self
                     view.addGestureRecognizer(longPressRecognizer)
                     recognizers[longPressRecognizer] = i
                 }
@@ -353,6 +332,19 @@ class TaskEntryCreatorByPickTaskVC:
         for (_, view) in taskbuttonviews {
             view.setNeedsDisplay()
         }
+    }
+
+    //---------------------------------------------
+    // TaskPickerVC - GestureRecognizerDelegate
+    //---------------------------------------------
+
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
+        shouldReceiveTouch touch: UITouch) -> Bool {
+            if let taskNumber = recognizers[gestureRecognizer] {
+                return true //taskIsSelectable(taskNumber)
+            } else {
+                return true
+            }
     }
 
 
