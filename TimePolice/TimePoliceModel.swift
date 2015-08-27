@@ -192,11 +192,11 @@ class Session: NSManagedObject {
 
     
     //---------------------------------------------
-    // Session - getSessionSummary
+    // Session - getSessionTaskSummary
     //---------------------------------------------
 
-    func getSessionSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
-        var sessionSummary: [Task: (Int, NSTimeInterval)] = [:]
+    func getSessionTaskSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
+        var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
@@ -205,13 +205,35 @@ class Session: NSManagedObject {
             if idx != self.work.count-1 || work.isStopped() {
                 let task = work.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
-                if let t = sessionSummary[task] {
+                if let t = sessionTaskSummary[task] {
                     taskSummary = t
                 }
                 var (activations, totalTime) = taskSummary
                 activations++
                 totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
-                sessionSummary[task] = (activations, totalTime)
+                sessionTaskSummary[task] = (activations, totalTime)
+            }
+        }
+
+        return sessionTaskSummary
+    }
+
+    //---------------------------------------------
+    // Session - getSessionSummary
+    //---------------------------------------------
+
+    func getSessionSummary(moc: NSManagedObjectContext) -> (Int, NSTimeInterval) {
+        var sessionSummary: (Int, NSTimeInterval) = (0,0)
+
+        self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+
+            let work = elem as! Work
+            // For all items but the last one, if it is ongoing
+            if idx != self.work.count-1 || work.isStopped() {
+                var (activations, totalTime) = sessionSummary
+                activations++
+                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                sessionSummary = (activations, totalTime)
             }
         }
 
@@ -987,7 +1009,7 @@ class TestData {
             }
         }
 
-        session = Session.createInMOC(moc, name: "\(sessionName) \(getString(NSDate()))", project: project)
+        session = Session.createInMOC(moc, name: "\(sessionName)", project: project)
 
         session.addTasks(taskList)
     }
@@ -996,25 +1018,23 @@ class TestData {
     // TestData - addSessionToHome
     //---------------------------------------------
 
-    class func addSessionToHome(moc: NSManagedObjectContext) {
-
+    class func addSessionToPrivate(moc: NSManagedObjectContext) {
+        // 24
         let taskList =  [
-            "I F2F", "I Eva", "I Chat",
-
-            "I Email", "---", "I Blixt",
-
-            "Projekt P", "Media P", "Hem P",
-
-            "Projekt U", "Media D", "Hem U",
-
-            "N Waste", "---", "N Not home",
-
-            "N Connect", "N Down", "N Time-in",
-
-            "N Physical", "N Coffe/WC", "N Other"
+            "+ RC", "+ Dev", "+ Media",
+            "+ Läsa/Titta", "+ Proj hemma", "+ Proj borta",
+            "+ Fysiskt", "+ Mindful", "+ Gemenskap",
+            
+            "- Person", "- Hem", "- Hus/tomt",
+            "- Bil", "- Annat", "",
+            
+            "0 Läsa/titta", "0 Bunden", "0 Fri",
+            
+            "* F2F", "* Eva", "* Chat",
+            "* Email", "", "* Blixt"
         ]
 
-        addSession(moc, projectName: "Home", sessionTemplateName: "Template - Home", sessionTemplateTasks: taskList, sessionName: "Home")
+        addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")
     }
 
     //---------------------------------------------
@@ -1022,24 +1042,24 @@ class TestData {
     //---------------------------------------------
 
     class func addSessionToWork(moc: NSManagedObjectContext) {
-
+        // 27
         let taskList = [
-            "I F2F", "---", "I Lync",
+            "+ Dev", "+ WoW", "+ Strategi",
+            "+ Lära ut", "+ Personlig utv", "",
+            "+ Fysisk", "+ Mindful", "+ Gemenskap",
             
-            "I Email", "I Ticket", "I Blixt",
+            "- Tickets", "- Epost", "- Tasks", 
+            "- Backlog", "- Assigna", "- Supporta",
+            "- Adm", "- Möte", "- Annat",
             
-            "P OF", "P Task", "P Ticket",
+            "0 Bunden", "0 Fri", "0 Privat",
             
-            "P US", "P Meeting", "P Other",
+            "* F2F", "", "* Chat",
+            "* Email", "* Ticket", "* Blixt"
             
-            "N Waste", "---", "N Not work",
-            
-            "N Connect", "N Down", "N Time-in",
-            
-            "N Physical", "N Coffe/WC", "N Other"
         ]
         
-        addSession(moc, projectName: "Work", sessionTemplateName: "Template - Work", sessionTemplateTasks: taskList, sessionName: "Work")
+        addSession(moc, projectName: "Jobb", sessionTemplateName: "Template - Jobb", sessionTemplateTasks: taskList, sessionName: "Jobb")
     }
     
     //---------------------------------------------
@@ -1047,24 +1067,24 @@ class TestData {
     //---------------------------------------------
 
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
-
+        // 21
         let taskList = [
-            "Sleep", "Sleep in-out", "---",
+            "Sova", "", "",
             
-            "Home", "Home in-out", "Home outside",
+            "Hemma", "", "Hemma ute",
             
-            "Work", "---", "Work outside",
+            "Jobb", "", "Jobb ute",
                 
-            "Car morning", "T morning", "P morning",
+            "Bil morgon", "T morgon", "P morgon",
 
-            "Car evening", "T evening", "P evening",
+            "Bil kväll", "T kväll", "P kväll",
 
-            "Lunch", "Errand", "F&S",
+            "Lunch", "Ärende", "F&S",
 
-            "1", "2", "3"
+            "Div 1", "Div 2", "Div 3"
         ]
         
-        addSession(moc, projectName: "Daytime", sessionTemplateName: "Template - Daytime", sessionTemplateTasks: taskList, sessionName: "Daytime")
+        addSession(moc, projectName: "Ett dygn", sessionTemplateName: "Template - Ett dygn", sessionTemplateTasks: taskList, sessionName: "Ett dygn")
     }
 
     //---------------------------------------------
@@ -1072,13 +1092,13 @@ class TestData {
     //---------------------------------------------
     
     class func addSessionToTest(moc: NSManagedObjectContext) {
-        
+        // 6
         let taskList = [
             "Adam", "Bertil", "Ceasar",
             
             "Etta", "Tvåa", "Trea"
         ]
-        
+
         addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
     }
 
