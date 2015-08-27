@@ -126,7 +126,7 @@ class TaskEntryCreatorBase:
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
-        if segue.identifier == "EditWork" {
+        if segue.identifier == "EditTaskEntry" {
             if let nvc = segue.destinationViewController as? UINavigationController,
                 vc = nvc.topViewController as? TaskEntryPropVC {
                     if let s = session,
@@ -165,7 +165,7 @@ class TaskEntryCreatorBase:
 
     }
 
-    @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
+    @IBAction func exitTaskEntryProp(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskEntryPropVC

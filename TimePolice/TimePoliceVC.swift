@@ -137,11 +137,11 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
-        if segue.identifier == "TaskPicker" {
+        if segue.identifier == "TaskEntryCreatorByPickTask" {
             let vc = segue.destinationViewController as! TaskEntryCreatorByPickTaskVC
             vc.session = selectedSession
         }
-        if segue.identifier == "WorkList" {
+        if segue.identifier == "TaskEntryCreatorByAddToList" {
             let vc = segue.destinationViewController as! TaskEntryCreatorByAddToListVC
             vc.session = selectedSession
         } 
@@ -292,10 +292,10 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         switch defaultVC.selectedSegmentIndex {
         case 0:
             appLog.log(logger, logtype: .Debug, message: "performSegue TaskPicker")
-            performSegueWithIdentifier("TaskPicker", sender: self)
+            performSegueWithIdentifier("TaskEntryCreatorByPickTask", sender: self)
         case 1:
             appLog.log(logger, logtype: .Debug, message: "performSegue WorkList")
-            performSegueWithIdentifier("WorkList", sender: self)
+            performSegueWithIdentifier("TaskEntryCreatorByAddToList", sender: self)
         default:
             appLog.log(logger, logtype: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
         }

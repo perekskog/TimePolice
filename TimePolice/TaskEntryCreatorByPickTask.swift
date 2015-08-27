@@ -278,7 +278,7 @@ class TaskEntryCreatorByPickTaskVC:
 
             selectedWorkIndex = session!.work.count - 1
 
-            performSegueWithIdentifier("EditWork", sender: self)
+            performSegueWithIdentifier("EditTaskEntry", sender: self)
         } else {
             appLog.log(logger, logtype: .EnterExit, message: "No last work")
         }
