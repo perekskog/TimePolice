@@ -19,7 +19,7 @@ enum FillWith: Int {
     case FillWithNone, FillWithPrevious, FillWithNext
 }
 
-class WorkPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
     // Input data
     var taskEntryTemplate: Work?

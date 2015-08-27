@@ -10,8 +10,6 @@
 
 TODO
 
-- Går ej att överrida "lazy var logger"
-
 */
 
 import UIKit
@@ -47,51 +45,70 @@ class TaskEntryCreatorBase:
     lazy var logger: AppLogger = {
         let logger = MultiLog()
         //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "TaskEntryCreatorBase")
-        logger.logger3 = ApplogLog(locator: "TaskEntryCreatorBase")
+        logger.logger2 = StringLog(locator: self.getLogDomain())
+        logger.logger3 = ApplogLog(locator: self.getLogDomain())
         
         return logger
     }()
+
+    func getLogDomain() -> String {
+        return "TaskEntryCreatorBase"
+    }
 
     
     //---------------------------------------------
     // TaskEntryCreatorBase - View lifecycle
     //---------------------------------------------
 
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    // Just once:
+    override func viewDidLoad() {
+        super.viewDidLoad()        
+        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
-    }
 
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
-    }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
     }
 
+
+    // Both of these, maybe several times:
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()        
-        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+
+    // Parent: viewDidDisappear, then:
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
     }
+
+
+    // ...
+
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    // Parent: viewWillAppear, then:
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+    // ...then: Child: viewDidAppear
+
+
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -109,9 +126,9 @@ class TaskEntryCreatorBase:
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
-        if segue.identifier == "EditWork" {
+        if segue.identifier == "EditTaskEntry" {
             if let nvc = segue.destinationViewController as? UINavigationController,
-                vc = nvc.topViewController as? WorkPropVC {
+                vc = nvc.topViewController as? TaskEntryPropVC {
                     if let s = session,
                     tl = s.tasks.array as? [Task] {
                         appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
@@ -148,10 +165,10 @@ class TaskEntryCreatorBase:
 
     }
 
-    @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
+    @IBAction func exitTaskEntryProp(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
-        let vc = unwindSegue.sourceViewController as! WorkPropVC
+        let vc = unwindSegue.sourceViewController as! TaskEntryPropVC
 
         if unwindSegue.identifier == "CancelTaskEntry" {
             appLog.log(logger, logtype: .Debug, message: "Handle CancelTaskEntry... Do nothing")

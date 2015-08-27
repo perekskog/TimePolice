@@ -140,18 +140,18 @@
                     <connections>
                         <outlet property="appLogSize" destination="3tR-Eh-bSr" id="dpB-F3-dLZ"/>
                         <outlet property="defaultVC" destination="Wq5-Lu-cAa" id="CxQ-hm-veh"/>
-                        <segue destination="vXZ-lx-hvc" kind="push" identifier="TaskPicker" id="Q4B-Bv-Ow3"/>
-                        <segue destination="QbM-a3-K2L" kind="push" identifier="WorkList" id="7bm-qM-hnF"/>
+                        <segue destination="vXZ-lx-hvc" kind="push" identifier="TaskEntryCreatorByPickTask" id="Q4B-Bv-Ow3"/>
+                        <segue destination="QbM-a3-K2L" kind="push" identifier="TaskEntryCreatorByAddToList" id="7bm-qM-hnF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cpz-F9-Kfn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1793" y="115"/>
         </scene>
-        <!--Task PickerVC-->
+        <!--TaskEntryCreatorByPickTaskVC-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="TaskPickerVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" userLabel="TaskEntryCreatorByPickTaskVC" customClass="TaskEntryCreatorByPickTaskVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -164,7 +164,7 @@
                     <navigationItem key="navigationItem" id="lIo-Le-7fv"/>
                     <connections>
                         <segue destination="Ts8-bs-c8R" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="nDQ-cN-cBa"/>
-                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditWork" id="I7g-5x-ylG"/>
+                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="I7g-5x-ylG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -172,10 +172,10 @@
             </objects>
             <point key="canvasLocation" x="2267" y="115"/>
         </scene>
-        <!--Work ListVC-->
+        <!--TaskEntryCreatorByAddToListVC-->
         <scene sceneID="wps-ek-s8l">
             <objects>
-                <viewController id="QbM-a3-K2L" customClass="WorkListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="QbM-a3-K2L" userLabel="TaskEntryCreatorByAddToListVC" customClass="TaskEntryCreatorByAddToListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9VG-A1-ay2"/>
                         <viewControllerLayoutGuide type="bottom" id="9gW-V1-TPd"/>
@@ -188,7 +188,7 @@
                     <navigationItem key="navigationItem" id="dxa-gD-taX"/>
                     <connections>
                         <segue destination="DP0-0d-1WN" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="6gh-5z-Q9W"/>
-                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditWork" id="hjh-eJ-Q4q"/>
+                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="hjh-eJ-Q4q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwM-jx-N4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -196,10 +196,10 @@
             </objects>
             <point key="canvasLocation" x="2267" y="838"/>
         </scene>
-        <!--WorkPropVC-->
+        <!--TaskEntryPropVC-->
         <scene sceneID="d2u-oH-QeM">
             <objects>
-                <viewController id="dzU-1d-OfS" userLabel="WorkPropVC" customClass="WorkPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dzU-1d-OfS" userLabel="TaskEntryPropVC" customClass="TaskEntryPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Fsg-Qu-mhy"/>
                         <viewControllerLayoutGuide type="bottom" id="OC8-9I-IBs"/>
@@ -211,9 +211,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="6ZT-nV-5Yo"/>
                     <connections>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="CancelTaskEntry" unwindAction="exitEditWork:" id="Af4-DQ-And"/>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="SaveTaskEntry" unwindAction="exitEditWork:" id="fTC-ee-ZR0"/>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteTaskEntry" unwindAction="exitEditWork:" id="nAc-LQ-DHj"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="CancelTaskEntry" unwindAction="exitTaskEntryProp:" id="Af4-DQ-And"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="SaveTaskEntry" unwindAction="exitTaskEntryProp:" id="fTC-ee-ZR0"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteTaskEntry" unwindAction="exitTaskEntryProp:" id="nAc-LQ-DHj"/>
                         <segue destination="tNe-a1-HVm" kind="push" identifier="SelectTask" id="faT-s4-dMw"/>
                     </connections>
                 </viewController>
@@ -288,6 +288,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="I7g-5x-ylG"/>
     </inferredMetricsTieBreakers>
 </document>

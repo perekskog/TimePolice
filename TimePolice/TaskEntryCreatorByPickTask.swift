@@ -1,5 +1,5 @@
 //
-//  TaskPickerViewController.swift
+//  TaskEntryCreatorByPickTaskVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2014-11-04.
@@ -11,41 +11,12 @@
 
 TODO
 
-- Borde jag inte kunna använda navigationbar?
+- Använd NavigationBar
   Sätt left = EXIT och titel till sessionsnamnet.
-
-- gestureRecognizer, TaskPickerStrategy
-  Hur ska den implementeras, får kompileringsfel?
-    // Gesture recognizer delegate
-    
-    func gestureRecognizer(gestureRecognizer: UITapGestureRecognizer,
-        shouldReceiveTouch touch: UITouch) -> Bool {
-            if let taskNumber = recognizers[gestureRecognizer] {
-                return taskIsSelectable(taskNumber)
-            } else {
-                return true
-            }
-    }
-
-+ Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
-    Ska SelectionAreaInfo innehålla optionals? Känns ganska praktiskt...
+  Ta då också bort SessionName från enum ViewType
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
-
-- Kan inte hantera fall då antal tasks < antal rutor
-
-- Lägg SessionName i NavigationController
-    - Ta då också bort SessionName från enum ViewType
-
-
-DONE
-
-v getSelectionAreaInfo
-  Theme ska inte räkna ut tid för pågående task.
-  Lägg till timeSinceLastActivation, i fallet med active blir det bra, men annars?
-    => Men jag har ju redan activatedAt...
-
 
 */
 
@@ -57,14 +28,13 @@ import CoreData
 //  TaskPickerVC
 //==================================================
 
-class TaskPickerVC: 
+class TaskEntryCreatorByPickTaskVC:
         TaskEntryCreatorBase,
         ToolbarInfoDelegate,
-        SelectionAreaInfoDelegate
+        SelectionAreaInfoDelegate,
+        UIGestureRecognizerDelegate
 	{
 
-    var sourceController: TimePoliceVC?
-    
     let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
     let sessionNameView = TaskPickerToolView()
     let taskPickerBGView = TaskPickerBGView()
@@ -86,29 +56,15 @@ class TaskPickerVC:
     //--------------------------------------------------------
     // TaskPickerVC - Lazy properties
     //--------------------------------------------------------
-/*
-    lazy var logger: AppLogger = {
-        let logger = MultiLog()
-        //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "TaskPickerVC")
-        logger.logger3 = ApplogLog(locator: "TaskPickerVC")
-        
-        return logger
-    }()
-*/
+    
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorTaskPicker"
+    }
+
 
     //---------------------------------------------
     // TaskPickerVC - View lifecycle
     //---------------------------------------------
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-
-        var nav = self.navigationController?.navigationBar
-        nav?.barStyle = UIBarStyle.Black
-        nav?.tintColor = UIColor.whiteColor()
-        nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -170,10 +126,12 @@ class TaskPickerVC:
                 if i < numberOfTasksInSession {
                     
                     let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
+                    tapRecognizer.delegate = self
                     view.addGestureRecognizer(tapRecognizer)
                     recognizers[tapRecognizer] = i
                     
                     let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
+                    tapRecognizer.delegate = self
                     view.addGestureRecognizer(longPressRecognizer)
                     recognizers[longPressRecognizer] = i
                 }
@@ -250,26 +208,18 @@ class TaskPickerVC:
         performSegueWithIdentifier("Exit", sender: self)
     }
 
-    func handleTapSettings(sender: UITapGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleTapSettings")
-    }
-
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
 
         if let taskList = session?.tasks.array as? [Task],
             work = session?.getLastWork() {
             if work.isOngoing() {
-               // Last work ongoing -> finished
                 setLastWorkAsFinished()
             } else {
-                // Last work finished -> ongoing
                 setLastWorkAsOngoing()
             }
             let taskIndex = find(taskList, work.task as Task)
             taskbuttonviews[taskIndex!]?.setNeedsDisplay()
-        } else {
-            // Empty worklist => do nothing
         }
 
         signInSignOutView.setNeedsDisplay()
@@ -319,16 +269,16 @@ class TaskPickerVC:
 
         if let work = session?.getLastWork(),
             taskList = session?.tasks.array as? [Task] {
-            let taskIndex = recognizers[sender]
-            let task = taskList[taskIndex!]
-            if work.isOngoing() && work.task != task {
+            let taskPressedIndex = recognizers[sender]
+            let taskPressed = taskList[taskPressedIndex!]
+            if work.isOngoing() && work.task != taskPressed {
                 appLog.log(logger, logtype: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
                 return
             }
 
             selectedWorkIndex = session!.work.count - 1
 
-            performSegueWithIdentifier("EditWork", sender: self)
+            performSegueWithIdentifier("EditTaskEntry", sender: self)
         } else {
             appLog.log(logger, logtype: .EnterExit, message: "No last work")
         }
@@ -353,6 +303,19 @@ class TaskPickerVC:
         for (_, view) in taskbuttonviews {
             view.setNeedsDisplay()
         }
+    }
+
+    //---------------------------------------------
+    // TaskPickerVC - GestureRecognizerDelegate
+    //---------------------------------------------
+
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
+        shouldReceiveTouch touch: UITouch) -> Bool {
+            if let taskNumber = recognizers[gestureRecognizer] {
+                return true //taskIsSelectable(taskNumber)
+            } else {
+                return true
+            }
     }
 
 

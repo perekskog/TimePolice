@@ -1,5 +1,5 @@
 //
-//  WorkListViewController.swift
+//  TaskEntryCreatorByAddToListVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-04-21.
@@ -17,7 +17,7 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListVC: 
+class TaskEntryCreatorByAddToListVC:
         TaskEntryCreatorBase,
         UITableViewDataSource, 
         UITableViewDelegate, 
@@ -60,6 +60,11 @@ class WorkListVC:
         return logger
     }()
 */
+    
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorTaskEntryList"
+    }
+
     //---------------------------------------------
     // WorkListVC - View lifecycle
     //---------------------------------------------
@@ -260,7 +265,7 @@ class WorkListVC:
             
             appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
 
-            performSegueWithIdentifier("EditWork", sender: self)
+            performSegueWithIdentifier("EditTaskEntry", sender: self)
         }
     }
 

@@ -351,7 +351,7 @@ class Unit_Test_ExampleTests: XCTestCase
     func testViewDidLoad2()
     {
         // we only have access to this if we import our project above
-        let v = TaskPickerVC()
+        let v = TaskEntryCreatorByPickTaskVC()
         
         // assert that the ViewController.view is not nil
         XCTAssertNotNil(v.view, "View Did Not load")
