@@ -291,6 +291,7 @@ class BasicTheme : Theme {
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
         if let t = selectionAreaInfo.task {
+            // TODO: If task.name ends with #RGB, add small square to the left of the name
             ThemeUtilities.addText(context, text: t.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         if let active = selectionAreaInfo.active {
@@ -466,6 +467,7 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
+            // TODO: If task.name ends with #RGB, add small square to the left of the name
             ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         
