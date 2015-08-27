@@ -229,26 +229,18 @@ class TaskEntryCreatorByPickTaskVC:
         performSegueWithIdentifier("Exit", sender: self)
     }
 
-    func handleTapSettings(sender: UITapGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleTapSettings")
-    }
-
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
 
         if let taskList = session?.tasks.array as? [Task],
             work = session?.getLastWork() {
             if work.isOngoing() {
-               // Last work ongoing -> finished
                 setLastWorkAsFinished()
             } else {
-                // Last work finished -> ongoing
                 setLastWorkAsOngoing()
             }
             let taskIndex = find(taskList, work.task as Task)
             taskbuttonviews[taskIndex!]?.setNeedsDisplay()
-        } else {
-            // Empty worklist => do nothing
         }
 
         signInSignOutView.setNeedsDisplay()
@@ -298,9 +290,9 @@ class TaskEntryCreatorByPickTaskVC:
 
         if let work = session?.getLastWork(),
             taskList = session?.tasks.array as? [Task] {
-            let taskIndex = recognizers[sender]
-            let task = taskList[taskIndex!]
-            if work.isOngoing() && work.task != task {
+            let taskPressedIndex = recognizers[sender]
+            let taskPressed = taskList[taskPressedIndex!]
+            if work.isOngoing() && work.task != taskPressed {
                 appLog.log(logger, logtype: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
                 return
             }
