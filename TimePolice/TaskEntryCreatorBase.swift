@@ -128,7 +128,7 @@ class TaskEntryCreatorBase:
 
         if segue.identifier == "EditWork" {
             if let nvc = segue.destinationViewController as? UINavigationController,
-                vc = nvc.topViewController as? WorkPropVC {
+                vc = nvc.topViewController as? TaskEntryPropVC {
                     if let s = session,
                     tl = s.tasks.array as? [Task] {
                         appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
@@ -168,7 +168,7 @@ class TaskEntryCreatorBase:
     @IBAction func exitEditWork(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
-        let vc = unwindSegue.sourceViewController as! WorkPropVC
+        let vc = unwindSegue.sourceViewController as! TaskEntryPropVC
 
         if unwindSegue.identifier == "CancelTaskEntry" {
             appLog.log(logger, logtype: .Debug, message: "Handle CancelTaskEntry... Do nothing")

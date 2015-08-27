@@ -140,12 +140,10 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         if segue.identifier == "TaskPicker" {
             let vc = segue.destinationViewController as! TaskEntryCreatorByPickTaskVC
             vc.session = selectedSession
-            vc.sourceController = self
-        } 
+        }
         if segue.identifier == "WorkList" {
             let vc = segue.destinationViewController as! TaskEntryCreatorByAddToListVC
             vc.session = selectedSession
-            vc.sourceController = self
         } 
     }
 
