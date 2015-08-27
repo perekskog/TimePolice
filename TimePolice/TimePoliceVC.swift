@@ -138,12 +138,12 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
         if segue.identifier == "TaskPicker" {
-            let vc = segue.destinationViewController as! TaskPickerVC
+            let vc = segue.destinationViewController as! TaskEntryCreatorByPickTaskVC
             vc.session = selectedSession
             vc.sourceController = self
         } 
         if segue.identifier == "WorkList" {
-            let vc = segue.destinationViewController as! WorkListVC
+            let vc = segue.destinationViewController as! TaskEntryCreatorByAddToListVC
             vc.session = selectedSession
             vc.sourceController = self
         } 

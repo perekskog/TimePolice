@@ -1,5 +1,5 @@
 //
-//  WorkListViewController.swift
+//  TaskEntryCreatorByAddToListVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-04-21.
@@ -17,7 +17,7 @@ TODO
 import UIKit
 import CoreData
 
-class WorkListVC: 
+class TaskEntryCreatorByAddToListVC:
         TaskEntryCreatorBase,
         UITableViewDataSource, 
         UITableViewDelegate, 

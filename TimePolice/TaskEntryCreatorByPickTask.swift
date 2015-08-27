@@ -1,5 +1,5 @@
 //
-//  TaskPickerViewController.swift
+//  TaskEntryCreatorByPickTaskVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2014-11-04.
@@ -52,7 +52,7 @@ import CoreData
 //  TaskPickerVC
 //==================================================
 
-class TaskPickerVC: 
+class TaskEntryCreatorByPickTaskVC:
         TaskEntryCreatorBase,
         ToolbarInfoDelegate,
         SelectionAreaInfoDelegate
