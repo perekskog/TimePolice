@@ -60,40 +60,55 @@ class TaskEntryCreatorBase:
     // TaskEntryCreatorBase - View lifecycle
     //---------------------------------------------
 
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    // Just once:
+    override func viewDidLoad() {
+        super.viewDidLoad()        
+        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
-    }
 
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
-    }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
     }
 
+
+    // Both of these, maybe several times:
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()        
-        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+
+    // Parent: viewDidDisappear, then:
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
     }
+
+
+    // ...
+
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    // Parent: viewWillAppear, then:
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+    // ...then: Child: viewDidAppear
+
+
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

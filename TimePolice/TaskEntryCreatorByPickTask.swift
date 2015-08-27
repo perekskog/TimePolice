@@ -35,8 +35,6 @@ class TaskEntryCreatorByPickTaskVC:
         UIGestureRecognizerDelegate
 	{
 
-    var sourceController: TimePoliceVC?
-    
     let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
     let sessionNameView = TaskPickerToolView()
     let taskPickerBGView = TaskPickerBGView()
@@ -58,16 +56,6 @@ class TaskEntryCreatorByPickTaskVC:
     //--------------------------------------------------------
     // TaskPickerVC - Lazy properties
     //--------------------------------------------------------
-/*
-    lazy var logger: AppLogger = {
-        let logger = MultiLog()
-        //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "TaskPickerVC")
-        logger.logger3 = ApplogLog(locator: "TaskPickerVC")
-        
-        return logger
-    }()
-*/
     
     override func getLogDomain() -> String {
         return "TaskEntryCreatorTaskPicker"
@@ -77,15 +65,6 @@ class TaskEntryCreatorByPickTaskVC:
     //---------------------------------------------
     // TaskPickerVC - View lifecycle
     //---------------------------------------------
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-
-        var nav = self.navigationController?.navigationBar
-        nav?.barStyle = UIBarStyle.Black
-        nav?.tintColor = UIColor.whiteColor()
-        nav?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.orangeColor()]
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
