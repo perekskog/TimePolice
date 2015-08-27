@@ -60,6 +60,11 @@ class WorkListVC:
         return logger
     }()
 */
+    
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorTaskEntryList"
+    }
+
     //---------------------------------------------
     // WorkListVC - View lifecycle
     //---------------------------------------------

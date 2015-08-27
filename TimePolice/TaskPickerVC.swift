@@ -27,15 +27,10 @@ TODO
             }
     }
 
-+ Om det finns fler "rutor" i Layout än det finns Tasks ska resten fyllas ut med tomma knappar.
-    Ska SelectionAreaInfo innehålla optionals? Känns ganska praktiskt...
-
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
 
-- Kan inte hantera fall då antal tasks < antal rutor
-
-- Lägg SessionName i NavigationController
+- Lägg EXIT och SessionName i NavigationController
     - Ta då också bort SessionName från enum ViewType
 
 
@@ -96,6 +91,11 @@ class TaskPickerVC:
         return logger
     }()
 */
+    
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorTaskPicker"
+    }
+
 
     //---------------------------------------------
     // TaskPickerVC - View lifecycle

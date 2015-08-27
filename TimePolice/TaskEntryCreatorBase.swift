@@ -10,8 +10,6 @@
 
 TODO
 
-- Går ej att överrida "lazy var logger"
-
 */
 
 import UIKit
@@ -47,11 +45,15 @@ class TaskEntryCreatorBase:
     lazy var logger: AppLogger = {
         let logger = MultiLog()
         //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "TaskEntryCreatorBase")
-        logger.logger3 = ApplogLog(locator: "TaskEntryCreatorBase")
+        logger.logger2 = StringLog(locator: self.getLogDomain())
+        logger.logger3 = ApplogLog(locator: self.getLogDomain())
         
         return logger
     }()
+
+    func getLogDomain() -> String {
+        return "TaskEntryCreatorBase"
+    }
 
     
     //---------------------------------------------
