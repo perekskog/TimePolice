@@ -473,9 +473,12 @@ class BlackGreenTheme : Theme {
             let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
             let startPointSquare = CGPoint(x: 5, y: 5)
             let endPointSquare = CGPoint(x: 10, y: 10)
+            CGContextSaveGState(context)
+//            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
             CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, 0)
+            CGContextRestoreGState(context)
             // TODO: If task.name ends with #RGB, add small square to the left of the name
-//            ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+           ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         
         if let ongoing = selectionAreaInfo.ongoing {
