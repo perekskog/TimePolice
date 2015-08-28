@@ -1030,8 +1030,8 @@ class TestData {
             
             "Läsa/titta#color=cc4", "Bunden#color=cc4", "Fri#color=cc4",
             
-            "F2F#color=f22", "Eva#color=f22", "Chat#color=f22",
-            "Email#color=f22", "", "Blixt#color=f22"
+            "F2F#color=b44", "Eva#color=b44", "Chat#color=b44",
+            "Email#color=b44", "", "Blixt#color=b44"
         ]
 
         addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")
@@ -1054,8 +1054,8 @@ class TestData {
             
             "Bunden#color=cc4", "Fri#color=cc4", "Privat#color=cc4",
             
-            "F2F#color=f22", "", "Chat#color=f22",
-            "Email#color=f22", "Ticket#color=f22", "Blixt#color=f22"
+            "F2F#color=b44", "", "Chat#color=b44",
+            "Email#color=b44", "Ticket#color=b44", "Blixt#color=b44"
             
         ]
         
