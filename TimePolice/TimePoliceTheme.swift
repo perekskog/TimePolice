@@ -467,7 +467,9 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            let colorSquare = UIColor(white: 0.8, alpha: 1.0).CGColor
+            let comment = ThemeUtilities.getComment(task.name)
+            let colorString = ThemeUtilities.getColorTag(comment)
+            let colorSquare = ThemeUtilities.getColor(colorString).CGColor
             let colorsSquare = [colorSquare, colorSquare]
             let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
             let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
@@ -548,6 +550,17 @@ class ThemeUtilities {
             CGContextStrokePath(context)
         }
     }
-
+    
+    class func getComment(text: String) -> String {
+        return ""
+    }
+    
+    class func getColorTag(text: String) -> String {
+        return ""
+    }
+    
+    class func getColor(text: String) -> UIColor {
+        return UIColor(red: 0.6, green: 0.4, blue: 0.4, alpha: 1.0)
+    }
 }
 
