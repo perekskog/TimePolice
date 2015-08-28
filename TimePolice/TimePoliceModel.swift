@@ -1094,9 +1094,9 @@ class TestData {
     class func addSessionToTest(moc: NSManagedObjectContext) {
         // 6
         let taskList = [
-            "Adam#faa", "Bertil#afa", "Ceasar#aaf",
+            "Adam#color=faa,x=adam", "Bertil#color=afa,x=bertil", "Ceasar#color=aaf,x=ceasar",
             
-            "Etta", "Tvåa", "Trea"
+            "Etta#color=f00", "Tvåa#color=0f0", "Trea#color=00f"
         ]
 
         addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
