@@ -273,7 +273,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         if let session = sessions?[indexPath.row] {
             if let work = session.getLastWork() {
                 if work.isOngoing() {
-                    cell.textLabel?.text = "\(session.name) (\(work.task.name))"
+                    let taskName = ThemeUtilities.getWithoutComment(work.task.name)
+                    cell.textLabel?.text = "\(session.name) (\(taskName))"
                 } else {
                     cell.textLabel?.text = "\(session.name) (---)"
                 }
