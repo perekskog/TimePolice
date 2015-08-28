@@ -485,8 +485,10 @@ class BlackGreenTheme : Theme {
             } else {
                 println("No comment")
             }
-            // TODO: If task.name ends with #RGB, add small square to the left of the name
-           ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            if let withoutComment = ThemeUtilities.getWithoutComment(task.name) {
+                // TODO: If task.name ends with #RGB, add small square to the left of the name
+                ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            }
         }
         
         if let ongoing = selectionAreaInfo.ongoing {
@@ -566,13 +568,23 @@ class ThemeUtilities {
         return comment
     }
     
+    class func getWithoutComment(source: String) -> String? {
+        var comment: String?
+        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        if x.count==2 {
+            comment = x[0]
+        }
+        return comment
+    }
+    
     class func getValue(source: String, forTag: String) -> String? {
-        let props=source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
+        let props=source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
         var value: String?
         for s in props {
             if s.hasPrefix("color") {
-                if props.count==2 {
-                    value = props[1]
+                let part = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
+                if part.count == 2 {
+                    value = part[1]
                 }
             }
         }

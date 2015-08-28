@@ -1094,7 +1094,7 @@ class TestData {
     class func addSessionToTest(moc: NSManagedObjectContext) {
         // 6
         let taskList = [
-            "Adam#color=faa,x=adam", "Bertil#color=afa,x=bertil", "Ceasar#color=aaf,x=ceasar",
+            "Adam#color=f00,x=adam", "Bertil#color=0f0,x=bertil", "Ceasar#color=00f,x=ceasar",
             
             "Etta#color=f00", "Tvåa#color=0f0", "Trea#color=00f"
         ]
