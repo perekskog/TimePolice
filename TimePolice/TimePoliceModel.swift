@@ -1028,7 +1028,7 @@ class TestData {
             "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
             "Bil#color=44f", "Annat#color=44f", "",
             
-            "Läsa/titta#color=cc4", "Bunden#color=cc4", "Fri#color=cc4",
+            "Läsa/titta#color=bb4", "Bunden#color=bb4", "Fri#color=bb4",
             
             "F2F#color=b44", "Eva#color=b44", "Chat#color=b44",
             "Email#color=b44", "", "Blixt#color=b44"
@@ -1052,7 +1052,7 @@ class TestData {
             "Backlog#color=44f", "Assigna#color=44f", "Supporta#color=44f",
             "Adm#color=44f", "Möte#color=44f", "Annat#color=44f",
             
-            "Bunden#color=cc4", "Fri#color=cc4", "Privat#color=cc4",
+            "Bunden#color=bb4", "Fri#color=bb4", "Privat#color=bb4",
             
             "F2F#color=b44", "", "Chat#color=b44",
             "Email#color=b44", "Ticket#color=b44", "Blixt#color=b44"
