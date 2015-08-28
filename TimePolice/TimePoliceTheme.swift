@@ -467,8 +467,15 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
+            let colorSquare = UIColor(white: 0.8, alpha: 1.0).CGColor
+            let colorsSquare = [colorSquare, colorSquare]
+            let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
+            let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
+            let startPointSquare = CGPoint(x: 5, y: 5)
+            let endPointSquare = CGPoint(x: 10, y: 10)
+            CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, 0)
             // TODO: If task.name ends with #RGB, add small square to the left of the name
-            ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+//            ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         
         if let ongoing = selectionAreaInfo.ongoing {
