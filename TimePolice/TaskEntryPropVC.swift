@@ -333,7 +333,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
             case 0:
                 cellTask.textLabel?.text = "Task"
                 if let t = taskSelected {
-                    cellTask.detailTextLabel?.text = t.name                    
+                    cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(t.name)
                 }
                 cellTask.accessoryType = .DisclosureIndicator
                 cell = cellTask

@@ -76,7 +76,7 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         }
 
         if let t = tasks?[indexPath.row] {
-            cell.textLabel?.text = t.name
+            cell.textLabel?.text = ThemeUtilities.getWithoutComment(t.name)
         }
 
         return cell

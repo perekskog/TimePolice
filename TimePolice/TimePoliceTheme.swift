@@ -485,10 +485,8 @@ class BlackGreenTheme : Theme {
             } else {
                 println("No comment")
             }
-            if let withoutComment = ThemeUtilities.getWithoutComment(task.name) {
-                // TODO: If task.name ends with #RGB, add small square to the left of the name
-                ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
-            }
+            let withoutComment = ThemeUtilities.getWithoutComment(task.name)
+            ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         
         if let ongoing = selectionAreaInfo.ongoing {
@@ -568,13 +566,13 @@ class ThemeUtilities {
         return comment
     }
     
-    class func getWithoutComment(source: String) -> String? {
-        var comment: String?
+    class func getWithoutComment(source: String) -> String {
+        var text = ""
         let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
         if x.count>=1 {
-            comment = x[0]
+            text = x[0]
         }
-        return comment
+        return text
     }
     
     class func getValue(source: String, forTag: String) -> String? {

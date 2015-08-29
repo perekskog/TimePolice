@@ -292,9 +292,9 @@ class TaskEntryCreatorByAddToListVC:
         if let w = session?.work[indexPath.row] as? Work {
             if w.isStopped() {
                 let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-                cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
+                cell.textLabel?.text = "W: \(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
             } else {
-                cell.textLabel?.text = "W: \(w.task.name) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
+                cell.textLabel?.text = "W: \(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
             }            
         }
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
