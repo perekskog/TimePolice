@@ -486,7 +486,9 @@ class BlackGreenTheme : Theme {
                 println("No comment")
             }
             let withoutComment = ThemeUtilities.getWithoutComment(task.name)
-            ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            if withoutComment != "---" {
+                ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            }
         }
         
         if let ongoing = selectionAreaInfo.ongoing {

@@ -1026,12 +1026,12 @@ class TestData {
             "Fysiskt#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
             
             "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
-            "Bil#color=44f", "Annat#color=44f", "",
+            "Bil#color=44f", "Annat#color=44f", "---",
             
             "Läsa/titta#color=bb4", "Bunden#color=bb4", "Fri#color=bb4",
             
             "F2F#color=b44", "Eva#color=b44", "Chat#color=b44",
-            "Email#color=b44", "", "Blixt#color=b44"
+            "Email#color=b44", "---", "Blixt#color=b44"
         ]
 
         addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")

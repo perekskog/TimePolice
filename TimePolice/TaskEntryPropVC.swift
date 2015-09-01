@@ -382,7 +382,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
             if let vc = unwindSegue.sourceViewController as? TaskSelectVC,
                 i = vc.taskIndexSelected {
                 taskToUse = taskList[i]
-                cellTask.detailTextLabel?.text = taskToUse!.name
+                cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(taskToUse!.name)
             }
         }
     }
