@@ -1022,11 +1022,11 @@ class TestData {
         // 24
         let taskList =  [
             "RC#color=4c4", "Dev#color=4c4", "Media#color=4c4",
-            "Läsa/Titta#color=4c4", "Proj hemma#color=4c4", "Proj borta#color=4c4",
+            "Läsa/Titta#color=4c4", "Div hemma#color=4c4", "Div borta#color=4c4",
             "Fysiskt#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
             
             "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
-            "Bil#color=44f", "Annat#color=44f", "---",
+            "Bil#color=44f", "Behöver div#color=44f", "---",
             
             "Läsa/titta#color=bb4", "Bunden#color=bb4", "Fri#color=bb4",
             
@@ -1044,17 +1044,17 @@ class TestData {
     class func addSessionToWork(moc: NSManagedObjectContext) {
         // 27
         let taskList = [
-            "Dev#color=4c4", "WoW#color=4c4", "Strategi#color=4c4",
-            "Lära ut#color=4c4", "Personlig utv#color=4c4", "",
+            "Dev#color=4c4", "WoW#color=4c4", "PPO#color=4c4",
+            "Stage 7#color=4c4", "Personlig utv#color=4c4", "---",
             "Fysisk#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
             
             "Tickets#color=44f", "Epost#color=44f", "Tasks#color=44f", 
             "Backlog#color=44f", "Assigna#color=44f", "Supporta#color=44f",
-            "Adm#color=44f", "Möte#color=44f", "Annat#color=44f",
+            "Adm#color=44f", "Möte#color=44f", "Behöver div#color=44f",
             
             "Bunden#color=bb4", "Fri#color=bb4", "Privat#color=bb4",
             
-            "F2F#color=b44", "", "Chat#color=b44",
+            "F2F#color=b44", "---", "Chat#color=b44",
             "Email#color=b44", "Ticket#color=b44", "Blixt#color=b44"
             
         ]
@@ -1069,11 +1069,11 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
         // 21
         let taskList = [
-            "Sova", "", "",
+            "Sova", "---", "---",
             
-            "Hemma", "", "Hemma ute",
+            "Hemma", "---", "Hemma ute",
             
-            "Jobb", "", "Jobb ute",
+            "Jobb", "---", "Jobb ute",
                 
             "Bil morgon", "T morgon", "P morgon",
 
