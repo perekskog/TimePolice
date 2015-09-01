@@ -333,7 +333,16 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
             case 0:
                 cellTask.textLabel?.text = "Task"
                 if let t = taskSelected {
-                    cellTask.detailTextLabel?.text = t.name                    
+                    cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(t.name)
+                    
+                    if let comment = ThemeUtilities.getComment(t.name) {
+                        if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
+                            let color = ThemeUtilities.string2color(colorString)
+                            
+                            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
+                        }
+                    }
+
                 }
                 cellTask.accessoryType = .DisclosureIndicator
                 cell = cellTask
@@ -382,7 +391,16 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
             if let vc = unwindSegue.sourceViewController as? TaskSelectVC,
                 i = vc.taskIndexSelected {
                 taskToUse = taskList[i]
-                cellTask.detailTextLabel?.text = taskToUse!.name
+                cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(taskToUse!.name)
+                
+                    if let comment = ThemeUtilities.getComment(taskToUse!.name) {
+                        if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
+                            let color = ThemeUtilities.string2color(colorString)
+                            
+                            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
+                        }
+                    }
+
             }
         }
     }

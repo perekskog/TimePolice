@@ -1022,17 +1022,17 @@ class TestData {
     class func addSessionToPrivate(moc: NSManagedObjectContext) {
         // 24
         let taskList =  [
-            "+ RC", "+ Dev", "+ Media",
-            "+ Läsa/Titta", "+ Proj hemma", "+ Proj borta",
-            "+ Fysiskt", "+ Mindful", "+ Gemenskap",
+            "RC#color=4c4", "Dev#color=4c4", "Media#color=4c4",
+            "Läsa/Titta#color=4c4", "Div hemma#color=4c4", "Div borta#color=4c4",
+            "Fysiskt#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
             
-            "- Person", "- Hem", "- Hus/tomt",
-            "- Bil", "- Annat", "",
+            "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
+            "Bil#color=44f", "Behöver div#color=44f", "",
             
-            "0 Läsa/titta", "0 Bunden", "0 Fri",
+            "Läsa/titta#color=bb4", "Bunden#color=bb4", "Fri#color=bb4",
             
-            "* F2F", "* Eva", "* Chat",
-            "* Email", "", "* Blixt"
+            "F2F#color=b44", "Eva#color=b44", "Chat#color=b44",
+            "Email#color=b44", "", "Blixt#color=b44"
         ]
 
         addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")
@@ -1045,18 +1045,18 @@ class TestData {
     class func addSessionToWork(moc: NSManagedObjectContext) {
         // 27
         let taskList = [
-            "+ Dev", "+ WoW", "+ Strategi",
-            "+ Lära ut", "+ Personlig utv", "",
-            "+ Fysisk", "+ Mindful", "+ Gemenskap",
+            "Dev#color=4c4", "WoW#color=4c4", "PPO#color=4c4",
+            "Stage 7#color=4c4", "Personlig utv#color=4c4", "",
+            "Fysisk#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
             
-            "- Tickets", "- Epost", "- Tasks", 
-            "- Backlog", "- Assigna", "- Supporta",
-            "- Adm", "- Möte", "- Annat",
+            "Tickets#color=44f", "Epost#color=44f", "Tasks#color=44f", 
+            "Backlog#color=44f", "Assigna#color=44f", "Supporta#color=44f",
+            "Adm#color=44f", "Möte#color=44f", "Behöver div#color=44f",
             
-            "0 Bunden", "0 Fri", "0 Privat",
+            "Bunden#color=bb4", "Fri#color=bb4", "Privat#color=bb4",
             
-            "* F2F", "", "* Chat",
-            "* Email", "* Ticket", "* Blixt"
+            "F2F#color=b44", "", "Chat#color=b44",
+            "Email#color=b44", "Ticket#color=b44", "Blixt#color=b44"
             
         ]
         
@@ -1095,9 +1095,9 @@ class TestData {
     class func addSessionToTest(moc: NSManagedObjectContext) {
         // 6
         let taskList = [
-            "Adam", "Bertil", "Ceasar",
+            "", "Bertil#color=8f8,x=bertil", "Ceasar#color=88f,x=ceasar",
             
-            "Etta", "Tvåa", "Trea"
+            "", "Tvåa#color=0f0", "Trea#color=00f"
         ]
 
         addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")

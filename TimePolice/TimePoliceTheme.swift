@@ -291,6 +291,7 @@ class BasicTheme : Theme {
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
         if let t = selectionAreaInfo.task {
+            // TODO: If task.name ends with #RGB, add small square to the left of the name
             ThemeUtilities.addText(context, text: t.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
         }
         if let active = selectionAreaInfo.active {
@@ -466,7 +467,28 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            if let comment = ThemeUtilities.getComment(task.name) {
+                println("comment:[\(comment)]")
+                if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
+                    println("colorstring:[\(colorString)]")
+                    let colorSquare = ThemeUtilities.string2color(colorString).CGColor
+                    let colorsSquare = [colorSquare, colorSquare]
+                    let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
+                    let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
+                    let startPointSquare = CGPoint(x: 4, y: 4)
+                    let endPointSquare = CGPoint(x: 8, y: 8)
+                    CGContextSaveGState(context)
+                    //            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
+                    CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, 0)
+                    CGContextRestoreGState(context)
+                }
+            } else {
+                println("No comment")
+            }
+            let withoutComment = ThemeUtilities.getWithoutComment(task.name)
+            if withoutComment != "" {
+                ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+            }
         }
         
         if let ongoing = selectionAreaInfo.ongoing {
@@ -536,6 +558,83 @@ class ThemeUtilities {
             CGContextStrokePath(context)
         }
     }
+    
+    class func getComment(source: String) -> String? {
+        var comment: String?
+        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        if x.count==2 {
+            comment = x[1]
+        }
+        return comment
+    }
+    
+    class func getWithoutComment(source: String) -> String {
+        var text = ""
+        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        if x.count>=1 {
+            text = x[0]
+        }
+        return text
+    }
+    
+    class func getValue(source: String, forTag: String) -> String? {
+        let props=source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
+        var value: String?
+        for s in props {
+            if s.hasPrefix("color") {
+                let part = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
+                if part.count == 2 {
+                    value = part[1]
+                }
+            }
+        }
+        return value
+    }
+    
+    class func string2color(text: String) -> UIColor {
+        var color: UIColor?
+        let r = text[advance(text.startIndex, 0)]
+        let red = hexchar2value(r)
+        let g = text[advance(text.startIndex, 1)]
+        let green = hexchar2value(g)
+        let b = text[advance(text.startIndex, 2)]
+        let blue = hexchar2value(b)
+        
+        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+    
+    class func hexchar2value(ch: Character) -> CGFloat {
+        switch ch {
+        case "0": return 0.0
+        case "1": return 1.0/16.0
+        case "2": return 2.0/16.0
+        case "3": return 3.0/16.0
+        case "4": return 4.0/16.0
+        case "5": return 5.0/16.0
+        case "6": return 6.0/16.0
+        case "7": return 7.0/16.0
+        case "8": return 8.0/16.0
+        case "9": return 9.0/16.0
+        case "a": return 10.0/16.0
+        case "b": return 11.0/16.0
+        case "c": return 12.0/16.0
+        case "d": return 13.0/16.0
+        case "e": return 14.0/16.0
+        case "f": return 15.0/16.0
+        default: return 0.0
+        }
+    }
 
+    class func getImageWithColor(color: UIColor, width: CGFloat, height: CGFloat) -> UIImage {                    
+        let rect = CGRectMake(0.0, 0.0, width, height);
+        UIGraphicsBeginImageContext(rect.size);
+        let context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillRect(context, rect);
+        let image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        return image
+    }
 }
 
