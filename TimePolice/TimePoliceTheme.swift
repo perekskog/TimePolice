@@ -486,7 +486,7 @@ class BlackGreenTheme : Theme {
                 println("No comment")
             }
             let withoutComment = ThemeUtilities.getWithoutComment(task.name)
-            if withoutComment != "---" {
+            if withoutComment != "" {
                 ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
             }
         }
@@ -623,6 +623,18 @@ class ThemeUtilities {
         case "f": return 15.0/16.0
         default: return 0.0
         }
+    }
+
+    class func getImageWithColor(color: UIColor, width: CGFloat, height: CGFloat) -> UIImage {                    
+        let rect = CGRectMake(0.0, 0.0, width, height);
+        UIGraphicsBeginImageContext(rect.size);
+        let context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, color.CGColor)
+        CGContextFillRect(context, rect);
+        let image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        return image
     }
 }
 

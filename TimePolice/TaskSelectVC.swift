@@ -76,25 +76,21 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         }
 
         if let t = tasks?[indexPath.row] {
-            cell.textLabel?.text = ThemeUtilities.getWithoutComment(t.name)
-                
+            let withoutComment = ThemeUtilities.getWithoutComment(t.name)
 
-            if t.name != "---" {
+            if withoutComment != "" {
+                cell.textLabel?.text = withoutComment
+                
                 if let comment = ThemeUtilities.getComment(t.name) {
                     if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                        let colorSquare = ThemeUtilities.string2color(colorString).CGColor
-                        
-                        let rect = CGRectMake(0, 0, 20, 20);
-                        UIGraphicsBeginImageContext(rect.size);
-                        let context = UIGraphicsGetCurrentContext();
-                        CGContextSetFillColorWithColor(context, colorSquare)
-                        CGContextFillRect(context, rect);
-                        let image = UIGraphicsGetImageFromCurrentImageContext();
-                        UIGraphicsEndImageContext();
-                        
-                        cell.imageView?.image = image
+                        let color = ThemeUtilities.string2color(colorString)
+                                                
+                        cell.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
                     }
                 }
+            } else {
+                cell.textLabel?.text = "(spacer)"
+                cell.imageView?.image = nil
             }
         }
     
