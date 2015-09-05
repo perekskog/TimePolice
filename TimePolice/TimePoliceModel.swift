@@ -1024,15 +1024,16 @@ class TestData {
         let taskList =  [
             "RC#color=4c4", "Dev#color=4c4", "Media#color=4c4",
             "Läsa/Titta#color=4c4", "Div hemma#color=4c4", "Div borta#color=4c4",
-            "Fysiskt#color=4c4", "Mindful#color=4c4", "Gemenskap#color=4c4",
+            "Fysiskt#color=4c4", "Time in#color=4c4", "Relationer#color=4c4",
+            "Lek#color=4c4", "Down#color=4c4", "",
+            "Pers. utv#color=4c4", "", "",
             
             "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
             "Bil#color=44f", "Behöver div#color=44f", "",
             
-            "Läsa/titta#color=bb4", "Bunden#color=bb4", "Fri#color=bb4",
+            "Blockerad#color=b44", "Avbrott#color=b44", "",
+            "Läsa/titta#color=bb4", "Oaktivitet#color=bb4"
             
-            "F2F#color=b44", "Eva#color=b44", "Chat#color=b44",
-            "Email#color=b44", "", "Blixt#color=b44"
         ]
 
         addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")

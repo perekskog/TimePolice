@@ -26,8 +26,8 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHb-0v-TCS">
-                                <rect key="frame" x="68" y="120" width="48" height="30"/>
-                                <state key="normal" title="Private">
+                                <rect key="frame" x="68" y="120" width="40" height="30"/>
+                                <state key="normal" title="Privat">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -47,8 +47,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldv-k9-PK6">
-                                <rect key="frame" x="126" y="120" width="36" height="30"/>
-                                <state key="normal" title="Work">
+                                <rect key="frame" x="126" y="120" width="35" height="30"/>
+                                <state key="normal" title="Jobb">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -56,8 +56,8 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RuT-t6-eC1">
-                                <rect key="frame" x="179" y="120" width="57" height="30"/>
-                                <state key="normal" title="Daytime">
+                                <rect key="frame" x="179" y="120" width="58" height="30"/>
+                                <state key="normal" title="Ett dygn">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
