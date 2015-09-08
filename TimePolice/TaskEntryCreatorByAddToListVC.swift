@@ -68,15 +68,6 @@ class TaskEntryCreatorByAddToListVC:
     //---------------------------------------------
     // WorkListVC - View lifecycle
     //---------------------------------------------
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-
-        if let indexPath = workListTableView.indexPathForSelectedRow() {
-            workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
-        }
-
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -130,6 +121,10 @@ class TaskEntryCreatorByAddToListVC:
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         workListBGView.addSubview(addView)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
 
         self.sessionSummary = (0,0)
         if let moc = managedObjectContext {
@@ -142,7 +137,21 @@ class TaskEntryCreatorByAddToListVC:
               userInfo: nil,
                repeats: true)        
 
+
+        if let indexPath = workListTableView.indexPathForSelectedRow() {
+            workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+        }
+
     }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+
+        updateActiveActivityTimer = nil
+    }
+
+
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
