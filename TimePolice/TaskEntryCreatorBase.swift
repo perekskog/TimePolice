@@ -60,7 +60,6 @@ class TaskEntryCreatorBase:
     // TaskEntryCreatorBase - View lifecycle
     //---------------------------------------------
 
-    // Just once:
     override func viewDidLoad() {
         super.viewDidLoad()        
         appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
@@ -74,7 +73,24 @@ class TaskEntryCreatorBase:
     }
 
 
-    // Both of these, maybe several times:
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+    }
+
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+    }
+
+
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
@@ -83,30 +99,6 @@ class TaskEntryCreatorBase:
         super.viewDidLayoutSubviews()
         appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
     }
-
-
-    // Parent: viewDidDisappear, then:
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
-    }
-
-
-    // ...
-
-
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
-    }
-
-    // Parent: viewWillAppear, then:
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
-    }
-    // ...then: Child: viewDidAppear
-
 
 
 
