@@ -11,9 +11,8 @@
 
 TODO
 
-- Använd NavigationBar
-  Sätt left = EXIT och titel till sessionsnamnet.
-  Ta då också bort SessionName från enum ViewType
+- Lägg ut en vy "buttons" som alla knappar läggs in i, då behöver jag bara ta bort "buttons" när nya knappar ska läggas ut.
+
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
@@ -37,9 +36,10 @@ class TaskEntryCreatorByPickTaskVC:
 
     let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
     let sessionNameView = TaskPickerToolView()
-    let taskPickerBGView = TaskPickerBGView()
     let signInSignOutView = TaskPickerToolView()
     let infoAreaView = TaskPickerToolView()
+
+    var taskPickerBGView = TaskPickerBGView()
 
     var layout: Layout?
 
@@ -50,6 +50,11 @@ class TaskEntryCreatorByPickTaskVC:
 
     var updateActiveActivityTimer: NSTimer?
     
+    let theme = BlackGreenTheme()
+//        let theme = BasicTheme()
+
+    let taskSelectionStrategy = TaskSelectAny()
+
 
 
 
@@ -69,10 +74,38 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let theme = BlackGreenTheme()
-//        let theme = BasicTheme()
 
-        let taskSelectionStrategy = TaskSelectAny()
+        (self.view as! TimePoliceBGView).theme = theme
+
+        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(exitButton)
+
+        sessionNameView.theme = theme
+        sessionNameView.tool = .SessionName
+        self.view.addSubview(sessionNameView)
+        
+        taskPickerBGView.theme = theme
+        self.view.addSubview(taskPickerBGView)
+
+        signInSignOutView.theme = theme
+        signInSignOutView.toolbarInfoDelegate = self
+        signInSignOutView.tool = .SignInSignOut
+        var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+        signInSignOutView.addGestureRecognizer(recognizer)
+        taskPickerBGView.addSubview(signInSignOutView)
+            
+        infoAreaView.theme = theme
+        infoAreaView.toolbarInfoDelegate = self
+        infoAreaView.tool = .InfoArea
+        taskPickerBGView.addSubview(infoAreaView)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
 
         let padding: CGFloat = 1
 
@@ -95,22 +128,9 @@ class TaskEntryCreatorByPickTaskVC:
             self.sessionTaskSummary = s.getSessionTaskSummary(moc)
         }
 
-        
-        (self.view as! TimePoliceBGView).theme = theme
-
-        exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(exitButton)
-
-        sessionNameView.theme = theme
-        sessionNameView.tool = .SessionName
-        self.view.addSubview(sessionNameView)
-        
-        taskPickerBGView.theme = theme
-        self.view.addSubview(taskPickerBGView)
-
+        recognizers = [:]
+        taskbuttonviews = [:]
+        taskPickerBGView = TaskPickerBGView()
 
         if let tl = session?.tasks.array as? [Task],
             l = layout {
@@ -139,27 +159,24 @@ class TaskEntryCreatorByPickTaskVC:
                 taskbuttonviews[i] = view
                 taskPickerBGView.addSubview(view)
             }
-                
-            signInSignOutView.theme = theme
-            signInSignOutView.toolbarInfoDelegate = self
-            signInSignOutView.tool = .SignInSignOut
-            var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
-            signInSignOutView.addGestureRecognizer(recognizer)
-            taskPickerBGView.addSubview(signInSignOutView)
-                
-            infoAreaView.theme = theme
-            infoAreaView.toolbarInfoDelegate = self
-            infoAreaView.tool = .InfoArea
-            taskPickerBGView.addSubview(infoAreaView)
-
-            updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
-                    target: self,
-                    selector: "updateActiveTask:",
-                    userInfo: nil,
-                    repeats: true)
         }
 
+        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+            target: self,
+            selector: "updateActiveTask:",
+            userInfo: nil,
+            repeats: true)
+
     }
+
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+
+        updateActiveActivityTimer = nil
+    }
+
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

@@ -45,6 +45,10 @@ class TaskEntryCreatorByAddToListVC:
     let addView = WorkListToolView()
     let infoAreaView = WorkListToolView()
 
+    let theme = BlackGreenTheme()
+//        let theme = BasicTheme()
+
+
 
     //--------------------------------------------------------
     // WorkListVC - Lazy properties
@@ -71,9 +75,6 @@ class TaskEntryCreatorByAddToListVC:
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let theme = BlackGreenTheme()
-//        let theme = BasicTheme()
 
         (self.view as! TimePoliceBGView).theme = theme
 
