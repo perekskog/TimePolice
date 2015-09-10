@@ -11,8 +11,7 @@
 
 TODO
 
-- Lägg ut en vy "buttons" som alla knappar läggs in i, då behöver jag bara ta bort "buttons" när nya knappar ska läggas ut.
-
+- EFter save i TaskENtryProp verkar timern fyra av dubbelt så ofta.
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
@@ -39,7 +38,7 @@ class TaskEntryCreatorByPickTaskVC:
     let signInSignOutView = TaskPickerToolView()
     let infoAreaView = TaskPickerToolView()
 
-    var taskPickerBGView = TaskPickerBGView()
+    let taskPickerBGView = TaskPickerBGView()
 
     var layout: Layout?
 
@@ -128,9 +127,17 @@ class TaskEntryCreatorByPickTaskVC:
             self.sessionTaskSummary = s.getSessionTaskSummary(moc)
         }
 
+        for (_, v) in taskbuttonviews {
+            if let rr = v.gestureRecognizers as? [UIGestureRecognizer] {
+                for r in rr {
+                    v.removeGestureRecognizer(r)
+                }
+            }
+            v.removeFromSuperview()
+        }
+
         recognizers = [:]
         taskbuttonviews = [:]
-        taskPickerBGView = TaskPickerBGView()
 
         if let tl = session?.tasks.array as? [Task],
             l = layout {
