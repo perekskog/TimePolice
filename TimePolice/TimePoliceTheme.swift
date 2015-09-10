@@ -468,9 +468,7 @@ class BlackGreenTheme : Theme {
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
             if let comment = ThemeUtilities.getComment(task.name) {
-                println("comment:[\(comment)]")
                 if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                    println("colorstring:[\(colorString)]")
                     let colorSquare = ThemeUtilities.string2color(colorString).CGColor
                     let colorsSquare = [colorSquare, colorSquare]
                     let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
@@ -483,7 +481,7 @@ class BlackGreenTheme : Theme {
                     CGContextRestoreGState(context)
                 }
             } else {
-                println("No comment")
+                // Do nothing
             }
             let withoutComment = ThemeUtilities.getWithoutComment(task.name)
             if withoutComment != "" {

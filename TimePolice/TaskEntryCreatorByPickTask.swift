@@ -11,7 +11,7 @@
 
 TODO
 
-- EFter save i TaskENtryProp verkar timern fyra av dubbelt så ofta.
+- Sätta timer till nil tar hjälper inte, den fortsätter att fyra av ändå
 
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
@@ -73,7 +73,6 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
         (self.view as! TimePoliceBGView).theme = theme
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
@@ -104,7 +103,6 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
 
         let padding: CGFloat = 1
 
@@ -174,12 +172,15 @@ class TaskEntryCreatorByPickTaskVC:
             userInfo: nil,
             repeats: true)
 
+        println("starting timer \(updateActiveActivityTimer)")
+
     }
 
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+
+        println("stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer = nil
     }
@@ -187,7 +188,6 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
 
         var lastview : UIView
         let width = CGRectGetWidth(self.view.frame)
@@ -506,6 +506,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
+        println("updateActiveTask(timer=\(timer)")
         updateN++
         if updateN == 5 {
             updateN = 0
