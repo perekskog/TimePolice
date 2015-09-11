@@ -182,7 +182,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         println("stopping timer \(updateActiveActivityTimer)")
 
-        updateActiveActivityTimer.invalidate()
+        updateActiveActivityTimer?.invalidate()
     }
 
 
