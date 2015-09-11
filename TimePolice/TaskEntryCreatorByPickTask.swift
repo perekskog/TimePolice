@@ -11,8 +11,6 @@
 
 TODO
 
-- Sätta timer till nil tar hjälper inte, den fortsätter att fyra av ändå
-
 - Behöver översyn angående optionals
     If there is no session, sessionTaskSummary will not be set
 
@@ -184,7 +182,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         println("stopping timer \(updateActiveActivityTimer)")
 
-        updateActiveActivityTimer = nil
+        updateActiveActivityTimer.invalidate()
     }
 
 
