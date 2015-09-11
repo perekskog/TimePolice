@@ -118,6 +118,8 @@ class TaskEntryCreatorByPickTaskVC:
                 layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
             } else if s.tasks.count <= 27 {
                 layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
+            } else if s.tasks.count <= 30 {
+                layout = GridLayout(rows: 10, columns: 3, padding: padding, toolHeight: 30)
             } else {
                 layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
             }
