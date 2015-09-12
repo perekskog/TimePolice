@@ -63,6 +63,9 @@ class TaskEntryCreatorBase:
     override func viewDidLoad() {
         super.viewDidLoad()        
         appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+        
+        // Do not extend to full screen
+        self.edgesForExtendedLayout = .None
     }
 
 

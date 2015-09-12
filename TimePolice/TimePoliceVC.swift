@@ -145,6 +145,14 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             let vc = segue.destinationViewController as! TaskEntryCreatorByAddToListVC
             vc.session = selectedSession
         } 
+        if segue.identifier == "TaskEntryCreators" {
+            let tbvc = segue.destinationViewController as! UITabBarController
+            if let vcs = tbvc.viewControllers as? [TaskEntryCreatorBase] {
+                for vc in vcs {
+                    vc.session = selectedSession
+                }
+            }
+        }
     }
 
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
@@ -290,6 +298,7 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         if let session = sessions?[indexPath.row] {
             selectedSession = session
         }
+        /*
         switch defaultVC.selectedSegmentIndex {
         case 0:
             appLog.log(logger, logtype: .Debug, message: "performSegue TaskPicker")
@@ -300,6 +309,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         default:
             appLog.log(logger, logtype: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
         }
+        */
+        performSegueWithIdentifier("TaskEntryCreators", sender: self)
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

@@ -138,18 +138,22 @@ class TaskEntryCreatorByAddToListVC:
               userInfo: nil,
                repeats: true)        
 
+        println("starting timer \(updateActiveActivityTimer)")
 
         if let indexPath = workListTableView.indexPathForSelectedRow() {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
 
+        redrawAfterSegue()
     }
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
 
-        updateActiveActivityTimer = nil
+        println("stopping timer \(updateActiveActivityTimer)")
+
+        updateActiveActivityTimer?.invalidate()
     }
 
 
@@ -389,6 +393,8 @@ class TaskEntryCreatorByAddToListVC:
 
     override func redrawAfterSegue() {
         workListTableView.reloadData()
+        signInSignOutView.setNeedsDisplay()
+        infoAreaView.setNeedsDisplay()
     }
         
 
@@ -400,6 +406,7 @@ class TaskEntryCreatorByAddToListVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
+        println("updateActiveTask(timer=\(timer)")
         updateN++
         if updateN == 5 {
             updateN = 0

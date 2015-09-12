@@ -174,6 +174,8 @@ class TaskEntryCreatorByPickTaskVC:
 
         println("starting timer \(updateActiveActivityTimer)")
 
+        redrawAfterSegue()
+
     }
 
 
