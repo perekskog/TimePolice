@@ -143,8 +143,15 @@ class TaskEntryCreatorByAddToListVC:
         if let indexPath = workListTableView.indexPathForSelectedRow() {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
-
+        
         redrawAfterSegue()
+
+        if let w = session?.work {
+            if w.count > 0 {
+                let indexPath = NSIndexPath(forRow: w.count - 1, inSection: 0)
+                self.workListTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Bottom, animated: true)
+            }
+        }
     }
 
     override func viewWillDisappear(animated: Bool) {
