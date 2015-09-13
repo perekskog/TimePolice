@@ -193,7 +193,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         var lastview : UIView
         let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame) - 50
 
         exitButton.frame = CGRectMake(0, 25, 70, 30)
         lastview = exitButton
@@ -508,7 +508,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-        println("updateActiveTask(timer=\(timer)")
+        //println("updateActiveTask(timer=\(timer)")
         updateN++
         if updateN == 5 {
             updateN = 0

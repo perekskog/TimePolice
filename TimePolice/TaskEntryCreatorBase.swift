@@ -15,12 +15,23 @@ TODO
 import UIKit
 import CoreData
 
+protocol TaskEntryCreator {
+}
+
+protocol TaskEntryCreatorDelegate {
+    func taskEntryCreator(taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int)
+}
+
 class TaskEntryCreatorBase:
-        UIViewController {
+        UIViewController,
+        TaskEntryCreator {
 
     var session: Session?
+    var sessionIndex: Int?
 
     var selectedWorkIndex: Int?
+
+    var delegate: TaskEntryCreatorDelegate?
 
 	//--------------------------------------------------------
     // TaskEntryCreatorBase - Lazy properties
@@ -73,6 +84,10 @@ class TaskEntryCreatorBase:
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+        
+        if let i = sessionIndex {
+            delegate?.taskEntryCreator(self, willViewSessionIndex: i)
+        }
     }
 
 

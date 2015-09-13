@@ -9,7 +9,11 @@
 import UIKit
 import CoreData
 
-class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TimePoliceVC: UIViewController, 
+    UITableViewDataSource, 
+    UITableViewDelegate, 
+    TaskEntryCreatorManagerDataSource,
+    TaskEntryCreatorManagerDelegate {
 
     @IBOutlet var defaultVC: UISegmentedControl!
     @IBOutlet var appLogSize: UILabel!
@@ -18,6 +22,9 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
 
     var sessions: [Session]?
     var selectedSession: Session?
+    var selectedSessionIndex: Int?
+    
+    var taskEntryCreatorManagers: [TaskEntryCreatorManagerBase]?
 
     //---------------------------------------
     // TimePoliceVC - Lazy properties
@@ -137,19 +144,16 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
 
-        if segue.identifier == "TaskEntryCreatorByPickTask" {
-            let vc = segue.destinationViewController as! TaskEntryCreatorByPickTaskVC
-            vc.session = selectedSession
-        }
-        if segue.identifier == "TaskEntryCreatorByAddToList" {
-            let vc = segue.destinationViewController as! TaskEntryCreatorByAddToListVC
-            vc.session = selectedSession
-        } 
-        if segue.identifier == "TaskEntryCreators" {
-            let tbvc = segue.destinationViewController as! UITabBarController
-            if let vcs = tbvc.viewControllers as? [TaskEntryCreatorBase] {
-                for vc in vcs {
-                    vc.session = selectedSession
+        if segue.identifier == "TaskEntryCreatorManagers" {
+            if let tbvc = segue.destinationViewController as? UITabBarController {
+                if let vcs = tbvc.viewControllers as? [TaskEntryCreatorManagerBase],
+                    i = selectedSessionIndex {
+                        taskEntryCreatorManagers = vcs
+                        for vc in vcs {
+                            vc.dataSource = self
+                            vc.delegate = self
+                            vc.currentSessionIndex = i
+                        }
                 }
             }
         }
@@ -158,6 +162,8 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "exitVC")
 
+        taskEntryCreatorManagers = nil
+        
         redrawAll(false)
     }
 
@@ -296,21 +302,11 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let session = sessions?[indexPath.row] {
+            selectedSessionIndex = indexPath.row
             selectedSession = session
         }
-        /*
-        switch defaultVC.selectedSegmentIndex {
-        case 0:
-            appLog.log(logger, logtype: .Debug, message: "performSegue TaskPicker")
-            performSegueWithIdentifier("TaskEntryCreatorByPickTask", sender: self)
-        case 1:
-            appLog.log(logger, logtype: .Debug, message: "performSegue WorkList")
-            performSegueWithIdentifier("TaskEntryCreatorByAddToList", sender: self)
-        default:
-            appLog.log(logger, logtype: .Debug, message: "VC \(defaultVC.selectedSegmentIndex) is not implemented")
-        }
-        */
-        performSegueWithIdentifier("TaskEntryCreators", sender: self)
+
+        performSegueWithIdentifier("TaskEntryCreatorManagers", sender: self)
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -330,4 +326,44 @@ class TimePoliceVC: UIViewController, UITableViewDataSource, UITableViewDelegate
             }
         }
     }
+
+
+    //-----------------------------------------
+    // TimePoliceVC - TaskEntryCreatorManagerDataSource
+    //-----------------------------------------
+
+
+    func taskEntryCreatorManager(sessionManager: TaskEntryCreatorManager, willChangeActiveSession: Int) {
+        appLog.log(logger, logtype: .EnterExit, message: "willChangeActiveSession to \(willChangeActiveSession)")
+
+        selectedSessionIndex = willChangeActiveSession
+        if let s = sessions {
+            if willChangeActiveSession >= 0 && willChangeActiveSession < s.count {
+                selectedSessionIndex = willChangeActiveSession
+                selectedSession = s[willChangeActiveSession]
+
+                if let i = selectedSessionIndex,
+                    tecms = taskEntryCreatorManagers {
+                    for tecm in tecms {
+                        if let vc = tecm as? TaskEntryCreatorManagerBase {
+                            println("TimePoliceVC: switchTo(\(i))")
+                            vc.switchTo(i)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func taskEntryCreatorManager(taskEntryCreatorManager: TaskEntryCreatorManager, sessionForIndex: Int) -> Session? {
+        appLog.log(logger, logtype: .EnterExit, message: "sessionForIndex(\(sessionForIndex))")
+
+        if let s = sessions {
+            if sessionForIndex >= 0 && sessionForIndex < s.count {
+                return s[sessionForIndex]
+            }
+        }
+        return nil
+    }
+
 }

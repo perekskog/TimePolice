@@ -170,7 +170,7 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
 
         var width = CGRectGetWidth(self.view.frame)
-        var height = CGRectGetHeight(self.view.frame)
+        var height = CGRectGetHeight(self.view.frame) - 50
 
         var lastview: UIView
 
@@ -413,7 +413,7 @@ class TaskEntryCreatorByAddToListVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-        println("updateActiveTask(timer=\(timer)")
+        //println("updateActiveTask(timer=\(timer)")
         updateN++
         if updateN == 5 {
             updateN = 0
