@@ -257,6 +257,32 @@ class TaskEntryCreatorBase:
             }
 
         }
+
+        if unwindSegue.identifier == "InsertNewTaskEntry" {
+
+            appLog.log(logger, logtype: .Debug, message: "Handle InsertNewTaskEntry")
+
+            if let moc = managedObjectContext,
+                     s = session,
+                     i = selectedWorkIndex {
+
+                if let insert = vc.insert {
+                    switch insert {
+                    case .InsertNewBeforeThis:
+                        appLog.log(logger, logtype: .Debug, message: "Insert new before this (index=\(i))")
+                        Work.createInMOCBeforeIndex(moc, session: s, index: i)
+                    case .InsertNewAfterThis:
+                        appLog.log(logger, logtype: .Debug, message: "Insert new after this (index=\(i))")
+                        Work.createInMOCAfterIndex(moc, session: s, index: i)
+                    }
+                }
+                TimePoliceModelUtils.save(moc)
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+
+                redrawAfterSegue()
+            }
+
+        }
         
     }
     

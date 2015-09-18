@@ -68,7 +68,7 @@ class Project: NSManagedObject {
 
 
     //---------------------------------------------
-    // Project - addSession
+    // Project - addSession (internal use only)
     //---------------------------------------------
 
     func addSession(session: Session) {
@@ -147,7 +147,7 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
-    // Session - addWork
+    // Session - addWork (internal use only)
     //---------------------------------------------
 
     func addWork(work: Work) {
@@ -158,7 +158,29 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
-    // Session - addTask
+    // Session - addWork (internal use only)
+    //---------------------------------------------
+
+    func insertWorkBefore(work: Work, index: Int) {
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(work, atIndex: index)
+        self.work = sw
+    }
+
+
+    //---------------------------------------------
+    // Session - addWork (internal use only)
+    //---------------------------------------------
+
+    func insertWorkAfter(work: Work, index: Int) {
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(work, atIndex: index+1)
+        self.work = sw
+    }
+
+
+    //---------------------------------------------
+    // Session - addTask (internal use only)
     //---------------------------------------------
 
     func addTask(task: Task) {
@@ -169,7 +191,7 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
-    // Session - addTasks
+    // Session - addTasks (internal use only)
     //---------------------------------------------
 
     func addTasks(taskList: [Task]) {
@@ -581,24 +603,6 @@ Future extensions
         TimePoliceModelUtils.save(moc)        
     }
 
-
-
-
-
-    //---------------------------------------------
-    // Session - insertWork
-    //---------------------------------------------
-
-/*
-    GUI operation: ???
-
-
-*/
-
-    func insertWork(workIndex: Int, work: Work) {
-
-    }
-
 }
 
 
@@ -734,6 +738,63 @@ class Work: NSManagedObject {
         return newItem
     }
     
+    class func createInMOCBeforeIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
+        
+        if let templateItem = session.getWork(index) {
+            let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
+
+            let date = NSDate()
+            let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+            newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+
+            newItem.name = templateItem.name
+            newItem.startTime = templateItem.startTime
+            newItem.stopTime = templateItem.startTime
+
+            templateItem.task.addWork(newItem)
+            templateItem.session.insertWorkBefore(newItem, index: index)
+
+            // Maintain relations
+            newItem.task = templateItem.task
+            newItem.session = templateItem.session
+
+            return newItem
+        }
+
+        return nil
+    }
+
+    class func createInMOCAfterIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
+        
+        if let templateItem = session.getWork(index) {
+            let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
+
+            let date = NSDate()
+            let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                    dateStyle: NSDateFormatterStyle.ShortStyle,
+                    timeStyle: NSDateFormatterStyle.MediumStyle)
+            newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+
+            newItem.name = templateItem.name
+            newItem.startTime = templateItem.stopTime
+            newItem.stopTime = templateItem.stopTime
+
+            templateItem.task.addWork(newItem)
+            templateItem.session.insertWorkAfter(newItem, index: index)
+
+            // Maintain relations
+            newItem.task = templateItem.task
+            newItem.session = templateItem.session
+
+            return newItem
+        }
+
+        return nil
+    }
+
+
     //---------------------------------------------
     // Work - delete
     //---------------------------------------------
@@ -894,6 +955,36 @@ class TimePoliceModelUtils {
                             s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
                         } else {
                             s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                        }
+                    }
+                    s += "    [Task container size=\(session.tasks.count)]\n"
+                    session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let task = elem as! Task
+                        s += ("    T: \(task.name)\n")
+                    }
+                }
+            }
+            
+            s += "\n"
+            s += ("---------------------------\n")
+            s += ("----------Session 2--------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "Session")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                s += "[Session container size=\(fetchResults.count)]\n"
+                for session in fetchResults {
+                    s += ("S: \(session.name)-\(session.id)\n")
+                    s += ("    P: \(session.project.name)-\(session.project.id)\n")
+                    s += "    [Work container size=\(session.work.count)]\n"
+                    let n = session.work.count
+                    if n > 0 {
+                        for i in 0...n-1 {
+                            let work = session.work.objectAtIndex(i)
+                            if work.isStopped() {
+                                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                                s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                            } else {
+                                s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                            }
                         }
                     }
                     s += "    [Task container size=\(session.tasks.count)]\n"

@@ -19,6 +19,10 @@ enum FillWith: Int {
     case FillWithNone, FillWithPrevious, FillWithNext
 }
 
+enum InsertPosition: Int {
+    case InsertNewBeforeThis, InsertNewAfterThis
+}
+
 class TaskEntryPropVC: 
     UIViewController, 
     UITableViewDataSource, 
@@ -38,6 +42,7 @@ class TaskEntryPropVC:
     var initialStartDate: NSDate?
     var initialStopDate: NSDate?
     var delete: FillWith?
+    var insert: InsertPosition?
 
     // Local data
     var editStart = false
@@ -278,6 +283,17 @@ class TaskEntryPropVC:
             default:
                 _ = 1
             }
+        case 3:
+            switch indexPath.row {
+            case 0:
+                self.insert = .InsertNewBeforeThis
+                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+            case 1:
+                self.insert = .InsertNewAfterThis
+                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+            default:
+                _ = 1
+            }
         default:
             _ = 1
         }
@@ -288,7 +304,7 @@ class TaskEntryPropVC:
     // UITableViewDataSource
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -306,6 +322,15 @@ class TaskEntryPropVC:
             return 1
         case 2:
             return 3
+        case 3:
+            if let i = self.isOngoing {
+                if i {
+                    return 1
+                } else {
+                    return 2
+                }
+            }
+            return 2
         default:
             return 0
         }
@@ -364,11 +389,21 @@ class TaskEntryPropVC:
             cell = UITableViewCell()
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Delete"
+                cell.textLabel?.text = "Delete this"
             case 1:
-                cell.textLabel?.text = "Delete, fill with previous"
+                cell.textLabel?.text = "Delete this, fill with previous"
             case 2:
-                cell.textLabel?.text = "Delete, fill with next"
+                cell.textLabel?.text = "Delete this, fill with next"
+            default:
+                cell.textLabel?.text = "Configuration error"
+            }
+        case 3:
+            cell = UITableViewCell()
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Insert new before this"
+            case 1:
+                cell.textLabel?.text = "Insert new after this"
             default:
                 cell.textLabel?.text = "Configuration error"
             }

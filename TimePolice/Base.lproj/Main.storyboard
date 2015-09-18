@@ -262,6 +262,7 @@
                         <segue destination="eM6-nC-ER0" kind="unwind" identifier="SaveTaskEntry" unwindAction="exitTaskEntryProp:" id="fTC-ee-ZR0"/>
                         <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteTaskEntry" unwindAction="exitTaskEntryProp:" id="nAc-LQ-DHj"/>
                         <segue destination="tNe-a1-HVm" kind="push" identifier="SelectTask" id="faT-s4-dMw"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="InsertNewTaskEntry" unwindAction="exitTaskEntryProp:" id="D7f-kQ-lMs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yei-av-ysS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -290,7 +291,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ot-zO-r7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MHh-sN-e8a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="5336" y="475"/>
+            <point key="canvasLocation" x="5450" y="479"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5jz-c1-GdA">
