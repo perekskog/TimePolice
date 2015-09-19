@@ -45,8 +45,8 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 			return taskList
 		}
 
-		for (index, task) in enumerate(taskList) {
-			if contains(selectedTasks, task) {
+		for (index, task) in taskList.enumerate() {
+			if selectedTasks.contains(task) {
 				indexes.append(index)
 			}
 		}
@@ -56,7 +56,7 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 	}
     
     func isSelectable(task: Task) -> Bool {
-        if contains(selectedTasks, task) {
+        if selectedTasks.contains(task) {
             return false
         } else {
             return true
@@ -64,7 +64,7 @@ class TaskSelectInSequence: TaskSelectionStrategy {
     }
 
 	func taskSelected(task: Task) {
-		if !contains(selectedTasks, task) {
+		if !selectedTasks.contains(task) {
 			selectedTasks.append(task)
 		}
 	}

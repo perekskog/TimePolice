@@ -35,14 +35,13 @@ class TaskEntryCreatorManagerBase: UIViewController,
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        println("TaskEntryManagerBase viewDidLoad")
+        print("TaskEntryManagerBase viewDidLoad")
         
         pageViewController.dataSource = self
         
         if let i = currentSessionIndex {
             if let initialVC: TaskEntryCreatorBase = pageViewControllerAtIndex(i) {
-                let viewControllers: NSArray = [initialVC]
-                pageViewController.setViewControllers(viewControllers as [AnyObject],
+                pageViewController.setViewControllers([initialVC],
                     direction: .Forward,
                     animated: false,
                     completion: nil)
@@ -59,24 +58,24 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        println("TaskEntryManagerBase viewWillAppear")
+        print("TaskEntryManagerBase viewWillAppear")
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        println("TaskEntryManagerBase viewDidAppear")
+        print("TaskEntryManagerBase viewDidAppear")
     }
     
     
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        println("TaskEntryManagerBase viewWillDisappear")
+        print("TaskEntryManagerBase viewWillDisappear")
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        println("TaskEntryManagerBase viewDidDisappear")
+        print("TaskEntryManagerBase viewDidDisappear")
     }
     
     
@@ -84,14 +83,14 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        println("TaskEntryManagerBase viewWillLayoutSubviews")
+        print("TaskEntryManagerBase viewWillLayoutSubviews")
         
         pageViewController.view.frame = self.view.bounds
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        println("TaskEntryManagerBase viewDidLayoutSubviews")
+        print("TaskEntryManagerBase viewDidLayoutSubviews")
     }
     
     
@@ -99,7 +98,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        println("TaskEntryManagerBase didReceiveMemoryWarning")
+        print("TaskEntryManagerBase didReceiveMemoryWarning")
     }
 
     /////////////////////////
@@ -107,12 +106,11 @@ class TaskEntryCreatorManagerBase: UIViewController,
     /////////////////////////
 
     func switchTo(newSessionIndex: Int) {
-        println("TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
+        print("TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
         if newSessionIndex != currentSessionIndex {
             if let newVC: TaskEntryCreatorBase = pageViewControllerAtIndex(newSessionIndex) {
                 currentSessionIndex = newSessionIndex
-                let viewControllers: NSArray = [newVC]
-                pageViewController.setViewControllers(viewControllers as [AnyObject],
+                pageViewController.setViewControllers([newVC],
                     direction: .Forward,
                     animated: false,
                     completion: nil)
@@ -153,7 +151,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     /////////////////////////
 
     func taskEntryCreator(taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int) {
-        println("TaskEntryCreatorManagerBase:willViewSessionIndex{willview=\(willViewSessionIndex), current=\(currentSessionIndex)")
+        print("TaskEntryCreatorManagerBase:willViewSessionIndex{willview=\(willViewSessionIndex), current=\(currentSessionIndex)")
         if willViewSessionIndex != currentSessionIndex {
             delegate?.taskEntryCreatorManager(self, willChangeActiveSession: willViewSessionIndex)
         }

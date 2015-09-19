@@ -51,8 +51,8 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
     let datePickerStop = UIDatePicker()
     var taskSelected: Task?
     
-    let buttonCancel = UIButton.buttonWithType(.System) as! UIButton
-    let buttonSave = UIButton.buttonWithType(.System) as! UIButton
+    let buttonCancel = UIButton(type: .System)
+    let buttonSave = UIButton(type: .System)
 
     //----------------------------------------------------------------
     // EditWorkVC - Lazy properties
@@ -142,7 +142,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
 
-        if let indexPath = table.indexPathForSelectedRow() {
+        if let indexPath = table.indexPathForSelectedRow {
             table.deselectRowAtIndexPath(indexPath, animated: true)
         }
         
@@ -154,10 +154,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        var lastview: UIView
-
         table.frame = CGRectMake(5, 0, width-10, height)
-        
     }
 
     override func viewDidLayoutSubviews() {
@@ -181,7 +178,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
     }
     
     func save(sender: UIButton) {
-        if let t = taskSelected {
+        if let _ = taskSelected {
             // Must have selected a task to save the task entry
             performSegueWithIdentifier("SaveTaskEntry", sender: self)            
         }
@@ -246,7 +243,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
             case 2:
                 editStop = true
             default:
-                let x = 1
+                _ = 1
             }
         case 1:
             switch indexPath.row {
@@ -265,10 +262,10 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
                 self.delete = .FillWithNext
                 performSegueWithIdentifier("DeleteTaskEntry", sender: self)
             default:
-                let x = 1
+                _ = 1
             }
         default:
-            let x = 1
+            _ = 1
         }
         
         self.table.endUpdates()
@@ -321,7 +318,6 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
                 cell = cellStopTime
             case 3:
                 cell = UITableViewCell()
-                let datepicker = UIDatePicker()
                 cell.contentView.addSubview(datePickerStop)
                 cell.clipsToBounds = true
             default:

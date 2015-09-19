@@ -86,7 +86,7 @@ class AppLog: AppLoggerDelegate {
 		sender.appendEntry(logEntry)
 
 		if sender.copyToConsole() {
-			println(logEntry)
+			print(logEntry)
 		}
 
 		if sender.copyToPasteboard() {
@@ -188,7 +188,7 @@ class TextViewLog: BasicLogger {
     override
 	func appendEntry(entry: String) {
 		textview.text! += "\n\(entry)"
-        let numberOfElements = count(textview.text)
+        let numberOfElements = textview.text.characters.count
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         textview.scrollRangeToVisible(range)
 	}

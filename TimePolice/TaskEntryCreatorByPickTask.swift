@@ -31,7 +31,7 @@ class TaskEntryCreatorByPickTaskVC:
         UIGestureRecognizerDelegate
 	{
 
-    let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+    let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = TaskPickerToolView()
     let signInSignOutView = TaskPickerToolView()
     let infoAreaView = TaskPickerToolView()
@@ -89,7 +89,7 @@ class TaskEntryCreatorByPickTaskVC:
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = .SignInSignOut
-        var recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+        let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
         signInSignOutView.addGestureRecognizer(recognizer)
         taskPickerBGView.addSubview(signInSignOutView)
             
@@ -126,7 +126,7 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         for (_, v) in taskbuttonviews {
-            if let rr = v.gestureRecognizers as? [UIGestureRecognizer] {
+            if let rr = v.gestureRecognizers {
                 for r in rr {
                     v.removeGestureRecognizer(r)
                 }
@@ -172,7 +172,7 @@ class TaskEntryCreatorByPickTaskVC:
             userInfo: nil,
             repeats: true)
 
-        println("starting timer \(updateActiveActivityTimer)")
+        print("starting timer \(updateActiveActivityTimer)")
 
         redrawAfterSegue()
 
@@ -182,7 +182,7 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
 
-        println("stopping timer \(updateActiveActivityTimer)")
+        print("stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer?.invalidate()
     }
@@ -191,19 +191,15 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        var lastview : UIView
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame) - 50
 
         exitButton.frame = CGRectMake(0, 25, 70, 30)
-        lastview = exitButton
         
         sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
         sessionNameView.toolbarInfoDelegate = self
-        lastview = sessionNameView
         
         taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
-        lastview = taskPickerBGView
 
         if let l = layout {
             let numberOfButtonsToDraw = l.numberOfSelectionAreas()
@@ -244,7 +240,7 @@ class TaskEntryCreatorByPickTaskVC:
             } else {
                 setLastWorkAsOngoing()
             }
-            let taskIndex = find(taskList, work.task as Task)
+            let taskIndex = taskList.indexOf(work.task as Task)
             taskbuttonviews[taskIndex!]?.setNeedsDisplay()
         }
 
@@ -262,7 +258,7 @@ class TaskEntryCreatorByPickTaskVC:
         // Handle ongoing task
         if let taskList = session?.tasks.array as? [Task],
             work = session?.getLastWork() {
-            let taskIndex = find(taskList, work.task as Task)
+            let taskIndex = taskList.indexOf(work.task as Task)
             taskbuttonviews[taskIndex!]?.setNeedsDisplay()
             if work.isOngoing() {
                 setLastWorkAsFinished()
@@ -337,11 +333,14 @@ class TaskEntryCreatorByPickTaskVC:
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
         shouldReceiveTouch touch: UITouch) -> Bool {
+            return true
+            /*
             if let taskNumber = recognizers[gestureRecognizer] {
                 return true //taskIsSelectable(taskNumber)
             } else {
                 return true
             }
+            */
     }
 
 
@@ -401,7 +400,7 @@ class TaskEntryCreatorByPickTaskVC:
         var totalActivations: Int = 0 // The first task is active when first selected
         var totalTime: NSTimeInterval = 0
         
-        for (task, (activations, time)) in sessionTaskSummary {
+        for (_, (activations, time)) in sessionTaskSummary {
             totalActivations += activations
             totalTime += time
         }
@@ -441,7 +440,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         if let moc = managedObjectContext,
             s = session {
-            let w = Work.createInMOC(moc, name: "", session: s, task: task)
+            Work.createInMOC(moc, name: "", session: s, task: task)
             TimePoliceModelUtils.save(moc)
         }
     }
@@ -520,8 +519,7 @@ class TaskEntryCreatorByPickTaskVC:
             let task = work.task
             
             if let taskList = session?.tasks.array as? [Task],
-                taskIndex = find(taskList, task as Task) {
-                let view = taskbuttonviews[taskIndex]
+                taskIndex = taskList.indexOf(task as Task) {
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
                 infoAreaView.setNeedsDisplay()
             }

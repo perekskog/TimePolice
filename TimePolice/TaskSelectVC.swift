@@ -40,7 +40,7 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     override func viewWillAppear(animated: Bool) {
-        if let indexPath = table.indexPathForSelectedRow() {
+        if let indexPath = table.indexPathForSelectedRow {
             table.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
@@ -68,12 +68,7 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     // UITableViewDataSource
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell!
-        if let c = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath) as? UITableViewCell {
-            cell = c
-        } else {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: cellReuseId)
-        }
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
         if let t = tasks?[indexPath.row] {
             let withoutComment = ThemeUtilities.getWithoutComment(t.name)

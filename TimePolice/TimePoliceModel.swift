@@ -88,9 +88,13 @@ class Project: NSManagedObject {
         let predicate = NSPredicate(format: "name == %@", name) 
         fetchRequest.predicate = predicate
 
-        let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project]
+        do {
+            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project]
 
-        return fetchResults
+            return fetchResults
+        } catch {
+            return nil
+        }
     }
 
 }
@@ -186,9 +190,12 @@ class Session: NSManagedObject {
         let predicate = NSPredicate(format: "name == %@", name) 
         fetchRequest.predicate = predicate
 
-        let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session]
-
-        return fetchResults
+        do {
+            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session]
+            return fetchResults
+        } catch {
+            return nil
+        }
     }
 
     
@@ -684,7 +691,6 @@ class Task: NSManagedObject {
     create -> [Ongoing] <- setAsOngoing / setAsFinished(time) -> [Finished]
 */
 
-let stoptimeOngoing = NSDate(timeIntervalSince1970: 0)
 
 class Work: NSManagedObject {
 
@@ -697,6 +703,7 @@ class Work: NSManagedObject {
     @NSManaged var session: Session
     @NSManaged var task: Task
 
+    let stoptimeOngoing = NSDate(timeIntervalSince1970: 0)
 
     //---------------------------------------------
     // Work - createInMOC
@@ -715,7 +722,7 @@ class Work: NSManagedObject {
 
         let now = NSDate()
         newItem.startTime = now
-        newItem.stopTime = stoptimeOngoing
+        newItem.stopTime = NSDate(timeIntervalSince1970: 0) // stoptimeOngoing
 
         // Maintain relations
         newItem.task = task
@@ -791,9 +798,11 @@ class TimePoliceModelUtils {
     //---------------------------------------------
 
     class func save(moc: NSManagedObjectContext) {
-        var error : NSError?
-        if(moc.save(&error) ) {
-            println("Save: error(\(error?.localizedDescription))")
+        do {
+            try moc.save()
+            print("Save: ok")
+        } catch {
+            // Swift 2: Where to get the error?
         }
 
     }
@@ -805,37 +814,42 @@ class TimePoliceModelUtils {
     class func clearAllData(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
 
-        // Delete all work
-        fetchRequest = NSFetchRequest(entityName: "Work")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
-            for work in fetchResults {
-                moc.deleteObject(work)
+        do {
+            // Delete all work
+            fetchRequest = NSFetchRequest(entityName: "Work")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Work] {
+                for work in fetchResults {
+                    moc.deleteObject(work)
+                }
             }
+            // Delete all tasks
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                for task in fetchResults {
+                    moc.deleteObject(task)
+                }
+            }
+            // Delete all sessions
+            fetchRequest = NSFetchRequest(entityName: "Session")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                for session in fetchResults {
+                    moc.deleteObject(session)
+                }
+            }
+            
+            // Delete all projects
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    moc.deleteObject(project)
+                }
+            }
+
+        } catch {
+            
         }
 
-        // Delete all tasks
-        fetchRequest = NSFetchRequest(entityName: "Task")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
-            for task in fetchResults {
-                moc.deleteObject(task)
-            }
-        }
 
-        // Delete all sessions
-        fetchRequest = NSFetchRequest(entityName: "Session")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-            for session in fetchResults {
-                moc.deleteObject(session)
-            }
-        }
-
-        // Delete all projects
-        fetchRequest = NSFetchRequest(entityName: "Project")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
-            for project in fetchResults {
-                moc.deleteObject(project)
-            }
-        }
     }
 
     //---------------------------------------------
@@ -845,91 +859,98 @@ class TimePoliceModelUtils {
     class func dumpAllData(moc: NSManagedObjectContext) -> String {
         var fetchRequest: NSFetchRequest
         var s: String
-
-        s = ("---------------------------\n")
-        s += ("----------Project----------\n\n")
-        fetchRequest = NSFetchRequest(entityName: "Project")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Project] {
-            s += "[Project container size=\(fetchResults.count)]\n"
-            for project in fetchResults {
-                s += ("P: \(project.name)-\(project.id)\n")
-                s += "    [Session container size=\(project.sessions.count)]\n"
-                for session in project.sessions {
-                    s += ("    S: \(session.name)-\(session.id)\n")
-                }
-            }
-        }
-
-        s += "\n"
-        s += ("---------------------------\n")
-        s += ("----------Session----------\n\n")
-        fetchRequest = NSFetchRequest(entityName: "Session")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
-            s += "[Session container size=\(fetchResults.count)]\n"
-            for session in fetchResults {
-                s += ("S: \(session.name)-\(session.id)\n")
-                s += ("    P: \(session.project.name)-\(session.project.id)\n")
-                s += "    [Work container size=\(session.work.count)]\n"
-                session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    let work = elem as! Work
-                    if work.isStopped() {
-                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                        s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
-                    } else {
-                        s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
-                    }
-                }
-                s += "    [Task container size=\(session.tasks.count)]\n"
-                session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    let task = elem as! Task
-                    s += ("    T: \(task.name)\n")
-                }
-            }
-        }
-
-        s += "\n"
-        s += ("------------------------\n")
-        s += ("----------Work----------\n\n")
-        fetchRequest = NSFetchRequest(entityName: "Work")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Work] {
-            s += "[Work container size=\(fetchResults.count)]\n"
-            for work in fetchResults {
-                if work.isStopped() {
-                    let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                    s += "W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
-                } else {
-                    s += "W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
-                }
-                s += ("    S: \(work.session.name)\n")
-                s += ("    T: \(work.task.name)\n")
-            }
-        }
-
-        s += "\n"
-        s += ("------------------------\n")
-        s += ("----------Task----------\n\n")
-        fetchRequest = NSFetchRequest(entityName: "Task")
-        if let fetchResults = moc.executeFetchRequest(fetchRequest, error: nil) as? [Task] {
-            s += "[Task container size=\(fetchResults.count)]\n"
-            for task in fetchResults {
-                s += ("T: \(task.name)\n")
-                s += "    [Session container size=\(task.sessions.count)]\n"
-                for session in task.sessions {
-                    s += ("    S: \(session.name)\n")
-                }
-                s += "    [Work container size=\(task.work.count)]\n"
-                task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                    let work = elem as! Work
-                    if work.isStopped() {
-                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                        s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
-                    } else {
-                        s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
-                    }
-                }
-            }
-        }
         
+        do {
+            
+            s = ("---------------------------\n")
+            s += ("----------Project----------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                s += "[Project container size=\(fetchResults.count)]\n"
+                for project in fetchResults {
+                    s += ("P: \(project.name)-\(project.id)\n")
+                    s += "    [Session container size=\(project.sessions.count)]\n"
+                    for session in project.sessions {
+                        s += ("    S: \(session.name)-\(session.id)\n")
+                    }
+                }
+            }
+            
+            s += "\n"
+            s += ("---------------------------\n")
+            s += ("----------Session----------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "Session")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                s += "[Session container size=\(fetchResults.count)]\n"
+                for session in fetchResults {
+                    s += ("S: \(session.name)-\(session.id)\n")
+                    s += ("    P: \(session.project.name)-\(session.project.id)\n")
+                    s += "    [Work container size=\(session.work.count)]\n"
+                    session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let work = elem as! Work
+                        if work.isStopped() {
+                            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                            s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                        } else {
+                            s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                        }
+                    }
+                    s += "    [Task container size=\(session.tasks.count)]\n"
+                    session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let task = elem as! Task
+                        s += ("    T: \(task.name)\n")
+                    }
+                }
+            }
+            
+            s += "\n"
+            s += ("------------------------\n")
+            s += ("----------Work----------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "Work")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Work] {
+                s += "[Work container size=\(fetchResults.count)]\n"
+                for work in fetchResults {
+                    if work.isStopped() {
+                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                        s += "W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                    } else {
+                        s += "W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                    }
+                    s += ("    S: \(work.session.name)\n")
+                    s += ("    T: \(work.task.name)\n")
+                }
+            }
+            
+            s += "\n"
+            s += ("------------------------\n")
+            s += ("----------Task----------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                s += "[Task container size=\(fetchResults.count)]\n"
+                for task in fetchResults {
+                    s += ("T: \(task.name)\n")
+                    s += "    [Session container size=\(task.sessions.count)]\n"
+                    for session in task.sessions {
+                        s += ("    S: \(session.name)\n")
+                    }
+                    s += "    [Work container size=\(task.work.count)]\n"
+                    task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let work = elem as! Work
+                        if work.isStopped() {
+                            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
+                            s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                        } else {
+                            s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                        }
+                    }
+                }
+            }
+        
+        } catch {
+
+            
+        }
+
         return s
     }
 
@@ -1107,6 +1128,6 @@ class TestData {
         addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
     }
 
-
 }
+
 

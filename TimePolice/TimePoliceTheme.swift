@@ -23,8 +23,9 @@ class TimePoliceBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        theme?.drawTimePoliceBG(context, parent: rect)
+        if let context = UIGraphicsGetCurrentContext() {
+            theme?.drawTimePoliceBG(context, parent: rect)
+        }
     }
 }
 
@@ -34,8 +35,9 @@ class TaskPickerBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        theme?.drawTaskPickerBG(context, parent: rect)
+        if let context = UIGraphicsGetCurrentContext() {
+            theme?.drawTaskPickerBG(context, parent: rect)
+        }
     }
 }
 
@@ -45,8 +47,9 @@ class WorkListBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        theme?.drawWorkListBG(context, parent: rect)
+        if let context = UIGraphicsGetCurrentContext() {
+            theme?.drawWorkListBG(context, parent: rect)
+        }
     }
 }
 
@@ -58,10 +61,11 @@ class TaskPickerButtonView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        if let i = taskPosition {
-            if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
-                theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
+        if let context = UIGraphicsGetCurrentContext() {
+            if let i = taskPosition {
+                if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
+                    theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
+                }
             }
         }
     }
@@ -75,10 +79,11 @@ class TaskPickerToolView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        if let i = tool {
-            if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
+        if let context = UIGraphicsGetCurrentContext() {
+            if let i = tool {
+                if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
+                    theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
+                }
             }
         }
     }
@@ -92,10 +97,11 @@ class WorkListToolView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        let context = UIGraphicsGetCurrentContext()
-        if let i = tool {
-            if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
+        if let context = UIGraphicsGetCurrentContext() {
+            if let i = tool {
+                if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
+                    theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
+                }
             }
         }
     }
@@ -168,8 +174,8 @@ class BasicTheme : Theme {
         
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])]
+        let colors = [CGColorCreate(colorSpaceRGB, [0.4, 0.4, 0.6, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.9, 1.0])!]
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
             colors, locations)
@@ -180,7 +186,7 @@ class BasicTheme : Theme {
         endPoint.x = 0
         endPoint.y = 700
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
     }
     
@@ -194,8 +200,8 @@ class BasicTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [0.0, 1.0, 0.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.8, 1.0, 0.8, 1.0])]
+        let colors = [CGColorCreate(colorSpaceRGB, [0.0, 1.0, 0.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.8, 1.0, 0.8, 1.0])!]
         let colorspace = CGColorSpaceCreateDeviceRGB()
         let gradient = CGGradientCreateWithColors(colorspace,
             colors, locations)
@@ -206,7 +212,7 @@ class BasicTheme : Theme {
         endPoint.x = 0
         endPoint.y = parent.height
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
     }
 
 
@@ -220,14 +226,14 @@ class BasicTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         
-        var foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
-        var foregroundColorBlack = UIColor(white: 0.0, alpha: 1.0).CGColor
-        var backgroundColorsGrey = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.6, 1.0])]
-        var backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.8, 0.0, 0.0, 1.0])]
-        var backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])]
+        let foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
+        let foregroundColorBlack = UIColor(white: 0.0, alpha: 1.0).CGColor
+        let backgroundColorsGrey = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.6, 0.6, 0.6, 1.0])!]
+        let backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.8, 0.0, 0.0, 1.0])!]
+        let backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])!]
         
         let colorspace = CGColorSpaceCreateDeviceRGB()
         var gradient = CGGradientCreateWithColors(colorspace, backgroundColorsGrey, locations)
@@ -258,7 +264,7 @@ class BasicTheme : Theme {
         endPoint.x = 0
         endPoint.y = parent.height
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         ThemeUtilities.addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
     }
@@ -269,12 +275,12 @@ class BasicTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 1.0, 1.0])]
+        var colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 1.0, 1.0])!]
         if let a = selectionAreaInfo.active {
             if a==true {
-                colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0]),
-                    CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])]
+                colors = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+                    CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!]
             }
         }
         let colorspace = CGColorSpaceCreateDeviceRGB()
@@ -287,7 +293,7 @@ class BasicTheme : Theme {
         endPoint.x = 0
         endPoint.y = parent.height
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
         if let t = selectionAreaInfo.task {
@@ -335,25 +341,25 @@ class BlackGreenTheme : Theme {
         
         // Top area
         let locations1: [CGFloat] = [ 0.0, 1.0 ]
-        let colors1 = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.5, 0.75, 0.5, 1.0])]
+        let colors1 = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.5, 0.75, 0.5, 1.0])!]
         let gradient1 = CGGradientCreateWithColors(colorSpaceRGB,
             colors1, locations1)
-        var startPoint1 = CGPoint(x:0.0, y:0.0)
-        var endPoint1 =  CGPoint(x:0.0, y:25.0)
+        let startPoint1 = CGPoint(x:0.0, y:0.0)
+        let endPoint1 =  CGPoint(x:0.0, y:25.0)
         CGContextDrawLinearGradient(context, gradient1,
-            startPoint1, endPoint1, 0)
+            startPoint1, endPoint1, CGGradientDrawingOptions(rawValue: 0))
 
         // Gradient
         let locations2: [CGFloat] = [ 0.0, 1.0 ]
-        let colors2 = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])]
+        let colors2 = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])!]
         let gradient2 = CGGradientCreateWithColors(colorSpaceRGB,
             colors2, locations2)
-        var startPoint2 = CGPoint(x:0.0, y:25.0)
-        var endPoint2 =  CGPoint(x:0.0, y:parent.height)
+        let startPoint2 = CGPoint(x:0.0, y:25.0)
+        let endPoint2 =  CGPoint(x:0.0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient2,
-            startPoint2, endPoint2, 0)
+            startPoint2, endPoint2, CGGradientDrawingOptions(rawValue: 0))
     }
     
 
@@ -367,14 +373,14 @@ class BlackGreenTheme : Theme {
 
         // Gradient
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])]
+        let colors = [CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.0, 0.8, 0.0, 1.0])!]
         let gradient = CGGradientCreateWithColors(colorSpaceRGB,
             colors, locations)
-        var startPoint = CGPoint(x:0.0, y:0.0)
-        var endPoint =  CGPoint(x:0.0, y:parent.height)
+        let startPoint = CGPoint(x:0.0, y:0.0)
+        let endPoint =  CGPoint(x:0.0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
     }
 
 
@@ -389,21 +395,21 @@ class BlackGreenTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         
-        var foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
-        var foregroundColorBlack = UIColor(white: 0.0, alpha: 1.0).CGColor
+        let foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).CGColor
+        _ = UIColor(white: 0.0, alpha: 1.0).CGColor
 
-        var backgroundColorsNeutral = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
+        let backgroundColorsNeutral = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])!]
 
-        var backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [0.7, 0.7, 0.7, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.4, 0.0, 0.0, 1.0])]
+        let backgroundColorsRed = [CGColorCreate(colorSpaceRGB, [0.7, 0.7, 0.7, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.4, 0.0, 0.0, 1.0])!]
 
-        var backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [0.7, 0.7, 0.7, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.0, 0.4, 0.0, 1.0])]
+        let backgroundColorsGreen = [CGColorCreate(colorSpaceRGB, [0.7, 0.7, 0.7, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.0, 0.4, 0.0, 1.0])!]
         
         let colorspace = CGColorSpaceCreateDeviceRGB()
         var gradient = CGGradientCreateWithColors(colorspace, backgroundColorsNeutral, locations)
-        var foregroundColor = foregroundColorWhite
+        let foregroundColor = foregroundColorWhite
         var text: String
 
         switch viewType {
@@ -421,8 +427,6 @@ class BlackGreenTheme : Theme {
             text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(getString(toolbarInfo.totalTimeActiveForSession))"
         case .Add:
             text = "Add"
-        default:
-            text = "---"
         }
         
         var startPoint = CGPoint()
@@ -432,7 +436,7 @@ class BlackGreenTheme : Theme {
         endPoint.x = 0
         endPoint.y = parent.height
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         ThemeUtilities.addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
     }
@@ -443,27 +447,27 @@ class BlackGreenTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        var colors = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0]),
-            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])]
+        var colors = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])!]
         if let active = selectionAreaInfo.active {
             if active {
                 if let ongoing = selectionAreaInfo.ongoing {
                     if ongoing {
-                        colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0]),
-                            CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])]
+                        colors = [CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])!,
+                            CGColorCreate(colorSpaceRGB, [0.5, 0.6, 0.5, 1.0])!]
                     } else {
-                        colors = [CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0]),
-                            CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])]
+                        colors = [CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])!,
+                            CGColorCreate(colorSpaceRGB, [0.6, 0.5, 0.5, 1.0])!]
                     }
                 }
             }
         }
         let gradient = CGGradientCreateWithColors(colorSpaceRGB,
             colors, locations)
-        var startPoint = CGPoint(x: 0.0, y:0.0)
-        var endPoint =  CGPoint(x:0, y:parent.height)
+        let startPoint = CGPoint(x: 0.0, y:0.0)
+        let endPoint =  CGPoint(x:0, y:parent.height)
         CGContextDrawLinearGradient(context, gradient,
-            startPoint, endPoint, 0)
+            startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
@@ -477,7 +481,7 @@ class BlackGreenTheme : Theme {
                     let endPointSquare = CGPoint(x: 8, y: 8)
                     CGContextSaveGState(context)
                     //            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
-                    CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, 0)
+                    CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
                     CGContextRestoreGState(context)
                 }
             } else {
@@ -528,11 +532,11 @@ class ThemeUtilities {
     
     class func addText(context: CGContextRef, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
         CGContextSaveGState(context)
-        var attributes: [String: AnyObject] = [
+        let attributes: [String: AnyObject] = [
             NSForegroundColorAttributeName : foregroundColor,
             NSFontAttributeName : UIFont.systemFontOfSize(fontSize)
         ]
-        /*1.2*/let font = attributes[NSFontAttributeName] as! UIFont
+        //let font = attributes[NSFontAttributeName] as! UIFont
         let attributedString = NSAttributedString(string: text, attributes: attributes)
         let textSize = text.sizeWithAttributes(attributes)
         CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
@@ -590,12 +594,12 @@ class ThemeUtilities {
     }
     
     class func string2color(text: String) -> UIColor {
-        var color: UIColor?
-        let r = text[advance(text.startIndex, 0)]
+        //var color: UIColor?
+        let r = text[text.startIndex.advancedBy(0)]
         let red = hexchar2value(r)
-        let g = text[advance(text.startIndex, 1)]
+        let g = text[text.startIndex.advancedBy(1)]
         let green = hexchar2value(g)
-        let b = text[advance(text.startIndex, 2)]
+        let b = text[text.startIndex.advancedBy(2)]
         let blue = hexchar2value(b)
         
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)

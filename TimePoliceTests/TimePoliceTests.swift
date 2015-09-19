@@ -157,7 +157,7 @@ class TimePoliceProjectTemplateManagerTests: XCTestCase {
 
     func testTheme() {
         XCTAssert(true)
-        let bt1 = BasicTheme()
+        _ = BasicTheme()
     }
 
     /*

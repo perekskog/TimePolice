@@ -40,13 +40,8 @@ class TaskEntryCreatorBase:
     lazy var managedObjectContext : NSManagedObjectContext? = {
 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
-        }()
+        return appDelegate.managedObjectContext
+    }()
 
     lazy var appLog : AppLog = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -252,8 +247,6 @@ class TaskEntryCreatorBase:
                     case .FillWithNext: // Next item, deletePreviousWorkAndAlignStart
                         appLog.log(logger, logtype: .Debug, message: "Fill with next")
                         s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                    default: // Not handled
-                        appLog.log(logger, logtype: .Debug, message: "Not handled")
                     }
                 }
                 TimePoliceModelUtils.save(moc)

@@ -38,7 +38,7 @@ class TaskEntryCreatorByAddToListVC:
 
     var updateActiveActivityTimer: NSTimer?
 
-    let exitButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+    let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = WorkListToolView()
     let workListBGView = WorkListBGView()
     let signInSignOutView = WorkListToolView()
@@ -138,9 +138,9 @@ class TaskEntryCreatorByAddToListVC:
               userInfo: nil,
                repeats: true)        
 
-        println("starting timer \(updateActiveActivityTimer)")
+        print("starting timer \(updateActiveActivityTimer)")
 
-        if let indexPath = workListTableView.indexPathForSelectedRow() {
+        if let indexPath = workListTableView.indexPathForSelectedRow {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
         
@@ -158,7 +158,7 @@ class TaskEntryCreatorByAddToListVC:
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
 
-        println("stopping timer \(updateActiveActivityTimer)")
+        print("stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer?.invalidate()
     }
@@ -309,7 +309,7 @@ class TaskEntryCreatorByAddToListVC:
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell")!
         if let w = session?.work[indexPath.row] as? Work {
             if w.isStopped() {
                 let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
@@ -430,7 +430,7 @@ class TaskEntryCreatorByAddToListVC:
 
 
     func scrollToEnd(tableView: UITableView) {
-        let numberOfSections = tableView.numberOfSections()
+        let numberOfSections = tableView.numberOfSections
         let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
         
         if numberOfRows > 0 {

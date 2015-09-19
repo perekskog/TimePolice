@@ -30,14 +30,9 @@ class TimePoliceVC: UIViewController,
     // TimePoliceVC - Lazy properties
     //---------------------------------------
 
-    lazy var managedObjectContext : NSManagedObjectContext? = {
+    lazy var managedObjectContext : NSManagedObjectContext = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if let managedObjectContext = appDelegate.managedObjectContext {
-            return managedObjectContext
-        }
-        else {
-            return nil
-        }
+        return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
@@ -116,24 +111,28 @@ class TimePoliceVC: UIViewController,
     func getSessions() -> [Session] {
         appLog.log(logger, logtype: .EnterExit, message: "getSessions")
 
-        let fetchRequest = NSFetchRequest(entityName: "Session")
-        if let tmpSessions = managedObjectContext!.executeFetchRequest(fetchRequest, error: nil) as? [Session] {
+        do {
+            let fetchRequest = NSFetchRequest(entityName: "Session")
             var nonTemplateSessions: [Session] = []
-            for session in tmpSessions {
-                if session.project.name != "Templates" {
-                    nonTemplateSessions.append(session)
+            if let tmpSessions = try managedObjectContext.executeFetchRequest(fetchRequest) as? [Session] {
+                for session in tmpSessions {
+                    if session.project.name != "Templates" {
+                        nonTemplateSessions.append(session)
+                    }
                 }
             }
             return nonTemplateSessions
+
+        } catch {
+            return []
         }
-        return []
     }
     
     func redrawAll(refreshCoreData: Bool) {
         if refreshCoreData==true {
             self.sessions = getSessions()
         }
-        appLogSize.text = "\(count(appLog.logString))"
+        appLogSize.text = "\(appLog.logString.characters.count))"
         logTableView.reloadData()
     }
     
@@ -189,84 +188,78 @@ class TimePoliceVC: UIViewController,
     @IBAction func loadDataPrivate(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataPrivate")
 
-        if let moc = self.managedObjectContext {
-            TestData.addSessionToPrivate(moc)
-            TimePoliceModelUtils.save(moc)
-            moc.reset()
+        let moc = self.managedObjectContext
+        TestData.addSessionToPrivate(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
 
-            redrawAll(true)
-        }
+        redrawAll(true)
     }
     
     @IBAction func loadDataWork(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataWork")
 
-        if let moc = self.managedObjectContext {
-            TestData.addSessionToWork(moc)
-            TimePoliceModelUtils.save(moc)
-            moc.reset()
+        let moc = self.managedObjectContext
+        TestData.addSessionToWork(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
 
-            redrawAll(true)
-        }
+        redrawAll(true)
     }
     
     @IBAction func loadDataDaytime(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataDaytime")
 
-        if let moc = self.managedObjectContext {
-            TestData.addSessionToDaytime(moc)
-            TimePoliceModelUtils.save(moc)
-            moc.reset()
+        let moc = self.managedObjectContext
+        TestData.addSessionToDaytime(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
 
-            redrawAll(true)
-        }
+        redrawAll(true)
     }
     
     @IBAction func loadDataTest(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataTest")
 
-        if let moc = self.managedObjectContext {
-            TestData.addSessionToTest(moc)
-            TimePoliceModelUtils.save(moc)
-            moc.reset()
+        let moc = self.managedObjectContext
+        TestData.addSessionToTest(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
 
-            redrawAll(true)
-        }
+        redrawAll(true)
     }
     
     @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
 
-        if let moc = self.managedObjectContext {
-            TimePoliceModelUtils.clearAllData(moc)
-            TimePoliceModelUtils.save(moc)
-            moc.reset()
+        let moc = self.managedObjectContext
+        TimePoliceModelUtils.clearAllData(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
 
-            redrawAll(true)
-        }
+        redrawAll(true)
     }
 
     @IBAction func clearApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
         appLog.logString = ""
-        appLogSize.text = "\(count(appLog.logString))"
+        appLogSize.text = "\(appLog.logString.characters.count))"
     }
 
     @IBAction func dumpCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
 
-        if let moc = self.managedObjectContext {
-            let s = TimePoliceModelUtils.dumpAllData(moc)
-            println(s)
-            UIPasteboard.generalPasteboard().string = s
-        }
+        let moc = self.managedObjectContext
+        let s = TimePoliceModelUtils.dumpAllData(moc)
+        print(s)
+        UIPasteboard.generalPasteboard().string = s
     }
 
     @IBAction func dumpApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpApplog")
 
         let s = appLog.logString
-        println(s)
+        print(s)
         UIPasteboard.generalPasteboard().string = s
     }
 
@@ -283,7 +276,7 @@ class TimePoliceVC: UIViewController,
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("TimePoliceSessionCell")!
         if let session = sessions?[indexPath.row] {
             if let work = session.getLastWork() {
                 if work.isOngoing() {
@@ -315,8 +308,8 @@ class TimePoliceVC: UIViewController,
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            if let moc = self.managedObjectContext,
-               session = sessions?[indexPath.row] {
+            let moc = self.managedObjectContext
+            if let session = sessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
                 Session.deleteInMOC(moc, session: session)
                 TimePoliceModelUtils.save(moc)
@@ -345,10 +338,8 @@ class TimePoliceVC: UIViewController,
                 if let i = selectedSessionIndex,
                     tecms = taskEntryCreatorManagers {
                     for tecm in tecms {
-                        if let vc = tecm as? TaskEntryCreatorManagerBase {
-                            println("TimePoliceVC: switchTo(\(i))")
-                            vc.switchTo(i)
-                        }
+                        print("TimePoliceVC: switchTo(\(i))")
+                        tecm.switchTo(i)
                     }
                 }
             }
