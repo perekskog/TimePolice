@@ -194,31 +194,29 @@ class TaskEntryCreatorBase:
                 } else {
                     appLog.log(logger, logtype: .Debug, message: "EditWork no task selected")
                 }
-                
-                if let initialDate = vc.initialStartDate {
-                    appLog.log(logger, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected start date=\(getString(vc.datePickerStart.date))")
 
-                    if initialDate != vc.datePickerStart.date {
-                        // The initial starttime was changed
-                        appLog.log(logger, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
-                        s.setStartTime(moc, workIndex: i, desiredStartTime: vc.datePickerStart.date)
-                    } else {
-                        appLog.log(logger, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
+                // Default: First adjust starttime, then adjust stoptime.
+                var startTimeFirst = true
+
+                // If starttime has been set to a later time than the original stoptime,
+                // it may be so that both start- and stoptime has been changed.
+                // In this case, adjust stoptime first, then starttime.
+                if let initialStopDate = vc.initialStopDate {
+                    if vc.datePickerStart.date.compare(initialStopDate) == .OrderedDescending {
+                        startTimeFirst = false
                     }
                 }
 
-                if let initialDate = vc.initialStopDate {
-                    appLog.log(logger, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected stop date=\(getString(vc.datePickerStop.date))")
+                if startTimeFirst {
+                    appLog.log(logger, logtype: .Debug, message: "Will adjust starttime first")
 
-                    if initialDate != vc.datePickerStop.date {
-                        // The initial stoptime was changed
-                        appLog.log(logger, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
-                        s.setStopTime(moc, workIndex: i, desiredStopTime: vc.datePickerStop.date)
-                    } else {
-                        appLog.log(logger, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
-                    }
+                    adjustStartTime(s, i:i, moc: moc, vc: vc)
+                    adjustStopTime(s, i:i, moc:moc, vc:vc)
+                } else {
+                    appLog.log(logger, logtype: .Debug, message: "Will adjust stoptime first")
+
+                    adjustStopTime(s, i:i, moc:moc, vc:vc)
+                    adjustStartTime(s, i:i, moc:moc, vc:vc)
                 }
 
                 TimePoliceModelUtils.save(moc)
@@ -227,7 +225,6 @@ class TaskEntryCreatorBase:
             }
             redrawAfterSegue()
         }
-
 
         if unwindSegue.identifier == "DeleteTaskEntry" {
             appLog.log(logger, logtype: .Debug, message: "Handle DeleteTaskEntry")
@@ -258,6 +255,38 @@ class TaskEntryCreatorBase:
         }
         
     }
+    
+    func adjustStartTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
+        if let initialDate = vc.initialStartDate {
+            appLog.log(logger, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork selected start date=\(getString(vc.datePickerStart.date))")
+            
+            if initialDate != vc.datePickerStart.date {
+                // The initial starttime was changed
+                appLog.log(logger, logtype: .Debug, message: "Selected starttime != initial starttime, setting starttime")
+                s.setStartTime(moc, workIndex: i, desiredStartTime: vc.datePickerStart.date)
+            } else {
+                appLog.log(logger, logtype: .Debug, message: "Selected starttime = initial starttime, don't set starttime")
+            }
+        }
+    }
+    
+    func adjustStopTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
+        if let initialDate = vc.initialStopDate {
+            appLog.log(logger, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork selected stop date=\(getString(vc.datePickerStop.date))")
+            
+            if initialDate != vc.datePickerStop.date {
+                // The initial stoptime was changed
+                appLog.log(logger, logtype: .Debug, message: "Selected stoptime != initial stoptime, setting stoptime")
+                s.setStopTime(moc, workIndex: i, desiredStopTime: vc.datePickerStop.date)
+            } else {
+                appLog.log(logger, logtype: .Debug, message: "Selected stoptime = initial stoptime, don't set stoptime")
+            }
+        }
+        
+    }
+
 
     func redrawAfterSegue() {
         // DO nothing here
