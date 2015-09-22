@@ -1046,16 +1046,17 @@ class TestData {
             "RC#color=4c4", "Dev#color=4c4", "Media#color=4c4",
             "Läsa/Titta#color=4c4", "Div hemma#color=4c4", "Div borta#color=4c4",
             "Fysiskt#color=4c4", "Time in#color=4c4", "Relationer#color=4c4",
-            "Lek#color=4c4", "Down#color=4c4", "",
-            "Pers. utv#color=4c4", "", "",
+            "Lek#color=4c4", "Down#color=4c4", "Pers. utv#color=4c4",
             
             "Person#color=44f", "Hem#color=44f", "Hus/tomt#color=44f",
             "Bil#color=44f", "Behöver div#color=44f", "",
+                        
+            "Oaktivitet#color=bbb", "", "",
             
+            "Läsa/titta#color=b84", "", "",
+
             "Blockerad#color=b44", "Avbrott#color=b44", "",
-            "Brand#color=b44", "Fokusskift#color=b44", "",
-            
-            "Läsa/titta#color=bb4", "Oaktivitet#color=bb4"
+            "Brand#color=b44", "Fokusskift#color=b44", ""
             
         ]
 
@@ -1072,17 +1073,17 @@ class TestData {
             "Dev#color=4c4", "PPO#color=4c4", "Stage 7#color=4c4",
 
             "Fysiskt#color=4c4", "Time in#color=4c4", "Relationer#color=4c4",
-            "Lek#color=4c4", "Down#color=4c4", "",
-            "Pers. utv#color=4c4", "", "",
+            "Lek#color=4c4", "Down#color=4c4", "Pers. utv#color=4c4",
             
             "Inbox#color=44f", "Pågående#color=44f", "Städa upp#color=44f",
             "Team#color=44f", "Adm#color=44f", "Annat#color=44f",
             
+            "Oaktivitet#color=bbb", "", "",
+
+            "Läsa/titta#color=b84", "", "",
+
             "Blockerad#color=b44", "Avbrott#color=b44", "",
             "Brand#color=b44", "Fokusskift#color=b44", "",
-            
-            "Läsa/titta#color=bb4", "Oaktivitet#color=bb4"
-            
         ]
         
         addSession(moc, projectName: "Jobb", sessionTemplateName: "Template - Jobb", sessionTemplateTasks: taskList, sessionName: "Jobb")
@@ -1095,19 +1096,16 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
         // 21
         let taskList = [
-            "Sova", "", "",
+            "Sova", "Hemma", "Hemma ute",
             
-            "Hemma", "", "Hemma ute",
-            
-            "Jobb", "", "Jobb ute",
+            "Jobb", "Jobb ute", "Lunch",
                 
-            "Bil morgon", "T morgon", "P morgon",
+            "Bil morgon", "Bil kväll", "",
+            "P morgon", "P kväll", "",
+            "T morgon", "T kväll", "",
+            "B morgon", "B kväll", "",
 
-            "Bil kväll", "T kväll", "P kväll",
-
-            "Lunch", "Ärende", "F&S",
-
-            "Div 1", "Div 2", "Div 3"
+            "Ärende", "F&S", "Annat"
         ]
         
         addSession(moc, projectName: "Ett dygn", sessionTemplateName: "Template - Ett dygn", sessionTemplateTasks: taskList, sessionName: "Ett dygn")
