@@ -21,7 +21,7 @@ import CoreData
 
 //==================================================
 //==================================================
-//  TaskPickerVC
+//  TaskEntryCreatorByPickTask
 //==================================================
 
 class TaskEntryCreatorByPickTaskVC:
@@ -55,21 +55,24 @@ class TaskEntryCreatorByPickTaskVC:
 
 
 
-    //--------------------------------------------------------
-    // TaskPickerVC - Lazy properties
-    //--------------------------------------------------------
-    
-    override func getLogDomain() -> String {
-        return "TaskEntryCreatorTaskPicker"
+    //---------------------------------------------
+    // TaskEntryCreatorByPickTask - AppLoggerDataSource
+    //---------------------------------------------
+
+    override
+    func getLogDomain() -> String {
+        return "TaskEntryCreatorByAddToList"
     }
 
 
     //---------------------------------------------
-    // TaskPickerVC - View lifecycle
+    // TaskEntryCreatorByPickTask - View lifecycle
     //---------------------------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        logger.datasource = self
 
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -220,7 +223,7 @@ class TaskEntryCreatorByPickTaskVC:
 
 
     //---------------------------------------------
-    // TaskPickerVC - GUI actions
+    // TaskEntryCreatorByPickTask - GUI actions
     //---------------------------------------------
 
     func exit(sender: UIButton) {
@@ -309,7 +312,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     
     //---------------------------------------------
-    // TaskPickerVC - Segue handling (from base class)
+    // TaskEntryCreatorByPickTask - Segue handling (from base class)
     //---------------------------------------------
     
     override func redrawAfterSegue() {
@@ -328,7 +331,7 @@ class TaskEntryCreatorByPickTaskVC:
     }
 
     //---------------------------------------------
-    // TaskPickerVC - GestureRecognizerDelegate
+    // TaskEntryCreatorByPickTask - GestureRecognizerDelegate
     //---------------------------------------------
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
@@ -345,7 +348,7 @@ class TaskEntryCreatorByPickTaskVC:
 
 
     //----------------------------------------------
-    //  TaskPickerVC - SelectionAreaInfoDelegate
+    //  TaskEntryCreatorByPickTask - SelectionAreaInfoDelegate
     //----------------------------------------------
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
@@ -391,7 +394,7 @@ class TaskEntryCreatorByPickTaskVC:
 	}
 
     //----------------------------------------------
-    //  TaskPickerVC - ToolbarInfoDelegate
+    //  TaskEntryCreatorByPickTask - ToolbarInfoDelegate
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
@@ -432,7 +435,7 @@ class TaskEntryCreatorByPickTaskVC:
     }
 
     //--------------------------------------------
-    //  TaskPickerVC - Sign int/out, add new work
+    //  TaskEntryCreatorByPickTask - Sign int/out, add new work
     //--------------------------------------------
 
     func addNewWork(task: Task) {
@@ -500,7 +503,7 @@ class TaskEntryCreatorByPickTaskVC:
 
 
     //--------------------------------------------------------------
-    // TaskPickerVC - Periodic update of views, triggered by timeout
+    // TaskEntryCreatorByPickTask - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
 
     var updateN = 0

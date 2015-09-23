@@ -1,5 +1,5 @@
 //
-//  WorkPropVC.swift
+//  TaskEntryPropVC.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-05-08.
@@ -19,7 +19,11 @@ enum FillWith: Int {
     case FillWithNone, FillWithPrevious, FillWithNext
 }
 
-class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class TaskEntryPropVC: 
+    UIViewController, 
+    UITableViewDataSource, 
+    UITableViewDelegate,
+    AppLoggerDataSource  {
 
     // Input data
     var taskEntryTemplate: Work?
@@ -55,7 +59,7 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
     let buttonSave = UIButton(type: .System)
 
     //----------------------------------------------------------------
-    // EditWorkVC - Lazy properties
+    // TaskEntryPropVC - Lazy properties
     //----------------------------------------------------------------
     
     lazy var appLog : AppLog = {
@@ -63,13 +67,23 @@ class TaskEntryPropVC: UIViewController, UITableViewDataSource, UITableViewDeleg
         return appDelegate.appLog
         }()
 
-    lazy var logger : AppLogger = {
-        return ApplogLog(locator: "EditWorkVC")
+    lazy var logger: AppLogger = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
     }()
 
+    //---------------------------------------------
+    // TaskEntryPropVC - AppLoggerDataSource
+    //---------------------------------------------
+
+    func getLogDomain() -> String {
+        return "TaskEntryPropVC"
+    }
 
     //---------------------------------------------
-    // EditWorkVC - View lifecycle
+    // TaskEntryPropVC - View lifecycle
     //---------------------------------------------
 
     override func viewWillDisappear(animated: Bool) {

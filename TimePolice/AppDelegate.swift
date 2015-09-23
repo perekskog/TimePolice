@@ -14,7 +14,7 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLoggerDataSource {
 
     var window: UIWindow?
 
@@ -107,19 +107,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return managedObjectContext
     }()
 
-    lazy var appLog: AppLog = {
-        print("Create an applog")
-        return AppLog()
-    }()
-
-    lazy var logger: AppLogger = {
-        print("Create a logger")
-        return ApplogLog(locator: "AppDelegate")
-    }()
-
-
-    // MARK: - Core Data Saving support
-
     func saveContext () {
         if managedObjectContext.hasChanges {
             do {
@@ -133,5 +120,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+
+    // AppLogDelegate
+
+    func includeEntry(loggerId: String, logtype: AppLogEntryType) -> Bool {
+        return true
+    }
+
+
+
+    // AppLoggerDataSource
+
+    func getLogDomain() -> String {
+        return "AppDelegate"
+    }
+
+
+    // TimePolice app global methods
+
+    lazy var appLog: AppLog = {
+        print("Create an applog")
+        let applog = AppLog()
+        applog.delegate = self
+        return applog
+    }()
+
+    func getDefaultLogger() -> AppLogger {
+        // Don't set a datasource here, it has to be done by the caller of this method.
+        return AppLogLogger()
+    }
+
+
+    // Class local methods
+
+    lazy var logger: AppLogger = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
+    }()
+
+
+
+
+
+
+
 }
+
+
 

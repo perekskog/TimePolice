@@ -11,7 +11,8 @@ import CoreData
 
 class TimePoliceVC: UIViewController, 
     UITableViewDataSource, 
-    UITableViewDelegate, 
+    UITableViewDelegate,
+    AppLoggerDataSource,
     TaskEntryCreatorManagerDataSource,
     TaskEntryCreatorManagerDelegate {
 
@@ -41,8 +42,20 @@ class TimePoliceVC: UIViewController,
     }()
 
     lazy var logger: AppLogger = {
-        return ApplogLog(locator: "TimePoliceVC")
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
     }()
+
+    //---------------------------------------------
+    // TimePoliceVC - AppLoggerDataSource
+    //---------------------------------------------
+
+    func getLogDomain() -> String {
+        return "TimePoliceVC"
+    }
+
 
 
     //---------------------------------------------

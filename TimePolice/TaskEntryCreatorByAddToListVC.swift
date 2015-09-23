@@ -48,33 +48,24 @@ class TaskEntryCreatorByAddToListVC:
     let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
 
-
-
-    //--------------------------------------------------------
-    // WorkListVC - Lazy properties
-    //--------------------------------------------------------
-
-    /*
-    lazy var logger: AppLogger = {
-        let logger = MultiLog()
-        //      logger.logger1 = TextViewLog(textview: statusView!, locator: "WorkListVC")
-        logger.logger2 = StringLog(locator: "WorkListVC")
-        logger.logger3 = ApplogLog(locator: "WorkListVC")
-        
-        return logger
-    }()
-*/
     
-    override func getLogDomain() -> String {
-        return "TaskEntryCreatorTaskEntryList"
+    //---------------------------------------------
+    // TaskEntryCreatorByAddToList - AppLoggerDataSource
+    //---------------------------------------------
+
+    override
+    func getLogDomain() -> String {
+        return "TaskEntryCreatorByAddToList"
     }
 
     //---------------------------------------------
-    // WorkListVC - View lifecycle
+    // TaskEntryCreatorByAddToList - View lifecycle
     //---------------------------------------------
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        logger.datasource = self
 
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -212,7 +203,7 @@ class TaskEntryCreatorByAddToListVC:
     }
 
     //-----------------------------------------
-    // WorkListVC - GUI actions
+    // TaskEntryCreatorByAddToList - GUI actions
     //-----------------------------------------
 
 
@@ -276,7 +267,7 @@ class TaskEntryCreatorByAddToListVC:
     }
 
     //-----------------------------------------
-    // WorkListVC - UITableViewDelegate
+    // TaskEntryCreatorByAddToList - UITableViewDelegate
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -297,7 +288,7 @@ class TaskEntryCreatorByAddToListVC:
 
     
     //-----------------------------------------
-    // WorkListVC - UITableViewDataSource
+    // TaskEntryCreatorByAddToList - UITableViewDataSource
     //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -355,7 +346,7 @@ class TaskEntryCreatorByAddToListVC:
 
 
     //----------------------------------------------
-    //  WorkListVC - ToolbarInfoDelegate
+    //  TaskEntryCreatorByAddToList - ToolbarInfoDelegate
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
@@ -393,7 +384,7 @@ class TaskEntryCreatorByAddToListVC:
 
 
     //---------------------------------------------
-    // WorkListVC - Segue handling
+    // TaskEntryCreatorByAddToList - Segue handling
     //---------------------------------------------
     
     // See base class
@@ -406,7 +397,7 @@ class TaskEntryCreatorByAddToListVC:
         
 
     //--------------------------------------------------------------
-    // WorkListVC - Periodic update of views, triggered by timeout
+    // TaskEntryCreatorByAddToList - Periodic update of views, triggered by timeout
     //--------------------------------------------------------------
 
     var updateN = 0
@@ -425,7 +416,7 @@ class TaskEntryCreatorByAddToListVC:
     }
 
     //---------------------------------------------
-    // WorkListVC - Utility functions
+    // TaskEntryCreatorByAddToList - Utility functions
     //---------------------------------------------
 
 
