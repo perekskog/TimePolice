@@ -31,6 +31,8 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.edgesForExtendedLayout = .None
+
         self.title = "Select Task"
         
         table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
