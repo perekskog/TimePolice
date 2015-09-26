@@ -193,8 +193,24 @@ class AppLogLogger: BasicLogger {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.appLog        
     }()
+}
 
+class ConsoleLogger: BasicLogger {
 
+    override
+    func appendEntry(entry: String) {
+        print("\(entry)")
+    }
+
+    override
+    func getContent() -> String {
+        return ""
+    }
+
+    override
+    func reset() {
+        // Do nothing
+    }
 }
 
 class MultiLogger: BasicLogger {
