@@ -23,6 +23,7 @@ protocol TaskEntryCreatorManager {
 class TaskEntryCreatorManagerBase: UIViewController,
     UIPageViewControllerDataSource,
     UIPageViewControllerDelegate,
+    AppLoggerDataSource,
     TaskEntryCreatorManager,
     TaskEntryCreatorDelegate {
     
@@ -32,10 +33,42 @@ class TaskEntryCreatorManagerBase: UIViewController,
     let pageViewController: UIPageViewController = TaskEntryCreatorManagerPageViewController()
 
     var currentSessionIndex: Int?
+
+    //--------------------------------------------------------
+    // TaskEntryCreatorManagerBase - Lazy properties
+    //--------------------------------------------------------
+
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog        
+    }()
+
+    lazy var logger: AppLogger = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
+    }()
+
+    //---------------------------------------------
+    // TaskEntryCreatorManagerBase - AppLoggerDataSource
+    //---------------------------------------------
+
+    func getLogDomain() -> String {
+        return "TaskEntryCreatorManagerBase"
+    }
+
+    
+    //---------------------------------------------
+    // TaskEntryCreatorManagerBase - View lifecycle
+    //---------------------------------------------
+
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("TaskEntryManagerBase viewDidLoad")
+        logger.datasource = self
+
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidLoad")
         
         pageViewController.dataSource = self
         
@@ -58,24 +91,24 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        print("TaskEntryManagerBase viewWillAppear")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillAppear")
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        print("TaskEntryManagerBase viewDidAppear")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidAppear")
     }
     
     
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        print("TaskEntryManagerBase viewWillDisappear")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillDisappear")
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        print("TaskEntryManagerBase viewDidDisappear")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidDisappear")
     }
     
     
@@ -83,14 +116,14 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        print("TaskEntryManagerBase viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillLayoutSubviews")
         
         pageViewController.view.frame = self.view.bounds
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("TaskEntryManagerBase viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidLayoutSubviews")
     }
     
     
@@ -98,7 +131,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        print("TaskEntryManagerBase didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase didReceiveMemoryWarning")
     }
 
     /////////////////////////
@@ -106,7 +139,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     /////////////////////////
 
     func switchTo(newSessionIndex: Int) {
-        print("TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
         if newSessionIndex != currentSessionIndex {
             if let newVC: TaskEntryCreatorBase = pageViewControllerAtIndex(newSessionIndex) {
                 currentSessionIndex = newSessionIndex
@@ -151,7 +184,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     /////////////////////////
 
     func taskEntryCreator(taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int) {
-        print("TaskEntryCreatorManagerBase:willViewSessionIndex{willview=\(willViewSessionIndex), current=\(currentSessionIndex)")
+        appLog.log(logger, logtype: .iOS, message: "TaskEntryCreatorManagerBase:willViewSessionIndex{willview=\(willViewSessionIndex), current=\(currentSessionIndex)")
         if willViewSessionIndex != currentSessionIndex {
             delegate?.taskEntryCreatorManager(self, willChangeActiveSession: willViewSessionIndex)
         }

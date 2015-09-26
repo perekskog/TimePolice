@@ -10,6 +10,16 @@ import UIKit
 
 class TaskEntryCreatorManagerForPickTask: TaskEntryCreatorManagerBase {
 
+    //---------------------------------------------
+    // TaskEntryCreatorManagerBase - AppLoggerDataSource
+    //---------------------------------------------
+
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorManagerForPickTask"
+    }
+
+
+
     /////////////////////////
     // UIPageViewControllerDataSource
     /////////////////////////

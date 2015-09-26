@@ -15,6 +15,7 @@ enum AppLogEntryType {
     case CoreData
     case Debug
     case iOS
+    case Resource
 }
 
 protocol AppLogger {

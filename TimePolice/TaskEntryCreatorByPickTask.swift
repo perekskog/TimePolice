@@ -175,7 +175,7 @@ class TaskEntryCreatorByPickTaskVC:
             userInfo: nil,
             repeats: true)
 
-        print("starting timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
 
         redrawAfterSegue()
 
@@ -185,7 +185,7 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
 
-        print("stopping timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer?.invalidate()
     }

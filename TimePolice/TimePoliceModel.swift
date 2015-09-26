@@ -802,6 +802,7 @@ class TimePoliceModelUtils {
             try moc.save()
             print("Save: ok")
         } catch {
+            print("Save: error")
             // Swift 2: Where to get the error?
         }
 

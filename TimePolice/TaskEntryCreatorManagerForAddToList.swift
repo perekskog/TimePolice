@@ -10,6 +10,15 @@ import UIKit
 
 class TaskEntryCreatorManagerForAddToList: TaskEntryCreatorManagerBase {
 
+    //---------------------------------------------
+    // TaskEntryCreatorManagerBase - AppLoggerDataSource
+    //---------------------------------------------
+
+    override func getLogDomain() -> String {
+        return "TaskEntryCreatorManagerForAddToList"
+    }
+
+
     /////////////////////////
     // UIPageViewControllerDataSource
     /////////////////////////

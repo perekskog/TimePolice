@@ -129,7 +129,7 @@ class TaskEntryCreatorByAddToListVC:
               userInfo: nil,
                repeats: true)        
 
-        print("starting timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
 
         if let indexPath = workListTableView.indexPathForSelectedRow {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
@@ -149,7 +149,7 @@ class TaskEntryCreatorByAddToListVC:
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
 
-        print("stopping timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer?.invalidate()
     }

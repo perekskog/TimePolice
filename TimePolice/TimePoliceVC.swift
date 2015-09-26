@@ -351,7 +351,7 @@ class TimePoliceVC: UIViewController,
                 if let i = selectedSessionIndex,
                     tecms = taskEntryCreatorManagers {
                     for tecm in tecms {
-                        print("TimePoliceVC: switchTo(\(i))")
+                        appLog.log(logger, logtype: .Debug, message: "TimePoliceVC: switchTo(\(i))")
                         tecm.switchTo(i)
                     }
                 }
