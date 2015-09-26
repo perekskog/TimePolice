@@ -17,6 +17,10 @@ protocol TaskEntryCreatorManagerDataSource {
 }
 
 protocol TaskEntryCreatorManager {
+    var dataSource: TaskEntryCreatorManagerDataSource? {get set}
+    var delegate: TaskEntryCreatorManagerDelegate? {get set}
+    var currentSessionIndex: Int? {get set}
+
     func switchTo(newSessionIndex: Int)
 }
 

@@ -25,7 +25,7 @@ class TimePoliceVC: UIViewController,
     var selectedSession: Session?
     var selectedSessionIndex: Int?
     
-    var taskEntryCreatorManagers: [TaskEntryCreatorManagerBase]?
+    var taskEntryCreatorManagers: [UIViewController]?
 
     //---------------------------------------
     // TimePoliceVC - Lazy properties
@@ -158,13 +158,15 @@ class TimePoliceVC: UIViewController,
 
         if segue.identifier == "TaskEntryCreatorManagers" {
             if let tbvc = segue.destinationViewController as? UITabBarController {
-                if let vcs = tbvc.viewControllers as? [TaskEntryCreatorManagerBase],
+                if let vcs = tbvc.viewControllers,
                     i = selectedSessionIndex {
                         taskEntryCreatorManagers = vcs
                         for vc in vcs {
-                            vc.dataSource = self
-                            vc.delegate = self
-                            vc.currentSessionIndex = i
+                            if var tecm = vc as? TaskEntryCreatorManager {
+                                tecm.dataSource = self
+                                tecm.delegate = self
+                                tecm.currentSessionIndex = i
+                            }
                         }
                 }
             }
@@ -360,11 +362,13 @@ class TimePoliceVC: UIViewController,
                 selectedSession = s[willChangeActiveSession]
 
                 if let i = selectedSessionIndex,
-                    tecms = taskEntryCreatorManagers {
-                    for tecm in tecms {
-                        appLog.log(logger, logtype: .Debug, message: "TimePoliceVC: switchTo(\(i))")
-                        tecm.switchTo(i)
-                    }
+                    vcs = taskEntryCreatorManagers {
+                        for vc in vcs {
+                            if let tecm = vc as? TaskEntryCreatorManager {
+                                appLog.log(logger, logtype: .Debug, message: "TimePoliceVC: switchTo(\(i))")
+                                tecm.switchTo(i)
+                            }
+                        }
                 }
             }
         }

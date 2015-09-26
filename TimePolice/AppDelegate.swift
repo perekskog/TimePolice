@@ -148,8 +148,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
 
     func getDefaultLogger() -> AppLogger {
         // Don't set a datasource here, it has to be done by the caller of this method.
-        return AppLogLogger()
-        //return ConsoleLogger()
+        let logger = MultiLogger()
+        logger.logger1 = AppLogLogger()
+        logger.logger2 = ConsoleLogger()
+        return logger
     }
 
 
