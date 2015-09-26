@@ -1113,6 +1113,29 @@ class TestData {
     }
 
     //---------------------------------------------
+    // TestData - addSessionToCost
+    //---------------------------------------------
+    
+    class func addSessionToCost(moc: NSManagedObjectContext) {
+        let taskList = [
+            "Component", "SM Yearly", "", "",
+            "Maint 15A", "Maint 14B", "", "",
+            
+            "Alfa", "Bravo", "Charlie",
+            "Delta", "Echo", "Foxtrot",
+            "Golf", "Hotel", "India",
+            "Juliet", "Kilo", "Lima",
+            "Mike", "November", "Oscar",
+            "Papa", "Quebeq", "Romeo",
+            "Sierra", "Tango", "Uniform",
+            "Victor", "Whiskey", "X-ray",
+            "Yankee", "Zulu"
+        ]
+        
+        addSession(moc, projectName: "Cost", sessionTemplateName: "Template - Cost", sessionTemplateTasks: taskList, sessionName: "Cost")
+    }
+
+    //---------------------------------------------
     // TestData - addSessionToTest
     //---------------------------------------------
     

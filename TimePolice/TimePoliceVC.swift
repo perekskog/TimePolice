@@ -231,6 +231,17 @@ class TimePoliceVC: UIViewController,
         redrawAll(true)
     }
     
+    @IBAction func loadDataCost(sender: AnyObject) {
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataCost")
+        
+        let moc = self.managedObjectContext
+        TestData.addSessionToCost(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
+        
+        redrawAll(true)
+    }
+
     @IBAction func loadDataTest(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataTest")
 
