@@ -214,33 +214,47 @@ class ConsoleLogger: BasicLogger {
     }
 }
 
-class MultiLogger: BasicLogger {
-	var logger1: AppLogger?
-	var logger2: AppLogger?
-	var logger3: AppLogger?
-
-	override
-	func localize(sender: AppLoggerDelegate, message: String) {
-		logger1?.localize(sender, message: message)
-		logger2?.localize(sender, message: message)
-		logger3?.localize(sender, message: message)
-	}
-
-    override
-	func appendEntry(entry: String) {
-        logger1?.appendEntry(entry)
-        logger2?.appendEntry(entry)
-        logger3?.appendEntry(entry)
-	}
-
-    override
-	func reset() {
-        logger1?.reset()
-        logger2?.reset()
-        logger3?.reset()
+class MultiLogger: AppLogger {
+    
+    var datasource: AppLoggerDataSource? {
+        didSet {
+            logger1.datasource = datasource
+            logger2.datasource = datasource
+            logger3.datasource = datasource
+        }
     }
+    
+    var logger1 = BasicLogger()
+    var logger2 = BasicLogger()
+    var logger3 = BasicLogger()
 
+    func localize(sender: AppLoggerDelegate, message: String) {
+        logger1.localize(sender, message: message)
+        logger2.localize(sender, message: message)
+        logger3.localize(sender, message: message)
+    }
+    
+    func appendEntry(entry: String) {
+        logger1.appendEntry(entry)
+        logger2.appendEntry(entry)
+        logger3.appendEntry(entry)
+    }
+    
+    func getContent() -> String {
+        return ""
+    }
+    
+    func reset() {
+        logger1.reset()
+        logger2.reset()
+        logger3.reset()
+    }
+    
+    func getId() -> String {
+        return "default"
+    }
 }
+
 
 
 
