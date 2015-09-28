@@ -36,6 +36,8 @@ class TaskEntryPropVC:
     var minimumDate: NSDate?
     var maximumDate: NSDate?
     var isOngoing: Bool?
+    var isFirst: Bool?
+    var isLast: Bool?
     
     // Output data
     var taskToUse: Task?
@@ -254,48 +256,56 @@ class TaskEntryPropVC:
         
         self.table.beginUpdates()
         
-        switch indexPath.section {
-        case 0:
-            switch indexPath.row {
-            case 0:
-                editStart = true
-            case 2:
-                editStop = true
-            default:
-                _ = 1
-            }
-        case 1:
-            switch indexPath.row {
-            default: 
-                performSegueWithIdentifier("SelectTask", sender: self)
-            }
-        case 2:
-            switch indexPath.row {
-            case 0:
-                self.delete = .FillWithNone
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-            case 1:
-                self.delete = .FillWithPrevious
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-            case 2:
-                self.delete = .FillWithNext
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-            default:
-                _ = 1
-            }
-        case 3:
-            switch indexPath.row {
-            case 0:
-                self.insert = .InsertNewBeforeThis
-                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
-            case 1:
-                self.insert = .InsertNewAfterThis
-                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
-            default:
-                _ = 1
-            }
-        default:
-            _ = 1
+    
+        if let last = self.isLast {
+
+                switch indexPath.section {
+                case 0:
+                    switch indexPath.row {
+                    case 0:
+                        editStart = true
+                    case 2:
+                        editStop = true
+                    default:
+                        _ = 1
+                    }
+                case 1:
+                    switch indexPath.row {
+                    default:
+                        performSegueWithIdentifier("SelectTask", sender: self)
+                    }
+                case 2:
+                    switch indexPath.row {
+                    case 0:
+                        self.delete = .FillWithNone
+                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                    case 1:
+                        if !last {
+                            self.delete = .FillWithPrevious
+                        } else {
+                            self.delete = .FillWithNext
+                        }
+                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                    case 2:
+                        self.delete = .FillWithNext
+                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                    default:
+                        _ = 1
+                    }
+                case 3:
+                    switch indexPath.row {
+                    case 0:
+                        self.insert = .InsertNewBeforeThis
+                        performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+                    case 1:
+                        self.insert = .InsertNewAfterThis
+                        performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+                    default:
+                        _ = 1
+                    }
+                default:
+                    _ = 1
+                }
         }
         
         self.table.endUpdates()
@@ -308,32 +318,47 @@ class TaskEntryPropVC:
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            if let i = self.isOngoing {
-                if i {
-                    return 2
-                } else {
-                    return 4
-                }
-            }
-            return 0
-        case 1:
-            return 1
-        case 2:
-            return 3
-        case 3:
-            if let i = self.isOngoing {
-                if i {
+        if let ongoing = self.isOngoing,
+            first = self.isFirst,
+            last = self.isLast {
+                switch section {
+                    // Datepickers
+                case 0:
+                    if ongoing {
+                        return 2
+                    } else {
+                        return 4
+                    }
+                    // Select task
+                case 1:
                     return 1
-                } else {
-                    return 2
+                    // Delete
+                case 2:
+                    // Always show "delete"
+                    var n = 1
+                    // If not first, show "delete, fill with previous"
+                    if !first {
+                        n++
+                    }
+                    // If not last, show "delete, fill with next"
+                    if !last {
+                        n++
+                    }
+                    return n
+                    // Insert
+                case 3:
+                    // Always show "insert before"
+                    var n = 1
+                    // If not ongoing, show "insert after"
+                    if !ongoing {
+                        n++
+                    }
+                    return n
+                default:
+                    return 0
                 }
-            }
-            return 2
-        default:
-            return 0
         }
+        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -377,7 +402,7 @@ class TaskEntryPropVC:
                             cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
                         }
                     }
-
+                    
                 }
                 cellTask.accessoryType = .DisclosureIndicator
                 cell = cellTask
@@ -391,7 +416,13 @@ class TaskEntryPropVC:
             case 0:
                 cell.textLabel?.text = "Delete this"
             case 1:
-                cell.textLabel?.text = "Delete this, fill with previous"
+                if let first = self.isFirst,
+                    last = self.isLast {
+                    cell.textLabel?.text = "Delete this, fill with previous"
+                    if first {
+                        cell.textLabel?.text = "Delete this, fill with next"
+                    }
+                }
             case 2:
                 cell.textLabel?.text = "Delete this, fill with next"
             default:
@@ -407,16 +438,15 @@ class TaskEntryPropVC:
             default:
                 cell.textLabel?.text = "Configuration error"
             }
-        default:    
+        default:
             cell = UITableViewCell()
             cell.textLabel?.text = "Configuration error"
         }
-
         return cell
     }
-    
+
     // Segue handling
-    
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "SelectTask" {
             if let vc = segue.destinationViewController as? TaskSelectVC {
@@ -430,7 +460,7 @@ class TaskEntryPropVC:
             // Do nothing
         }
     }
-    
+
     @IBAction func exitSelectTask(unwindSegue: UIStoryboardSegue ) {
         if unwindSegue.identifier == "DoneSelectTask" {
             if let vc = unwindSegue.sourceViewController as? TaskSelectVC,

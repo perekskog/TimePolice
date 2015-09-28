@@ -162,6 +162,16 @@ class TaskEntryCreatorBase:
                             } else {
                                 vc.isOngoing = false
                             }
+                            if i == 0 {
+                                vc.isFirst = true
+                            } else {
+                                vc.isFirst = false
+                            }
+                            if i == wl.count-1 {
+                                vc.isLast = true
+                            } else {
+                                vc.isLast = false
+                            }
                         }
 
                     }
