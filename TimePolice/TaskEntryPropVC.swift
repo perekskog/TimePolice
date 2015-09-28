@@ -416,8 +416,7 @@ class TaskEntryPropVC:
             case 0:
                 cell.textLabel?.text = "Delete this"
             case 1:
-                if let first = self.isFirst,
-                    last = self.isLast {
+                if let first = self.isFirst {
                     cell.textLabel?.text = "Delete this, fill with previous"
                     if first {
                         cell.textLabel?.text = "Delete this, fill with next"
