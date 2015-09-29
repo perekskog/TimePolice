@@ -193,7 +193,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Pick task" id="qvg-By-36f"/>
+                    <tabBarItem key="tabBarItem" title="Pick task" image="PickTask.png" selectedImage="PickTask.png" id="qvg-By-36f"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="71P-IP-wZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -212,7 +212,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Add to list" id="ylp-rN-Xxe"/>
+                    <tabBarItem key="tabBarItem" title="Add to list" image="AddToList.png" id="ylp-rN-Xxe"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kyt-k8-gCq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -351,6 +351,10 @@
             <point key="canvasLocation" x="2209" y="486"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="AddToList.png" width="19" height="23"/>
+        <image name="PickTask.png" width="19" height="25"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="hjh-eJ-Q4q"/>
     </inferredMetricsTieBreakers>
