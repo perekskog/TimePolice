@@ -71,8 +71,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.datasource = self
-
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidLoad")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
         
         pageViewController.dataSource = self
         
@@ -95,24 +94,24 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
     }
     
     
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
     }
     
     
@@ -120,14 +119,14 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
         
         pageViewController.view.frame = self.view.bounds
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
     }
     
     
@@ -135,7 +134,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryManagerBase didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "TaskEntryManagerBase didReceiveMemoryWarning")
     }
 
     /////////////////////////
@@ -143,7 +142,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     /////////////////////////
 
     func switchTo(newSessionIndex: Int) {
-        appLog.log(logger, logtype: .iOS, message: "TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
+        appLog.log(logger, logtype: .EnterExit, message: "TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
         if newSessionIndex != currentSessionIndex {
             if let newVC: TaskEntryCreatorBase = pageViewControllerAtIndex(newSessionIndex) {
                 currentSessionIndex = newSessionIndex

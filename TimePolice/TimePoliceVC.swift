@@ -64,38 +64,38 @@ class TimePoliceVC: UIViewController,
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        appLog.log(logger, logtype: .iOS, message: "viewDidLoad")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         var viewFrame = self.view.frame
         viewFrame.origin.y += 200
@@ -114,7 +114,7 @@ class TimePoliceVC: UIViewController,
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     //---------------------------------------------

@@ -95,21 +95,23 @@ class TaskEntryPropVC:
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.datasource = self
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
         
         self.edgesForExtendedLayout = .None
 
@@ -161,7 +163,7 @@ class TaskEntryPropVC:
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillAppear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
 
         if let indexPath = table.indexPathForSelectedRow {
             table.deselectRowAtIndexPath(indexPath, animated: true)
@@ -170,7 +172,7 @@ class TaskEntryPropVC:
     }
 
     override func viewWillLayoutSubviews() {
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
 
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
@@ -180,7 +182,7 @@ class TaskEntryPropVC:
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
 
         table.separatorInset = UIEdgeInsetsZero
         table.layoutMargins = UIEdgeInsetsZero
@@ -189,7 +191,7 @@ class TaskEntryPropVC:
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        appLog.log(logger, logtype: .iOS, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     // GUI actions

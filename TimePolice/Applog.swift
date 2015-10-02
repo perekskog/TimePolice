@@ -16,6 +16,9 @@ enum AppLogEntryType {
     case Debug
     case iOS
     case Resource
+    case PeriodicCallback
+    case AppLifecycle
+    case ViewLifecycle
 }
 
 protocol AppLogger {

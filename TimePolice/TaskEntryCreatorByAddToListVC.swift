@@ -64,8 +64,8 @@ class TaskEntryCreatorByAddToListVC:
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         logger.datasource = self
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -117,6 +117,8 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+
 
         self.sessionSummary = (0,0)
         if let moc = managedObjectContext {
@@ -147,7 +149,7 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .iOS, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
 
         appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 
@@ -158,7 +160,7 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .iOS, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
 
         var width = CGRectGetWidth(self.view.frame)
         var height = CGRectGetHeight(self.view.frame) - 50
@@ -194,6 +196,7 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
 
         // Inset to left edge on cells with text
         workListTableView.separatorInset = UIEdgeInsetsZero
@@ -350,7 +353,7 @@ class TaskEntryCreatorByAddToListVC:
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
+        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
 
         var (totalActivations, totalTime) = sessionSummary
 
@@ -404,14 +407,7 @@ class TaskEntryCreatorByAddToListVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-        //println("updateActiveTask(timer=\(timer)")
-        updateN++
-        if updateN == 5 {
-            updateN = 0
-        }
-        if updateN==0 {
-            appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
-        }
+        appLog.log(logger, logtype: .PeriodicCallback, message: "updateActiveTask")
         infoAreaView.setNeedsDisplay()
     }
 

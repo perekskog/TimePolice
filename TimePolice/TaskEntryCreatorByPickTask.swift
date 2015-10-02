@@ -61,7 +61,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     override
     func getLogDomain() -> String {
-        return "TaskEntryCreatorByAddToList"
+        return "TaskEntryCreatorByPickTask"
     }
 
 
@@ -71,8 +71,8 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         logger.datasource = self
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
@@ -104,6 +104,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
 
         let padding: CGFloat = 1
 
@@ -184,6 +185,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
 
         appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 
@@ -193,6 +195,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
 
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame) - 50
@@ -352,7 +355,7 @@ class TaskEntryCreatorByPickTaskVC:
     //----------------------------------------------
 
 	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        appLog.log(logger, logtype: .EnterExit) { "getSelectionAreaInfo\(selectionArea)"}
+        appLog.log(logger, logtype: .PeriodicCallback) { "getSelectionAreaInfo\(selectionArea)"}
 
         // This will only be called when there are selection areas setup 
         //  => there _is_ a session
@@ -398,7 +401,7 @@ class TaskEntryCreatorByPickTaskVC:
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .EnterExit, message: "getToolbarInfo")
+        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
         
         var totalActivations: Int = 0 // The first task is active when first selected
         var totalTime: NSTimeInterval = 0
@@ -510,14 +513,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     @objc
     func updateActiveTask(timer: NSTimer) {
-        //println("updateActiveTask(timer=\(timer)")
-        updateN++
-        if updateN == 5 {
-            updateN = 0
-        }
-        if updateN==0 {
-            appLog.log(logger, logtype: .Debug, message: "updateActiveTask")
-        }
+        appLog.log(logger, logtype: .PeriodicCallback, message: "updateActiveTask")
         if let work = session?.getLastWork() {
             let task = work.task
             
