@@ -257,7 +257,7 @@ class TaskEntryPropVC:
         self.table.beginUpdates()
         
     
-        if let last = self.isLast {
+        if let first = self.isFirst {
 
                 switch indexPath.section {
                 case 0:
@@ -280,9 +280,8 @@ class TaskEntryPropVC:
                         self.delete = .FillWithNone
                         performSegueWithIdentifier("DeleteTaskEntry", sender: self)
                     case 1:
-                        if !last {
-                            self.delete = .FillWithPrevious
-                        } else {
+                        self.delete = .FillWithPrevious
+                        if first {
                             self.delete = .FillWithNext
                         }
                         performSegueWithIdentifier("DeleteTaskEntry", sender: self)
