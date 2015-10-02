@@ -43,7 +43,7 @@ class Project: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
-        /*1.2OK*/
+
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
 
         let date = NSDate()
@@ -365,7 +365,6 @@ Future extensions
         }
 
         var targetTime = desiredStartTime
-        /*1.2OK*/
         let workToModify = work[workIndex] as! Work
 
         // Never change starttime into the future
@@ -393,7 +392,6 @@ Future extensions
             // Prepare modification of workToModify, also modify previousWork
 
             // Not the first item => There is a previous item
-            /*1.2OK*/
             let previousWork = work[workIndex-1] as! Work
 
             // Don't set starttime earlier than start of previous work
@@ -448,7 +446,7 @@ Future extensions
         }
 
         var targetTime = desiredStopTime
-        /*1.2OK*/
+
         let workToModify = work[workIndex] as! Work
 
         // Never change stoptime into the future
@@ -475,7 +473,6 @@ Future extensions
             // Prepare modification of workToModify, also modify previousWork
 
             // Not the last item => There is a next item
-            /*1.2OK*/
             let nextWork = work[workIndex+1] as! Work
 
             if targetTime.compare(nextWork.startTime) == .OrderedDescending {
@@ -1190,7 +1187,7 @@ class TestData {
     class func addSessionToDaytime(moc: NSManagedObjectContext) {
         // 21
         let taskList = [
-            "Sova", "Hemma", "Hemma ute",
+            "Hemma", "Hemma ute", "Sova",
             
             "Jobb", "Jobb ute", "Lunch",
                 
@@ -1211,8 +1208,8 @@ class TestData {
     
     class func addSessionToCost(moc: NSManagedObjectContext) {
         let taskList = [
-            "Component", "SM Yearly", "", "",
-            "Maint 15A", "Maint 14B", "", "",
+            "Comp 16A", "Comp 16B", "", "",
+            "Maint", "SM Yearly", "", "",
             
             "Alfa", "Bravo", "Charlie",
             "Delta", "Echo", "Foxtrot",
