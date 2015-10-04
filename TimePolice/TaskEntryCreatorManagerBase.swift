@@ -1,15 +1,21 @@
 //
-//  SessionManagerBase.swift
+//  TaskEntryCreatorManagerBase.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-09-13.
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/* 
+
+TODO
+
+*/
+
 import UIKit
 
 protocol TaskEntryCreatorManagerDelegate {
-    func taskEntryCreatorManager(taskEntryCreatorManager: TaskEntryCreatorManager, willChangeActiveSession: Int)    
+    func taskEntryCreatorManager(taskEntryCreatorManager: TaskEntryCreatorManager, willChangeActiveSessionTo: Int)
 }
 
 protocol TaskEntryCreatorManagerDataSource {
@@ -33,10 +39,10 @@ class TaskEntryCreatorManagerBase: UIViewController,
     
     var dataSource: TaskEntryCreatorManagerDataSource?
     var delegate: TaskEntryCreatorManagerDelegate?
+    var currentSessionIndex: Int?
     
     let pageViewController: UIPageViewController = TaskEntryCreatorManagerPageViewController()
 
-    var currentSessionIndex: Int?
 
     //--------------------------------------------------------
     // TaskEntryCreatorManagerBase - Lazy properties
@@ -75,19 +81,21 @@ class TaskEntryCreatorManagerBase: UIViewController,
         
         pageViewController.dataSource = self
         
-        if let i = currentSessionIndex {
-            if let initialVC: TaskEntryCreatorBase = pageViewControllerAtIndex(i) {
-                pageViewController.setViewControllers([initialVC],
-                    direction: .Forward,
-                    animated: false,
-                    completion: nil)
-                pageViewController.delegate = self
-                
-                self.addChildViewController(pageViewController)
-                self.view.addSubview(self.pageViewController.view)
-                pageViewController.didMoveToParentViewController(self)
-            }
+        guard let i = currentSessionIndex,
+                let initialVC: TaskEntryCreatorBase = pageViewControllerAtIndex(i) else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in viewDidLoad")
+            return
         }
+
+        pageViewController.setViewControllers([initialVC],
+            direction: .Forward,
+            animated: false,
+            completion: nil)
+        pageViewController.delegate = self
+        
+        self.addChildViewController(pageViewController)
+        self.view.addSubview(self.pageViewController.view)
+        pageViewController.didMoveToParentViewController(self)
     }
     
     
@@ -143,15 +151,18 @@ class TaskEntryCreatorManagerBase: UIViewController,
 
     func switchTo(newSessionIndex: Int) {
         appLog.log(logger, logtype: .EnterExit, message: "TaskEntryCreatorManagerBase.switchTo(new=\(newSessionIndex), current=\(currentSessionIndex)")
-        if newSessionIndex != currentSessionIndex {
-            if let newVC: TaskEntryCreatorBase = pageViewControllerAtIndex(newSessionIndex) {
-                currentSessionIndex = newSessionIndex
-                pageViewController.setViewControllers([newVC],
-                    direction: .Forward,
-                    animated: false,
-                    completion: nil)
-            }
+        if newSessionIndex == currentSessionIndex {
+            return
         }
+        guard let newVC: TaskEntryCreatorBase = pageViewControllerAtIndex(newSessionIndex) else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in switchTo")
+            return
+        }
+        currentSessionIndex = newSessionIndex
+        pageViewController.setViewControllers([newVC],
+            direction: .Forward,
+            animated: false,
+            completion: nil)
     }
     
     
@@ -165,7 +176,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        if let vc = viewController as? TaskEntryCreatorBase {
+        if let vc = viewController as? TaskEntryCreator {
             if let index = vc.sessionIndex {
                 return pageViewControllerAtIndex(index-1)
             }
@@ -174,7 +185,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        if let vc = viewController as? TaskEntryCreatorBase {
+        if let vc = viewController as? TaskEntryCreator {
             if let index = vc.sessionIndex {
                 return pageViewControllerAtIndex(index+1)
             }
@@ -189,7 +200,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     func taskEntryCreator(taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int) {
         appLog.log(logger, logtype: .iOS, message: "TaskEntryCreatorManagerBase:willViewSessionIndex{willview=\(willViewSessionIndex), current=\(currentSessionIndex)")
         if willViewSessionIndex != currentSessionIndex {
-            delegate?.taskEntryCreatorManager(self, willChangeActiveSession: willViewSessionIndex)
+            delegate?.taskEntryCreatorManager(self, willChangeActiveSessionTo: willViewSessionIndex)
         }
     }
 

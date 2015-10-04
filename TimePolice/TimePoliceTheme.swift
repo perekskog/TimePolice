@@ -6,6 +6,13 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+
+TODO
+
+*/
+
+
 import Foundation
 import UIKit
 
@@ -23,10 +30,13 @@ class TimePoliceBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            theme?.drawTimePoliceBG(context, parent: rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            logDefault("TimePoliceBGView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawTimePoliceBG(context, parent: rect)
     }
+
 }
 
 class TaskPickerBGView: UIView {
@@ -35,9 +45,11 @@ class TaskPickerBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            theme?.drawTaskPickerBG(context, parent: rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            logDefault("TaskPickerBGView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawTaskPickerBG(context, parent: rect)
     }
 }
 
@@ -47,9 +59,11 @@ class WorkListBGView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            theme?.drawWorkListBG(context, parent: rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            logDefault("WorkListBGView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawWorkListBG(context, parent: rect)
     }
 }
 
@@ -61,13 +75,13 @@ class TaskPickerButtonView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            if let i = taskPosition {
-                if let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) {
-                    theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
-                }
-            }
+        guard let context = UIGraphicsGetCurrentContext(),
+                i = taskPosition,
+                selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) else {
+            logDefault("TaskPickerButtonView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
     }
 }
 
@@ -79,13 +93,13 @@ class TaskPickerToolView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            if let i = tool {
-                if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                    theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
-                }
-            }
+        guard let context = UIGraphicsGetCurrentContext(),
+                i = tool,
+                toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+            logDefault("TaskPickerToolView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
     }
 }
 
@@ -97,13 +111,13 @@ class WorkListToolView: UIView {
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        if let context = UIGraphicsGetCurrentContext() {
-            if let i = tool {
-                if let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() {
-                    theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
-                }
-            }
+        guard let context = UIGraphicsGetCurrentContext(),
+                i = tool ,
+                toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+            logDefault("WorkListToolView", logtype: .Guard, message: "drawRect")
+            return
         }
+        theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
     }
 }
 

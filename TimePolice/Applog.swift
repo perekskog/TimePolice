@@ -19,6 +19,7 @@ enum AppLogEntryType {
     case PeriodicCallback
     case AppLifecycle
     case ViewLifecycle
+    case Guard
 }
 
 protocol AppLogger {
@@ -57,18 +58,21 @@ class AppLog: AppLoggerDelegate {
     }
 
     func log(logger: AppLogger, logtype: AppLogEntryType, message: String) {
-        if let b = delegate?.includeEntry(logger.getId(), logtype: logtype) {
-            if b {
-                doLog(logger, message: message)
-            }
+        guard let toBeIncluded = delegate?.includeEntry(logger.getId(), logtype: logtype) else {
+            return
+        }
+        if toBeIncluded {
+            doLog(logger, message: message)
         }
     }
 
     func log(logger: AppLogger, logtype: AppLogEntryType, message: () -> String) {
-        if let b = delegate?.includeEntry(logger.getId(), logtype: logtype) {
-            if b {
-                doLog(logger, message: message())
-            }
+        guard let toBeIncluded = delegate?.includeEntry(logger.getId(), logtype: logtype) else {
+            return
+        }
+
+        if toBeIncluded {
+            doLog(logger, message: message())
         }
     }
 
@@ -80,15 +84,6 @@ class AppLog: AppLoggerDelegate {
         let now = NSDate()
         let logEntry = "\(getString(now)): \(localizedEntry)"
         sender.appendEntry(logEntry)
-    }
-
-
-    func excludeEntry(loggerId: String, logtype: AppLogEntryType) -> Bool {
-        return !includeEntry(loggerId, logtype: logtype)
-    }
-
-    func includeEntry(loggerId: String, logtype: AppLogEntryType) -> Bool {
-        return true
     }
 
 }
@@ -131,21 +126,23 @@ class TextViewLogger: BasicLogger {
 
     override
 	func appendEntry(entry: String) {
-        if let t = textview {
-            t.text! += "\n\(entry)"
-            let numberOfElements = t.text.characters.count
-            let range:NSRange = NSMakeRange(numberOfElements-1, 1)
-            t.scrollRangeToVisible(range)
+        guard let t = self.textview else {
+            return
         }
+
+        t.text! += "\n\(entry)"
+        let numberOfElements = t.text.characters.count
+        let range:NSRange = NSMakeRange(numberOfElements-1, 1)
+        t.scrollRangeToVisible(range)
 	}
 
     override
 	func getContent() -> String {
-        if let t = textview {
-            return t.text
-        } else {
+        guard let t = self.textview else {
             return ""
         }
+
+        return t.text
 	}
 
     override

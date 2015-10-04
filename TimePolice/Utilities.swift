@@ -6,6 +6,13 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+
+TODO
+
+*/
+
+
 import Foundation
 import UIKit
 import CoreData
@@ -42,6 +49,22 @@ func getStringNoDate(date: NSDate) -> String {
 	return timeString
 }
 
+// AppLog helper
 
+func logDefault(logdomain: String, logtype: AppLogEntryType, message: String) {
+	let appdelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+ 	var logger = appdelegate.defaultLogger
+ 	logger.datasource = DefaultLogHelper(logdomain: logdomain)
+    (UIApplication.sharedApplication().delegate as! AppDelegate).appLog.log(logger, logtype: .Guard, message: message)
+}
 
+class DefaultLogHelper: AppLoggerDataSource {
+	var logDomain: String
+	init(logdomain: String) {
+		self.logDomain = logdomain
+	}
+    func getLogDomain() -> String {
+        return self.logDomain
+    }
+}
 

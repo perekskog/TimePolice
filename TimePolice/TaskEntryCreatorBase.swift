@@ -16,6 +16,9 @@ import UIKit
 import CoreData
 
 protocol TaskEntryCreator {
+    var session: Session? { get set }
+    var sessionIndex: Int? { get set }
+    var delegate: TaskEntryCreatorDelegate? { get set }
 }
 
 protocol TaskEntryCreatorDelegate {
@@ -29,16 +32,16 @@ class TaskEntryCreatorBase:
 
     var session: Session?
     var sessionIndex: Int?
+    var delegate: TaskEntryCreatorDelegate?
 
     var selectedWorkIndex: Int?
 
-    var delegate: TaskEntryCreatorDelegate?
 
 	//--------------------------------------------------------
     // TaskEntryCreatorBase - Lazy properties
     //--------------------------------------------------------
 
-    lazy var managedObjectContext : NSManagedObjectContext? = {
+    lazy var moc : NSManagedObjectContext = {
 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.managedObjectContext
@@ -57,7 +60,7 @@ class TaskEntryCreatorBase:
     }()
 
     //---------------------------------------------
-    // TimePoliceVC - AppLoggerDataSource
+    // TaskEntryCreatorBase - AppLoggerDataSource
     //---------------------------------------------
 
     func getLogDomain() -> String {
@@ -84,9 +87,12 @@ class TaskEntryCreatorBase:
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
         
-        if let i = sessionIndex {
-            delegate?.taskEntryCreator(self, willViewSessionIndex: i)
+        guard let i = sessionIndex  else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in viewWillAppear")
+            return
         }
+
+        delegate?.taskEntryCreator(self, willViewSessionIndex: i)
     }
 
 
@@ -136,45 +142,46 @@ class TaskEntryCreatorBase:
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
         if segue.identifier == "EditTaskEntry" {
-            if let nvc = segue.destinationViewController as? UINavigationController,
-                vc = nvc.topViewController as? TaskEntryPropVC {
-                    if let s = session,
-                    tl = s.tasks.array as? [Task] {
-                        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+            guard let nvc = segue.destinationViewController as? UINavigationController,
+                    let vc = nvc.topViewController as? TaskEntryPropVC,
+                    let s = session,
+                    let tl = s.tasks.array as? [Task],
+                    let wl = s.work.array as? [Work],
+                    let i = selectedWorkIndex else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in prepareForSegue")
+               return
+            }
+            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
 
-                        vc.taskList = tl
+            vc.taskList = tl
 
-                        // Never set any time into the future
-                        vc.maximumDate = NSDate()
-                        if let wl = s.work.array as? [Work],
-                           i = selectedWorkIndex {
-                            vc.taskEntryTemplate = wl[i]
-                            if i > 0 {
-                                // Limit to starttime of previous item, if any
-                                vc.minimumDate = wl[i-1].startTime
-                            }
-                            if i < wl.count-1 && !wl[i+1].isOngoing() {
-                                // Limit to stoptime of next item, if any
-                                vc.maximumDate = wl[i+1].stopTime
-                            }
-                            if vc.taskEntryTemplate!.isOngoing() {
-                                vc.isOngoing = true
-                            } else {
-                                vc.isOngoing = false
-                            }
-                            if i == 0 {
-                                vc.isFirst = true
-                            } else {
-                                vc.isFirst = false
-                            }
-                            if i == wl.count-1 {
-                                vc.isLast = true
-                            } else {
-                                vc.isLast = false
-                            }
-                        }
+            vc.taskEntryTemplate = wl[i]
 
-                    }
+            // Never set any time into the future
+            vc.maximumDate = NSDate()
+
+            if i > 0 {
+                // Limit to starttime of previous item, if any
+                vc.minimumDate = wl[i-1].startTime
+            }
+            if i < wl.count-1 && !wl[i+1].isOngoing() {
+                // Limit to stoptime of next item, if any
+                vc.maximumDate = wl[i+1].stopTime
+            }
+            if vc.taskEntryTemplate!.isOngoing() {
+                vc.isOngoing = true
+            } else {
+                vc.isOngoing = false
+            }
+            if i == 0 {
+                vc.isFirst = true
+            } else {
+                vc.isFirst = false
+            }
+            if i == wl.count-1 {
+                vc.isLast = true
+            } else {
+                vc.isLast = false
             }
         }
 
@@ -197,99 +204,105 @@ class TaskEntryCreatorBase:
         if unwindSegue.identifier == "SaveTaskEntry" {
             appLog.log(logger, logtype: .Debug, message: "Handle SaveTaskEntry")
 
-            if let moc = managedObjectContext,
-                     s = session,
-                     i = selectedWorkIndex {
-
-                if let t = vc.taskToUse {
-                    // Change task if this attribute was set
-                    appLog.log(logger, logtype: .Debug, message: "EditWork selected task=\(t.name)")
-                    s.getWork(i)!.task = t
-                } else {
-                    appLog.log(logger, logtype: .Debug, message: "EditWork no task selected")
-                }
-
-                // Default: First adjust starttime, then adjust stoptime.
-                var startTimeFirst = true
-
-                // If starttime has been set to a later time than the original stoptime,
-                // it may be so that both start- and stoptime has been changed.
-                // In this case, adjust stoptime first, then starttime.
-                if let initialStopDate = vc.initialStopDate {
-                    if vc.datePickerStart.date.compare(initialStopDate) == .OrderedDescending {
-                        startTimeFirst = false
-                    }
-                }
-
-                if startTimeFirst {
-                    appLog.log(logger, logtype: .Debug, message: "Will adjust starttime first")
-
-                    adjustStartTime(s, i:i, moc: moc, vc: vc)
-                    adjustStopTime(s, i:i, moc:moc, vc:vc)
-                } else {
-                    appLog.log(logger, logtype: .Debug, message: "Will adjust stoptime first")
-
-                    adjustStopTime(s, i:i, moc:moc, vc:vc)
-                    adjustStartTime(s, i:i, moc:moc, vc:vc)
-                }
-
-                TimePoliceModelUtils.save(moc)
-
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+            guard let s = session,
+                     i = selectedWorkIndex  else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in exitTaskEntryProp SaveTaskEntry")
+                return
             }
-            redrawAfterSegue()
+
+            defer {
+                TimePoliceModelUtils.save(moc)
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                redrawAfterSegue()
+            }
+
+            if let t = vc.taskToUse {
+                // Change task if this attribute was set
+                appLog.log(logger, logtype: .Debug, message: "EditWork selected task=\(t.name)")
+                s.getWork(i)!.task = t
+            } else {
+                appLog.log(logger, logtype: .Debug, message: "EditWork no task selected")
+            }
+
+            // Default: First adjust starttime, then adjust stoptime.
+            var startTimeFirst = true
+
+            // If starttime has been set to a later time than the original stoptime,
+            // it may be so that both start- and stoptime has been changed.
+            // In this case, adjust stoptime first, then starttime.
+            if let initialStopDate = vc.initialStopDate {
+                if vc.datePickerStart.date.compare(initialStopDate) == .OrderedDescending {
+                    startTimeFirst = false
+                }
+            }
+
+            if startTimeFirst {
+                appLog.log(logger, logtype: .Debug, message: "Will adjust starttime first")
+
+                adjustStartTime(s, i:i, moc: moc, vc: vc)
+                adjustStopTime(s, i:i, moc:moc, vc:vc)
+            } else {
+                appLog.log(logger, logtype: .Debug, message: "Will adjust stoptime first")
+
+                adjustStopTime(s, i:i, moc:moc, vc:vc)
+                adjustStartTime(s, i:i, moc:moc, vc:vc)
+            }
+
         }
 
         if unwindSegue.identifier == "DeleteTaskEntry" {
             appLog.log(logger, logtype: .Debug, message: "Handle DeleteTaskEntry")
 
-            if let moc = managedObjectContext,
-                     s = session,
-                     i = selectedWorkIndex {
+            guard let s = session,
+                     i = selectedWorkIndex,
+                     delete = vc.delete else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in exitTaskEntryProp DeleteTaskEntry")
+                return
+            }
 
-                if let delete = vc.delete {
-                    switch delete {
-                    case .FillWithNone: // Nothing, deleteWork
-                        appLog.log(logger, logtype: .Debug, message: "Fill with nothing")
-                        s.deleteWork(moc, workIndex: i)
-                    case .FillWithPrevious: // Previous item, deleteNextWorkAndAlignStop
-                        appLog.log(logger, logtype: .Debug, message: "Fill with previous")
-                        s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-                    case .FillWithNext: // Next item, deletePreviousWorkAndAlignStart
-                        appLog.log(logger, logtype: .Debug, message: "Fill with next")
-                        s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
-                    }
-                }
+            defer {
                 TimePoliceModelUtils.save(moc)
                 appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-
                 redrawAfterSegue()
             }
 
+            switch delete {
+            case .FillWithNone: // Nothing, deleteWork
+                appLog.log(logger, logtype: .Debug, message: "Fill with nothing")
+                s.deleteWork(moc, workIndex: i)
+            case .FillWithPrevious: // Previous item, deleteNextWorkAndAlignStop
+                appLog.log(logger, logtype: .Debug, message: "Fill with previous")
+                s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
+            case .FillWithNext: // Next item, deletePreviousWorkAndAlignStart
+                appLog.log(logger, logtype: .Debug, message: "Fill with next")
+                s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+            }
         }
 
         if unwindSegue.identifier == "InsertNewTaskEntry" {
 
             appLog.log(logger, logtype: .Debug, message: "Handle InsertNewTaskEntry")
 
-            if let moc = managedObjectContext,
-                     s = session,
-                     i = selectedWorkIndex {
+            guard let s = session,
+                     i = selectedWorkIndex,
+                     insert = vc.insert else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in exitTaskEntryProp InsertNewTaskEntry")
+                return
+            }
 
-                if let insert = vc.insert {
-                    switch insert {
-                    case .InsertNewBeforeThis:
-                        appLog.log(logger, logtype: .Debug, message: "Insert new before this (index=\(i))")
-                        Work.createInMOCBeforeIndex(moc, session: s, index: i)
-                    case .InsertNewAfterThis:
-                        appLog.log(logger, logtype: .Debug, message: "Insert new after this (index=\(i))")
-                        Work.createInMOCAfterIndex(moc, session: s, index: i)
-                    }
-                }
+            defer {
                 TimePoliceModelUtils.save(moc)
                 appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-
                 redrawAfterSegue()
+            }
+
+            switch insert {
+            case .InsertNewBeforeThis:
+                appLog.log(logger, logtype: .Debug, message: "Insert new before this (index=\(i))")
+                Work.createInMOCBeforeIndex(moc, session: s, index: i)
+            case .InsertNewAfterThis:
+                appLog.log(logger, logtype: .Debug, message: "Insert new after this (index=\(i))")
+                Work.createInMOCAfterIndex(moc, session: s, index: i)
             }
 
         }

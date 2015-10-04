@@ -10,19 +10,20 @@ import Foundation
 import CoreData
 import UIKit
 
-/*  TODO in this file
+/*  TODO
 
-Session.delete*
-Session.insert*
+? Session.delete*
+? Session.insert*
     Must update relations to session and tasks.
 
-TestData
+? TestData
     Update according to relation maintaining methods
 
-Session.deleteWork
+? Session.deleteWork
     Ej implementerad, behövs inte för att ta bort en session.
 
 - Missing: AppLog
+  Or perhaps throw some errors?
 
 */
 
@@ -739,58 +740,60 @@ class Work: NSManagedObject {
     
     class func createInMOCBeforeIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
         
-        if let templateItem = session.getWork(index) {
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
-
-            let date = NSDate()
-            let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
-            newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
-
-            newItem.name = templateItem.name
-            newItem.startTime = templateItem.startTime
-            newItem.stopTime = templateItem.startTime
-
-            templateItem.task.addWork(newItem)
-            templateItem.session.insertWorkBefore(newItem, index: index)
-
-            // Maintain relations
-            newItem.task = templateItem.task
-            newItem.session = templateItem.session
-
-            return newItem
+        guard let templateItem = session.getWork(index) else {
+            logDefault("Work", logtype: .Guard, message: "createInMOCBeforeIndex")
+            return nil
         }
 
-        return nil
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
+
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                dateStyle: NSDateFormatterStyle.ShortStyle,
+                timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+
+        newItem.name = templateItem.name
+        newItem.startTime = templateItem.startTime
+        newItem.stopTime = templateItem.startTime
+
+        templateItem.task.addWork(newItem)
+        templateItem.session.insertWorkBefore(newItem, index: index)
+
+        // Maintain relations
+        newItem.task = templateItem.task
+        newItem.session = templateItem.session
+
+        return newItem
     }
 
     class func createInMOCAfterIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
         
-        if let templateItem = session.getWork(index) {
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
-
-            let date = NSDate()
-            let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
-            newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
-
-            newItem.name = templateItem.name
-            newItem.startTime = templateItem.stopTime
-            newItem.stopTime = templateItem.stopTime
-
-            templateItem.task.addWork(newItem)
-            templateItem.session.insertWorkAfter(newItem, index: index)
-
-            // Maintain relations
-            newItem.task = templateItem.task
-            newItem.session = templateItem.session
-
-            return newItem
+        guard let templateItem = session.getWork(index) else {
+            logDefault("Work", logtype: .Guard, message: "createInMOCAfterIndex")
+            return nil
         }
 
-        return nil
+        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
+
+        let date = NSDate()
+        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
+                dateStyle: NSDateFormatterStyle.ShortStyle,
+                timeStyle: NSDateFormatterStyle.MediumStyle)
+        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+
+        newItem.name = templateItem.name
+        newItem.startTime = templateItem.stopTime
+        newItem.stopTime = templateItem.stopTime
+
+        templateItem.task.addWork(newItem)
+        templateItem.session.insertWorkAfter(newItem, index: index)
+
+        // Maintain relations
+        newItem.task = templateItem.task
+        newItem.session = templateItem.session
+
+        return newItem
     }
 
 
@@ -883,6 +886,11 @@ class TimePoliceModelUtils {
                     moc.deleteObject(work)
                 }
             }
+        } catch {
+            print("Can't fetch work for deletion")
+        }
+        
+        do {
             // Delete all tasks
             fetchRequest = NSFetchRequest(entityName: "Task")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
@@ -890,6 +898,11 @@ class TimePoliceModelUtils {
                     moc.deleteObject(task)
                 }
             }
+        } catch {
+            print("Can't fetch tasks for deletion")
+        }
+        
+        do {
             // Delete all sessions
             fetchRequest = NSFetchRequest(entityName: "Session")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
@@ -897,7 +910,11 @@ class TimePoliceModelUtils {
                     moc.deleteObject(session)
                 }
             }
-            
+        } catch {
+            print("Can't fetch sessions for deletion")
+        }
+        
+        do {
             // Delete all projects
             fetchRequest = NSFetchRequest(entityName: "Project")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
@@ -905,12 +922,9 @@ class TimePoliceModelUtils {
                     moc.deleteObject(project)
                 }
             }
-
         } catch {
-            
+            print("Can't fetch projects for deletion")
         }
-
-
     }
 
     //---------------------------------------------
@@ -922,7 +936,6 @@ class TimePoliceModelUtils {
         var s: String
         
         do {
-            
             s = ("---------------------------\n")
             s += ("----------Project----------\n\n")
             fetchRequest = NSFetchRequest(entityName: "Project")
@@ -936,7 +949,11 @@ class TimePoliceModelUtils {
                     }
                 }
             }
-            
+        } catch {
+            print("Can't fetch projects")
+        }
+
+        do {
             s += "\n"
             s += ("---------------------------\n")
             s += ("----------Session----------\n\n")
@@ -963,7 +980,11 @@ class TimePoliceModelUtils {
                     }
                 }
             }
-            
+        } catch {
+            print("Can't fetch sessions")
+        }
+        
+        do {
             s += "\n"
             s += ("---------------------------\n")
             s += ("----------Session 2--------\n\n")
@@ -993,7 +1014,11 @@ class TimePoliceModelUtils {
                     }
                 }
             }
-            
+        } catch {
+            print("Can't fetch sessions")
+        }
+        
+        do {
             s += "\n"
             s += ("------------------------\n")
             s += ("----------Work----------\n\n")
@@ -1011,7 +1036,11 @@ class TimePoliceModelUtils {
                     s += ("    T: \(work.task.name)\n")
                 }
             }
-            
+        } catch {
+            print("Can't fetch work")
+        }
+        
+        do {
             s += "\n"
             s += ("------------------------\n")
             s += ("----------Task----------\n\n")
@@ -1038,8 +1067,7 @@ class TimePoliceModelUtils {
             }
         
         } catch {
-
-            
+            print("Can't fetch tasks")
         }
 
         return s
@@ -1088,38 +1116,40 @@ class TestData {
         var session: Session
         var taskList: [Task] = []
 
-        if let projects = Project.findInMOC(moc, name: "Templates") {
-            if projects.count > 0 {
-                projectTemplate = projects[0]
-            } else {
-                projectTemplate = Project.createInMOC(moc, name: "Templates")
-            }
-        } else {
+        guard let projects1 = Project.findInMOC(moc, name: "Templates") else {
+            logDefault("TestData", logtype: .Guard, message: "addSession(Templates)")
             return
+        }
+        if projects1.count > 0 {
+                projectTemplate = projects1[0]
+        } else {
+                projectTemplate = Project.createInMOC(moc, name: "Templates")
         }
 
-        if let projects = Project.findInMOC(moc, name: projectName) {
-            if projects.count > 0 {
-                project = projects[0]
-            } else {
-                project = Project.createInMOC(moc, name: projectName)
-            }
-        } else {
+        guard let projects2 = Project.findInMOC(moc, name: projectName) else {
+            logDefault("TestData", logtype: .Guard, message: "addSession(\(projectName))")
             return
         }
+        if projects2.count > 0 {
+            project = projects2[0]
+        } else {
+            project = Project.createInMOC(moc, name: projectName)
+        }
         
-        if let sessions = Session.findInMOC(moc, name: sessionTemplateName) {
-            if sessions.count > 0 {
-                let sessionTemplate = sessions[0] as Session
-                taskList = sessionTemplate.tasks.array as! [Task]
-            } else {
-                let sessionTemplate = Session.createInMOC(moc, name: sessionTemplateName, project: projectTemplate)
-                for taskName in sessionTemplateTasks {
-                    let task = Task.createInMOC(moc, name: taskName, session: sessionTemplate)
-                    taskList.append(task)
-                }
-                taskList = sessionTemplate.tasks.array as! [Task]
+        guard let sessions = Session.findInMOC(moc, name: sessionTemplateName) else {
+            logDefault("TestData", logtype: .Guard, message: "addSession(\(sessionTemplateName))")
+            return
+        }
+        if sessions.count > 0 {
+            let sessionTemplate = sessions[0] as Session
+            taskList = sessionTemplate.tasks.array as! [Task]
+        } else {
+            let sessionTemplate = Session.createInMOC(moc, name: sessionTemplateName, project: projectTemplate)
+            for taskName in sessionTemplateTasks {
+                let task = Task.createInMOC(moc, name: taskName, session: sessionTemplate)
+                taskList.append(task)
             }
+            taskList = sessionTemplate.tasks.array as! [Task]
         }
 
         session = Session.createInMOC(moc, name: "\(sessionName)", project: project)

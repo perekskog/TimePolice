@@ -6,6 +6,13 @@
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+
+TODO
+
+*/
+
+
 import UIKit
 import CoreData
 
@@ -109,6 +116,8 @@ class TimePoliceVC: UIViewController,
         
         defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
 
+        logDefault("TimePoliceVC", logtype: .Guard, message: "test of defaultlog")
+
         redrawAll(true)
     }
 
@@ -145,7 +154,7 @@ class TimePoliceVC: UIViewController,
         if refreshCoreData==true {
             self.sessions = getSessions()
         }
-        appLogSize.text = "\(appLog.logString.characters.count))"
+        appLogSize.text = "\(appLog.logString.characters.count)"
         logTableView.reloadData()
     }
     
@@ -352,23 +361,23 @@ class TimePoliceVC: UIViewController,
     //-----------------------------------------
 
 
-    func taskEntryCreatorManager(sessionManager: TaskEntryCreatorManager, willChangeActiveSession: Int) {
-        appLog.log(logger, logtype: .EnterExit, message: "willChangeActiveSession to \(willChangeActiveSession)")
+    func taskEntryCreatorManager(sessionManager: TaskEntryCreatorManager, willChangeActiveSessionTo: Int) {
+        appLog.log(logger, logtype: .EnterExit, message: "willChangeActiveSession to \(willChangeActiveSessionTo)")
 
-        selectedSessionIndex = willChangeActiveSession
-        if let s = sessions {
-            if willChangeActiveSession >= 0 && willChangeActiveSession < s.count {
-                selectedSessionIndex = willChangeActiveSession
-                selectedSession = s[willChangeActiveSession]
+        guard let s = sessions,
+                tecms =  taskEntryCreatorManagers else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in taskEntryCreatorManager willChangeActiveSessionTo(\(willChangeActiveSessionTo)")
+            return
+        }
 
-                if let i = selectedSessionIndex,
-                    vcs = taskEntryCreatorManagers {
-                        for vc in vcs {
-                            if let tecm = vc as? TaskEntryCreatorManager {
-                                appLog.log(logger, logtype: .Debug, message: "TimePoliceVC: switchTo(\(i))")
-                                tecm.switchTo(i)
-                            }
-                        }
+        if willChangeActiveSessionTo >= 0 && willChangeActiveSessionTo < s.count {
+            selectedSession = s[willChangeActiveSessionTo]
+            selectedSessionIndex = willChangeActiveSessionTo
+
+            for vc in tecms {
+                if let tecm = vc as? TaskEntryCreatorManager {
+                    appLog.log(logger, logtype: .Debug, message: "TimePoliceVC: switchTo(\(willChangeActiveSessionTo))")
+                    tecm.switchTo(willChangeActiveSessionTo)
                 }
             }
         }
@@ -377,12 +386,13 @@ class TimePoliceVC: UIViewController,
     func taskEntryCreatorManager(taskEntryCreatorManager: TaskEntryCreatorManager, sessionForIndex: Int) -> Session? {
         appLog.log(logger, logtype: .EnterExit, message: "sessionForIndex(\(sessionForIndex))")
 
-        if let s = sessions {
-            if sessionForIndex >= 0 && sessionForIndex < s.count {
-                return s[sessionForIndex]
-            }
+        guard let s = sessions
+            where sessionForIndex >= 0 && sessionForIndex < s.count else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in taskEntryCreatorManager sessionForIndex(\(sessionForIndex))")
+            return nil
         }
-        return nil
+        
+        return s[sessionForIndex]
     }
 
 }

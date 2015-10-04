@@ -126,6 +126,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
 
     func includeEntry(loggerId: String, logtype: AppLogEntryType) -> Bool {
         var toBeIncluded = true
+/*
+        if logtype != .Guard {
+            toBeIncluded = false
+        }
+*/
         
         switch logtype {
         case .PeriodicCallback,
@@ -157,11 +162,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
         return applog
     }()
 
+    lazy var defaultLogger: AppLogger = {
+        let logger = MultiLogger()
+        logger.logger1 = AppLogLogger()
+        logger.logger2 = ConsoleLogger()
+        return logger
+    }()
+
     func getDefaultLogger() -> AppLogger {
         // Don't set a datasource here, it has to be done by the caller of this method.
         let logger = MultiLogger()
         logger.logger1 = AppLogLogger()
         logger.logger2 = ConsoleLogger()
+        return logger
+    }
+    
+    func getDefaultLogger(datasource: AppLoggerDataSource) -> AppLogger {
+        var logger = getDefaultLogger()
+        logger.datasource = datasource
         return logger
     }
 

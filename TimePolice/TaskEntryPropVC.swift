@@ -7,6 +7,7 @@
 //
 
 /*
+
 TODO
 
 - Redigera Work.name. Behöver bara vara synligt i WorkProp (så jag kan kolla i efterhand varför jag valde en diverse-task)
@@ -256,60 +257,62 @@ class TaskEntryPropVC:
         editStart = false
         editStop = false
         
-        self.table.beginUpdates()
-        
-    
-        if let first = self.isFirst {
-
-                switch indexPath.section {
-                case 0:
-                    switch indexPath.row {
-                    case 0:
-                        editStart = true
-                    case 2:
-                        editStop = true
-                    default:
-                        _ = 1
-                    }
-                case 1:
-                    switch indexPath.row {
-                    default:
-                        performSegueWithIdentifier("SelectTask", sender: self)
-                    }
-                case 2:
-                    switch indexPath.row {
-                    case 0:
-                        self.delete = .FillWithNone
-                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-                    case 1:
-                        self.delete = .FillWithPrevious
-                        if first {
-                            self.delete = .FillWithNext
-                        }
-                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-                    case 2:
-                        self.delete = .FillWithNext
-                        performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-                    default:
-                        _ = 1
-                    }
-                case 3:
-                    switch indexPath.row {
-                    case 0:
-                        self.insert = .InsertNewBeforeThis
-                        performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
-                    case 1:
-                        self.insert = .InsertNewAfterThis
-                        performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
-                    default:
-                        _ = 1
-                    }
-                default:
-                    _ = 1
-                }
+        guard let first = self.isFirst else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
+            return
         }
-        
-        self.table.endUpdates()
+
+        self.table.beginUpdates()
+        defer {
+            self.table.endUpdates()
+        }
+    
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                editStart = true
+            case 2:
+                editStop = true
+            default:
+                _ = 1
+            }
+        case 1:
+            switch indexPath.row {
+            default:
+                performSegueWithIdentifier("SelectTask", sender: self)
+            }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                self.delete = .FillWithNone
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            case 1:
+                self.delete = .FillWithPrevious
+                if first {
+                    self.delete = .FillWithNext
+                }
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            case 2:
+                self.delete = .FillWithNext
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            default:
+                _ = 1
+            }
+        case 3:
+            switch indexPath.row {
+            case 0:
+                self.insert = .InsertNewBeforeThis
+                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+            case 1:
+                self.insert = .InsertNewAfterThis
+                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+            default:
+                _ = 1
+            }
+        default:
+            _ = 1
+        }        
     }
     
     // UITableViewDataSource
@@ -319,47 +322,49 @@ class TaskEntryPropVC:
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let ongoing = self.isOngoing,
+        guard let ongoing = self.isOngoing,
             first = self.isFirst,
-            last = self.isLast {
-                switch section {
-                    // Datepickers
-                case 0:
-                    if ongoing {
-                        return 2
-                    } else {
-                        return 4
-                    }
-                    // Select task
-                case 1:
-                    return 1
-                    // Delete
-                case 2:
-                    // Always show "delete"
-                    var n = 1
-                    // If not first, show "delete, fill with previous"
-                    if !first {
-                        n++
-                    }
-                    // If not last, show "delete, fill with next"
-                    if !last {
-                        n++
-                    }
-                    return n
-                    // Insert
-                case 3:
-                    // Always show "insert before"
-                    var n = 1
-                    // If not ongoing, show "insert after"
-                    if !ongoing {
-                        n++
-                    }
-                    return n
-                default:
-                    return 0
-                }
+            last = self.isLast else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:numberOfRowsInSection")
+            return 0
         }
-        return 0
+
+        switch section {
+            // Datepickers
+        case 0:
+            if ongoing {
+                return 2
+            } else {
+                return 4
+            }
+            // Select task
+        case 1:
+            return 1
+            // Delete
+        case 2:
+            // Always show "delete"
+            var n = 1
+            // If not first, show "delete, fill with previous"
+            if !first {
+                n++
+            }
+            // If not last, show "delete, fill with next"
+            if !last {
+                n++
+            }
+            return n
+            // Insert
+        case 3:
+            // Always show "insert before"
+            var n = 1
+            // If not ongoing, show "insert after"
+            if !ongoing {
+                n++
+            }
+            return n
+        default:
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -463,20 +468,24 @@ class TaskEntryPropVC:
 
     @IBAction func exitSelectTask(unwindSegue: UIStoryboardSegue ) {
         if unwindSegue.identifier == "DoneSelectTask" {
-            if let vc = unwindSegue.sourceViewController as? TaskSelectVC,
-                i = vc.taskIndexSelected {
-                taskToUse = taskList[i]
-                cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(taskToUse!.name)
-                
-                    if let comment = ThemeUtilities.getComment(taskToUse!.name) {
-                        if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                            let color = ThemeUtilities.string2color(colorString)
-                            
-                            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
-                        }
-                    }
 
+            guard let vc = unwindSegue.sourceViewController as? TaskSelectVC,
+                i = vc.taskIndexSelected else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in exitSelectTask DoneSelectTask 1")
+                return
             }
+
+            taskToUse = taskList[i]
+            cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(taskToUse!.name)
+
+            guard let comment = ThemeUtilities.getComment(taskToUse!.name),
+                    let colorString = ThemeUtilities.getValue(comment, forTag: "color") else {
+                appLog.log(logger, logtype: .Guard, message: "guard fail in exitSelectTask DoneSelectTask 2")
+                return
+            }
+
+            let color = ThemeUtilities.string2color(colorString)        
+            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
         }
     }
 

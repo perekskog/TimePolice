@@ -10,8 +10,6 @@
 
 TODO
 
-- Vad är skillnaden mellan commitEditingStyle och canEditRowAtIndexPath? Behövs båda?
-
 */
 
 import UIKit
@@ -121,9 +119,7 @@ class TaskEntryCreatorByAddToListVC:
 
 
         self.sessionSummary = (0,0)
-        if let moc = managedObjectContext {
-           self.sessionSummary = session?.getSessionSummary(moc)
-        }
+        self.sessionSummary = session?.getSessionSummary(moc)
 
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                 target: self,
@@ -219,51 +215,57 @@ class TaskEntryCreatorByAddToListVC:
     func switchOngoingFinished(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "switchOngoingFinished")
 
-        if let w = session?.getLastWork() {
-            if w.isOngoing() {
-                w.setStoppedAt(NSDate())
-                var (activations, totalTime) = sessionSummary
-                activations++
-                totalTime += w.stopTime.timeIntervalSinceDate(w.startTime)
-                sessionSummary = (activations, totalTime)
-            } else {
-                var (activations, totalTime) = sessionSummary
-                activations--
-                totalTime -= w.stopTime.timeIntervalSinceDate(w.startTime)
-                sessionSummary = (activations, totalTime)
-                w.setAsOngoing()
-            }
-            workListTableView.reloadData()
-            scrollToEnd(workListTableView)
-        }
-        
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
+
+        guard let w = session?.getLastWork() else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in switchOngoingFinished")
+            return
+        }
+
+        if w.isOngoing() {
+            w.setStoppedAt(NSDate())
+            var (activations, totalTime) = sessionSummary
+            activations++
+            totalTime += w.stopTime.timeIntervalSinceDate(w.startTime)
+            sessionSummary = (activations, totalTime)
+        } else {
+            var (activations, totalTime) = sessionSummary
+            activations--
+            totalTime -= w.stopTime.timeIntervalSinceDate(w.startTime)
+            sessionSummary = (activations, totalTime)
+            w.setAsOngoing()
+        }
+        workListTableView.reloadData()
+        scrollToEnd(workListTableView)        
     }
     
     func addWork(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "addWork")
 
-        if let moc = managedObjectContext,
-                 s = session {
-            let now = NSDate()
-            var task = s.tasks[0] as! Task
-            if let lastWork = s.getLastWork() {
-                task = lastWork.task
-                if lastWork.isOngoing() {
-                    lastWork.setStoppedAt(now)
-                    var (activations, totalTime) = sessionSummary
-                    activations++
-                    totalTime += lastWork.stopTime.timeIntervalSinceDate(lastWork.startTime)
-                    sessionSummary = (activations, totalTime)
-                }
-            }
-            Work.createInMOC(moc, name: "", session: s, task: task)
-            TimePoliceModelUtils.save(moc)
-
-            workListTableView.reloadData()
-            scrollToEnd(workListTableView)
+        guard let s = session else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in addWork")
+            return
         }
+
+        let now = NSDate()
+        var task = s.tasks[0] as! Task
+        if let lastWork = s.getLastWork() {
+            task = lastWork.task
+            if lastWork.isOngoing() {
+                lastWork.setStoppedAt(now)
+                var (activations, totalTime) = sessionSummary
+                activations++
+                totalTime += lastWork.stopTime.timeIntervalSinceDate(lastWork.startTime)
+                sessionSummary = (activations, totalTime)
+            }
+        }
+
+        Work.createInMOC(moc, name: "", session: s, task: task)
+        TimePoliceModelUtils.save(moc)
+
+        workListTableView.reloadData()
+        scrollToEnd(workListTableView)
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -274,20 +276,19 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let w = session?.work[indexPath.row] as? Work {
-            selectedWork = w
-            selectedWorkIndex = indexPath.row
-            
-            appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
-
-            performSegueWithIdentifier("EditTaskEntry", sender: self)
+        guard let w = session?.work[indexPath.row] as? Work else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
+            return
         }
+
+        selectedWork = w
+        selectedWorkIndex = indexPath.row
+        
+        appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
+
+        performSegueWithIdentifier("EditTaskEntry", sender: self)
     }
 
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
 
     
     //-----------------------------------------
@@ -304,22 +305,26 @@ class TaskEntryCreatorByAddToListVC:
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell")!
-        if let w = session?.work[indexPath.row] as? Work {
-            if w.isStopped() {
-                let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-                cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
-            } else {
-                cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
-            }     
-            if let comment = ThemeUtilities.getComment(w.task.name) {
-                if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                    let color = ThemeUtilities.string2color(colorString)
 
-                    cell.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 10.0, height: 10.0)
-                }
-            }
-
+        guard let w = session?.work[indexPath.row] as? Work else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
+            return cell
         }
+
+        if w.isStopped() {
+            let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
+            cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
+        } else {
+            cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
+        }     
+        if let comment = ThemeUtilities.getComment(w.task.name) {
+            if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
+                let color = ThemeUtilities.string2color(colorString)
+
+                cell.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 10.0, height: 10.0)
+            }
+        }
+
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
@@ -329,23 +334,6 @@ class TaskEntryCreatorByAddToListVC:
 
         return cell
     }
-
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            if let moc = self.managedObjectContext,
-                     s = session {
-                appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
-
-                s.deleteWork(moc, workIndex: indexPath.row)
-                TimePoliceModelUtils.save(moc)
-                
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
-
-                workListTableView.reloadData()
-            }
-        }
-    }
-
 
 
     //----------------------------------------------

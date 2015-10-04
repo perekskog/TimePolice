@@ -1,23 +1,29 @@
 //
-//  SessionManagerForAddToList.swift
+//  TaskEntryCreatorManagerForAddToList.swift
 //  TimePolice
 //
 //  Created by Per Ekskog on 2015-09-13.
 //  Copyright (c) 2015 Per Ekskog. All rights reserved.
 //
 
+/* 
+
+TODO
+
+*/
+
+
 import UIKit
 
 class TaskEntryCreatorManagerForAddToList: TaskEntryCreatorManagerBase {
 
     //---------------------------------------------
-    // TaskEntryCreatorManagerBase - AppLoggerDataSource
+    // TaskEntryCreatorManagerForAddToList - AppLoggerDataSource
     //---------------------------------------------
 
     override func getLogDomain() -> String {
         return "TaskEntryCreatorManagerForAddToList"
     }
-
 
     /////////////////////////
     // UIPageViewControllerDataSource
@@ -25,17 +31,19 @@ class TaskEntryCreatorManagerForAddToList: TaskEntryCreatorManagerBase {
 
     override
     func pageViewControllerAtIndex(index: Int) -> TaskEntryCreatorBase? {
-        if let s = dataSource?.taskEntryCreatorManager(self, sessionForIndex: index) {
+        guard let s = dataSource?.taskEntryCreatorManager(self, sessionForIndex: index) else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in pageViewControllerAtIndex")
+            return nil
+        }
         
-            let storyBoard = UIStoryboard(name: "Main",
-                bundle: NSBundle.mainBundle())
-            if let newVC = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByAddToList") as? TaskEntryCreatorByAddToListVC {
-                newVC.sessionIndex = index
-                newVC.session = s
-                newVC.delegate = self
+        let storyBoard = UIStoryboard(name: "Main",
+            bundle: NSBundle.mainBundle())
+        if let newVC = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByAddToList") as? TaskEntryCreatorBase {
+            newVC.sessionIndex = index
+            newVC.session = s
+            newVC.delegate = self
                             
-                return newVC
-            }
+            return newVC
         }
 
         return nil
