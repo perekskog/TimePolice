@@ -65,21 +65,8 @@
                                     <action selector="loadDataDaytime:" destination="ibE-kE-IVF" eventType="touchUpInside" id="Wgf-HY-lLG"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="View" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q1L-QQ-XNe">
-                                <rect key="frame" x="9" y="159" width="51" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wq5-Lu-cAa">
-                                <rect key="frame" x="66" y="152" width="194" height="29"/>
-                                <segments>
-                                    <segment title="switcher"/>
-                                    <segment title="list"/>
-                                </segments>
-                            </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKw-39-d1n">
-                                <rect key="frame" x="145" y="82" width="49" height="30"/>
+                                <rect key="frame" x="109" y="83" width="49" height="30"/>
                                 <state key="normal" title="Applog">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -88,8 +75,8 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20A-tb-NFv">
-                                <rect key="frame" x="66" y="82" width="65" height="30"/>
-                                <state key="normal" title="CoreData">
+                                <rect key="frame" x="68" y="82" width="33" height="30"/>
+                                <state key="normal" title="Core">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -139,6 +126,13 @@
                                     <action selector="loadDataCost:" destination="ibE-kE-IVF" eventType="touchUpInside" id="USM-8L-dBt"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6d2-vu-blc">
+                                <rect key="frame" x="166" y="82" width="61" height="30"/>
+                                <state key="normal" title="Sessions"/>
+                                <connections>
+                                    <action selector="dumpSessionSummary:" destination="ibE-kE-IVF" eventType="touchUpInside" id="F2l-zG-A01"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -147,7 +141,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="appLogSize" destination="3tR-Eh-bSr" id="dpB-F3-dLZ"/>
-                        <outlet property="defaultVC" destination="Wq5-Lu-cAa" id="CxQ-hm-veh"/>
                         <segue destination="bYn-0s-WYr" kind="push" identifier="TaskEntryCreatorManagers" id="A2k-t4-VXx"/>
                     </connections>
                 </viewController>

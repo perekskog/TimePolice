@@ -100,6 +100,18 @@ class Project: NSManagedObject {
         }
     }
 
+    class func findInMOC(moc: NSManagedObjectContext) -> [Project]? {
+
+        let fetchRequest = NSFetchRequest(entityName: "Project")
+
+        do {
+            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project]
+
+            return fetchResults
+        } catch {
+            return nil
+        }
+    }
 }
 
 //=======================================================================================
@@ -127,8 +139,11 @@ class Session: NSManagedObject {
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Session] \(dateAndTime) - \(date.timeIntervalSince1970)"
-        newItem.name = name
+        newItem.id = "[Session=\(name)] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.NoStyle)
+        newItem.name = "\(name) \(dateWithoutTime)"
 
         // Maintain relations
         project.addSession(newItem)
@@ -228,7 +243,7 @@ class Session: NSManagedObject {
     // Session - getSessionTaskSummary
     //---------------------------------------------
 
-    func getSessionTaskSummary(moc: NSManagedObjectContext) -> [Task: (Int, NSTimeInterval)] {
+    func getSessionTaskSummary() -> [Task: (Int, NSTimeInterval)] {
         var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
@@ -1072,6 +1087,28 @@ class TimePoliceModelUtils {
 
         return s
     }
+
+    //---------------------------------------------
+    // TimePoliceModelUtils - getSessionTasks
+    //---------------------------------------------
+
+    class func getSessionTasks(session: Session) -> String {
+        var s = "\(session.id)\n"
+        let summary = session.getSessionTaskSummary()
+        for task in session.tasks.array as! [Task] {
+            let withoutComment = ThemeUtilities.getWithoutComment(task.name)
+            if withoutComment != "" {
+                var time: NSTimeInterval = 0
+                if let (_, t) = summary[task] {
+                    time = t
+                }
+                s += "\(withoutComment)\t\(getString(time))\n"
+            }
+        }
+        return s
+    }
+
+
 
     //---------------------------------------------
     // TimePoliceModelUtils - getSessionWork

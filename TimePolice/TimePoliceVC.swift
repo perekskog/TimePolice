@@ -23,7 +23,6 @@ class TimePoliceVC: UIViewController,
     TaskEntryCreatorManagerDataSource,
     TaskEntryCreatorManagerDelegate {
 
-    @IBOutlet var defaultVC: UISegmentedControl!
     @IBOutlet var appLogSize: UILabel!
     
     var logTableView = UITableView(frame: CGRectZero, style: .Plain)
@@ -38,7 +37,7 @@ class TimePoliceVC: UIViewController,
     // TimePoliceVC - Lazy properties
     //---------------------------------------
 
-    lazy var managedObjectContext : NSManagedObjectContext = {
+    lazy var moc : NSManagedObjectContext = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
@@ -105,19 +104,16 @@ class TimePoliceVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         var viewFrame = self.view.frame
-        viewFrame.origin.y += 200
-        viewFrame.size.height -= 200
+        viewFrame.origin.y += 150
+        viewFrame.size.height -= 150
         logTableView.frame = viewFrame
         self.view.addSubview(logTableView)
         
         logTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TimePoliceSessionCell")
         logTableView.dataSource = self
         logTableView.delegate = self
+        logTableView.rowHeight = 30
         
-        defaultVC.addTarget(self, action: "defaultVCChanged:", forControlEvents: .ValueChanged)
-
-        logDefault("TimePoliceVC", logtype: .Guard, message: "test of defaultlog")
-
         redrawAll(true)
     }
 
@@ -136,7 +132,7 @@ class TimePoliceVC: UIViewController,
         do {
             let fetchRequest = NSFetchRequest(entityName: "Session")
             var nonTemplateSessions: [Session] = []
-            if let tmpSessions = try managedObjectContext.executeFetchRequest(fetchRequest) as? [Session] {
+            if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 for session in tmpSessions {
                     if session.project.name != "Templates" {
                         nonTemplateSessions.append(session)
@@ -195,24 +191,9 @@ class TimePoliceVC: UIViewController,
     // TimePoliceVC - Buttons
     //----------------------------------------
     
-    func defaultVCChanged(sender: UISegmentedControl) {
-        appLog.log(logger, logtype: .EnterExit, message: "defaultVCChanged")
-
-        switch sender.selectedSegmentIndex {
-        case 0:
-            appLog.log(logger, logtype: .Debug, message: "TaskSwitcher")
-        case 1:
-            appLog.log(logger, logtype: .Debug, message: "WorkList")
-        default:
-            appLog.log(logger, logtype: .Debug, message: "Some other value (\(sender.selectedSegmentIndex))")
-        }
-    }
-
-
     @IBAction func loadDataPrivate(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataPrivate")
 
-        let moc = self.managedObjectContext
         TestData.addSessionToPrivate(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -223,7 +204,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func loadDataWork(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataWork")
 
-        let moc = self.managedObjectContext
         TestData.addSessionToWork(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -234,7 +214,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func loadDataDaytime(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataDaytime")
 
-        let moc = self.managedObjectContext
         TestData.addSessionToDaytime(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -245,7 +224,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func loadDataCost(sender: AnyObject) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataCost")
         
-        let moc = self.managedObjectContext
         TestData.addSessionToCost(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -256,7 +234,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func loadDataTest(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataTest")
 
-        let moc = self.managedObjectContext
         TestData.addSessionToTest(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -267,7 +244,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
 
-        let moc = self.managedObjectContext
         TimePoliceModelUtils.clearAllData(moc)
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -284,7 +260,6 @@ class TimePoliceVC: UIViewController,
     @IBAction func dumpCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
 
-        let moc = self.managedObjectContext
         let s = TimePoliceModelUtils.dumpAllData(moc)
         print(s)
         UIPasteboard.generalPasteboard().string = s
@@ -294,6 +269,74 @@ class TimePoliceVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "dumpApplog")
 
         let s = appLog.logString
+        print(s)
+        UIPasteboard.generalPasteboard().string = s
+    }
+
+    @IBAction func dumpSessionSummary(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "dumpSessionSummary")
+
+        /*
+        for each project p {
+            projectSummary = [session: [Task:NSTimeInterval] ]
+            setOfTasks = []
+            for each session in p {
+                get sessionSummary -> [Task: NSTieInterval]
+                for each task in sessionSummary {
+                    setOfTasks.add(task)
+                }
+                projectSummary[session] = sessionSummary
+            }
+            for each session in projectSummary {
+                print session heading
+            }
+            for each task in setOfTasks {
+                print task heading
+                for each session in projectSummary {
+                    print time for task
+                }
+            }
+        }
+        */
+
+        guard let projects = Project.findInMOC(moc) else {
+            return
+        }
+
+        var s = ""
+        for project in projects {
+            if project.name == "Templates" {
+                continue
+            }
+            var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
+            var setOfTasks = Set<Task>()
+            for session in project.sessions {
+                let sessionSummary = (session as! Session).getSessionTaskSummary()
+                for (task, _) in sessionSummary {
+                    setOfTasks.insert(task)
+                }
+                projectSummary[session as! Session] = sessionSummary
+            }
+            var heading = "\t"
+            for (session, _) in projectSummary {
+                heading += "\(session.name)\t"
+            }
+            s += "\(heading)\n"
+
+            var taskRow = ""
+            for task in setOfTasks {
+                taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
+                for (_, sessionSummary) in projectSummary {
+                    if let (_, time) = sessionSummary[task] {
+                        taskRow += "\(getString(time))\t"
+                    } else {
+                        taskRow += "---\t"
+                    }
+                }
+                s += "\(taskRow)\n"
+            }
+            s += "\n"
+        }
         print(s)
         UIPasteboard.generalPasteboard().string = s
     }
@@ -343,7 +386,6 @@ class TimePoliceVC: UIViewController,
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            let moc = self.managedObjectContext
             if let session = sessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
                 Session.deleteInMOC(moc, session: session)
