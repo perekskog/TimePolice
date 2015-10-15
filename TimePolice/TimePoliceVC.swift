@@ -324,7 +324,7 @@ class TimePoliceVC: UIViewController,
             s += "\(heading)\n"
 
             var taskRow = ""
-            for task in setOfTasks {
+            for task in setOfTasks.sort({$0.name < $1.name}) {
                 taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
                 for (_, sessionSummary) in projectSummary {
                     if let (_, time) = sessionSummary[task] {
