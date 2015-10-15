@@ -319,6 +319,11 @@ class TimePoliceVC: UIViewController,
             }
             var heading = "\t"
             for session in projectSummary.keys.sort({$0.name < $1.name}) {
+                if let w = session.getLastWork() {
+                    if w.isOngoing() {
+                        heading += "* "
+                    }
+                }
                 heading += "\(session.name)\t"
             }
             s += "\(heading)\n"
