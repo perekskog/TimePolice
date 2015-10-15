@@ -304,13 +304,13 @@ class TimePoliceVC: UIViewController,
         }
 
         var s = ""
-        for project in projects {
+        for project in projects.sort({$0.name < $1.name}) {
             if project.name == "Templates" {
                 continue
             }
             var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
             var setOfTasks = Set<Task>()
-            for session in project.sessions.sort({$0.name < $1.name}) {
+            for session in project.sessions {
                 let sessionSummary = (session as! Session).getSessionTaskSummary()
                 for (task, _) in sessionSummary {
                     setOfTasks.insert(task)
@@ -318,7 +318,7 @@ class TimePoliceVC: UIViewController,
                 projectSummary[session as! Session] = sessionSummary
             }
             var heading = "\t"
-            for (session, _) in projectSummary {
+            for session in projectSummary.keys.sort({$0.name < $1.name}) {
                 heading += "\(session.name)\t"
             }
             s += "\(heading)\n"
@@ -326,11 +326,13 @@ class TimePoliceVC: UIViewController,
             var taskRow = ""
             for task in setOfTasks.sort({$0.name < $1.name}) {
                 taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
-                for (_, sessionSummary) in projectSummary {
-                    if let (_, time) = sessionSummary[task] {
-                        taskRow += "\(getString(time))\t"
-                    } else {
-                        taskRow += "---\t"
+                for session in projectSummary.keys.sort({$0.name < $1.name}) {
+                    if let sessionSummary = projectSummary[session] {
+                        if let (_, time) = sessionSummary[task] {
+                            taskRow += "\(getString(time))\t"
+                        } else {
+                            taskRow += "---\t"
+                        }
                     }
                 }
                 s += "\(taskRow)\n"
