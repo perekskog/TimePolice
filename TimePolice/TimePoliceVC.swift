@@ -324,12 +324,19 @@ class TimePoliceVC: UIViewController,
             s += "\(heading)\n"
 
             var taskRow = ""
+            var sessionTotal: [Session: NSTimeInterval] = [:]
             for task in setOfTasks.sort({$0.name < $1.name}) {
                 taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
                 for session in projectSummary.keys.sort({$0.name < $1.name}) {
                     if let sessionSummary = projectSummary[session] {
                         if let (_, time) = sessionSummary[task] {
                             taskRow += "\(getString(time))\t"
+                            var total: NSTimeInterval = 0
+                            if let t = sessionTotal[session] {
+                                total = t
+                            }
+                            total += time
+                            sessionTotal[session] = total
                         } else {
                             taskRow += "---\t"
                         }
@@ -337,6 +344,15 @@ class TimePoliceVC: UIViewController,
                 }
                 s += "\(taskRow)\n"
             }
+            var summaryRow = "Total\t"
+            for session in projectSummary.keys.sort({$0.name < $1.name}) {
+                if let total = sessionTotal[session] {
+                    summaryRow += "\(getString(total))\t"
+                } else {
+                    summaryRow += "0\t"
+                }
+            }
+            s += summaryRow
             s += "\n"
         }
         print(s)
