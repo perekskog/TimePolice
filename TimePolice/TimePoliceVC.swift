@@ -310,7 +310,7 @@ class TimePoliceVC: UIViewController,
             }
             var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
             var setOfTasks = Set<Task>()
-            for session in project.sessions {
+            for session in project.sessions.sort({$0.name < $1.name}) {
                 let sessionSummary = (session as! Session).getSessionTaskSummary()
                 for (task, _) in sessionSummary {
                     setOfTasks.insert(task)
