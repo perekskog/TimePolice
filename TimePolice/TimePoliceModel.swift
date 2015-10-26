@@ -140,10 +140,7 @@ class Session: NSManagedObject {
                     dateStyle: NSDateFormatterStyle.ShortStyle,
                     timeStyle: NSDateFormatterStyle.MediumStyle)
         newItem.id = "[Session=\(name)] \(dateAndTime) - \(date.timeIntervalSince1970)"
-        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
-            dateStyle: NSDateFormatterStyle.ShortStyle,
-            timeStyle: NSDateFormatterStyle.NoStyle)
-        newItem.name = "\(name) \(dateWithoutTime)"
+        newItem.name = "\(name)"
 
         // Maintain relations
         project.addSession(newItem)
@@ -999,39 +996,6 @@ class TimePoliceModelUtils {
             print("Can't fetch sessions")
         }
         
-        do {
-            s += "\n"
-            s += ("---------------------------\n")
-            s += ("----------Session 2--------\n\n")
-            fetchRequest = NSFetchRequest(entityName: "Session")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
-                s += "[Session container size=\(fetchResults.count)]\n"
-                for session in fetchResults {
-                    s += ("S: \(session.name)-\(session.id)\n")
-                    s += ("    P: \(session.project.name)-\(session.project.id)\n")
-                    s += "    [Work container size=\(session.work.count)]\n"
-                    let n = session.work.count
-                    if n > 0 {
-                        for i in 0...n-1 {
-                            let work = session.work.objectAtIndex(i)
-                            if work.isStopped() {
-                                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                                s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
-                            } else {
-                                s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
-                            }
-                        }
-                    }
-                    s += "    [Task container size=\(session.tasks.count)]\n"
-                    session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                        let task = elem as! Task
-                        s += ("    T: \(task.name)\n")
-                    }
-                }
-            }
-        } catch {
-            print("Can't fetch sessions")
-        }
         
         do {
             s += "\n"
@@ -1217,8 +1181,12 @@ class TestData {
             "Brand#color=b44", "Fokusskift#color=b44", ""
             
         ]
+        let date = NSDate()
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.NoStyle)
 
-        addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat")
+        addSession(moc, projectName: "Privat", sessionTemplateName: "Template - Privat", sessionTemplateTasks: taskList, sessionName: "Privat \(dateWithoutTime)")
     }
 
     //---------------------------------------------
@@ -1243,8 +1211,13 @@ class TestData {
             "Blockerad#color=b44", "Avbrott#color=b44", "",
             "Brand#color=b44", "Fokusskift#color=b44", "",
         ]
-        
-        addSession(moc, projectName: "Jobb", sessionTemplateName: "Template - Jobb", sessionTemplateTasks: taskList, sessionName: "Jobb")
+
+        let date = NSDate()
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+        dateStyle: NSDateFormatterStyle.ShortStyle,
+        timeStyle: NSDateFormatterStyle.NoStyle)
+
+        addSession(moc, projectName: "Jobb", sessionTemplateName: "Template - Jobb", sessionTemplateTasks: taskList, sessionName: "Jobb \(dateWithoutTime)")
     }
     
     //---------------------------------------------
@@ -1265,8 +1238,13 @@ class TestData {
 
             "Ärende", "F&S", "Annat"
         ]
+
+        let date = NSDate()
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.NoStyle)
         
-        addSession(moc, projectName: "Ett dygn", sessionTemplateName: "Template - Ett dygn", sessionTemplateTasks: taskList, sessionName: "Ett dygn")
+        addSession(moc, projectName: "Ett dygn", sessionTemplateName: "Template - Ett dygn", sessionTemplateTasks: taskList, sessionName: "Ett dygn \(dateWithoutTime)")
     }
 
     //---------------------------------------------
@@ -1289,7 +1267,12 @@ class TestData {
             "Yankee", "Zulu"
         ]
         
-        addSession(moc, projectName: "Cost", sessionTemplateName: "Template - Cost", sessionTemplateTasks: taskList, sessionName: "Cost")
+        let date = NSDate()
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.NoStyle)
+
+        addSession(moc, projectName: "Cost", sessionTemplateName: "Template - Cost", sessionTemplateTasks: taskList, sessionName: "Cost \(dateWithoutTime)")
     }
 
     //---------------------------------------------
@@ -1304,7 +1287,12 @@ class TestData {
             "", "Tvåa#color=0f0", "Trea#color=00f"
         ]
 
-        addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test")
+        let date = NSDate()
+        let dateWithoutTime = NSDateFormatter.localizedStringFromDate(date,
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.NoStyle)
+
+        addSession(moc, projectName: "Test", sessionTemplateName: "Template - Test", sessionTemplateTasks: taskList, sessionName: "Test \(dateWithoutTime)")
     }
 
 }
