@@ -102,7 +102,6 @@ class TaskEntryCreatorByAddToListVC:
         workListTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         workListBGView.addSubview(workListTableView)
-        scrollToEnd(workListTableView)
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
@@ -120,6 +119,8 @@ class TaskEntryCreatorByAddToListVC:
 
         self.sessionSummary = (0,0)
         self.sessionSummary = session?.getSessionSummary(moc)
+
+        scrollToEnd(workListTableView)
 
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                 target: self,
