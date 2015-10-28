@@ -257,7 +257,8 @@ class TaskEntryPropVC:
         editStart = false
         editStop = false
         
-        guard let first = self.isFirst else {
+        guard let first = self.isFirst,
+                last = self.isLast else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
             return
         }
@@ -283,13 +284,17 @@ class TaskEntryPropVC:
                 performSegueWithIdentifier("SelectTask", sender: self)
             }
         case 2:
+            // Sama logic as for "cellForRowAtIndexPath"
             switch indexPath.row {
             case 0:
-                self.delete = .FillWithNone
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
-            case 1:
                 self.delete = .FillWithPrevious
                 if first {
+                    self.delete = .FillWithNone
+                }
+                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+            case 1:
+                self.delete = .FillWithNone
+                if (first && !last) {
                     self.delete = .FillWithNext
                 }
                 performSegueWithIdentifier("DeleteTaskEntry", sender: self)
@@ -370,6 +375,13 @@ class TaskEntryPropVC:
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         var cell: UITableViewCell
+
+        guard let first = self.isFirst,
+                last = self.isLast else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
+            return UITableViewCell()
+        }
+
         
         switch indexPath.section {
         case 0:
@@ -417,16 +429,35 @@ class TaskEntryPropVC:
                 cell.textLabel?.text = "Configuration error"
             }
         case 2:
+/*
+1 button: 
+    0: this 
+        first AND last
+2 buttons:
+    0: fill with prev
+    1: this
+        !first AND last
+
+    0: this
+    1: fill with next
+        !last AND first
+3 buttons
+    0: fill with prev
+    1: this
+    2: fill with next
+        !first AND !last
+*/
             cell = UITableViewCell()
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Delete this"
+                cell.textLabel?.text = "Delete this, fill with previous"
+                if first {
+                    cell.textLabel?.text = "Delete this"
+                }
             case 1:
-                if let first = self.isFirst {
-                    cell.textLabel?.text = "Delete this, fill with previous"
-                    if first {
-                        cell.textLabel?.text = "Delete this, fill with next"
-                    }
+                cell.textLabel?.text = "Delete this"
+                if (first && !last) {
+                    cell.textLabel?.text = "Delete this, fill with next"                    
                 }
             case 2:
                 cell.textLabel?.text = "Delete this, fill with next"
