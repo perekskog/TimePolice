@@ -19,7 +19,7 @@ class TaskEntryCreatorByAddToListVC:
         TaskEntryCreatorBase,
         UITableViewDataSource, 
         UITableViewDelegate, 
-        UIGestureRecognizerDelegate, 
+        UIGestureRecognizerDelegate,
         ToolbarInfoDelegate {
 
     var sourceController: TimePoliceVC?
@@ -43,6 +43,8 @@ class TaskEntryCreatorByAddToListVC:
     let addView = WorkListToolView()
     let infoAreaView = WorkListToolView()
 
+    var gap2work: [Int] = []
+
     let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
 
@@ -56,6 +58,36 @@ class TaskEntryCreatorByAddToListVC:
         return "TaskEntryCreatorByAddToList"
     }
 
+    func getGap2Work(workList: [Work]) -> [Int] {
+        if workList.count == 0 {
+            return []
+        }
+        // First entry is never a gap
+        var gap2Work: [Int] = [0]
+
+        // If there are more than one element: Go through entire list
+        if workList.count > 1 {
+            var previousTaskEntry = workList[0]
+            for i in 1...workList.count-1 {
+                let te = workList[i]
+                appLog.log(logger, logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
+                appLog.log(logger, logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
+//                if te.startTime.isEqualToDate(previousTaskEntry.stopTime) {
+                if te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime) < 0.5 {
+                    // No gap
+                } else {
+                    let diff = te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime)
+                    appLog.log(logger, logtype: .Debug, message: "(gap=\(diff))")
+                    gap2Work.append(-1)
+                }
+                previousTaskEntry = te
+                gap2Work.append(i)
+            }
+        }
+
+        return gap2Work
+    }
+
     //---------------------------------------------
     // TaskEntryCreatorByAddToList - View lifecycle
     //---------------------------------------------
@@ -66,6 +98,18 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
+
+        //GAP: Update list of gaps
+        gap2work = []
+        if let s = session,
+            wl = s.work.array as? [Work] {
+            gap2work = getGap2Work(wl)
+        }
+        var s = ""
+        for i in gap2work {
+            s += "\(i)\t"
+        }
+        appLog.log(logger, logtype: .Debug, message: s)
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -101,7 +145,7 @@ class TaskEntryCreatorByAddToListVC:
         workListTableView.rowHeight = 25
         workListTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
-        workListBGView.addSubview(workListTableView)
+        workListBGView.addSubview(workListTableView)                
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
@@ -110,6 +154,7 @@ class TaskEntryCreatorByAddToListVC:
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         workListBGView.addSubview(addView)
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -133,7 +178,7 @@ class TaskEntryCreatorByAddToListVC:
         if let indexPath = workListTableView.indexPathForSelectedRow {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
-        
+
         redrawAfterSegue()
 
         if let w = session?.work {
@@ -265,6 +310,12 @@ class TaskEntryCreatorByAddToListVC:
         Work.createInMOC(moc, name: "", session: s, task: task)
         TimePoliceModelUtils.save(moc)
 
+        gap2work = []
+        if let s = session,
+            wl = s.work.array as? [Work] {
+            gap2work = getGap2Work(wl)
+        }
+
         workListTableView.reloadData()
         scrollToEnd(workListTableView)
 
@@ -277,28 +328,81 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        guard let w = session?.work[indexPath.row] as? Work else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
+        //GAP: Use a popover for a gap, continue if not a gap
+        if indexPath.row >= gap2work.count {
+            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [workIndex out of bounds]")
+            
+            return
+        }
+
+        if gap2work[indexPath.row] == -1 {
+            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [workIndex=gap]")
+            
+            // A gap is never first or last in the list => There is always a choice between fill with previous or next
+            
+            let alertContoller = UIAlertController(title: "Delete gap", message: nil,
+                preferredStyle: .ActionSheet)
+            let fillWithPreviousAction = UIAlertAction(title: "...fill with previous", style: .Default,
+                handler: { action in
+                    self.handleDeleteFillWithPrevious(indexPath.row)
+                })
+            alertContoller.addAction(fillWithPreviousAction)
+            let fillWithNextAction = UIAlertAction(title: "...fill with next", style: .Default,
+                handler: { action in
+                    self.handleDeleteFillWithNext(indexPath.row)
+                })
+            alertContoller.addAction(fillWithNextAction)
+            
+            presentViewController(alertContoller, animated: true, completion: nil)
+            
+            return
+        }
+        let workIndex = gap2work[indexPath.row]
+
+        guard let w = session?.work[workIndex] as? Work else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [work]")
             return
         }
 
         selectedWork = w
-        selectedWorkIndex = indexPath.row
+        selectedWorkIndex = workIndex
         
-        appLog.log(logger, logtype: .Debug) { "selected(row=\(indexPath.row), work=\(w.task.name))" }
+        appLog.log(logger, logtype: .Debug) { "selected(row=\(workIndex), work=\(w.task.name))" }
 
         performSegueWithIdentifier("EditTaskEntry", sender: self)
     }
 
+    func handleDeleteFillWithPrevious(index: Int) {
+        appLog.log(logger, logtype: .Debug, message: "Fill with previous")
+        if let s = session {
+            let previousWorkIndex = gap2work[index-1]
+            let nextWorkIndex = gap2work[index+1]
+            let nextStartTime = s.work[nextWorkIndex].startTime
+            s.setStopTime(moc, workIndex: previousWorkIndex, desiredStopTime: nextStartTime)
+            redrawAfterSegue()
+        }
+    }
 
+    func handleDeleteFillWithNext(index: Int) {
+        appLog.log(logger, logtype: .Debug, message: "Fill with next")
+
+        if let s = session {
+            let previousWorkIndex = gap2work[index-1]
+            let nextWorkIndex = gap2work[index+1]
+            let previousStopTime = s.work[previousWorkIndex].stopTime
+            s.setStartTime(moc, workIndex: nextWorkIndex, desiredStartTime: previousStopTime)
+            redrawAfterSegue()
+        }
+    }
     
     //-----------------------------------------
     // TaskEntryCreatorByAddToList - UITableViewDataSource
     //-----------------------------------------
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let w = session?.work {
-            return w.count
+        //GAP: Include gaps in count
+        if let _ = session?.work {
+            return gap2work.count
         } else {
             return 0
         }
@@ -307,7 +411,28 @@ class TaskEntryCreatorByAddToListVC:
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell")!
 
-        guard let w = session?.work[indexPath.row] as? Work else {
+        //GAP: Special handling for gaps, should return a cell with other formatting
+        if indexPath.row >= gap2work.count {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [workIndex]")
+            return cell
+        }
+        
+        let workIndex = gap2work[indexPath.row]
+        
+        if workIndex == -1 {
+            cell.textLabel?.text = "---"
+
+            cell.backgroundColor = UIColor(white:0.2, alpha:1.0)
+            cell.textLabel?.textColor = UIColor(white: 0.5, alpha: 1.0)
+            cell.textLabel?.adjustsFontSizeToFitWidth = true
+
+            cell.separatorInset = UIEdgeInsetsZero
+            cell.layoutMargins = UIEdgeInsetsZero
+
+            return cell
+        }
+
+        guard let w = session?.work[workIndex] as? Work else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
             return cell
         }
@@ -382,6 +507,13 @@ class TaskEntryCreatorByAddToListVC:
     // See base class
 
     override func redrawAfterSegue() {
+        //GAP: Update list of gaps, there may be new ones, or old ones may be "removed"
+        gap2work = []
+        if let s = session,
+            wl = s.work.array as? [Work] {
+            gap2work = getGap2Work(wl)
+        }
+
         workListTableView.reloadData()
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
