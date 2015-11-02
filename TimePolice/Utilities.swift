@@ -49,6 +49,20 @@ func getStringNoDate(date: NSDate) -> String {
 	return timeString
 }
 
+func getStringOnlyDay(date: NSDate) -> String {
+	let formatter = NSDateFormatter();
+    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("dd", options: 0, locale: NSLocale.currentLocale())
+	let timeString = formatter.stringFromDate(date)
+	return timeString
+}
+
+func getStringWithFormat(date: NSDate, format: String) -> String {
+	let formatter = NSDateFormatter();
+    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate(format, options: 0, locale: NSLocale.currentLocale())
+	let timeString = formatter.stringFromDate(date)
+	return timeString
+}
+
 // AppLog helper
 
 func logDefault(logdomain: String, logtype: AppLogEntryType, message: String) {

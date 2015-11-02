@@ -9,16 +9,32 @@
 /* Begin PBXBuildFile section */
 		CB0B0AE61A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */; };
 		CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */; };
-		CB0B0AE91A8158D600D22A08 /* TimePoliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */; };
-		CB0B0AEA1A8158D600D22A08 /* TimePoliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */; };
+		CB0B0AE91A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */; };
+		CB0B0AEA1A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */; };
 		CB0B0AEC1A815B0100D22A08 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AEB1A815B0100D22A08 /* Utilities.swift */; };
 		CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AEB1A815B0100D22A08 /* Utilities.swift */; };
 		CB0B0AF21A8177DA00D22A08 /* TimePoliceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */; };
 		CB0B0AF31A8177DA00D22A08 /* TimePoliceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */; };
-		CB1EDE9A1BBAED2A007FD39C /* AddToList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE981BBAED29007FD39C /* AddToList@2x.png */; settings = {ASSET_TAGS = (); }; };
-		CB1EDE9B1BBAED2A007FD39C /* PickTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE991BBAED29007FD39C /* PickTask@2x.png */; settings = {ASSET_TAGS = (); }; };
-		CB1EDE9E1BBAF3E6007FD39C /* AddToList.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */; settings = {ASSET_TAGS = (); }; };
-		CB1EDE9F1BBAF3E6007FD39C /* PickTask.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9D1BBAF3E6007FD39C /* PickTask.png */; settings = {ASSET_TAGS = (); }; };
+		CB0E9E881BE73C3200DEE193 /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */; };
+		CB0E9E891BE73C3200DEE193 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E811BE73C3200DEE193 /* Project.swift */; };
+		CB0E9E8A1BE73C3200DEE193 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */; };
+		CB0E9E8B1BE73C3200DEE193 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E831BE73C3200DEE193 /* Task.swift */; };
+		CB0E9E8C1BE73C3200DEE193 /* Work+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E841BE73C3200DEE193 /* Work+CoreDataProperties.swift */; };
+		CB0E9E8D1BE73C3200DEE193 /* Work.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E851BE73C3200DEE193 /* Work.swift */; };
+		CB0E9E8E1BE73C3200DEE193 /* Session+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E861BE73C3200DEE193 /* Session+CoreDataProperties.swift */; };
+		CB0E9E8F1BE73C3200DEE193 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E871BE73C3200DEE193 /* Session.swift */; };
+		CB0E9E901BE81B4200DEE193 /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */; };
+		CB0E9E911BE81B4200DEE193 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E811BE73C3200DEE193 /* Project.swift */; };
+		CB0E9E921BE81B4200DEE193 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */; };
+		CB0E9E931BE81B4200DEE193 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E831BE73C3200DEE193 /* Task.swift */; };
+		CB0E9E941BE81B4200DEE193 /* Work+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E841BE73C3200DEE193 /* Work+CoreDataProperties.swift */; };
+		CB0E9E951BE81B4200DEE193 /* Work.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E851BE73C3200DEE193 /* Work.swift */; };
+		CB0E9E961BE81B4200DEE193 /* Session+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E861BE73C3200DEE193 /* Session+CoreDataProperties.swift */; };
+		CB0E9E971BE81B4200DEE193 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E871BE73C3200DEE193 /* Session.swift */; };
+		CB1EDE9A1BBAED2A007FD39C /* AddToList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE981BBAED29007FD39C /* AddToList@2x.png */; };
+		CB1EDE9B1BBAED2A007FD39C /* PickTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE991BBAED29007FD39C /* PickTask@2x.png */; };
+		CB1EDE9E1BBAF3E6007FD39C /* AddToList.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */; };
+		CB1EDE9F1BBAF3E6007FD39C /* PickTask.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9D1BBAF3E6007FD39C /* PickTask.png */; };
 		CB33BC501B7333C00067DE3F /* TaskSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */; };
 		CB33BC511B7333C00067DE3F /* TaskSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */; };
 		CB3418771A0B4F580062C281 /* TaskEntryCreatorByPickTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182BF1A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift */; };
@@ -34,8 +50,8 @@
 		CB899E4D1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */; };
 		CB899E4E1BA561C100914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */; };
 		CBA1A47B1AFD02F7005403F7 /* TaskEntryPropVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */; };
-		CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; settings = {ASSET_TAGS = (); }; };
-		CBA6F84C1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; settings = {ASSET_TAGS = (); }; };
+		CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; };
+		CBA6F84C1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; };
 		CBCC3EE51AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */; };
 		CBCC3EE61AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */; };
 		CBCEFCB01B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */; };
@@ -62,9 +78,17 @@
 
 /* Begin PBXFileReference section */
 		CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskPickerStrategy.swift; sourceTree = "<group>"; };
-		CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceModel.swift; sourceTree = "<group>"; };
+		CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceModelUtils.swift; sourceTree = "<group>"; };
 		CB0B0AEB1A815B0100D22A08 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceVC.swift; sourceTree = "<group>"; };
+		CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CB0E9E811BE73C3200DEE193 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CB0E9E831BE73C3200DEE193 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		CB0E9E841BE73C3200DEE193 /* Work+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Work+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CB0E9E851BE73C3200DEE193 /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
+		CB0E9E861BE73C3200DEE193 /* Session+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CB0E9E871BE73C3200DEE193 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CB1EDE981BBAED29007FD39C /* AddToList@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AddToList@2x.png"; sourceTree = "<group>"; };
 		CB1EDE991BBAED29007FD39C /* PickTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PickTask@2x.png"; sourceTree = "<group>"; };
 		CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddToList.png; sourceTree = "<group>"; };
@@ -112,6 +136,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CB0E9E7F1BE73BF500DEE193 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */,
+				CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */,
+				CB0E9E811BE73C3200DEE193 /* Project.swift */,
+				CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */,
+				CB0E9E831BE73C3200DEE193 /* Task.swift */,
+				CB0E9E841BE73C3200DEE193 /* Work+CoreDataProperties.swift */,
+				CB0E9E851BE73C3200DEE193 /* Work.swift */,
+				CB0E9E861BE73C3200DEE193 /* Session+CoreDataProperties.swift */,
+				CB0E9E871BE73C3200DEE193 /* Session.swift */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
 		CBD182AF1A08AAD2007BA9F7 = {
 			isa = PBXGroup;
 			children = (
@@ -136,25 +176,25 @@
 			children = (
 				CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */,
 				CBA6F84A1BB33E5E003C650D /* Applog.swift */,
-				CBDBCE4C1A88273B00E33072 /* TimePolice.xcdatamodeld */,
-				CBD182C11A08AAD2007BA9F7 /* Main.storyboard */,
-				CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */,
-				CB899E451BA5521600914CDA /* TaskEntryCreatorManagerBase.swift */,
-				CB899E431BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift */,
-				CB899E4A1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift */,
-				CB0B0AE81A8158D600D22A08 /* TimePoliceModel.swift */,
-				CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */,
-				CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */,
 				CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */,
-				CBD182BF1A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift */,
 				CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */,
+				CBD182BF1A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift */,
+				CB899E451BA5521600914CDA /* TaskEntryCreatorManagerBase.swift */,
+				CB899E4A1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift */,
+				CB899E431BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift */,
+				CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */,
+				CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */,
 				CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */,
 				CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */,
-				CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */,
 				CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */,
+				CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */,
+				CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */,
+				CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */,
 				CB0B0AEB1A815B0100D22A08 /* Utilities.swift */,
 				CBD182C41A08AAD2007BA9F7 /* Images.xcassets */,
+				CB0E9E7F1BE73BF500DEE193 /* Core Data */,
 				CBD182C61A08AAD2007BA9F7 /* LaunchScreen.xib */,
+				CBD182C11A08AAD2007BA9F7 /* Main.storyboard */,
 				CBD182BB1A08AAD2007BA9F7 /* Supporting Files */,
 			);
 			path = TimePolice;
@@ -304,8 +344,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB0B0AE61A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
+				CB0E9E8C1BE73C3200DEE193 /* Work+CoreDataProperties.swift in Sources */,
 				CB33BC501B7333C00067DE3F /* TaskSelectVC.swift in Sources */,
 				CB899E4B1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift in Sources */,
+				CB0E9E891BE73C3200DEE193 /* Project.swift in Sources */,
+				CB0E9E8B1BE73C3200DEE193 /* Task.swift in Sources */,
+				CB0E9E8A1BE73C3200DEE193 /* Task+CoreDataProperties.swift in Sources */,
+				CB0E9E881BE73C3200DEE193 /* Project+CoreDataProperties.swift in Sources */,
+				CB0E9E8D1BE73C3200DEE193 /* Work.swift in Sources */,
 				CBD182C01A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift in Sources */,
 				CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */,
 				CBCEFCB01B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,
@@ -315,7 +361,9 @@
 				CB899E4D1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */,
 				CB899E441BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift in Sources */,
 				CB0B0AF21A8177DA00D22A08 /* TimePoliceVC.swift in Sources */,
-				CB0B0AE91A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
+				CB0E9E8E1BE73C3200DEE193 /* Session+CoreDataProperties.swift in Sources */,
+				CB0B0AE91A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */,
+				CB0E9E8F1BE73C3200DEE193 /* Session.swift in Sources */,
 				CBCC3EE51AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */,
 				CB623C101A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CBA1A47B1AFD02F7005403F7 /* TaskEntryPropVC.swift in Sources */,
@@ -328,8 +376,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB0E9E921BE81B4200DEE193 /* Task+CoreDataProperties.swift in Sources */,
 				CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
+				CB0E9E951BE81B4200DEE193 /* Work.swift in Sources */,
 				CB33BC511B7333C00067DE3F /* TaskSelectVC.swift in Sources */,
+				CB0E9E961BE81B4200DEE193 /* Session+CoreDataProperties.swift in Sources */,
 				CB3418771A0B4F580062C281 /* TaskEntryCreatorByPickTask.swift in Sources */,
 				CB899E471BA555F500914CDA /* TaskEntryCreatorManagerBase.swift in Sources */,
 				CBCEFCB11B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,
@@ -337,13 +388,18 @@
 				CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */,
 				CB0B0AF31A8177DA00D22A08 /* TimePoliceVC.swift in Sources */,
 				CB899E4E1BA561C100914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */,
-				CB0B0AEA1A8158D600D22A08 /* TimePoliceModel.swift in Sources */,
+				CB0B0AEA1A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */,
 				CBA6F84C1BB33E5E003C650D /* Applog.swift in Sources */,
+				CB0E9E941BE81B4200DEE193 /* Work+CoreDataProperties.swift in Sources */,
+				CB0E9E931BE81B4200DEE193 /* Task.swift in Sources */,
 				CBCC3EE61AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */,
+				CB0E9E901BE81B4200DEE193 /* Project+CoreDataProperties.swift in Sources */,
 				CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CB867F501B0134AA00AA8C8A /* TaskEntryPropVC.swift in Sources */,
+				CB0E9E971BE81B4200DEE193 /* Session.swift in Sources */,
 				CB623C0E1A7ED728004AE917 /* TimePoliceTheme.swift in Sources */,
 				CBD182D41A08AAD2007BA9F7 /* TimePoliceTests.swift in Sources */,
+				CB0E9E911BE81B4200DEE193 /* Project.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

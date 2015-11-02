@@ -304,7 +304,7 @@ class TimePoliceVC: UIViewController,
         }
 
         var s = ""
-        for project in projects.sort({$0.name < $1.name}) {
+        for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
             if project.name == "Templates" {
                 continue
             }
@@ -318,7 +318,7 @@ class TimePoliceVC: UIViewController,
                 projectSummary[session as! Session] = sessionSummary
             }
             var heading = "\t"
-            for session in projectSummary.keys.sort({$0.name < $1.name}) {
+            for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                 if let w = session.getLastWork() {
                     if w.isOngoing() {
                         heading += "* "
@@ -330,9 +330,9 @@ class TimePoliceVC: UIViewController,
 
             var taskRow = ""
             var sessionTotal: [Session: NSTimeInterval] = [:]
-            for task in setOfTasks.sort({$0.name < $1.name}) {
+            for task in setOfTasks.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                 taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
-                for session in projectSummary.keys.sort({$0.name < $1.name}) {
+                for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let sessionSummary = projectSummary[session] {
                         if let (_, time) = sessionSummary[task] {
                             taskRow += "\(getString(time))\t"
@@ -350,7 +350,7 @@ class TimePoliceVC: UIViewController,
                 s += "\(taskRow)\n"
             }
             var summaryRow = "Total\t"
-            for session in projectSummary.keys.sort({$0.name < $1.name}) {
+            for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                 if let total = sessionTotal[session] {
                     summaryRow += "\(getString(total))\t"
                 } else {
