@@ -342,16 +342,22 @@ class TaskEntryCreatorByAddToListVC:
             
             let alertContoller = UIAlertController(title: "Delete gap", message: nil,
                 preferredStyle: .ActionSheet)
+            
             let fillWithPreviousAction = UIAlertAction(title: "...fill with previous", style: .Default,
                 handler: { action in
                     self.handleDeleteFillWithPrevious(indexPath.row)
                 })
             alertContoller.addAction(fillWithPreviousAction)
+            
             let fillWithNextAction = UIAlertAction(title: "...fill with next", style: .Default,
                 handler: { action in
                     self.handleDeleteFillWithNext(indexPath.row)
                 })
             alertContoller.addAction(fillWithNextAction)
+            
+            let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+                handler: nil)
+            alertContoller.addAction(cancel)
             
             presentViewController(alertContoller, animated: true, completion: nil)
             
