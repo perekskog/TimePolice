@@ -435,6 +435,8 @@ class TaskEntryCreatorByAddToListVC:
             cell.separatorInset = UIEdgeInsetsZero
             cell.layoutMargins = UIEdgeInsetsZero
 
+            cell.imageView?.image = nil
+
             return cell
         }
 
