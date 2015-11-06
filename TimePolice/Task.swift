@@ -27,9 +27,17 @@ class Task: NSManagedObject {
         newItem.id = "[Task] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
+        newItem.properties = [String: String]()
+
 
         // Maintain relations
         session.addTask(newItem)
+
+        if let props = UtilitiesString.getProperties(name) {
+            let s = UtilitiesString.dumpProperties(props)
+            UtilitiesApplog.logDefault("Task.createInMOC", logtype: .Debug, message: s)
+        }
+
 
         return newItem
     }

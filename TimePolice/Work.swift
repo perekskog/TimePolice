@@ -35,14 +35,15 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
-
+        newItem.properties = [String: String]()
+        
         newItem.startTime = date
         newItem.stopTime = NSDate(timeIntervalSince1970: 0) // stoptimeOngoing
 
         // Maintain relations
         newItem.task = task
         newItem.session = session
-
+        
         task.addWork(newItem)
         session.addWork(newItem)
 
@@ -52,7 +53,7 @@ class Work: NSManagedObject {
     class func createInMOCBeforeIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
         
         guard let templateItem = session.getWork(index) else {
-            logDefault("Work", logtype: .Guard, message: "createInMOCBeforeIndex")
+            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCBeforeIndex")
             return nil
         }
 
@@ -65,6 +66,7 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = templateItem.name
         newItem.created = date
+        newItem.properties = [String: String]()
 
         newItem.startTime = templateItem.startTime
         newItem.stopTime = templateItem.startTime
@@ -82,7 +84,7 @@ class Work: NSManagedObject {
     class func createInMOCAfterIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
         
         guard let templateItem = session.getWork(index) else {
-            logDefault("Work", logtype: .Guard, message: "createInMOCAfterIndex")
+            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCAfterIndex")
             return nil
         }
 

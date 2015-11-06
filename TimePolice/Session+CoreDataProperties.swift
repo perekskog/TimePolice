@@ -14,9 +14,10 @@ import CoreData
 
 extension Session {
 
+    @NSManaged var created: NSDate
     @NSManaged var id: String
     @NSManaged var name: String
-    @NSManaged var created: NSDate
+    @NSManaged var properties: NSObject
     @NSManaged var project: Project
     @NSManaged var tasks: NSOrderedSet
     @NSManaged var work: NSOrderedSet

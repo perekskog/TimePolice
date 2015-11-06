@@ -116,10 +116,13 @@ class TimePoliceModelUtils {
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
                 s += "[Project container size=\(fetchResults.count)]\n"
                 for project in fetchResults {
-                    s += ("P: \(project.name) @ \(getString(project.created))\n")
+                    s += ("P: \(project.name) @ \(UtilitiesDate.getString(project.created))\n")
+                    for (key, value) in project.properties as! [String: String] {
+                        s += "[\(key)]=[\(value)]\n"
+                    }
                     s += "    [Session container size=\(project.sessions.count)]\n"
                     for session in project.sessions {
-                        s += "    S: \(session.name) @ \(getString(session.created))\n"
+                        s += "    S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n"
                     }
                 }
             }
@@ -135,16 +138,16 @@ class TimePoliceModelUtils {
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
-                    s += ("S: \(session.name) @ \(getString(session.created))\n")
-                    s += ("    P: \(session.project.name) @ \(getString(session.project.created))\n")
+                    s += ("S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
+                    s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
                     s += "    [Work container size=\(session.work.count)]\n"
                     session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                         let work = elem as! Work
                         if work.isStopped() {
                             let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                            s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
                         } else {
-                            s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
                         }
                     }
                     s += "    [Task container size=\(session.tasks.count)]\n"
@@ -169,12 +172,12 @@ class TimePoliceModelUtils {
                 for work in fetchResults {
                     if work.isStopped() {
                         let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                        s += "W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
                     } else {
-                        s += "W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"
+                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
                     }
-                    s += "    S: \(work.session.name) @ \(getString(work.session.created))\n"
-                    s += "    T: \(work.task.name) @ \(getString(work.task.created))\n"
+                    s += "    S: \(work.session.name) @ \(UtilitiesDate.getString(work.session.created))\n"
+                    s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
                 }
             }
         } catch {
@@ -189,19 +192,19 @@ class TimePoliceModelUtils {
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
                 s += "[Task container size=\(fetchResults.count)]\n"
                 for task in fetchResults {
-                    s += ("T: \(task.name) @ \(getString(task.created))\n")
+                    s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created))\n")
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {
-                        s += ("    S: \(session.name) @ \(getString(session.created))\n")
+                        s += ("    S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
                     }
                     s += "    [Work container size=\(task.work.count)]\n"
                     task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                         let work = elem as! Work
                         if work.isStopped() {
                             let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                            s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"
+                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
                         } else {
-                            s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
                         }
                     }
                 }
@@ -219,16 +222,16 @@ class TimePoliceModelUtils {
     //---------------------------------------------
 
     class func getSessionTasks(session: Session) -> String {
-        var s = "\(session.name)-\(getString(session.created))\n"
+        var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
         let summary = session.getSessionTaskSummary()
         for task in session.tasks.array as! [Task] {
-            let withoutComment = ThemeUtilities.getWithoutComment(task.name)
+            let withoutComment = UtilitiesString.getWithoutProperties(task.name)
             if withoutComment != "" {
                 var time: NSTimeInterval = 0
                 if let (_, t) = summary[task] {
                     time = t
                 }
-                s += "\(withoutComment)\t\(getString(time))\n"
+                s += "\(withoutComment)\t\(UtilitiesDate.getString(time))\n"
             }
         }
         return s
@@ -245,15 +248,15 @@ class TimePoliceModelUtils {
         var s: String
 
         s = "Current Session:\n"
-        s += "S: \(session.name) @ \(getString(session.created))\n"
-        s += "    P: \(session.project.name) @ \(getString(session.project.created))\n"
+        s += "S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n"
+        s += "    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n"
         session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
             let work = elem as! Work
             if work.isStopped() {
                 let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                s += "    W: \(work.task.name) \(getString(work.startTime))->\(getStringNoDate(work.stopTime)) = \(getString(timeForWork))\n"                
+                s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
             } else {
-                s += "    W: \(work.task.name) \(getString(work.startTime))->(ongoing) = ------\n"                                
+                s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
             }
         }
 
@@ -280,7 +283,7 @@ class TestData {
         var taskList: [Task] = []
 
         guard let projects1 = Project.findInMOC(moc, name: "Templates") else {
-            logDefault("TestData", logtype: .Guard, message: "addSession(Templates)")
+            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "addSession(Templates)")
             return
         }
         if projects1.count > 0 {
@@ -290,7 +293,7 @@ class TestData {
         }
 
         guard let projects2 = Project.findInMOC(moc, name: projectName) else {
-            logDefault("TestData", logtype: .Guard, message: "addSession(\(projectName))")
+            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "addSession(\(projectName))")
             return
         }
         if projects2.count > 0 {
@@ -300,7 +303,7 @@ class TestData {
         }
         
         guard let sessions = Session.findInMOC(moc, name: sessionTemplateName) else {
-            logDefault("TestData", logtype: .Guard, message: "addSession(\(sessionTemplateName))")
+            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "addSession(\(sessionTemplateName))")
             return
         }
         if sessions.count > 0 {
@@ -348,7 +351,7 @@ class TestData {
         addSession(moc, projectName: "Privat", 
             sessionTemplateName: "Template - Privat", 
             sessionTemplateTasks: taskList, 
-            sessionName: "Privat \(getStringOnlyDay(date))")
+            sessionName: "Privat \(UtilitiesDate.getStringOnlyDay(date))")
     }
 
     //---------------------------------------------
@@ -378,7 +381,7 @@ class TestData {
         addSession(moc, projectName: "Jobb", 
             sessionTemplateName: "Template - Jobb", 
             sessionTemplateTasks: taskList, 
-            sessionName: "Jobb \(getStringOnlyDay(date))")
+            sessionName: "Jobb \(UtilitiesDate.getStringOnlyDay(date))")
     }
     
     //---------------------------------------------
@@ -404,7 +407,7 @@ class TestData {
         addSession(moc, projectName: "Ett dygn", 
             sessionTemplateName: "Template - Ett dygn", 
             sessionTemplateTasks: taskList, 
-            sessionName: "Ett dygn \(getStringOnlyDay(date))")
+            sessionName: "Ett dygn \(UtilitiesDate.getStringOnlyDay(date))")
     }
 
     //---------------------------------------------
@@ -431,7 +434,7 @@ class TestData {
         addSession(moc, projectName: "Cost", 
             sessionTemplateName: "Template - Cost", 
             sessionTemplateTasks: taskList, 
-            sessionName: "Cost \(getStringOnlyDay(date))")
+            sessionName: "Cost \(UtilitiesDate.getStringOnlyDay(date))")
     }
 
     //---------------------------------------------
@@ -450,7 +453,7 @@ class TestData {
         addSession(moc, projectName: "Test", 
             sessionTemplateName: "Template - Test", 
             sessionTemplateTasks: taskList, 
-            sessionName: "Test \(getStringWithFormat(date, format: "ddss"))")
+            sessionName: "Test \(UtilitiesDate.getStringWithFormat(date, format: "ddss"))")
     }
 
 }

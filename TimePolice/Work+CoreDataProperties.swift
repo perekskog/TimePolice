@@ -14,11 +14,12 @@ import CoreData
 
 extension Work {
 
+    @NSManaged var created: NSDate
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var startTime: NSDate
     @NSManaged var stopTime: NSDate
-    @NSManaged var created: NSDate
+    @NSManaged var properties: NSObject
     @NSManaged var session: Session
     @NSManaged var task: Task
 

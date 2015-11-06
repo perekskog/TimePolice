@@ -27,6 +27,7 @@ class Project: NSManagedObject {
         newItem.id = "[Project] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
+        newItem.properties = [String: String]()
 
         return newItem
     }

@@ -37,7 +37,8 @@ class Session: NSManagedObject {
         newItem.id = "[Session=\(name)] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = "\(name)"
         newItem.created = date
-
+        newItem.properties = [String: String]()
+        
         newItem.project = project
 
         // Maintain relations

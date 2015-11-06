@@ -134,8 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
         
         switch logtype {
         case .PeriodicCallback,
-            .AppLifecycle,
-            .ViewLifecycle:
+        .Debug:
                 toBeIncluded = false
         default:
                 toBeIncluded = true

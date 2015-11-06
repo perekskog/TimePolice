@@ -311,8 +311,8 @@ class TaskEntryCreatorBase:
     
     func adjustStartTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStartDate {
-            appLog.log(logger, logtype: .Debug, message: "EditWork initial start date=\(getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "EditWork selected start date=\(getString(vc.datePickerStart.date))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork initial start date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork selected start date=\(UtilitiesDate.getString(vc.datePickerStart.date))")
             
             if initialDate != vc.datePickerStart.date {
                 // The initial starttime was changed
@@ -326,8 +326,8 @@ class TaskEntryCreatorBase:
     
     func adjustStopTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStopDate {
-            appLog.log(logger, logtype: .Debug, message: "EditWork initial stop date=\(getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "EditWork selected stop date=\(getString(vc.datePickerStop.date))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork initial stop date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "EditWork selected stop date=\(UtilitiesDate.getString(vc.datePickerStop.date))")
             
             if initialDate != vc.datePickerStop.date {
                 // The initial stoptime was changed

@@ -76,16 +76,16 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
         if let t = tasks?[indexPath.row] {
-            let withoutComment = ThemeUtilities.getWithoutComment(t.name)
+            let withoutComment = UtilitiesString.getWithoutProperties(t.name)
 
             if withoutComment != "" {
                 cell.textLabel?.text = withoutComment
                 
-                if let comment = ThemeUtilities.getComment(t.name) {
-                    if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                        let color = ThemeUtilities.string2color(colorString)
+                if let comment = UtilitiesString.getProperty(t.name) {
+                    if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
+                        let color = UtilitiesColor.string2color(colorString)
                                                 
-                        cell.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
+                        cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
                     }
                 }
             } else {

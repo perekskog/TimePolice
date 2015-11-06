@@ -82,7 +82,7 @@ class AppLog: AppLoggerDelegate {
 
     func entryLocalized(sender: AppLogger, localizedEntry: String) {
         let now = NSDate()
-        let logEntry = "\(getString(now)): \(localizedEntry)"
+        let logEntry = "\(UtilitiesDate.getString(now)): \(localizedEntry)"
         sender.appendEntry(logEntry)
     }
 

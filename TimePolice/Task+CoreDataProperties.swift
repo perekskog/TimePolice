@@ -14,9 +14,10 @@ import CoreData
 
 extension Task {
 
+    @NSManaged var created: NSDate
     @NSManaged var id: String
     @NSManaged var name: String
-    @NSManaged var created: NSDate
+    @NSManaged var properties: NSObject
     @NSManaged var sessions: NSSet
     @NSManaged var work: NSOrderedSet
 

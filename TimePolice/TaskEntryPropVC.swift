@@ -212,16 +212,16 @@ class TaskEntryPropVC:
         if sender == datePickerStart {
             if datePickerStart.date.compare(datePickerStop.date) == .OrderedDescending {
                 datePickerStop.date = datePickerStart.date
-                cellStopTime.detailTextLabel?.text = getString(datePickerStop.date)
+                cellStopTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStop.date)
             }
-            cellStartTime.detailTextLabel?.text = getString(datePickerStart.date)
+            cellStartTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStart.date)
         }
         if sender == datePickerStop {
             if datePickerStop.date.compare(datePickerStart.date) == .OrderedAscending {
                 datePickerStart.date = datePickerStop.date
-                cellStartTime.detailTextLabel?.text = getString(datePickerStart.date)
+                cellStartTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStart.date)
             }
-            cellStopTime.detailTextLabel?.text = getString(datePickerStop.date)
+            cellStopTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStop.date)
         }
     }
     
@@ -388,7 +388,7 @@ class TaskEntryPropVC:
             switch indexPath.row {
             case 0:
                 cellStartTime.textLabel?.text = "Start time"
-                cellStartTime.detailTextLabel?.text = getString(datePickerStart.date)
+                cellStartTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStart.date)
                 cell = cellStartTime
             case 1:
                 cell = UITableViewCell()
@@ -396,7 +396,7 @@ class TaskEntryPropVC:
                 cell.clipsToBounds = true
             case 2:
                 cellStopTime.textLabel?.text = "Stop time"
-                cellStopTime.detailTextLabel?.text = getString(datePickerStop.date)
+                cellStopTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStop.date)
                 cell = cellStopTime
             case 3:
                 cell = UITableViewCell()
@@ -411,13 +411,13 @@ class TaskEntryPropVC:
             case 0:
                 cellTask.textLabel?.text = "Task"
                 if let t = taskSelected {
-                    cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(t.name)
+                    cellTask.detailTextLabel?.text = UtilitiesString.getWithoutProperties(t.name)
                     
-                    if let comment = ThemeUtilities.getComment(t.name) {
-                        if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                            let color = ThemeUtilities.string2color(colorString)
+                    if let comment = UtilitiesString.getProperty(t.name) {
+                        if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
+                            let color = UtilitiesColor.string2color(colorString)
                             
-                            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
+                            cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
                         }
                     }
                     
@@ -507,16 +507,16 @@ class TaskEntryPropVC:
             }
 
             taskToUse = taskList[i]
-            cellTask.detailTextLabel?.text = ThemeUtilities.getWithoutComment(taskToUse!.name)
+            cellTask.detailTextLabel?.text = UtilitiesString.getWithoutProperties(taskToUse!.name)
 
-            guard let comment = ThemeUtilities.getComment(taskToUse!.name),
-                    let colorString = ThemeUtilities.getValue(comment, forTag: "color") else {
+            guard let comment = UtilitiesString.getProperty(taskToUse!.name),
+                    let colorString = UtilitiesString.getValue(comment, forTag: "color") else {
                 appLog.log(logger, logtype: .Guard, message: "guard fail in exitSelectTask DoneSelectTask 2")
                 return
             }
 
-            let color = ThemeUtilities.string2color(colorString)        
-            cellTask.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 15.0, height: 15.0)
+            let color = UtilitiesColor.string2color(colorString)
+            cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
         }
     }
 

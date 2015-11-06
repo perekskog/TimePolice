@@ -31,7 +31,7 @@ class TimePoliceBGView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext() else {
-            logDefault("TimePoliceBGView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TimePoliceBGView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawTimePoliceBG(context, parent: rect)
@@ -46,7 +46,7 @@ class TaskPickerBGView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext() else {
-            logDefault("TaskPickerBGView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TaskPickerBGView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawTaskPickerBG(context, parent: rect)
@@ -60,7 +60,7 @@ class WorkListBGView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext() else {
-            logDefault("WorkListBGView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("WorkListBGView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawWorkListBG(context, parent: rect)
@@ -78,7 +78,7 @@ class TaskPickerButtonView: UIView {
         guard let context = UIGraphicsGetCurrentContext(),
                 i = taskPosition,
                 selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) else {
-            logDefault("TaskPickerButtonView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TaskPickerButtonView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawTaskPickerButton(context, parent: rect, taskPosition: i, selectionAreaInfo: selectionAreaInfo)
@@ -96,7 +96,7 @@ class TaskPickerToolView: UIView {
         guard let context = UIGraphicsGetCurrentContext(),
                 i = tool,
                 toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
-            logDefault("TaskPickerToolView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TaskPickerToolView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawTaskPickerTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
@@ -114,7 +114,7 @@ class WorkListToolView: UIView {
         guard let context = UIGraphicsGetCurrentContext(),
                 i = tool ,
                 toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
-            logDefault("WorkListToolView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("WorkListToolView", logtype: .Guard, message: "drawRect")
             return
         }
         theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
@@ -266,7 +266,7 @@ class BasicTheme : Theme {
                 foregroundColor = foregroundColorWhite
             }
         case .InfoArea:
-            text = "\(toolbarInfo.totalTimesActivatedForSession)    \(getString(toolbarInfo.totalTimeActiveForSession))"
+            text = "\(toolbarInfo.totalTimesActivatedForSession)    \(UtilitiesDate.getString(toolbarInfo.totalTimeActiveForSession))"
         case .Add:
             text = "Add"
         }
@@ -319,14 +319,14 @@ class BasicTheme : Theme {
                 if let activatedAt = selectionAreaInfo.activatedAt {
                     let now = NSDate()
                     let activeTime = now.timeIntervalSinceDate(activatedAt)
-                    ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                    ThemeUtilities.addText(context, text: UtilitiesDate.getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
             } else {
                 if let numberOfTimesActivated = selectionAreaInfo.numberOfTimesActivated {
                     ThemeUtilities.addText(context, text: String(numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
                 if let totalTimeActive = selectionAreaInfo.totalTimeActive {
-                    ThemeUtilities.addText(context, text: getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                    ThemeUtilities.addText(context, text: UtilitiesDate.getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
             
             }
@@ -438,7 +438,7 @@ class BlackGreenTheme : Theme {
                 gradient = CGGradientCreateWithColors(colorspace, backgroundColorsRed, locations)
             }
         case .InfoArea:
-            text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(getString(toolbarInfo.totalTimeActiveForSession))"
+            text = "Completed: \(toolbarInfo.totalTimesActivatedForSession)    Total time: \(UtilitiesDate.getString(toolbarInfo.totalTimeActiveForSession))"
         case .Add:
             text = "Add"
         }
@@ -485,9 +485,9 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            if let comment = ThemeUtilities.getComment(task.name) {
-                if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                    let colorSquare = ThemeUtilities.string2color(colorString).CGColor
+            if let comment = UtilitiesString.getProperty(task.name) {
+                if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
+                    let colorSquare = UtilitiesColor.string2color(colorString).CGColor
                     let colorsSquare = [colorSquare, colorSquare]
                     let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
                     let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
@@ -501,7 +501,7 @@ class BlackGreenTheme : Theme {
             } else {
                 // Do nothing
             }
-            let withoutComment = ThemeUtilities.getWithoutComment(task.name)
+            let withoutComment = UtilitiesString.getWithoutProperties(task.name)
             if withoutComment != "" {
                 ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
             }
@@ -512,14 +512,14 @@ class BlackGreenTheme : Theme {
                 if let activatedAt = selectionAreaInfo.activatedAt {
                     let now = NSDate()
                     let activeTime = now.timeIntervalSinceDate(activatedAt)
-                    ThemeUtilities.addText(context, text: getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                    ThemeUtilities.addText(context, text: UtilitiesDate.getString(activeTime), origin: CGPoint(x:parent.width/2, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
             } else {
                 if let numberOfTimesActivated = selectionAreaInfo.numberOfTimesActivated {
                     ThemeUtilities.addText(context, text: String(numberOfTimesActivated), origin: CGPoint(x:parent.width/4, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
                 if let totalTimeActive = selectionAreaInfo.totalTimeActive {
-                    ThemeUtilities.addText(context, text: getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
+                    ThemeUtilities.addText(context, text: UtilitiesDate.getString(totalTimeActive), origin: CGPoint(x:parent.width/4*3, y:parent.height/4*3), fontSize: smallSize, withFrame: false, foregroundColor: color)
                 }
             }
         }
@@ -527,15 +527,6 @@ class BlackGreenTheme : Theme {
 
     
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -575,82 +566,5 @@ class ThemeUtilities {
         }
     }
     
-    class func getComment(source: String) -> String? {
-        var comment: String?
-        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
-        if x.count==2 {
-            comment = x[1]
-        }
-        return comment
-    }
-    
-    class func getWithoutComment(source: String) -> String {
-        var text = ""
-        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
-        if x.count>=1 {
-            text = x[0]
-        }
-        return text
-    }
-    
-    class func getValue(source: String, forTag: String) -> String? {
-        let props=source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
-        var value: String?
-        for s in props {
-            if s.hasPrefix("color") {
-                let part = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
-                if part.count == 2 {
-                    value = part[1]
-                }
-            }
-        }
-        return value
-    }
-    
-    class func string2color(text: String) -> UIColor {
-        //var color: UIColor?
-        let r = text[text.startIndex.advancedBy(0)]
-        let red = hexchar2value(r)
-        let g = text[text.startIndex.advancedBy(1)]
-        let green = hexchar2value(g)
-        let b = text[text.startIndex.advancedBy(2)]
-        let blue = hexchar2value(b)
-        
-        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
-    }
-    
-    class func hexchar2value(ch: Character) -> CGFloat {
-        switch ch {
-        case "0": return 0.0
-        case "1": return 1.0/16.0
-        case "2": return 2.0/16.0
-        case "3": return 3.0/16.0
-        case "4": return 4.0/16.0
-        case "5": return 5.0/16.0
-        case "6": return 6.0/16.0
-        case "7": return 7.0/16.0
-        case "8": return 8.0/16.0
-        case "9": return 9.0/16.0
-        case "a": return 10.0/16.0
-        case "b": return 11.0/16.0
-        case "c": return 12.0/16.0
-        case "d": return 13.0/16.0
-        case "e": return 14.0/16.0
-        case "f": return 15.0/16.0
-        default: return 0.0
-        }
-    }
-
-    class func getImageWithColor(color: UIColor, width: CGFloat, height: CGFloat) -> UIImage {                    
-        let rect = CGRectMake(0.0, 0.0, width, height);
-        UIGraphicsBeginImageContext(rect.size);
-        let context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextFillRect(context, rect);
-        let image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
-        return image
-    }
 }
 

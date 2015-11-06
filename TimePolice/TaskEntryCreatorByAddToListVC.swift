@@ -441,15 +441,15 @@ class TaskEntryCreatorByAddToListVC:
 
         if w.isStopped() {
             let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-            cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->\(getStringNoDate(w.stopTime)) = \(getString(timeForWork))\n"
+            cell.textLabel?.text = "\(UtilitiesString.getWithoutProperties(w.task.name)) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
         } else {
-            cell.textLabel?.text = "\(ThemeUtilities.getWithoutComment(w.task.name)) \(getStringNoDate(w.startTime))->(ongoing) = ------\n"
+            cell.textLabel?.text = "\(UtilitiesString.getWithoutProperties(w.task.name)) \(UtilitiesDate.getStringNoDate(w.startTime))->(ongoing) = ------\n"
         }     
-        if let comment = ThemeUtilities.getComment(w.task.name) {
-            if let colorString = ThemeUtilities.getValue(comment, forTag: "color") {
-                let color = ThemeUtilities.string2color(colorString)
+        if let comment = UtilitiesString.getProperty(w.task.name) {
+            if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
+                let color = UtilitiesColor.string2color(colorString)
 
-                cell.imageView?.image = ThemeUtilities.getImageWithColor(color, width: 10.0, height: 10.0)
+                cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 10.0, height: 10.0)
             }
         }
 
