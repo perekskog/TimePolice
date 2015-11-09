@@ -330,7 +330,7 @@ class TimePoliceVC: UIViewController,
 
             var taskRow = ""
             var sessionTotal: [Session: NSTimeInterval] = [:]
-            for task in setOfTasks.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+            for task in setOfTasks.sort({ $0.name < $1.name }) {
                 taskRow = "\(ThemeUtilities.getWithoutComment(task.name))\t"
                 for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let sessionSummary = projectSummary[session] {
