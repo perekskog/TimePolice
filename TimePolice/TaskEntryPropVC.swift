@@ -411,14 +411,12 @@ class TaskEntryPropVC:
             case 0:
                 cellTask.textLabel?.text = "Task"
                 if let t = taskSelected {
-                    cellTask.detailTextLabel?.text = UtilitiesString.getWithoutProperties(t.name)
+                    cellTask.detailTextLabel?.text = t.name
                     
-                    if let comment = UtilitiesString.getProperty(t.name) {
-                        if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
-                            let color = UtilitiesColor.string2color(colorString)
-                            
-                            cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
-                        }
+                    if let colorString = t.getProperty("color") {
+                        let color = UtilitiesColor.string2color(colorString)
+                        
+                        cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
                     }
                     
                 }
@@ -507,16 +505,21 @@ class TaskEntryPropVC:
             }
 
             taskToUse = taskList[i]
-            cellTask.detailTextLabel?.text = UtilitiesString.getWithoutProperties(taskToUse!.name)
+            cellTask.detailTextLabel?.text = taskToUse!.name
 
+        /*
+            Not needed?
             guard let comment = UtilitiesString.getProperty(taskToUse!.name),
                     let colorString = UtilitiesString.getValue(comment, forTag: "color") else {
                 appLog.log(logger, logtype: .Guard, message: "guard fail in exitSelectTask DoneSelectTask 2")
                 return
             }
+        */
 
-            let color = UtilitiesColor.string2color(colorString)
-            cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
+            if let colorString = taskToUse!.getProperty("color") {
+                let color = UtilitiesColor.string2color(colorString)
+                cellTask.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
+            }
         }
     }
 

@@ -76,17 +76,15 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
         if let t = tasks?[indexPath.row] {
-            let withoutComment = UtilitiesString.getWithoutProperties(t.name)
+            let withoutComment = t.name
 
             if withoutComment != "" {
                 cell.textLabel?.text = withoutComment
                 
-                if let comment = UtilitiesString.getProperty(t.name) {
-                    if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
-                        let color = UtilitiesColor.string2color(colorString)
-                                                
-                        cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
-                    }
+                if let colorString = t.getProperty("color") {
+                    let color = UtilitiesColor.string2color(colorString)
+                    
+                    cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
                 }
             } else {
                 cell.textLabel?.text = "(spacer)"

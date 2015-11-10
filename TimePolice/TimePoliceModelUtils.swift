@@ -139,6 +139,9 @@ class TimePoliceModelUtils {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
                     s += ("S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
+                    for (key, value) in session.properties as! [String: String] {
+                        s += "[\(key)]=[\(value)]\n"
+                    }
                     s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
                     s += "    [Work container size=\(session.work.count)]\n"
                     session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
@@ -176,6 +179,9 @@ class TimePoliceModelUtils {
                     } else {
                         s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
                     }
+                    for (key, value) in work.properties as! [String: String] {
+                        s += "[\(key)]=[\(value)]\n"
+                    }
                     s += "    S: \(work.session.name) @ \(UtilitiesDate.getString(work.session.created))\n"
                     s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
                 }
@@ -193,6 +199,9 @@ class TimePoliceModelUtils {
                 s += "[Task container size=\(fetchResults.count)]\n"
                 for task in fetchResults {
                     s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created))\n")
+                    for (key, value) in task.properties as! [String: String] {
+                        s += "[\(key)]=[\(value)]\n"
+                    }
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {
                         s += ("    S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
@@ -225,7 +234,7 @@ class TimePoliceModelUtils {
         var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
         let summary = session.getSessionTaskSummary()
         for task in session.tasks.array as! [Task] {
-            let withoutComment = UtilitiesString.getWithoutProperties(task.name)
+            let withoutComment = task.name
             if withoutComment != "" {
                 var time: NSTimeInterval = 0
                 if let (_, t) = summary[task] {

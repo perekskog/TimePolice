@@ -35,7 +35,12 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
+
         newItem.properties = [String: String]()
+        if let p = UtilitiesString.getProperties(name) {
+            newItem.properties = p
+            newItem.name = UtilitiesString.getWithoutProperties(name)
+        }
         
         newItem.startTime = date
         newItem.stopTime = NSDate(timeIntervalSince1970: 0) // stoptimeOngoing

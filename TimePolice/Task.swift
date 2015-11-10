@@ -27,8 +27,13 @@ class Task: NSManagedObject {
         newItem.id = "[Task] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
-        newItem.properties = [String: String]()
 
+
+        newItem.properties = [String: String]()
+        if let p = UtilitiesString.getProperties(name) {
+            newItem.properties = p
+            newItem.name = UtilitiesString.getWithoutProperties(name)
+        }
 
         // Maintain relations
         session.addTask(newItem)
@@ -52,6 +57,17 @@ class Task: NSManagedObject {
             Work.deleteInMOC(moc, work: work as! Work)
         }
         moc.deleteObject(task)
+    }
+
+    //---------------------------------------------
+    // Task - getProperty
+    //---------------------------------------------
+    
+    func getProperty(key: String) -> String? {
+        guard let p = properties as? [String: String] else {
+            return nil
+        }
+        return p[key]
     }
 
     

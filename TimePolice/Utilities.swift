@@ -93,15 +93,6 @@ class DefaultLogHelper: AppLoggerDataSource {
 
 class UtilitiesString {
 
-    class func getProperty(source: String) -> String? {
-        var comment: String?
-        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
-        if x.count==2 {
-            comment = x[1]
-        }
-        return comment
-    }
-    
     class func getWithoutProperties(source: String) -> String {
         var text = ""
         let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
@@ -111,26 +102,16 @@ class UtilitiesString {
         return text
     }
     
-    class func getValue(source: String, forTag: String) -> String? {
-        let props=source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
-        var value: String?
-        for s in props {
-            if s.hasPrefix("color") {
-                let part = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
-                if part.count == 2 {
-                    value = part[1]
-                }
-            }
-        }
-        return value
-    }
-
-    
     class func getProperties(source: String) -> [String: String]? {
-    	guard let propString = UtilitiesString.getProperty(source) else {
-    		return nil
-    	}
-        let propstring=propString.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
+        var propString: String?
+        let parts = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        if parts.count==2 {
+            propString = parts[1]
+        } else {
+            return nil
+        }
+
+        let propstring=propString!.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
         var props = [String: String]()
         for s in propstring {
         	let parts = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))

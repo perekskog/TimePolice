@@ -441,16 +441,14 @@ class TaskEntryCreatorByAddToListVC:
 
         if w.isStopped() {
             let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-            cell.textLabel?.text = "\(UtilitiesString.getWithoutProperties(w.task.name)) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+            cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
         } else {
-            cell.textLabel?.text = "\(UtilitiesString.getWithoutProperties(w.task.name)) \(UtilitiesDate.getStringNoDate(w.startTime))->(ongoing) = ------\n"
+            cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->(ongoing) = ------\n"
         }     
-        if let comment = UtilitiesString.getProperty(w.task.name) {
-            if let colorString = UtilitiesString.getValue(comment, forTag: "color") {
-                let color = UtilitiesColor.string2color(colorString)
-
-                cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 10.0, height: 10.0)
-            }
+        if let colorString = w.task.getProperty("color") {
+            let color = UtilitiesColor.string2color(colorString)
+            
+            cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 10.0, height: 10.0)
         }
 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)

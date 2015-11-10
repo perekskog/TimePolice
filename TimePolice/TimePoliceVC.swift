@@ -331,7 +331,7 @@ class TimePoliceVC: UIViewController,
             var taskRow = ""
             var sessionTotal: [Session: NSTimeInterval] = [:]
             for task in setOfTasks.sort({ $0.name < $1.name }) {
-                taskRow = "\(UtilitiesString.getWithoutProperties(task.name))\t"
+                taskRow = "\(task.name)\t"
                 for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let sessionSummary = projectSummary[session] {
                         if let (_, time) = sessionSummary[task] {
@@ -381,7 +381,7 @@ class TimePoliceVC: UIViewController,
         if let session = sessions?[indexPath.row] {
             if let work = session.getLastWork() {
                 if work.isOngoing() {
-                    let taskName = UtilitiesString.getWithoutProperties(work.task.name)
+                    let taskName = work.task.name
                     cell.textLabel?.text = "\(session.name) (\(taskName))"
                 } else {
                     cell.textLabel?.text = "\(session.name) (---)"
