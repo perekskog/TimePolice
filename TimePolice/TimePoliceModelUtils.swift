@@ -231,13 +231,12 @@ class TimePoliceModelUtils {
         var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
         let summary = session.getSessionTaskSummary()
         for task in session.tasks.array as! [Task] {
-            let withoutComment = task.name
-            if withoutComment != "" {
+            if task.name != "" {
                 var time: NSTimeInterval = 0
                 if let (_, t) = summary[task] {
                     time = t
                 }
-                s += "\(withoutComment)\t\(UtilitiesDate.getString(time))\n"
+                s += "\(task.name)\t\(UtilitiesDate.getString(time))\n"
             }
         }
         return s

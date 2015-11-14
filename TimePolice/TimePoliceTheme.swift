@@ -485,8 +485,7 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            let withoutComment = task.name
-            if withoutComment != "" {
+            if task.name != "" {
                 if let colorString = task.getProperty("color") {
                     let colorSquare = UtilitiesColor.string2color(colorString).CGColor
                     let colorsSquare = [colorSquare, colorSquare]
@@ -499,7 +498,7 @@ class BlackGreenTheme : Theme {
                     CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
                     CGContextRestoreGState(context)
                 }
-                ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
+                ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
             }
         }
         

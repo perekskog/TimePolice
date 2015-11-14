@@ -76,10 +76,8 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
         if let t = tasks?[indexPath.row] {
-            let withoutComment = t.name
-
-            if withoutComment != "" {
-                cell.textLabel?.text = withoutComment
+            if t.name != "" {
+                cell.textLabel?.text = t.name
                 
                 if let colorString = t.getProperty("color") {
                     let color = UtilitiesColor.string2color(colorString)
