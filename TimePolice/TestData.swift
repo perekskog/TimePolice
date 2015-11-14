@@ -32,7 +32,7 @@ class TestData {
     // TestData - storeTemplate
     //---------------------------------------------
 
-    class func storeTemplate(moc: NSManagedObjectContext, session: (String, [String: String]), tasks: [(String, [String: String])]) {
+    class func storeTemplate(moc: NSManagedObjectContext, project: String, session: (String, [String: String]), tasks: [(String, [String: String])]) {
 
         // Find template project, or create it if it does not already exist
         var templateProject: Project
@@ -72,6 +72,8 @@ class TestData {
                 } else {
                     // Retain old task, otherwise create new task
                     var found = false
+
+                    // First, search among the tasks in the old template
                     if oldTemplateSession != nil {
                         for task in (oldTemplateSession?.tasks)! {
                             if !found && task.name == newTaskName {
@@ -80,6 +82,24 @@ class TestData {
                             }
                         }
                     }
+                    // Second, search in project
+                    // (A task might have been used some time ago)
+
+                    if let projects = Project.findInMOC(moc, name: project) {
+                        if projects.count > 0 {
+                            let project = projects[0]
+
+                            for session in project.sessions {
+                                for task in (session as! Session).tasks {
+                                    if !found && task.name == newTaskName {
+                                        found = true
+                                        newTemplateSession.addTask(task as! Task)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Only create task if it could not be reused
                     if !found {
                         Task.createInMOC(moc, name: newTaskName, properties: properties, session: newTemplateSession)
                     }
@@ -193,8 +213,8 @@ class TestData {
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
 
     }
@@ -240,8 +260,8 @@ class TestData {
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
     }
     
@@ -276,8 +296,8 @@ class TestData {
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
 
     }
@@ -326,8 +346,8 @@ class TestData {
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
 
     }
@@ -340,24 +360,26 @@ class TestData {
     class func addSessionToTest(moc: NSManagedObjectContext) {
         var s = "Test\n"
         s += "Adam#color=8f8\n"
-        s += "Bertil#color=88f"
+        s += "Bertil#color=88f\n"
+        s += "Ceasar"
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
     }
 
     class func addSessionToTest2(moc: NSManagedObjectContext) {
         var s = "Test\n"
+        s += "\n"
         s += "Bertil#color=88f\n"
         s += "Ceasar#cat=hemma,color=ff0"
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
     }
 
@@ -370,8 +392,8 @@ class TestData {
 
         let st = SessionTemplate()
         st.parseTemplate(s)
-        storeTemplate(moc, session: st.session, tasks: st.tasks)
         let (sessionName, _) = st.session
+        storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks)
         cloneSession(moc, projectName: sessionName, sessionName: sessionName)
     }
 

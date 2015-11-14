@@ -153,7 +153,7 @@ class TimePoliceModelUtils {
                     s += "    [Task container size=\(session.tasks.count)]\n"
                     session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
                         let task = elem as! Task
-                        s += ("    T: \(task.name)\n")
+                        s += "    T: \(task.name) @ \(UtilitiesDate.getString(task.created))\n"
                     }
                 }
             }
