@@ -24,38 +24,46 @@ class Work: NSManagedObject {
     // Work - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session, task: Task) -> Work {
-        
+    class func createInMOC(moc: NSManagedObjectContext,
+            name: String, session: Session, task: Task) -> Work {
+            
+        let n = UtilitiesString.getWithoutProperties(name)
+        let p = UtilitiesString.getProperties(name)
+        return Work.createInMOC(moc, name: n, properties: p, session: session, task: task)
+    }
+    
+    class func createInMOC(moc: NSManagedObjectContext,
+        name: String, properties: [String: String], session: Session, task: Task) -> Work {
+            
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
-
+        
         let date = NSDate()
         let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
+            dateStyle: NSDateFormatterStyle.ShortStyle,
+            timeStyle: NSDateFormatterStyle.MediumStyle)
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
-
-        newItem.properties = [String: String]()
-        if let p = UtilitiesString.getProperties(name) {
-            newItem.properties = p
-            newItem.name = UtilitiesString.getWithoutProperties(name)
-        }
-        
+        newItem.properties = properties
         newItem.startTime = date
         newItem.stopTime = NSDate(timeIntervalSince1970: 0) // stoptimeOngoing
-
+        
         // Maintain relations
         newItem.task = task
         newItem.session = session
         
         task.addWork(newItem)
         session.addWork(newItem)
-
+        
+        let s = UtilitiesString.dumpProperties(properties)
+        UtilitiesApplog.logDefault("Work.createInMOC", logtype: .Debug, message: s)
+        
         return newItem
     }
-    
-    class func createInMOCBeforeIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
+
+
+    class func createInMOCBeforeIndex(moc: NSManagedObjectContext, 
+            session: Session, index: Int) -> Work? {
         
         guard let templateItem = session.getWork(index) else {
             UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCBeforeIndex")
@@ -71,8 +79,7 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = templateItem.name
         newItem.created = date
-        newItem.properties = [String: String]()
-
+        newItem.properties = templateItem.properties
         newItem.startTime = templateItem.startTime
         newItem.stopTime = templateItem.startTime
 
@@ -82,11 +89,17 @@ class Work: NSManagedObject {
         // Maintain relations
         newItem.task = templateItem.task
         newItem.session = templateItem.session
+                
+        if let p = templateItem.properties as? [String: String] {
+            let s = UtilitiesString.dumpProperties(p)
+            UtilitiesApplog.logDefault("Work.createInMOC", logtype: .Debug, message: s)
+        }
 
         return newItem
     }
 
-    class func createInMOCAfterIndex(moc: NSManagedObjectContext, session: Session, index: Int) -> Work? {
+    class func createInMOCAfterIndex(moc: NSManagedObjectContext, 
+            session: Session, index: Int) -> Work? {
         
         guard let templateItem = session.getWork(index) else {
             UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCAfterIndex")
@@ -102,7 +115,7 @@ class Work: NSManagedObject {
         newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = templateItem.name
         newItem.created = date
-
+        newItem.properties = templateItem.properties
         newItem.startTime = templateItem.stopTime
         newItem.stopTime = templateItem.stopTime
 
@@ -112,6 +125,11 @@ class Work: NSManagedObject {
         // Maintain relations
         newItem.task = templateItem.task
         newItem.session = templateItem.session
+                
+        if let p = templateItem.properties as? [String: String] {
+            let s = UtilitiesString.dumpProperties(p)
+            UtilitiesApplog.logDefault("Work.createInMOC", logtype: .Debug, message: s)
+        }
 
         return newItem
     }

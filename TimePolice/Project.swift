@@ -16,7 +16,16 @@ class Project: NSManagedObject {
     // Project - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String) -> Project {
+    class func createInMOC(moc: NSManagedObjectContext, 
+            name: String) -> Project {
+
+        let n = UtilitiesString.getWithoutProperties(name)
+        let p = UtilitiesString.getProperties(name)
+        return Project.createInMOC(moc, name: n, properties: p)
+    }
+
+    class func createInMOC(moc: NSManagedObjectContext, 
+            name: String, properties: [String: String]) -> Project {
 
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
 
@@ -27,12 +36,10 @@ class Project: NSManagedObject {
         newItem.id = "[Project] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
+        newItem.properties = properties
 
-        newItem.properties = [String: String]()
-        if let p = UtilitiesString.getProperties(name) {
-            newItem.properties = p
-            newItem.name = UtilitiesString.getWithoutProperties(name)
-        }
+        let s = UtilitiesString.dumpProperties(properties)
+        UtilitiesApplog.logDefault("Project.createInMOC", logtype: .Debug, message: s)
 
         return newItem
     }

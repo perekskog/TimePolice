@@ -102,13 +102,13 @@ class UtilitiesString {
         return text
     }
     
-    class func getProperties(source: String) -> [String: String]? {
+    class func getProperties(source: String) -> [String: String] {
         var propString: String?
         let parts = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
         if parts.count==2 {
             propString = parts[1]
         } else {
-            return nil
+            return [:]
         }
 
         let propstring=propString!.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
@@ -122,8 +122,17 @@ class UtilitiesString {
         if props.count > 0 {
             return props
         } else {
-            return nil
+            return [:]
         }
+    }
+
+    class func getStringFromProperties(props: [String: String]) -> String {
+        var s = ""
+        for (key, value) in props {
+            s += "\(key)=\(value),"
+        }
+        s.removeAtIndex(s.endIndex.predecessor())
+        return s
     }
 
     class func dumpProperties(props: [String: String]) -> String {

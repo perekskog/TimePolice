@@ -485,20 +485,20 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            if let colorString = task.getProperty("color") {
-                let colorSquare = UtilitiesColor.string2color(colorString).CGColor
-                let colorsSquare = [colorSquare, colorSquare]
-                let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
-                let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
-                let startPointSquare = CGPoint(x: 4, y: 4)
-                let endPointSquare = CGPoint(x: 8, y: 8)
-                CGContextSaveGState(context)
-                //            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
-                CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
-                CGContextRestoreGState(context)
-            }
             let withoutComment = task.name
             if withoutComment != "" {
+                if let colorString = task.getProperty("color") {
+                    let colorSquare = UtilitiesColor.string2color(colorString).CGColor
+                    let colorsSquare = [colorSquare, colorSquare]
+                    let locationSquare: [CGFloat] = [ 0.0, 1.0 ]
+                    let gradientSquare = CGGradientCreateWithColors(colorSpaceRGB, colorsSquare, locationSquare)
+                    let startPointSquare = CGPoint(x: 4, y: 4)
+                    let endPointSquare = CGPoint(x: 8, y: 8)
+                    CGContextSaveGState(context)
+                    //            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
+                    CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
+                    CGContextRestoreGState(context)
+                }
                 ThemeUtilities.addText(context, text: withoutComment, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
             }
         }

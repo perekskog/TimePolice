@@ -16,7 +16,17 @@ class Task: NSManagedObject {
     // Task - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String, session: Session) -> Task {
+    class func createInMOC(moc: NSManagedObjectContext, 
+            name: String, session: Session) -> Task {
+        
+        let n = UtilitiesString.getWithoutProperties(name)
+        let p = UtilitiesString.getProperties(name)
+        return Task.createInMOC(moc, name: n, properties: p, session: session)
+    }
+
+
+    class func createInMOC(moc: NSManagedObjectContext, 
+            name: String, properties: [String: String], session: Session) -> Task {
         
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
 
@@ -27,22 +37,13 @@ class Task: NSManagedObject {
         newItem.id = "[Task] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = name
         newItem.created = date
-
-
-        newItem.properties = [String: String]()
-        if let p = UtilitiesString.getProperties(name) {
-            newItem.properties = p
-            newItem.name = UtilitiesString.getWithoutProperties(name)
-        }
+        newItem.properties = properties
 
         // Maintain relations
         session.addTask(newItem)
 
-        if let props = UtilitiesString.getProperties(name) {
-            let s = UtilitiesString.dumpProperties(props)
-            UtilitiesApplog.logDefault("Task.createInMOC", logtype: .Debug, message: s)
-        }
-
+        let s = UtilitiesString.dumpProperties(properties)
+        UtilitiesApplog.logDefault("Task.createInMOC", logtype: .Debug, message: s)
 
         return newItem
     }

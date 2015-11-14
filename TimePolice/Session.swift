@@ -26,7 +26,17 @@ class Session: NSManagedObject {
     // Session - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, name: String, project: Project) -> Session {
+    class func createInMOC(moc: NSManagedObjectContext, 
+                name: String, project: Project) -> Session {
+
+        let n = UtilitiesString.getWithoutProperties(name)
+        let p = UtilitiesString.getProperties(name)
+        let s = Session.createInMOC(moc, name: n, properties: p, project: project)
+        return s
+    }
+
+    class func createInMOC(moc: NSManagedObjectContext, 
+                name: String, properties: [String: String], project: Project) -> Session {
         
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
@@ -37,17 +47,15 @@ class Session: NSManagedObject {
         newItem.id = "[Session=\(name)] \(dateAndTime) - \(date.timeIntervalSince1970)"
         newItem.name = "\(name)"
         newItem.created = date
-
-        newItem.properties = [String: String]()
-        if let p = UtilitiesString.getProperties(name) {
-            newItem.properties = p
-            newItem.name = UtilitiesString.getWithoutProperties(name)
-        }
+        newItem.properties = properties
         
         newItem.project = project
 
         // Maintain relations
         project.addSession(newItem)
+
+        let s = UtilitiesString.dumpProperties(properties)
+        UtilitiesApplog.logDefault("Session.createInMOC", logtype: .Debug, message: s)
 
         return newItem
     }
@@ -119,6 +127,15 @@ class Session: NSManagedObject {
         }
     }
 
+    //---------------------------------------------
+    // Session - addTasks (internal use only)
+    //---------------------------------------------
+
+    func deleteTask(task: Task) {
+        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
+        st.removeObject(task)
+        self.tasks = st
+    }
 
 
     //---------------------------------------------

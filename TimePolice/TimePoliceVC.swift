@@ -241,6 +241,26 @@ class TimePoliceVC: UIViewController,
         redrawAll(true)
     }
     
+    @IBAction func loadDataTest2(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataTest2")
+
+        TestData.addSessionToTest2(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
+
+        redrawAll(true)
+    }
+    
+    @IBAction func loadDataTest3(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "loadDataTest2")
+
+        TestData.addSessionToTest3(moc)
+        TimePoliceModelUtils.save(moc)
+        moc.reset()
+
+        redrawAll(true)
+    }
+    
     @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
 
