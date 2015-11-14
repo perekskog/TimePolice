@@ -292,7 +292,7 @@ class TestData {
         s += "\n"
         s += "Ärende\n"
         s += "F&S\n"
-        s += "Annat\n"
+        s += "Annat"
 
         let st = SessionTemplate()
         st.parseTemplate(s)
@@ -358,7 +358,7 @@ class TestData {
 
 
     class func addSessionToTest(moc: NSManagedObjectContext) {
-        var s = "Test\n"
+        var s = "Test#columns=1\n"
         s += "Adam#color=8f8\n"
         s += "Bertil#color=88f\n"
         s += "Ceasar"
@@ -371,7 +371,7 @@ class TestData {
     }
 
     class func addSessionToTest2(moc: NSManagedObjectContext) {
-        var s = "Test\n"
+        var s = "Test#columns=2\n"
         s += "\n"
         s += "Bertil#color=88f\n"
         s += "Ceasar#cat=hemma,color=ff0"
@@ -384,7 +384,7 @@ class TestData {
     }
 
     class func addSessionToTest3(moc: NSManagedObjectContext) {
-        var s = "Test\n"
+        var s = "Test#columns=3\n"
         s += "\n"
         s += "\n"
         s += "Ceasar#color=88f\n"

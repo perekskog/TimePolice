@@ -74,6 +74,17 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
+    // Session - getProperty
+    //---------------------------------------------
+    
+    func getProperty(key: String) -> String? {
+        guard let p = properties as? [String: String] else {
+            return nil
+        }
+        return p[key]
+    }
+
+    //---------------------------------------------
     // Session - addWork (internal use only)
     //---------------------------------------------
 

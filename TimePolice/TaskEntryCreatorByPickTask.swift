@@ -121,21 +121,21 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         let padding: CGFloat = 1
-        if s.tasks.count <= 6 {
-            layout = GridLayout(rows: 6, columns: 1, padding: padding, toolHeight: 30)
-        } else if s.tasks.count <= 12 {
-            layout = GridLayout(rows: 6, columns: 2, padding: padding, toolHeight: 30)
-        } else if s.tasks.count <= 21 {
-            layout = GridLayout(rows: 7, columns: 3, padding: padding, toolHeight: 30)
-        } else if s.tasks.count <= 24 {
-            layout = GridLayout(rows: 8, columns: 3, padding: padding, toolHeight: 30)
-        } else if s.tasks.count <= 27 {
-            layout = GridLayout(rows: 9, columns: 3, padding: padding, toolHeight: 30)
-        } else if s.tasks.count <= 30 {
-            layout = GridLayout(rows: 10, columns: 3, padding: padding, toolHeight: 30)
-        } else {
-            layout = GridLayout(rows: 10, columns: 4, padding: padding, toolHeight: 30)
+        let toolHeight: CGFloat = 30
+
+        var columns: Int = 1 + s.tasks.count/10
+
+        if let cols = s.getProperty("columns"),
+            c = Int(cols) {
+                columns = c
         }
+
+        var rows: Int = s.tasks.count/columns
+        if s.tasks.count % columns > 0 {
+            rows++
+        }
+
+        layout = GridLayout(rows: rows, columns: columns, padding: padding, toolHeight: toolHeight)
         
         self.sessionTaskSummary = s.getSessionTaskSummary()
 
