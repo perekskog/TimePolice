@@ -133,8 +133,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
 */
         
         switch logtype {
-        case .PeriodicCallback,
-        .Debug:
+        case .PeriodicCallback:
                 toBeIncluded = false
         default:
                 toBeIncluded = true

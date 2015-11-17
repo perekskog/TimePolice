@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="NPP-pM-9ME">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="h2A-Ro-PcX">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
     </dependencies>
     <scenes>
-        <!--Time PoliceVC-->
+        <!--MainTemplateListVC-->
+        <scene sceneID="aa4-5I-Fc1">
+            <objects>
+                <viewController id="Irr-mv-VTQ" userLabel="MainTemplateListVC" customClass="MainTemplateListVC" customModule="TimePolice" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="p3T-ZM-xAF"/>
+                        <viewControllerLayoutGuide type="bottom" id="5NS-hd-nY5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oHd-zy-LSo">
+                                <rect key="frame" x="28" y="23" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="BlR-8F-y7L"/>
+                                    <action selector="exit:" destination="Irr-mv-VTQ" eventType="touchUpInside" id="Xas-o7-B9o"/>
+                                    <action selector="exit:" destination="ibE-kE-IVF" eventType="touchUpInside" id="m8O-fh-sYj"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7dW-GI-dvj"/>
+                    <connections>
+                        <segue destination="xKM-2J-WlK" kind="modal" identifier="MainTemplateProp" id="UQc-Rc-4Y0"/>
+                        <segue destination="3jP-wD-9bJ" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Wa2-3f-W4B"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qu7-rQ-Yhg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="3jP-wD-9bJ" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3227" y="-578"/>
+        </scene>
+        <!--MainTemplatePropVC-->
+        <scene sceneID="nN3-jG-VGX">
+            <objects>
+                <viewController id="kUl-Z4-YiI" userLabel="MainTemplatePropVC" customClass="MainTemplatePropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bjB-bv-4tP"/>
+                        <viewControllerLayoutGuide type="bottom" id="SBW-at-YEg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Hgy-cC-Rfq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HlS-mS-5sB">
+                                <rect key="frame" x="40" y="125" width="240" height="406"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="USl-RV-TM6"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HQc-tn-hSD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4322" y="-578"/>
+        </scene>
+        <!--MainSessionsVC-->
         <scene sceneID="b4w-RP-6if">
             <objects>
-                <viewController id="ibE-kE-IVF" customClass="TimePoliceVC" customModule="TimePolice" sceneMemberID="viewController">
+                <viewController id="ibE-kE-IVF" userLabel="MainSessionsVC" customClass="MainSessionsVC" customModule="TimePolice" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="54z-OJ-CMk"/>
                         <viewControllerLayoutGuide type="bottom" id="Vka-ag-VfY"/>
@@ -17,16 +84,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hjR-LU-Jkq">
-                                <rect key="frame" x="66" y="44" width="68" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Core data">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearCoreData:" destination="ibE-kE-IVF" eventType="touchUpInside" id="90W-eW-rbX"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHb-0v-TCS">
                                 <rect key="frame" x="68" y="120" width="40" height="30"/>
                                 <animations/>
@@ -37,13 +94,6 @@
                                     <action selector="loadDataPrivate:" destination="ibE-kE-IVF" eventType="touchUpInside" id="INH-hH-9Cf"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZwB-DC-1Hy">
-                                <rect key="frame" x="118" y="15" width="85" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Create" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igq-HE-rsE">
                                 <rect key="frame" x="9" y="124" width="51" height="21"/>
                                 <animations/>
@@ -71,33 +121,6 @@
                                     <action selector="loadDataDaytime:" destination="ibE-kE-IVF" eventType="touchUpInside" id="Wgf-HY-lLG"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKw-39-d1n">
-                                <rect key="frame" x="109" y="83" width="49" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dumpApplog:" destination="ibE-kE-IVF" eventType="touchUpInside" id="XBa-4I-2Tj"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20A-tb-NFv">
-                                <rect key="frame" x="68" y="82" width="33" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Core">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dumpCoreData:" destination="ibE-kE-IVF" eventType="touchUpInside" id="cqI-Iw-0gT"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Copy" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-Un-Ypd">
-                                <rect key="frame" x="9" y="86" width="51" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-Eh-bSr">
                                 <rect key="frame" x="222" y="53" width="84" height="21"/>
                                 <animations/>
@@ -105,23 +128,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcV-Bp-bb0">
-                                <rect key="frame" x="9" y="48" width="51" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dIL-h8-acL">
-                                <rect key="frame" x="145" y="44" width="49" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearApplog:" destination="ibE-kE-IVF" eventType="touchUpInside" id="9UR-4t-ySS"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-9D-Acs">
                                 <rect key="frame" x="270" y="83" width="30" height="30"/>
                                 <animations/>
@@ -140,14 +146,6 @@
                                     <action selector="loadDataCost:" destination="ibE-kE-IVF" eventType="touchUpInside" id="USM-8L-dBt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6d2-vu-blc">
-                                <rect key="frame" x="166" y="82" width="61" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Sessions"/>
-                                <connections>
-                                    <action selector="dumpSessionSummary:" destination="ibE-kE-IVF" eventType="touchUpInside" id="F2l-zG-A01"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFf-b8-XPi">
                                 <rect key="frame" x="270" y="105" width="39" height="30"/>
                                 <animations/>
@@ -164,6 +162,15 @@
                                     <action selector="loadDataTest3:" destination="ibE-kE-IVF" eventType="touchUpInside" id="7en-xh-qWp"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8NE-zH-fEt">
+                                <rect key="frame" x="19" y="20" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exit:" destination="ibE-kE-IVF" eventType="touchUpInside" id="9UM-9U-iwQ"/>
+                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="qYB-lr-1FP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -174,11 +181,13 @@
                     <connections>
                         <outlet property="appLogSize" destination="3tR-Eh-bSr" id="dpB-F3-dLZ"/>
                         <segue destination="bYn-0s-WYr" kind="push" identifier="TaskEntryCreatorManagers" id="A2k-t4-VXx"/>
+                        <segue destination="zcu-y0-IBg" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Eex-Ti-mQC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cpz-F9-Kfn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="zcu-y0-IBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1623" y="486"/>
+            <point key="canvasLocation" x="3219" y="486"/>
         </scene>
         <!--TaskEntryCreatorByPickTaskVC-->
         <scene sceneID="ufC-wZ-h7g">
@@ -204,7 +213,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <exit id="Ts8-bs-c8R" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3691" y="211"/>
+            <point key="canvasLocation" x="5287" y="259"/>
         </scene>
         <!--SessionManagerForPickTask-->
         <scene sceneID="z8q-n2-lJG">
@@ -224,12 +233,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="71P-IP-wZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3062" y="211"/>
+            <point key="canvasLocation" x="4670" y="259"/>
         </scene>
-        <!--Add to list-->
+        <!--SessionManagerForAddToList-->
         <scene sceneID="VTu-hB-Jde">
             <objects>
-                <viewController id="FNn-dD-6RS" customClass="TaskEntryCreatorManagerForAddToList" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="FNn-dD-6RS" userLabel="SessionManagerForAddToList" customClass="TaskEntryCreatorManagerForAddToList" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="d9k-V2-O8A"/>
                         <viewControllerLayoutGuide type="bottom" id="R9D-DB-Bco"/>
@@ -244,7 +253,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kyt-k8-gCq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3074" y="981"/>
+            <point key="canvasLocation" x="4670" y="981"/>
         </scene>
         <!--TaskEntryCreatorByAddToListVC-->
         <scene sceneID="wps-ek-s8l">
@@ -270,7 +279,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwM-jx-N4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="DP0-0d-1WN" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3691" y="981"/>
+            <point key="canvasLocation" x="5287" y="981"/>
         </scene>
         <!--TaskEntryPropVC-->
         <scene sceneID="d2u-oH-QeM">
@@ -298,7 +307,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yei-av-ysS" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="eM6-nC-ER0" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4954" y="479"/>
+            <point key="canvasLocation" x="6574" y="599"/>
         </scene>
         <!--TaskSelectVC-->
         <scene sceneID="VvP-X4-uFq">
@@ -322,26 +331,198 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ot-zO-r7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MHh-sN-e8a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="5450" y="479"/>
+            <point key="canvasLocation" x="7070" y="599"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="5jz-c1-GdA">
+        <!--MainVC-->
+        <scene sceneID="Hk9-N5-ZWe">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="NPP-pM-9ME" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wg7-SK-ffS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                <viewController id="eLJ-bB-2C6" userLabel="MainVC" customClass="MainVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JhE-lg-WDg"/>
+                        <viewControllerLayoutGuide type="bottom" id="iDV-7q-SL9"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BEL-M0-Gy8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZG-iV-Vgl">
+                                <rect key="frame" x="125" y="122" width="71" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Templates"/>
+                                <connections>
+                                    <segue destination="Irr-mv-VTQ" kind="push" id="vBV-Ts-BqF"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7G-KF-Reh">
+                                <rect key="frame" x="130" y="193" width="61" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Sessions"/>
+                                <connections>
+                                    <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RE4-zX-HtF">
+                                <rect key="frame" x="137" y="269" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Export"/>
+                                <connections>
+                                    <segue destination="SF8-YH-e6F" kind="push" identifier="Export" id="dBH-RE-CZO"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4i-xD-Haj">
+                                <rect key="frame" x="118" y="54" width="85" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rVL-WA-YrK">
+                                <rect key="frame" x="132" y="346" width="57" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Settings"/>
+                                <connections>
+                                    <segue destination="jaN-JA-eGe" kind="push" identifier="Settings" id="MQT-qG-4tx"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <animations/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="ibE-kE-IVF" kind="relationship" relationship="rootViewController" id="qZY-Cn-nnO"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pNx-jO-sik" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WJJ-DQ-rtD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1074" y="486"/>
+            <point key="canvasLocation" x="2283" y="148"/>
+        </scene>
+        <!--MainExportVC-->
+        <scene sceneID="xKi-Ul-NQu">
+            <objects>
+                <viewController id="SF8-YH-e6F" userLabel="MainExportVC" customClass="MainExportVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="g80-vh-Otz"/>
+                        <viewControllerLayoutGuide type="bottom" id="pf1-W3-eNp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mGh-7y-Ctg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="304-oV-hmY">
+                                <rect key="frame" x="151" y="160" width="49" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Applog">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpApplog:" destination="SF8-YH-e6F" eventType="touchUpInside" id="F4J-es-VeJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rk0-Pe-KGj">
+                                <rect key="frame" x="110" y="159" width="33" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Core">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Copy" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Njj-Pt-kjj">
+                                <rect key="frame" x="51" y="163" width="51" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
+                                <rect key="frame" x="208" y="159" width="61" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Sessions"/>
+                                <connections>
+                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O9I-4w-amE">
+                                <rect key="frame" x="60" y="40" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exit:" destination="SF8-YH-e6F" eventType="touchUpInside" id="6bl-fe-S1a"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Op2-MH-YBM"/>
+                    <connections>
+                        <segue destination="pKT-ae-mHb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="MO6-1c-cNm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qr4-jv-DAj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="pKT-ae-mHb" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2476" y="1001"/>
+        </scene>
+        <!--MainSettingsVC-->
+        <scene sceneID="HHE-Vn-6fp">
+            <objects>
+                <viewController id="jaN-JA-eGe" userLabel="MainSettingsVC" customClass="MainSettingVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Qdm-jD-G6q"/>
+                        <viewControllerLayoutGuide type="bottom" id="Uz7-rG-grc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uKX-cz-dYV" customClass="Main">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAC-Ek-niD">
+                                <rect key="frame" x="125" y="117" width="68" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Core data">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearCoreData:" destination="jaN-JA-eGe" eventType="touchUpInside" id="woR-cP-Y6t"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
+                                <rect key="frame" x="68" y="121" width="51" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
+                                <rect key="frame" x="204" y="117" width="49" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Applog">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearApplog:" destination="jaN-JA-eGe" eventType="touchUpInside" id="KCO-2c-hb0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="joo-kf-e6R">
+                                <rect key="frame" x="66" y="28" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
+                    <connections>
+                        <segue destination="SLu-ke-hzb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="IYJ-zg-K2k"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FoT-qM-lBj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="SLu-ke-hzb" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2084" y="1001"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="B5B-BN-JiH">
@@ -360,7 +541,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LoU-fD-5P2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4422" y="479"/>
+            <point key="canvasLocation" x="6042" y="599"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="t25-xF-g8Y">
@@ -382,7 +563,46 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WWf-dK-40d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2209" y="486"/>
+            <point key="canvasLocation" x="3805" y="486"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="6uX-GU-Bqg">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="h2A-Ro-PcX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3Gz-bL-3qq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="eLJ-bB-2C6" kind="relationship" relationship="rootViewController" id="hWH-zD-y88"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Iy-5j-Zub" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1751" y="148"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="QW0-n4-WFa">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xKM-2J-WlK" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="cNY-tf-Pao"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="26V-3P-75g">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="kUl-Z4-YiI" kind="relationship" relationship="rootViewController" id="UTa-6L-GW9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4kX-3r-oDu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3805" y="-578"/>
         </scene>
     </scenes>
     <resources>
@@ -390,6 +610,6 @@
         <image name="PickTask.png" width="19" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="I7g-5x-ylG"/>
     </inferredMetricsTieBreakers>
 </document>

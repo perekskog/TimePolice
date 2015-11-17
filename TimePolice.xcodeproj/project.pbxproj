@@ -13,8 +13,6 @@
 		CB0B0AEA1A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */; };
 		CB0B0AEC1A815B0100D22A08 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AEB1A815B0100D22A08 /* Utilities.swift */; };
 		CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AEB1A815B0100D22A08 /* Utilities.swift */; };
-		CB0B0AF21A8177DA00D22A08 /* TimePoliceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */; };
-		CB0B0AF31A8177DA00D22A08 /* TimePoliceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */; };
 		CB0E9E881BE73C3200DEE193 /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */; };
 		CB0E9E891BE73C3200DEE193 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E811BE73C3200DEE193 /* Project.swift */; };
 		CB0E9E8A1BE73C3200DEE193 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */; };
@@ -56,6 +54,18 @@
 		CBA1A47B1AFD02F7005403F7 /* TaskEntryPropVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */; };
 		CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; };
 		CBA6F84C1BB33E5E003C650D /* Applog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA6F84A1BB33E5E003C650D /* Applog.swift */; };
+		CBB51C481BF9A93B00C84B11 /* MainSessionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* MainSessionsVC.swift */; };
+		CBB51C491BF9A93D00C84B11 /* MainSessionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AF11A8177DA00D22A08 /* MainSessionsVC.swift */; };
+		CBB51C601BF9B20600C84B11 /* MainTemplateListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C5F1BF9B20600C84B11 /* MainTemplateListVC.swift */; };
+		CBB51C611BF9B20600C84B11 /* MainTemplateListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C5F1BF9B20600C84B11 /* MainTemplateListVC.swift */; };
+		CBB51C631BF9B22800C84B11 /* MainTemplatePropVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C621BF9B22800C84B11 /* MainTemplatePropVC.swift */; };
+		CBB51C641BF9B22800C84B11 /* MainTemplatePropVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C621BF9B22800C84B11 /* MainTemplatePropVC.swift */; };
+		CBB51C661BF9B26500C84B11 /* MainExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C651BF9B26500C84B11 /* MainExportVC.swift */; };
+		CBB51C671BF9B26500C84B11 /* MainExportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C651BF9B26500C84B11 /* MainExportVC.swift */; };
+		CBB51C691BF9B29000C84B11 /* MainSettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C681BF9B29000C84B11 /* MainSettingVC.swift */; };
+		CBB51C6A1BF9B29000C84B11 /* MainSettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C681BF9B29000C84B11 /* MainSettingVC.swift */; };
+		CBB51C6C1BF9BD0400C84B11 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C6B1BF9BD0400C84B11 /* MainVC.swift */; };
+		CBB51C6D1BF9BD0400C84B11 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB51C6B1BF9BD0400C84B11 /* MainVC.swift */; };
 		CBCC3EE51AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */; };
 		CBCC3EE61AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */; };
 		CBCEFCB01B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */; };
@@ -84,7 +94,7 @@
 		CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskPickerStrategy.swift; sourceTree = "<group>"; };
 		CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceModelUtils.swift; sourceTree = "<group>"; };
 		CB0B0AEB1A815B0100D22A08 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceVC.swift; sourceTree = "<group>"; };
+		CB0B0AF11A8177DA00D22A08 /* MainSessionsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSessionsVC.swift; sourceTree = "<group>"; };
 		CB0E9E801BE73C3200DEE193 /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CB0E9E811BE73C3200DEE193 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		CB0E9E821BE73C3200DEE193 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -108,6 +118,11 @@
 		CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorManagerPageViewController.swift; sourceTree = "<group>"; };
 		CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryPropVC.swift; sourceTree = "<group>"; };
 		CBA6F84A1BB33E5E003C650D /* Applog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Applog.swift; sourceTree = "<group>"; };
+		CBB51C5F1BF9B20600C84B11 /* MainTemplateListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTemplateListVC.swift; sourceTree = "<group>"; };
+		CBB51C621BF9B22800C84B11 /* MainTemplatePropVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTemplatePropVC.swift; sourceTree = "<group>"; };
+		CBB51C651BF9B26500C84B11 /* MainExportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainExportVC.swift; sourceTree = "<group>"; };
+		CBB51C681BF9B29000C84B11 /* MainSettingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSettingVC.swift; sourceTree = "<group>"; };
+		CBB51C6B1BF9BD0400C84B11 /* MainVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		CBCC3EE41AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorByAddToListVC.swift; sourceTree = "<group>"; };
 		CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorBase.swift; sourceTree = "<group>"; };
 		CBD182B81A08AAD2007BA9F7 /* TimePolice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimePolice.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,6 +195,12 @@
 		CBD182BA1A08AAD2007BA9F7 /* TimePolice */ = {
 			isa = PBXGroup;
 			children = (
+				CBB51C6B1BF9BD0400C84B11 /* MainVC.swift */,
+				CBB51C5F1BF9B20600C84B11 /* MainTemplateListVC.swift */,
+				CBB51C621BF9B22800C84B11 /* MainTemplatePropVC.swift */,
+				CBB51C651BF9B26500C84B11 /* MainExportVC.swift */,
+				CBB51C681BF9B29000C84B11 /* MainSettingVC.swift */,
+				CB0B0AF11A8177DA00D22A08 /* MainSessionsVC.swift */,
 				CBD182BD1A08AAD2007BA9F7 /* AppDelegate.swift */,
 				CBA6F84A1BB33E5E003C650D /* Applog.swift */,
 				CBCEFCAF1B83BCC1008EE427 /* TaskEntryCreatorBase.swift */,
@@ -196,7 +217,6 @@
 				CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */,
 				CB0E9EAF1BF5250C00DEE193 /* TestData.swift */,
 				CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */,
-				CB0B0AF11A8177DA00D22A08 /* TimePoliceVC.swift */,
 				CB0E9EAC1BF267AE00DEE193 /* SessionTemplate.swift */,
 				CB0B0AEB1A815B0100D22A08 /* Utilities.swift */,
 				CBD182C41A08AAD2007BA9F7 /* Images.xcassets */,
@@ -355,23 +375,28 @@
 				CB0E9E8C1BE73C3200DEE193 /* Work+CoreDataProperties.swift in Sources */,
 				CB33BC501B7333C00067DE3F /* TaskSelectVC.swift in Sources */,
 				CB899E4B1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift in Sources */,
+				CBB51C6C1BF9BD0400C84B11 /* MainVC.swift in Sources */,
 				CB0E9E891BE73C3200DEE193 /* Project.swift in Sources */,
 				CB0E9E8B1BE73C3200DEE193 /* Task.swift in Sources */,
 				CB0E9E8A1BE73C3200DEE193 /* Task+CoreDataProperties.swift in Sources */,
 				CB0E9E881BE73C3200DEE193 /* Project+CoreDataProperties.swift in Sources */,
 				CB0E9E8D1BE73C3200DEE193 /* Work.swift in Sources */,
 				CBD182C01A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift in Sources */,
+				CBB51C691BF9B29000C84B11 /* MainSettingVC.swift in Sources */,
 				CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */,
 				CB0E9EAD1BF267AE00DEE193 /* SessionTemplate.swift in Sources */,
 				CBCEFCB01B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,
 				CB0B0AEC1A815B0100D22A08 /* Utilities.swift in Sources */,
+				CBB51C661BF9B26500C84B11 /* MainExportVC.swift in Sources */,
+				CBB51C631BF9B22800C84B11 /* MainTemplatePropVC.swift in Sources */,
 				CBDBCE4E1A88273B00E33072 /* TimePolice.xcdatamodeld in Sources */,
 				CB899E461BA5521600914CDA /* TaskEntryCreatorManagerBase.swift in Sources */,
 				CB899E4D1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */,
+				CBB51C601BF9B20600C84B11 /* MainTemplateListVC.swift in Sources */,
 				CB899E441BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift in Sources */,
-				CB0B0AF21A8177DA00D22A08 /* TimePoliceVC.swift in Sources */,
 				CB0E9EB01BF5250C00DEE193 /* TestData.swift in Sources */,
 				CB0E9E8E1BE73C3200DEE193 /* Session+CoreDataProperties.swift in Sources */,
+				CBB51C491BF9A93D00C84B11 /* MainSessionsVC.swift in Sources */,
 				CB0B0AE91A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */,
 				CB0E9E8F1BE73C3200DEE193 /* Session.swift in Sources */,
 				CBCC3EE51AE61F3C0058AE6C /* TaskEntryCreatorByAddToListVC.swift in Sources */,
@@ -386,18 +411,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBB51C6A1BF9B29000C84B11 /* MainSettingVC.swift in Sources */,
 				CB0E9E921BE81B4200DEE193 /* Task+CoreDataProperties.swift in Sources */,
 				CB0E9EAE1BF271B000DEE193 /* SessionTemplate.swift in Sources */,
+				CBB51C671BF9B26500C84B11 /* MainExportVC.swift in Sources */,
+				CBB51C641BF9B22800C84B11 /* MainTemplatePropVC.swift in Sources */,
 				CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */,
 				CB0E9E951BE81B4200DEE193 /* Work.swift in Sources */,
 				CB33BC511B7333C00067DE3F /* TaskSelectVC.swift in Sources */,
 				CB0E9E961BE81B4200DEE193 /* Session+CoreDataProperties.swift in Sources */,
+				CBB51C611BF9B20600C84B11 /* MainTemplateListVC.swift in Sources */,
+				CBB51C481BF9A93B00C84B11 /* MainSessionsVC.swift in Sources */,
 				CB3418771A0B4F580062C281 /* TaskEntryCreatorByPickTask.swift in Sources */,
 				CB899E471BA555F500914CDA /* TaskEntryCreatorManagerBase.swift in Sources */,
 				CBCEFCB11B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,
 				CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */,
+				CBB51C6D1BF9BD0400C84B11 /* MainVC.swift in Sources */,
 				CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */,
-				CB0B0AF31A8177DA00D22A08 /* TimePoliceVC.swift in Sources */,
 				CB899E4E1BA561C100914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */,
 				CB0B0AEA1A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */,
 				CBA6F84C1BB33E5E003C650D /* Applog.swift in Sources */,

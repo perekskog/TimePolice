@@ -22,7 +22,8 @@ class TaskEntryCreatorByAddToListVC:
         UIGestureRecognizerDelegate,
         ToolbarInfoDelegate {
 
-    var sourceController: TimePoliceVC?
+    
+    var sourceController: MainSessionsVC?
 
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
 
