@@ -27,16 +27,16 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
     class func createInMOC(moc: NSManagedObjectContext, 
-                name: String, project: Project) -> Session {
+        name: String, project: Project, src: String) -> Session {
 
         let n = UtilitiesString.getWithoutProperties(name)
         let p = UtilitiesString.getProperties(name)
-        let s = Session.createInMOC(moc, name: n, properties: p, project: project)
+            let s = Session.createInMOC(moc, name: n, properties: p, project: project, src: src)
         return s
     }
 
     class func createInMOC(moc: NSManagedObjectContext, 
-                name: String, properties: [String: String], project: Project) -> Session {
+        name: String, properties: [String: String], project: Project, src: String) -> Session {
         
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
@@ -48,6 +48,7 @@ class Session: NSManagedObject {
         newItem.name = "\(name)"
         newItem.created = date
         newItem.properties = properties
+        newItem.src = src
         
         newItem.project = project
 

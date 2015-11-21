@@ -43,7 +43,7 @@ class MainVC: UIViewController,
 
 
     //---------------------------------------------
-    // MainSessionsVC - View lifecycle
+    // MainVC - View lifecycle
     //---------------------------------------------
 
     override func viewWillAppear(animated: Bool) {
@@ -89,7 +89,7 @@ class MainVC: UIViewController,
 
 
     //---------------------------------------------
-    // MainSessionsVC - Segue handling
+    // MainVC - Segue handling
     //---------------------------------------------
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -97,6 +97,14 @@ class MainVC: UIViewController,
 
         if segue.identifier == "Exit" {
             // Nothing to prepare
+        }
+        if segue.identifier == "Templates" {
+            if let vc = segue.destinationViewController as? MainTemplateListVC,
+                    projects = Project.findInMOC(moc, name: "Templates") {
+                if projects.count > 0 {
+                    vc.templateProject = projects[0]
+                }
+            }
         }
     }
 

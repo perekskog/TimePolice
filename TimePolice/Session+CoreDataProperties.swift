@@ -18,6 +18,7 @@ extension Session {
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var properties: NSObject
+    @NSManaged var src: String
     @NSManaged var project: Project
     @NSManaged var tasks: NSOrderedSet
     @NSManaged var work: NSOrderedSet

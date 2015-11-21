@@ -204,75 +204,61 @@ class MainSessionsVC: UIViewController,
     // MainSessionsVC - Buttons
     //----------------------------------------
     
-    @IBAction func loadDataPrivate(sender: UIButton) {
+    @IBAction func clonePrivat(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataPrivate")
 
-        TestData.addSessionToPrivate(moc)
+        TimePoliceModelUtils.cloneSession(moc, projectName: "Privat", sessionName: "Privat")
+
         TimePoliceModelUtils.save(moc)
         moc.reset()
 
         redrawAll(true)
     }
     
-    @IBAction func loadDataWork(sender: UIButton) {
+    @IBAction func cloneJobb(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataWork")
 
-        TestData.addSessionToWork(moc)
+        TimePoliceModelUtils.cloneSession(moc, projectName: "Jobb", sessionName: "Jobb")
+
         TimePoliceModelUtils.save(moc)
         moc.reset()
 
         redrawAll(true)
     }
     
-    @IBAction func loadDataDaytime(sender: UIButton) {
+    @IBAction func cloneDygn(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataDaytime")
 
-        TestData.addSessionToDaytime(moc)
+        TimePoliceModelUtils.cloneSession(moc, projectName: "Ett dygn", sessionName: "Ett dygn")
+
         TimePoliceModelUtils.save(moc)
         moc.reset()
 
         redrawAll(true)
     }
     
-    @IBAction func loadDataCost(sender: AnyObject) {
+    @IBAction func cloneKostnad(sender: AnyObject) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataCost")
         
-        TestData.addSessionToCost(moc)
+        TimePoliceModelUtils.cloneSession(moc, projectName: "Kostnad", sessionName: "Kostnad")
+
         TimePoliceModelUtils.save(moc)
         moc.reset()
         
         redrawAll(true)
     }
 
-    @IBAction func loadDataTest(sender: UIButton) {
+    @IBAction func cloneTest(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "loadDataTest")
 
-        TestData.addSessionToTest(moc)
+        TimePoliceModelUtils.cloneSession(moc, projectName: "Test", sessionName: "Test")
+
         TimePoliceModelUtils.save(moc)
         moc.reset()
 
         redrawAll(true)
     }
     
-    @IBAction func loadDataTest2(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "loadDataTest2")
-
-        TestData.addSessionToTest2(moc)
-        TimePoliceModelUtils.save(moc)
-        moc.reset()
-
-        redrawAll(true)
-    }
-    
-    @IBAction func loadDataTest3(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "loadDataTest2")
-
-        TestData.addSessionToTest3(moc)
-        TimePoliceModelUtils.save(moc)
-        moc.reset()
-
-        redrawAll(true)
-    }
     
     //-----------------------------------------
     // MainSessionsVC- UITableView

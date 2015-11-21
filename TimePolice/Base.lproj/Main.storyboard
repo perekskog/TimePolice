@@ -13,28 +13,17 @@
                         <viewControllerLayoutGuide type="top" id="p3T-ZM-xAF"/>
                         <viewControllerLayoutGuide type="bottom" id="5NS-hd-nY5"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr">
+                    <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr" customClass="MainTem">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oHd-zy-LSo">
-                                <rect key="frame" x="28" y="23" width="30" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Exit"/>
-                                <connections>
-                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="BlR-8F-y7L"/>
-                                    <action selector="exit:" destination="Irr-mv-VTQ" eventType="touchUpInside" id="Xas-o7-B9o"/>
-                                    <action selector="exit:" destination="ibE-kE-IVF" eventType="touchUpInside" id="m8O-fh-sYj"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="7dW-GI-dvj"/>
                     <connections>
-                        <segue destination="xKM-2J-WlK" kind="modal" identifier="MainTemplateProp" id="UQc-Rc-4Y0"/>
+                        <segue destination="xKM-2J-WlK" kind="modal" identifier="AddTemplate" id="UQc-Rc-4Y0"/>
                         <segue destination="3jP-wD-9bJ" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Wa2-3f-W4B"/>
+                        <segue destination="xKM-2J-WlK" kind="modal" identifier="EditTemplate" id="Rbx-w5-iep"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qu7-rQ-Yhg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -53,22 +42,17 @@
                     <view key="view" contentMode="scaleToFill" id="Hgy-cC-Rfq">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="HlS-mS-5sB">
-                                <rect key="frame" x="40" y="125" width="240" height="406"/>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="USl-RV-TM6"/>
+                    <connections>
+                        <segue destination="Nvm-JO-pky" kind="unwind" identifier="CancelTemplateProp" unwindAction="exitTemplateProp:" id="axe-EH-C4l"/>
+                        <segue destination="Nvm-JO-pky" kind="unwind" identifier="SaveTemplateProp" unwindAction="exitTemplateProp:" id="V5g-mN-y1A"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HQc-tn-hSD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Nvm-JO-pky" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4322" y="-578"/>
         </scene>
@@ -85,81 +69,48 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHb-0v-TCS">
-                                <rect key="frame" x="68" y="120" width="40" height="30"/>
+                                <rect key="frame" x="72" y="71" width="40" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Privat">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loadDataPrivate:" destination="ibE-kE-IVF" eventType="touchUpInside" id="INH-hH-9Cf"/>
+                                    <action selector="clonePrivat:" destination="ibE-kE-IVF" eventType="touchUpInside" id="CBd-AL-g9V"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Create" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igq-HE-rsE">
-                                <rect key="frame" x="9" y="124" width="51" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Clone" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igq-HE-rsE">
+                                <rect key="frame" x="19" y="75" width="45" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldv-k9-PK6">
-                                <rect key="frame" x="160" y="120" width="35" height="30"/>
+                                <rect key="frame" x="164" y="71" width="35" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Jobb">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loadDataWork:" destination="ibE-kE-IVF" eventType="touchUpInside" id="UAe-Da-wjz"/>
+                                    <action selector="cloneJobb:" destination="ibE-kE-IVF" eventType="touchUpInside" id="grW-qX-sf5"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RuT-t6-eC1">
-                                <rect key="frame" x="115" y="120" width="36" height="30"/>
+                                <rect key="frame" x="120" y="71" width="36" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Dygn">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loadDataDaytime:" destination="ibE-kE-IVF" eventType="touchUpInside" id="Wgf-HY-lLG"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-Eh-bSr">
-                                <rect key="frame" x="222" y="53" width="84" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-9D-Acs">
-                                <rect key="frame" x="270" y="83" width="30" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="loadDataTest:" destination="ibE-kE-IVF" eventType="touchUpInside" id="R4f-0E-a3w"/>
+                                    <action selector="cloneDygn:" destination="ibE-kE-IVF" eventType="touchUpInside" id="LxW-Oo-ozi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="For-L6-2E9">
-                                <rect key="frame" x="205" y="120" width="32" height="30"/>
+                                <rect key="frame" x="206" y="71" width="56" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Cost"/>
+                                <state key="normal" title="Kostnad"/>
                                 <connections>
-                                    <action selector="loadDataCost:" destination="ibE-kE-IVF" eventType="touchUpInside" id="USM-8L-dBt"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFf-b8-XPi">
-                                <rect key="frame" x="270" y="105" width="39" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test2"/>
-                                <connections>
-                                    <action selector="loadDataTest2:" destination="ibE-kE-IVF" eventType="touchUpInside" id="p3V-eJ-efi"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b8Z-hW-0T9">
-                                <rect key="frame" x="270" y="130" width="39" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test3"/>
-                                <connections>
-                                    <action selector="loadDataTest3:" destination="ibE-kE-IVF" eventType="touchUpInside" id="7en-xh-qWp"/>
+                                    <action selector="cloneKostnad:" destination="ibE-kE-IVF" eventType="touchUpInside" id="ved-9f-WwW"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8NE-zH-fEt">
@@ -171,6 +122,23 @@
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="qYB-lr-1FP"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-9D-Acs">
+                                <rect key="frame" x="72" y="109" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Test">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cloneTest:" destination="ibE-kE-IVF" eventType="touchUpInside" id="c3m-i2-lU2"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-Eh-bSr">
+                                <rect key="frame" x="224" y="37" width="84" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -350,7 +318,7 @@
                                 <animations/>
                                 <state key="normal" title="Templates"/>
                                 <connections>
-                                    <segue destination="Irr-mv-VTQ" kind="push" id="vBV-Ts-BqF"/>
+                                    <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7G-KF-Reh">
@@ -476,7 +444,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAC-Ek-niD">
-                                <rect key="frame" x="125" y="117" width="68" height="30"/>
+                                <rect key="frame" x="97" y="122" width="68" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Core data">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -486,28 +454,91 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
-                                <rect key="frame" x="68" y="121" width="51" height="21"/>
+                                <rect key="frame" x="24" y="126" width="51" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
-                                <rect key="frame" x="204" y="117" width="49" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearApplog:" destination="jaN-JA-eGe" eventType="touchUpInside" id="KCO-2c-hb0"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="joo-kf-e6R">
                                 <rect key="frame" x="66" y="28" width="30" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Exit"/>
                                 <connections>
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCU-fo-OTF">
+                                <rect key="frame" x="97" y="178" width="40" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Privat"/>
+                                <connections>
+                                    <action selector="restorePrivate:" destination="jaN-JA-eGe" eventType="touchUpInside" id="tmn-E9-olI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KLa-RC-6AC">
+                                <rect key="frame" x="147" y="178" width="36" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Dygn"/>
+                                <connections>
+                                    <action selector="restoreDygn:" destination="jaN-JA-eGe" eventType="touchUpInside" id="id2-uh-dxq"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icw-7h-wam">
+                                <rect key="frame" x="191" y="178" width="35" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Jobb"/>
+                                <connections>
+                                    <action selector="restoreJobb:" destination="jaN-JA-eGe" eventType="touchUpInside" id="FXZ-Kg-OGJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSh-6R-jDV">
+                                <rect key="frame" x="234" y="178" width="56" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Kostnad"/>
+                                <connections>
+                                    <action selector="restoreKostnad:" destination="jaN-JA-eGe" eventType="touchUpInside" id="CGc-ai-EVc"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Restore" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j7Y-7k-CSh">
+                                <rect key="frame" x="16" y="182" width="59" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOx-yj-ZIe">
+                                <rect key="frame" x="100" y="216" width="40" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Test 1"/>
+                                <connections>
+                                    <action selector="restoreTest1:" destination="jaN-JA-eGe" eventType="touchUpInside" id="A9w-ts-NHG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d6H-YM-HNr">
+                                <rect key="frame" x="150" y="216" width="43" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Test 2"/>
+                                <connections>
+                                    <action selector="restoreTest2:" destination="jaN-JA-eGe" eventType="touchUpInside" id="rWi-i5-AAL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gbc-FJ-N6n">
+                                <rect key="frame" x="204" y="216" width="43" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Test 3"/>
+                                <connections>
+                                    <action selector="restoreTest3:" destination="jaN-JA-eGe" eventType="touchUpInside" id="uHq-F6-gGB"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
+                                <rect key="frame" x="184" y="122" width="49" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Applog">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearApplog:" destination="jaN-JA-eGe" eventType="touchUpInside" id="KCO-2c-hb0"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -610,6 +641,7 @@
         <image name="PickTask.png" width="19" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="I7g-5x-ylG"/>
+        <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="Rbx-w5-iep"/>
     </inferredMetricsTieBreakers>
 </document>
