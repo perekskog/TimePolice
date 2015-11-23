@@ -56,10 +56,10 @@
             </objects>
             <point key="canvasLocation" x="4322" y="-578"/>
         </scene>
-        <!--MainSessionsVC-->
+        <!--MainSessionListVC-->
         <scene sceneID="b4w-RP-6if">
             <objects>
-                <viewController id="ibE-kE-IVF" userLabel="MainSessionsVC" customClass="MainSessionsVC" customModule="TimePolice" sceneMemberID="viewController">
+                <viewController id="ibE-kE-IVF" userLabel="MainSessionListVC" customClass="MainSessionListVC" customModule="TimePolice" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="54z-OJ-CMk"/>
                         <viewControllerLayoutGuide type="bottom" id="Vka-ag-VfY"/>
@@ -67,79 +67,6 @@
                     <view key="view" contentMode="scaleToFill" id="uMu-Gj-jXc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHb-0v-TCS">
-                                <rect key="frame" x="72" y="71" width="40" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Privat">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clonePrivat:" destination="ibE-kE-IVF" eventType="touchUpInside" id="CBd-AL-g9V"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Clone" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igq-HE-rsE">
-                                <rect key="frame" x="19" y="75" width="45" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldv-k9-PK6">
-                                <rect key="frame" x="164" y="71" width="35" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Jobb">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="cloneJobb:" destination="ibE-kE-IVF" eventType="touchUpInside" id="grW-qX-sf5"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RuT-t6-eC1">
-                                <rect key="frame" x="120" y="71" width="36" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Dygn">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="cloneDygn:" destination="ibE-kE-IVF" eventType="touchUpInside" id="LxW-Oo-ozi"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="For-L6-2E9">
-                                <rect key="frame" x="206" y="71" width="56" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Kostnad"/>
-                                <connections>
-                                    <action selector="cloneKostnad:" destination="ibE-kE-IVF" eventType="touchUpInside" id="ved-9f-WwW"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8NE-zH-fEt">
-                                <rect key="frame" x="19" y="20" width="30" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Exit"/>
-                                <connections>
-                                    <action selector="exit:" destination="ibE-kE-IVF" eventType="touchUpInside" id="9UM-9U-iwQ"/>
-                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="qYB-lr-1FP"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-9D-Acs">
-                                <rect key="frame" x="72" y="109" width="30" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="cloneTest:" destination="ibE-kE-IVF" eventType="touchUpInside" id="c3m-i2-lU2"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-Eh-bSr">
-                                <rect key="frame" x="224" y="37" width="84" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -147,15 +74,40 @@
                         <barButtonItem key="rightBarButtonItem" title="Item" id="uxp-TD-gik"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="appLogSize" destination="3tR-Eh-bSr" id="dpB-F3-dLZ"/>
                         <segue destination="bYn-0s-WYr" kind="push" identifier="TaskEntryCreatorManagers" id="A2k-t4-VXx"/>
                         <segue destination="zcu-y0-IBg" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Eex-Ti-mQC"/>
+                        <segue destination="nEv-Wf-VRv" kind="modal" identifier="AddSession" id="kpq-o5-Dsg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cpz-F9-Kfn" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="zcu-y0-IBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3219" y="486"/>
+        </scene>
+        <!--MainTemplateSelectVC-->
+        <scene sceneID="z98-2o-bEw">
+            <objects>
+                <viewController id="mfS-TQ-VpO" userLabel="MainTemplateSelectVC" customClass="MainTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="R3o-CL-REZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="0ob-64-CwQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ohm-CD-deu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="d9x-TN-yOa"/>
+                    <connections>
+                        <segue destination="QfW-Yk-j1o" kind="unwind" identifier="DoneTemplateSelect" unwindAction="exitSelectTemplate:" id="Vm6-bN-251"/>
+                        <segue destination="QfW-Yk-j1o" kind="unwind" identifier="CancelTemplateSelect" unwindAction="exitSelectTemplate:" id="gYr-eg-L2q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gNg-Ed-hyu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="QfW-Yk-j1o" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3663" y="1219"/>
         </scene>
         <!--TaskEntryCreatorByPickTaskVC-->
         <scene sceneID="ufC-wZ-h7g">
@@ -634,6 +586,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4kX-3r-oDu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3805" y="-578"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="64S-Cs-NdT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nEv-Wf-VRv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="2kF-8a-jW3"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dbq-Bf-IIa">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="mfS-TQ-VpO" kind="relationship" relationship="rootViewController" id="xG3-CG-FE3"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qN8-7L-Vl4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3219" y="1219"/>
         </scene>
     </scenes>
     <resources>

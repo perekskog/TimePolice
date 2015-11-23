@@ -6,6 +6,12 @@
 //  Copyright © 2015 Per Ekskog. All rights reserved.
 //
 
+/*
+
+TODO
+
+*/
+
 import UIKit
 import CoreData
 
@@ -17,26 +23,24 @@ class MainTemplateListVC: UIViewController,
     UIGestureRecognizerDelegate {
 
     // Input data
-    var templateProject: Project?
-
+    var templateProjectName: String?
 
     // Internal data
     var templateSessions: [Session]?
+    var selectedTemplateIndex: Int?
 
+    // GUI
     var templateTableView = UITableView(frame: CGRectZero, style: .Plain)
     let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = WorkListToolView()
     let templateListBGView = WorkListBGView()
     let addView = WorkListToolView()
-
-
     let theme = BlackGreenTheme()
 
-    var selectedTemplateIndex: Int?
 
 
     //---------------------------------------
-    // MainSettingsVC - Lazy properties
+    // MainTemplateListVC - Lazy properties
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
@@ -57,7 +61,7 @@ class MainTemplateListVC: UIViewController,
     }()
 
     //---------------------------------------------
-    // MainSettingsVC - AppLoggerDataSource
+    // MainTemplateListVC - AppLoggerDataSource
     //---------------------------------------------
 
     func getLogDomain() -> String {
@@ -67,7 +71,7 @@ class MainTemplateListVC: UIViewController,
 
 
     //---------------------------------------------
-    // MainSettingsVC - View lifecycle
+    // MainTemplateListVC - View lifecycle
     //---------------------------------------------
 
     override func viewWillDisappear(animated: Bool) {
@@ -90,8 +94,6 @@ class MainTemplateListVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
         
         self.edgesForExtendedLayout = .None
-
-        refreshCoreData()
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -123,6 +125,7 @@ class MainTemplateListVC: UIViewController,
         addView.addGestureRecognizer(recognizer)
         templateListBGView.addSubview(addView)
 
+        redrawAll(true)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -176,25 +179,39 @@ class MainTemplateListVC: UIViewController,
     }
 
     //---------------------------------------------
-    // MainSessionsVC - Data and GUI updates
+    // MainTemplateListVC - Data and GUI updates
     //---------------------------------------------
 
     func redrawAll(refreshCoreData: Bool) {
+        if refreshCoreData==true {
+            templateSessions = getTemplates()
+        }
         templateTableView.reloadData()
     }
 
-    func refreshCoreData() {
-        if let p = templateProject {
-            templateSessions = p.sessions.allObjects as? [Session]
+    func getTemplates() -> [Session] {
+        appLog.log(logger, logtype: .EnterExit, message: "getTemplates")
+
+        do {
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            var templateSessions: [Session] = []
+            if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                for session in tmpSessions {
+                    if session.project.name == templateProjectName {
+                        templateSessions.append(session)
+                    }
+                }
+            }
+            return templateSessions
+
+        } catch {
+            return []
         }
     }
 
-    func refreshGUI() {
-        templateTableView.reloadData()
-    }
 
     //---------------------------------------------
-    // MainSessionsVC - GUI actions
+    // MainTemplateListVC - GUI actions
     //---------------------------------------------
 
     @IBAction func exit(sender: UIButton) {
@@ -209,87 +226,9 @@ class MainTemplateListVC: UIViewController,
         performSegueWithIdentifier("AddTemplate", sender: self)
     }
 
-    //---------------------------------------------
-    // UITableViewDataSource
-    //---------------------------------------------
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = templateTableView.dequeueReusableCellWithIdentifier("TemplateList", forIndexPath: indexPath)
-
-        if let s = templateSessions
-        where indexPath.row >= 0 && indexPath.row <= s.count {
-            let session = s[indexPath.row]
-            cell.textLabel?.text = session.name
-        }
-
-        cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
-        cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
-
-        cell.separatorInset = UIEdgeInsetsZero
-        cell.layoutMargins = UIEdgeInsetsZero
-    
-        return cell
-    }
-
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let s = templateSessions {
-            return s.count
-        } else {
-            return 0
-        }
-    }
-
-    //-----------------------------------------
-    // UITableViewDelegate
-    //-----------------------------------------
-
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let s = templateSessions
-        where indexPath.row >= 0 && indexPath.row < s.count {
-            selectedTemplateIndex = indexPath.row
-            performSegueWithIdentifier("EditTemplate", sender: self)
-        }
-    }
-
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            if let session = templateSessions?[indexPath.row] {
-                appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
-                Session.deleteInMOC(moc, session: session)
-                TimePoliceModelUtils.save(moc)
-                //moc.reset()
-
-                refreshGUI()
-            }
-        }
-    }
-
-
-
 
     //----------------------------------------------
-    //  ToolbarInfoDelegate
-    //----------------------------------------------
-    
-    func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
-        
-        let toolbarInfo = ToolbarInfo(
-            signedIn: false,
-            totalTimesActivatedForSession: 0,
-            totalTimeActiveForSession: 0,
-            sessionName: "Templates")
-        
-        return toolbarInfo
-    }
-
-    //----------------------------------------------
-    //  Segue handling
+    //  MainTemplateListVC - Segue handling
     //----------------------------------------------
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -320,8 +259,7 @@ class MainTemplateListVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "exitTemplateProp(unwindsegue=\(unwindSegue.identifier))")
 
         if unwindSegue.identifier == "CancelTemplateProp" {
-            refreshCoreData()
-            refreshGUI()
+            redrawAll(true)
         }
         if unwindSegue.identifier == "SaveTemplateProp" {
             // Update template
@@ -332,8 +270,86 @@ class MainTemplateListVC: UIViewController,
                     appLog.log(logger, logtype: .CoreData, message: st.getString(st.session, tasks: st.tasks))
                     TimePoliceModelUtils.storeTemplate(moc, project: "Templates", session: st.session, tasks: st.tasks, src: newSrc)
             }
-            refreshCoreData()
-            refreshGUI()
+            redrawAll(true)
         }
     }
+
+    //---------------------------------------------
+    // MainTemplateListVC - UITableViewDataSource
+    //---------------------------------------------
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let s = templateSessions {
+            return s.count
+        } else {
+            return 0
+        }
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = templateTableView.dequeueReusableCellWithIdentifier("TemplateList", forIndexPath: indexPath)
+
+        if let s = templateSessions
+        where indexPath.row >= 0 && indexPath.row <= s.count {
+            let session = s[indexPath.row]
+            cell.textLabel?.text = session.name
+        }
+
+        cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
+        cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
+
+        cell.separatorInset = UIEdgeInsetsZero
+        cell.layoutMargins = UIEdgeInsetsZero
+    
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
+
+        return cell
+    }
+
+    //-----------------------------------------
+    // MainTemplateListVC - UITableViewDelegate
+    //-----------------------------------------
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let s = templateSessions
+        where indexPath.row >= 0 && indexPath.row < s.count {
+            selectedTemplateIndex = indexPath.row
+            performSegueWithIdentifier("EditTemplate", sender: self)
+        }
+    }
+
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            if let session = templateSessions?[indexPath.row] {
+                appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
+                Session.deleteInMOC(moc, session: session)
+                TimePoliceModelUtils.save(moc)
+                moc.reset()
+
+                redrawAll(true)
+            }
+        }
+    }
+
+    //----------------------------------------------
+    //  MainTemplateListVC - ToolbarInfoDelegate
+    //----------------------------------------------
+    
+    func getToolbarInfo() -> ToolbarInfo {
+        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
+        
+        let toolbarInfo = ToolbarInfo(
+            signedIn: false,
+            totalTimesActivatedForSession: 0,
+            totalTimeActiveForSession: 0,
+            sessionName: "Templates")
+        
+        return toolbarInfo
+    }
+
 }

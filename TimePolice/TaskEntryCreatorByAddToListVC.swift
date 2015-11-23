@@ -23,7 +23,7 @@ class TaskEntryCreatorByAddToListVC:
         ToolbarInfoDelegate {
 
     
-    var sourceController: MainSessionsVC?
+    var sourceController: MainSessionListVC?
 
     var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
 

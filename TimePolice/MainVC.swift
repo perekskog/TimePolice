@@ -99,11 +99,13 @@ class MainVC: UIViewController,
             // Nothing to prepare
         }
         if segue.identifier == "Templates" {
-            if let vc = segue.destinationViewController as? MainTemplateListVC,
-                    projects = Project.findInMOC(moc, name: "Templates") {
-                if projects.count > 0 {
-                    vc.templateProject = projects[0]
-                }
+            if let vc = segue.destinationViewController as? MainTemplateListVC {
+                vc.templateProjectName = "Templates"
+            }
+        }
+        if segue.identifier == "Sessions" {
+            if let vc = segue.destinationViewController as? MainSessionListVC {
+                vc.templateProjectName = "Templates"
             }
         }
     }
