@@ -102,6 +102,7 @@ class MainTemplatePropVC: UIViewController,
         }
         textTemplate.textColor = UIColor.blackColor()
         textTemplate.backgroundColor = UIColor.whiteColor()
+        textTemplate.font = UIFont(name: textTemplate.font!.fontName, size: 16)
         self.view.addSubview(textTemplate)
 
         self.view.backgroundColor = UIColor.grayColor()
