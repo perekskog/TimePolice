@@ -18,6 +18,6 @@ extension Project {
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var properties: NSObject
-    @NSManaged var sessions: NSSet
+    @NSManaged var sessions: NSOrderedSet
 
 }

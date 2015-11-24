@@ -5,7 +5,7 @@
         <attribute name="id" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="properties" attributeType="Transformable" syncable="YES"/>
-        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="project" inverseEntity="Session" syncable="YES"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Session" inverseName="project" inverseEntity="Session" syncable="YES"/>
     </entity>
     <entity name="Session" representedClassName="TimePolice.Session" syncable="YES">
         <attribute name="created" attributeType="Date" syncable="YES"/>

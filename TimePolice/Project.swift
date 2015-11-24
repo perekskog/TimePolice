@@ -62,7 +62,7 @@ class Project: NSManagedObject {
     //---------------------------------------------
 
     func addSession(session: Session) {
-        let s = self.sessions.mutableCopy() as! NSMutableSet
+        let s = self.sessions.mutableCopy() as! NSMutableOrderedSet
         s.addObject(session)
         self.sessions = s
     }
