@@ -265,48 +265,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZG-iV-Vgl">
-                                <rect key="frame" x="125" y="122" width="71" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Templates"/>
-                                <connections>
-                                    <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7G-KF-Reh">
-                                <rect key="frame" x="130" y="193" width="61" height="30"/>
+                                <rect key="frame" x="93" y="316" width="140" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Sessions"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <state key="normal" title="Sessions">
+                                    <color key="titleColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RE4-zX-HtF">
-                                <rect key="frame" x="137" y="269" width="46" height="30"/>
+                                <rect key="frame" x="104" y="379" width="113" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Export"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <state key="normal" title="Export">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="SF8-YH-e6F" kind="push" identifier="Export" id="dBH-RE-CZO"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4i-xD-Haj">
-                                <rect key="frame" x="118" y="54" width="85" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4i-xD-Haj">
+                                <rect key="frame" x="32" y="37" width="268" height="62"/>
                                 <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="40"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rVL-WA-YrK">
-                                <rect key="frame" x="132" y="346" width="57" height="30"/>
+                                <rect key="frame" x="86" y="441" width="154" height="40"/>
                                 <animations/>
-                                <state key="normal" title="Settings"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <state key="normal" title="Settings">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="jaN-JA-eGe" kind="push" identifier="Settings" id="MQT-qG-4tx"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZG-iV-Vgl">
+                                <rect key="frame" x="81" y="242" width="159" height="42"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Templates">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.30389532342657344" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
                 </viewController>
@@ -327,9 +341,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="304-oV-hmY">
-                                <rect key="frame" x="151" y="160" width="49" height="30"/>
+                                <rect key="frame" x="122" y="244" width="77" height="30"/>
                                 <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="Applog">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -337,41 +353,56 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rk0-Pe-KGj">
-                                <rect key="frame" x="110" y="159" width="33" height="30"/>
+                                <rect key="frame" x="132" y="187" width="57" height="30"/>
                                 <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="Core">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Copy" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Njj-Pt-kjj">
-                                <rect key="frame" x="51" y="163" width="51" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
-                                <rect key="frame" x="208" y="159" width="61" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Sessions"/>
-                                <connections>
-                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O9I-4w-amE">
-                                <rect key="frame" x="60" y="40" width="30" height="30"/>
+                                <rect key="frame" x="0.0" y="18" width="52" height="34"/>
                                 <animations/>
-                                <state key="normal" title="Exit"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="exit:" destination="SF8-YH-e6F" eventType="touchUpInside" id="6bl-fe-S1a"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bf8-C4-6KS">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NB9-zW-I8r">
+                                <rect key="frame" x="101" y="99" width="118" height="36"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
+                                <rect key="frame" x="113" y="300" width="95" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="Sessions">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.29848666958041958" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Op2-MH-YBM"/>
                     <connections>
@@ -396,97 +427,48 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAC-Ek-niD">
-                                <rect key="frame" x="97" y="122" width="68" height="30"/>
+                                <rect key="frame" x="103" y="250" width="123" height="30"/>
                                 <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="Core data">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="clearCoreData:" destination="jaN-JA-eGe" eventType="touchUpInside" id="woR-cP-Y6t"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
-                                <rect key="frame" x="24" y="126" width="51" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
+                                <rect key="frame" x="106" y="106" width="108" height="28"/>
                                 <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <color key="textColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="joo-kf-e6R">
-                                <rect key="frame" x="66" y="28" width="30" height="30"/>
+                                <rect key="frame" x="0.0" y="18" width="53" height="34"/>
                                 <animations/>
-                                <state key="normal" title="Exit"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCU-fo-OTF">
-                                <rect key="frame" x="97" y="178" width="40" height="30"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZZ7-PF-vat">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <animations/>
-                                <state key="normal" title="Privat"/>
-                                <connections>
-                                    <action selector="restorePrivate:" destination="jaN-JA-eGe" eventType="touchUpInside" id="tmn-E9-olI"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KLa-RC-6AC">
-                                <rect key="frame" x="147" y="178" width="36" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Dygn"/>
-                                <connections>
-                                    <action selector="restoreDygn:" destination="jaN-JA-eGe" eventType="touchUpInside" id="id2-uh-dxq"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icw-7h-wam">
-                                <rect key="frame" x="191" y="178" width="35" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Jobb"/>
-                                <connections>
-                                    <action selector="restoreJobb:" destination="jaN-JA-eGe" eventType="touchUpInside" id="FXZ-Kg-OGJ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSh-6R-jDV">
-                                <rect key="frame" x="234" y="178" width="56" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Kostnad"/>
-                                <connections>
-                                    <action selector="restoreKostnad:" destination="jaN-JA-eGe" eventType="touchUpInside" id="CGc-ai-EVc"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Restore" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j7Y-7k-CSh">
-                                <rect key="frame" x="16" y="182" width="59" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOx-yj-ZIe">
-                                <rect key="frame" x="100" y="216" width="40" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test 1"/>
-                                <connections>
-                                    <action selector="restoreTest1:" destination="jaN-JA-eGe" eventType="touchUpInside" id="A9w-ts-NHG"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d6H-YM-HNr">
-                                <rect key="frame" x="150" y="216" width="43" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test 2"/>
-                                <connections>
-                                    <action selector="restoreTest2:" destination="jaN-JA-eGe" eventType="touchUpInside" id="rWi-i5-AAL"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gbc-FJ-N6n">
-                                <rect key="frame" x="204" y="216" width="43" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Test 3"/>
-                                <connections>
-                                    <action selector="restoreTest3:" destination="jaN-JA-eGe" eventType="touchUpInside" id="uHq-F6-gGB"/>
-                                </connections>
-                            </button>
+                                <color key="backgroundColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
-                                <rect key="frame" x="184" y="122" width="49" height="30"/>
+                                <rect key="frame" x="116" y="204" width="88" height="30"/>
                                 <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="Applog">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -495,7 +477,7 @@
                             </button>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.29602819055944057" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
                     <connections>
@@ -505,7 +487,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FoT-qM-lBj" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="SLu-ke-hzb" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2084" y="1001"/>
+            <point key="canvasLocation" x="2087" y="1001"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="B5B-BN-JiH">
