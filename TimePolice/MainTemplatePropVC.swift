@@ -21,7 +21,7 @@ class MainTemplatePropVC: UIViewController,
     
     // Internal
     let textTemplate = UITextView(frame: CGRectZero)
-
+    var spaceAtBottom = 0
 
 
     deinit {
@@ -111,6 +111,8 @@ class MainTemplatePropVC: UIViewController,
 
         self.view.backgroundColor = UIColor.grayColor()
 
+        spaceAtBottom = 20
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
     }
@@ -127,8 +129,7 @@ class MainTemplatePropVC: UIViewController,
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
-
-        textTemplate.frame = CGRectMake(10, 10, width-20, height-20)
+        textTemplate.frame = CGRectMake(10, 10, width-20, height-CGFloat(spaceAtBottom))
         // lastview = textTemplate
 
 
@@ -158,14 +159,16 @@ class MainTemplatePropVC: UIViewController,
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             appLog.log(logger, logtype: .Debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
-            self.textTemplate.frame.size.height -= keyboardSize.height
+//            self.textTemplate.frame.size.height -= keyboardSize.height
+            spaceAtBottom = 20 + Int(keyboardSize.height)
         }
     }
 
     func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             appLog.log(logger, logtype: .Debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
-            self.textTemplate.frame.size.height += keyboardSize.height
+//            self.textTemplate.frame.size.height += keyboardSize.height
+            spaceAtBottom = 20
         }
     }
 }
