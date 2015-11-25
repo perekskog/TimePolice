@@ -24,6 +24,10 @@ class MainTemplatePropVC: UIViewController,
 
 
 
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self);
+    }
+
     //---------------------------------------
     // MainSettingsVC - Lazy properties
     //---------------------------------------
@@ -107,6 +111,8 @@ class MainTemplatePropVC: UIViewController,
 
         self.view.backgroundColor = UIColor.grayColor()
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -147,6 +153,20 @@ class MainTemplatePropVC: UIViewController,
     func save(sender: UIButton) {
         updatedTemplate = textTemplate.text
         performSegueWithIdentifier("SaveTemplateProp", sender: self)
+    }
+
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            appLog.log(logger, logtype: .Debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
+            self.textTemplate.frame.size.height -= keyboardSize.height
+        }
+    }
+
+    func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+            appLog.log(logger, logtype: .Debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
+            self.textTemplate.frame.size.height += keyboardSize.height
+        }
     }
 }
 

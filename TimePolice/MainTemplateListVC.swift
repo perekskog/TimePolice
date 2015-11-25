@@ -93,6 +93,8 @@ class MainTemplateListVC: UIViewController,
         super.viewDidLoad()
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
         
+        (self.view as! TimePoliceBGView).theme = theme
+
         self.edgesForExtendedLayout = .None
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
@@ -147,23 +149,23 @@ class MainTemplateListVC: UIViewController,
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 20, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, 30)
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 20, width-70, 30)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
         lastview = sessionNameView
 
-        templateListBGView.frame = CGRectMake(0, 50, width, height - 50)
+        templateListBGView.frame = CGRectMake(0, 55, width, height - 55)
         lastview = templateListBGView
 
         width = CGRectGetWidth(templateListBGView.frame)
         height = CGRectGetHeight(templateListBGView.frame)
         let padding = 1
 
-        templateTableView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), height - 30)
+        templateTableView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), height - 30 - CGFloat(padding))
         lastview = templateTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30 - 2*CGFloat(padding))
         lastview = addView
 
     }

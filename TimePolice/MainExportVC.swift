@@ -12,6 +12,8 @@ import CoreData
 class MainExportVC: UIViewController,
     AppLoggerDataSource {
 
+    let theme = BlackGreenTheme()
+
     //---------------------------------------
     // MainExportVC - Lazy properties
     //---------------------------------------
@@ -80,6 +82,8 @@ class MainExportVC: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+
+        (self.view as! TimePoliceBGView).theme = theme
     }
 
     override func didReceiveMemoryWarning() {

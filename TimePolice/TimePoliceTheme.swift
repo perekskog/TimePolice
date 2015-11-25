@@ -366,8 +366,8 @@ class BlackGreenTheme : Theme {
 
         // Gradient
         let locations2: [CGFloat] = [ 0.0, 1.0 ]
-        let colors2 = [CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])!,
-            CGColorCreate(colorSpaceRGB, [0.0, 0.0, 0.0, 1.0])!]
+        let colors2 = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.2, 0.2, 0.2, 1.0])!]
         let gradient2 = CGGradientCreateWithColors(colorSpaceRGB,
             colors2, locations2)
         let startPoint2 = CGPoint(x:0.0, y:25.0)

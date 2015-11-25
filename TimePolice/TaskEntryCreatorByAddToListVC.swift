@@ -351,7 +351,11 @@ class TaskEntryCreatorByAddToListVC:
             alertContoller.addAction(fillWithNextAction)
             
             let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-                handler: nil)
+                handler: { action in
+                    if let indexPath = self.workListTableView.indexPathForSelectedRow {
+                        self.workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    }
+                })
             alertContoller.addAction(cancel)
             
             presentViewController(alertContoller, animated: true, completion: nil)
