@@ -159,7 +159,6 @@ class MainTemplatePropVC: UIViewController,
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             appLog.log(logger, logtype: .Debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
-//            self.textTemplate.frame.size.height -= keyboardSize.height
             spaceAtBottom = 20 + Int(keyboardSize.height)
         }
     }
@@ -167,7 +166,6 @@ class MainTemplatePropVC: UIViewController,
     func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
             appLog.log(logger, logtype: .Debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
-//            self.textTemplate.frame.size.height += keyboardSize.height
             spaceAtBottom = 20
         }
     }

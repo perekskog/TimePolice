@@ -12,6 +12,9 @@ import CoreData
 class MainSettingVC: UIViewController,
     AppLoggerDataSource {
 
+
+    @IBOutlet var applogSize: UILabel!
+
     let theme = BlackGreenTheme()
 
 
@@ -85,6 +88,8 @@ class MainSettingVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
+
+        redrawAll(false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -99,21 +104,56 @@ class MainSettingVC: UIViewController,
     @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
 
-        MainSettingVC.clearAllData(moc)
-        TimePoliceModelUtils.save(moc)
-        moc.reset()
+        let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
+            preferredStyle: .Alert)
+        
+        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
+            handler: { action in
+                MainSettingVC.clearAllData(self.moc)
+                TimePoliceModelUtils.save(self.moc)
+                self.moc.reset()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
+                self.redrawAll(false)
+            })
+        alertContoller.addAction(fillWithPreviousAction)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
     }
 
     @IBAction func clearApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
-        appLog.logString = ""
+        
+        let alertContoller = UIAlertController(title: "Reset applog?", message: nil,
+            preferredStyle: .Alert)
+        
+        let fillWithPreviousAction = UIAlertAction(title: "Reset", style: .Default,
+            handler: { action in
+                self.appLog.logString = ""
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
+                self.redrawAll(false)
+        })
+        alertContoller.addAction(fillWithPreviousAction)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
     }
 
-        @IBAction func settings(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "settings")
-        performSegueWithIdentifier("Settings", sender: self)
-    }
+    //---------------------------------------------
+    // MainSettingsVC - Data and GUI updates
+    //---------------------------------------------
 
+    func redrawAll(refreshCoreData: Bool) {
+        if refreshCoreData==true {
+        }
+        applogSize.text = "current size = \(self.appLog.logString.characters.count)" 
+    }
 
     //---------------------------------------------
     // MainSettingsVC - GUI actions
@@ -179,210 +219,6 @@ class MainSettingVC: UIViewController,
         } catch {
             print("Can't fetch projects for deletion")
         }
-    }
-
-    //---------------------------------------------
-    // MainSettingsVC - Restore templates
-    //---------------------------------------------
-
-    @IBAction func restorePrivate(sender: UIButton) {
-        
-        var s = "Privat#columns=3\n"
-        s += "=#color=4c4\n"
-        s += "RC\n"
-        s += "Dev\n"
-        s += "Media\n"
-        s += "Läsa/titta\n"
-        s += "Div hemma\n"
-        s += "Div borta\n"
-        s += "Fysiskt\n"
-        s += "Time in\n"
-        s += "Relationer\n"
-        s += "Lek\n"
-        s += "Down\n"
-        s += "Pers. utv\n"
-        s += "=#color=44f\n"
-        s += "Person\n"
-        s += "Hem\n"
-        s += "Hus/tomt\n"
-        s += "Bil\n"
-        s += "Behöver div\n"
-        s += "\n"
-        s += "=#color=bbb\n"
-        s += "Oaktivitet\n"
-        s += "\n"
-        s += "\n"
-        s += "=#color=b84\n"
-        s += "Slöläs/titta\n"
-        s += "\n"
-        s += "\n"
-        s += "=#color=b44\n"
-        s += "Blockerad\n"
-        s += "Avbrott\n"
-        s += "\n"
-        s += "Brand\n"
-        s += "Fokusskift\n"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-
-        TimePoliceModelUtils.save(moc)
-        moc.reset()
-    }
-
-    @IBAction func restoreJobb(sender: UIButton) {
-
-        var s = "Jobb#columns=3\n"
-        s += "=#color=4c4\n"
-        s += "Dev\n"
-        s += "SM\n"
-        s += "Stage 7\n"
-        s += "Fysiskt\n"
-        s += "Time in\n"
-        s += "Relationer\n"
-        s += "Lek\n"
-        s += "Down\n"
-        s += "Pers. utv\n"
-        s += "=#color=44f\n"
-        s += "Inbox\n"
-        s += "Pågående\n"
-        s += "Städa upp\n"
-        s += "Team\n"
-        s += "Adm\n"
-        s += "Annat\n"
-        s += "=#color=bbb\n"
-        s += "Oaktivitet\n"
-        s += "\n"
-        s += "\n"
-        s += "=#color=b84\n"
-        s += "Läsa/titta\n"
-        s += "\n"
-        s += "\n"
-        s += "=#color=b44\n"
-        s += "Blockerad\n"
-        s += "Avbrott\n"
-        s += "\n"
-        s += "Brand\n"
-        s += "Foskusskifte\n"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-    }
-
-    @IBAction func restoreDygn(sender: UIButton) {
-
-        var s = "Ett dygn#columns=3\n"
-        s += "Hemma\n"
-        s += "Hemma ute\n"
-        s += "Sova\n"
-        s += "Jobb\n"
-        s += "Jobb ute\n"
-        s += "Lunch\n"
-        s += "Bil mrg\n"
-        s += "Bil kv\n"
-        s += "\n"
-        s += "Pendel mrg\n"
-        s += "Pendel kv\n"
-        s += "\n"
-        s += "Tbana mrg\n"
-        s += "Tbana kv\n"
-        s += "\n"
-        s += "Buss mrg\n"
-        s += "Buss kv\n"
-        s += "\n"
-        s += "Ärende\n"
-        s += "F&S\n"
-        s += "Annat"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-    }
-
-    @IBAction func restoreKostnad(sender: UIButton) {
-
-        var s = "Kostnad#columns=4\n"
-        s += "Comp 16A\n"
-        s += "Comp 16B\n"
-        s += "\n"
-        s += "\n"
-        s += "Main\n"
-        s += "SM Yearly\n"
-        s += "\n"
-        s += "\n"
-        s += "Alfa\n"
-        s += "Bravo\n"
-        s += "Charlie\n"
-        s += "Delta\n"
-        s += "Echo\n"
-        s += "Foxtrot\n"
-        s += "Golf\n"
-        s += "Hotel\n"
-        s += "India\n"
-        s += "Juliet\n"
-        s += "Kilo\n"
-        s += "Lima\n"
-        s += "Mike\n"
-        s += "November\n"
-        s += "Oskar\n"
-        s += "Papa\n"
-        s += "Quebeq\n"
-        s += "Romeo\n"
-        s += "Sierra\n"
-        s += "Tango\n"
-        s += "Uniform\n"
-        s += "Viktor\n"
-        s += "Whiskey\n"
-        s += "X-ray\n"
-        s += "Yankee\n"
-        s += "Zulu"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-    }
-
-    @IBAction func restoreTest1(sender: UIButton) {
-        var s = "Test#columns=1\n"
-        s += "Adam#color=8f8\n"
-        s += "Bertil#color=88f\n"
-        s += "Ceasar"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-    }
-
-    @IBAction func restoreTest2(sender: UIButton) {
-        var s = "Test#columns=2\n"
-        s += "\n"
-        s += "Bertil#color=88f\n"
-        s += "Ceasar#cat=hemma,color=ff0"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
-    }
-
-    @IBAction func restoreTest3(sender: UIButton) {
-        var s = "Test#columns=3\n"
-        s += "\n"
-        s += "\n"
-        s += "Ceasar#color=88f\n"
-        s += "David#cat=hemma,color=ff0"
-
-        let st = SessionTemplate()
-        st.parseTemplate(s)
-        let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
 }
