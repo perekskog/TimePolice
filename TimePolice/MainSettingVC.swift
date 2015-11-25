@@ -221,7 +221,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
 
         TimePoliceModelUtils.save(moc)
         moc.reset()
@@ -265,7 +265,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
     @IBAction func restoreDygn(sender: UIButton) {
@@ -296,7 +296,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
     @IBAction func restoreKostnad(sender: UIButton) {
@@ -340,7 +340,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
     @IBAction func restoreTest1(sender: UIButton) {
@@ -352,7 +352,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
     @IBAction func restoreTest2(sender: UIButton) {
@@ -364,7 +364,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
     @IBAction func restoreTest3(sender: UIButton) {
@@ -377,7 +377,7 @@ class MainSettingVC: UIViewController,
         let st = SessionTemplate()
         st.parseTemplate(s)
         let (sessionName, _) = st.session
-        TimePoliceModelUtils.storeTemplate(moc, project: sessionName, session: st.session, tasks: st.tasks, src: s)
+        TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: sessionName, session: st.session, tasks: st.tasks, src: s)
     }
 
 }

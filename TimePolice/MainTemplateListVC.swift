@@ -268,7 +268,8 @@ class MainTemplateListVC: UIViewController,
                     let st = SessionTemplate()
                     st.parseTemplate(newSrc)
                     appLog.log(logger, logtype: .CoreData, message: st.getString(st.session, tasks: st.tasks))
-                    TimePoliceModelUtils.storeTemplate(moc, project: "Templates", session: st.session, tasks: st.tasks, src: newSrc)
+                    let (reuseTasksFromProject, _) = st.session
+                    TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: reuseTasksFromProject, session: st.session, tasks: st.tasks, src: newSrc)
             }
             redrawAll(true)
         }

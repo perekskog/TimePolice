@@ -92,7 +92,7 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - storeTemplate
     //---------------------------------------------
 
-    class func storeTemplate(moc: NSManagedObjectContext, project: String, session: (String, [String: String]), tasks: [(String, [String: String])], src: String) {
+    class func storeTemplate(moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, [String: String]), tasks: [(String, [String: String])], src: String) {
 
         defer {
             TimePoliceModelUtils.save(moc)
@@ -151,7 +151,7 @@ class TimePoliceModelUtils {
                     // Second, search in project
                     // (A task might have been used some time ago)
 
-                    if let projects = Project.findInMOC(moc, name: project) {
+                    if let projects = Project.findInMOC(moc, name: reuseTasksFromProject) {
                         if projects.count > 0 {
                             let project = projects[0]
 
