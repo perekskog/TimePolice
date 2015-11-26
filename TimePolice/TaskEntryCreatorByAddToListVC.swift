@@ -163,10 +163,6 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
 
 
-        self.sessionSummary = (0,0)
-        self.sessionSummary = session?.getSessionSummary(moc)
-
-
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                 target: self,
               selector: "updateActiveTask:",
@@ -179,10 +175,26 @@ class TaskEntryCreatorByAddToListVC:
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
 
+        self.sessionSummary = (0,0)
+        self.sessionSummary = session?.getSessionSummary(moc)
+
         redrawAfterSegue()
 
         scrollToEnd(workListTableView)
     }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        self.sessionSummary = (0,0)
+        self.sessionSummary = session?.getSessionSummary(moc)
+
+        redrawAfterSegue()
+
+        scrollToEnd(workListTableView)
+    }
+
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
