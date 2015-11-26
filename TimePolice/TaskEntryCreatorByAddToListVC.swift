@@ -174,25 +174,11 @@ class TaskEntryCreatorByAddToListVC:
         if let indexPath = workListTableView.indexPathForSelectedRow {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
-
-        self.sessionSummary = (0,0)
-        self.sessionSummary = session?.getSessionSummary(moc)
-
-        redrawAfterSegue()
-
-        scrollToEnd(workListTableView)
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
-
-        self.sessionSummary = (0,0)
-        self.sessionSummary = session?.getSessionSummary(moc)
-
-        redrawAfterSegue()
-
-        scrollToEnd(workListTableView)
     }
 
 
@@ -240,6 +226,16 @@ class TaskEntryCreatorByAddToListVC:
 
         addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
         lastview = addView
+
+        // This was originally in viewWillAppear, but it seems that viewWillAPpear will be called
+        // when changing session (PageController) and then, when changing TabBar, it will NOT
+        // be called. 
+        // viewWillLayoutSubviews is always called, often several times.
+
+        self.sessionSummary = (0,0)
+        self.sessionSummary = session?.getSessionSummary(moc)
+        redrawAfterSegue()
+        scrollToEnd(workListTableView)
 
     }
 
