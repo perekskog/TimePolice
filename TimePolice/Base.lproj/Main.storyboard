@@ -128,6 +128,7 @@
                     <connections>
                         <segue destination="Ts8-bs-c8R" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="nDQ-cN-cBa"/>
                         <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="I7g-5x-ylG"/>
+                        <segue destination="Ouh-dk-s8P" kind="modal" identifier="UseTemplate" id="cS4-xQ-gF3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -194,6 +195,7 @@
                     <connections>
                         <segue destination="DP0-0d-1WN" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="6gh-5z-Q9W"/>
                         <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="hjh-eJ-Q4q"/>
+                        <segue destination="Ouh-dk-s8P" kind="modal" identifier="UseTemplate" id="JW7-jI-2S6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwM-jx-N4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -227,7 +229,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yei-av-ysS" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="eM6-nC-ER0" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6574" y="599"/>
+            <point key="canvasLocation" x="6602" y="739"/>
         </scene>
         <!--TaskSelectVC-->
         <scene sceneID="VvP-X4-uFq">
@@ -251,7 +253,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ot-zO-r7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MHh-sN-e8a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="7070" y="599"/>
+            <point key="canvasLocation" x="7098" y="739"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="Hk9-N5-ZWe">
@@ -494,6 +496,31 @@
             </objects>
             <point key="canvasLocation" x="2087" y="1001"/>
         </scene>
+        <!--TaskEntryUseTemplate-->
+        <scene sceneID="wZb-cd-unN">
+            <objects>
+                <viewController id="K31-sT-C4m" userLabel="TaskEntryUseTemplate" customClass="TaskEntryTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WMf-Fp-ys6"/>
+                        <viewControllerLayoutGuide type="bottom" id="BqU-Gu-kdU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lCk-0v-Vni">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="guz-W2-o7i"/>
+                    <connections>
+                        <segue destination="0Ra-kf-VIz" kind="unwind" identifier="CancelUseTemplate" unwindAction="exitUseTemplate:" id="lgV-lg-DXZ"/>
+                        <segue destination="0Ra-kf-VIz" kind="unwind" identifier="DoneUseTemplate" unwindAction="exitUseTemplate:" id="WWx-l5-XDW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tO2-Xu-7m4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0Ra-kf-VIz" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6602" y="-20"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="B5B-BN-JiH">
             <objects>
@@ -511,7 +538,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LoU-fD-5P2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6042" y="599"/>
+            <point key="canvasLocation" x="6070" y="739"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="t25-xF-g8Y">
@@ -594,13 +621,33 @@
             </objects>
             <point key="canvasLocation" x="3219" y="1219"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WF8-on-koo">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ouh-dk-s8P" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cDe-Te-MJr">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="K31-sT-C4m" kind="relationship" relationship="rootViewController" id="OoG-px-FFl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zXE-ct-TiK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6070" y="-20"/>
+        </scene>
     </scenes>
     <resources>
         <image name="AddToList.png" width="19" height="23"/>
         <image name="PickTask.png" width="19" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="I7g-5x-ylG"/>
+        <segue reference="cS4-xQ-gF3"/>
+        <segue reference="hjh-eJ-Q4q"/>
         <segue reference="Rbx-w5-iep"/>
     </inferredMetricsTieBreakers>
 </document>

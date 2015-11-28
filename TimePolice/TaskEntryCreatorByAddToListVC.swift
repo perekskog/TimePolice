@@ -121,6 +121,9 @@ class TaskEntryCreatorByAddToListVC:
         sessionNameView.theme = theme
         sessionNameView.tool = .SessionName
         sessionNameView.toolbarInfoDelegate = self
+        var recognizer = UITapGestureRecognizer(target:self, action:Selector("useTemplate:"))
+        recognizer.delegate = self
+        sessionNameView.addGestureRecognizer(recognizer)
         self.view.addSubview(sessionNameView)
 
         workListBGView.theme = theme
@@ -134,7 +137,7 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = .SignInSignOut
-        var recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
+        recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
         recognizer.delegate = self
         signInSignOutView.addGestureRecognizer(recognizer)
         workListBGView.addSubview(signInSignOutView)
@@ -259,6 +262,12 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .EnterExit, message: "exit")
         
         performSegueWithIdentifier("Exit", sender: self)
+    }
+
+    func useTemplate(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
+
+        performSegueWithIdentifier("UseTemplate", sender: self)
     }
 
     func switchOngoingFinished(sender: UIButton) {

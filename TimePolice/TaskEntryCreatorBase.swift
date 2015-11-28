@@ -141,6 +141,22 @@ class TaskEntryCreatorBase:
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         appLog.log(logger, logtype: .EnterExit) { "prepareForSegue(\(segue.identifier))" }
 
+        if segue.identifier == "ExitVC" {
+            // Nothing to prepare
+        }
+
+
+        if segue.identifier == "UseTemplate" {
+            guard let nvc = segue.destinationViewController as? UINavigationController,
+                    let vc = nvc.topViewController as? TaskEntryTemplateSelectVC,
+                    let projects = Project.findInMOC(moc, name: "Templates")
+                    where projects.count >= 1 else {
+                return
+            }
+            let p = projects[0]
+            vc.templates = p.sessions.array as? [Session]
+        }
+
         if segue.identifier == "EditTaskEntry" {
             guard let nvc = segue.destinationViewController as? UINavigationController,
                     let vc = nvc.topViewController as? TaskEntryPropVC,
@@ -185,12 +201,40 @@ class TaskEntryCreatorBase:
             }
         }
 
-        if segue.identifier == "ExitVC" {
-            // Nothing to prepare
+    }
+    @IBAction func exitUseTemplate(unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
+
+        let vc = unwindSegue.sourceViewController as! TaskEntryTemplateSelectVC
+
+
+        if unwindSegue.identifier == "CancelUseTemplate" {
+            appLog.log(logger, logtype: .Debug, message: "Handle CancelUseTemplate... Do nothing")
+            // Do nothing
         }
 
-    }
+        if unwindSegue.identifier == "DoneUseTemplate" {
+            appLog.log(logger, logtype: .Debug, message: "Handle DoneUseTemplate")
+            // Replace tasks for current session
+            guard let i = vc.templateIndexSelected,
+                let session = vc.templates?[i] else {
+                    return
+            }
 
+            if let s = self.session {
+                s.tasks = session.tasks
+                
+                TimePoliceModelUtils.save(moc)
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                redrawAfterSegue()
+
+            }
+
+        }
+
+
+    }
+        
     @IBAction func exitTaskEntryProp(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "exitEditWork(unwindsegue=\(unwindSegue.identifier))")
 
@@ -305,8 +349,7 @@ class TaskEntryCreatorBase:
                 Work.createInMOCAfterIndex(moc, session: s, index: i)
             }
 
-        }
-        
+        }        
     }
     
     func adjustStartTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {

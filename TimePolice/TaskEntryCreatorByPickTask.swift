@@ -81,6 +81,10 @@ class TaskEntryCreatorByPickTaskVC:
 
         sessionNameView.theme = theme
         sessionNameView.tool = .SessionName
+        var recognizer = UITapGestureRecognizer(target:self, action:Selector("useTemplate:"))
+        recognizer.delegate = self
+        sessionNameView.addGestureRecognizer(recognizer)
+
         self.view.addSubview(sessionNameView)
         
         taskPickerBGView.theme = theme
@@ -89,7 +93,7 @@ class TaskEntryCreatorByPickTaskVC:
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = .SignInSignOut
-        let recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+        recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
         signInSignOutView.addGestureRecognizer(recognizer)
         taskPickerBGView.addSubview(signInSignOutView)
             
@@ -239,6 +243,12 @@ class TaskEntryCreatorByPickTaskVC:
         performSegueWithIdentifier("Exit", sender: self)
     }
 
+    func useTemplate(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
+
+        performSegueWithIdentifier("UseTemplate", sender: self)
+    }
+
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
 
@@ -257,8 +267,9 @@ class TaskEntryCreatorByPickTaskVC:
         } else {
             setLastWorkAsOngoing()
         }
-        let taskIndex = taskList.indexOf(work.task as Task)
-        taskbuttonviews[taskIndex!]?.setNeedsDisplay()
+        if let taskIndex = taskList.indexOf(work.task as Task) {
+            taskbuttonviews[taskIndex]?.setNeedsDisplay()
+        }
 
         appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
     }
@@ -276,12 +287,12 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         // Handle ongoing task
-        if let work = s.getLastWork() {
-            let taskIndex = taskList.indexOf(work.task as Task)
-            taskbuttonviews[taskIndex!]?.setNeedsDisplay()
-            if work.isOngoing() {
-                setLastWorkAsFinished()
-            }
+        if let work = s.getLastWork(),
+            taskIndex = taskList.indexOf(work.task as Task) {
+                taskbuttonviews[taskIndex]?.setNeedsDisplay()
+                if work.isOngoing() {
+                    setLastWorkAsFinished()
+                }
         }
 
         // Handle new task

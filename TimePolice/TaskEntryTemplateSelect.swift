@@ -1,8 +1,8 @@
 //
-//  MainTemplateListVC.swift
+//  TaskEntryTemplateSelectVC.swift
 //  TimePolice
 //
-//  Created by Per Ekskog on 2015-11-22.
+//  Created by Per Ekskog on 2015-11-27.
 //  Copyright © 2015 Per Ekskog. All rights reserved.
 //
 
@@ -17,7 +17,7 @@ TODO
 import UIKit
 import CoreData
 
-class MainTemplateSelectVC: UIViewController,
+class TaskEntryTemplateSelectVC: UIViewController,
     UITableViewDataSource,
     UITableViewDelegate {
 
@@ -72,14 +72,14 @@ class MainTemplateSelectVC: UIViewController,
     // GUI actions
 
     func cancel(sender: UIButton) {
-        performSegueWithIdentifier("CancelTemplateSelect", sender: self)
+        performSegueWithIdentifier("CancelUseTemplate", sender: self)
     }
     
     // UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         templateIndexSelected = indexPath.row
-        performSegueWithIdentifier("DoneTemplateSelect", sender: self)
+        performSegueWithIdentifier("DoneUseTemplate", sender: self)
     }
     
     // UITableViewDataSource

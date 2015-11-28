@@ -33,6 +33,8 @@
 		CB0E9EAE1BF271B000DEE193 /* SessionTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9EAC1BF267AE00DEE193 /* SessionTemplate.swift */; };
 		CB0E9EB01BF5250C00DEE193 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9EAF1BF5250C00DEE193 /* TestData.swift */; };
 		CB0E9EB11BF525B300DEE193 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9EAF1BF5250C00DEE193 /* TestData.swift */; };
+		CB14B9171C0826AE00B4884E /* TaskEntryTemplateSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB14B9161C0826AE00B4884E /* TaskEntryTemplateSelect.swift */; };
+		CB14B9181C08ACE700B4884E /* TaskEntryTemplateSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB14B9161C0826AE00B4884E /* TaskEntryTemplateSelect.swift */; };
 		CB1EDE9A1BBAED2A007FD39C /* AddToList@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE981BBAED29007FD39C /* AddToList@2x.png */; };
 		CB1EDE9B1BBAED2A007FD39C /* PickTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE991BBAED29007FD39C /* PickTask@2x.png */; };
 		CB1EDE9E1BBAF3E6007FD39C /* AddToList.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */; };
@@ -106,6 +108,7 @@
 		CB0E9E871BE73C3200DEE193 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CB0E9EAC1BF267AE00DEE193 /* SessionTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTemplate.swift; sourceTree = "<group>"; };
 		CB0E9EAF1BF5250C00DEE193 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		CB14B9161C0826AE00B4884E /* TaskEntryTemplateSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryTemplateSelect.swift; sourceTree = "<group>"; };
 		CB1EDE981BBAED29007FD39C /* AddToList@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AddToList@2x.png"; sourceTree = "<group>"; };
 		CB1EDE991BBAED29007FD39C /* PickTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PickTask@2x.png"; sourceTree = "<group>"; };
 		CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddToList.png; sourceTree = "<group>"; };
@@ -214,9 +217,10 @@
 				CB899E4A1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift */,
 				CB899E431BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift */,
 				CB899E4C1BA55E7E00914CDA /* TaskEntryCreatorManagerPageViewController.swift */,
-				CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */,
 				CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */,
 				CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */,
+				CB14B9161C0826AE00B4884E /* TaskEntryTemplateSelect.swift */,
+				CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */,
 				CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */,
 				CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */,
 				CB0E9EAF1BF5250C00DEE193 /* TestData.swift */,
@@ -408,6 +412,7 @@
 				CB623C101A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */,
 				CBA1A47B1AFD02F7005403F7 /* TaskEntryPropVC.swift in Sources */,
 				CB623C0D1A7ED728004AE917 /* TimePoliceTheme.swift in Sources */,
+				CB14B9171C0826AE00B4884E /* TaskEntryTemplateSelect.swift in Sources */,
 				CBD182BE1A08AAD2007BA9F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,6 +437,7 @@
 				CB0B0AED1A815B0100D22A08 /* Utilities.swift in Sources */,
 				CBB51C6D1BF9BD0400C84B11 /* MainVC.swift in Sources */,
 				CBAF8DAC1C0387CB00849C06 /* MainTemplateSelectVC.swift in Sources */,
+				CB14B9181C08ACE700B4884E /* TaskEntryTemplateSelect.swift in Sources */,
 				CBDBCE541A88312100E33072 /* AppDelegate.swift in Sources */,
 				CB899E4E1BA561C100914CDA /* TaskEntryCreatorManagerPageViewController.swift in Sources */,
 				CB0B0AEA1A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */,

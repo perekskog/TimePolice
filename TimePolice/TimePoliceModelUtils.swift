@@ -156,12 +156,25 @@ class TimePoliceModelUtils {
                             let project = projects[0]
 
                             for session in project.sessions {
+                                // Forst, search among tasks
                                 for task in (session as! Session).tasks {
                                     if !found && task.name == newTaskName {
                                         found = true
                                         if let t = task as? Task {
                                             t.properties = mergedProperties
                                             newTemplateSession.addTask(t)
+                                        }
+                                    }
+                                }
+                                // Second, search among TaskEntries
+                                // It might be that there is a TaskEntry since long before
+                                // but the corresponding Task is not part of the session.
+                                for work in (session as! Session).work {
+                                    if !found && work.task.name == newTaskName {
+                                        found = true
+                                        if let w = work as? Work {
+                                            w.task.properties = mergedProperties
+                                            newTemplateSession.addTask(w.task)
                                         }
                                     }
                                 }
