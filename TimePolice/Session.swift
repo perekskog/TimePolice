@@ -179,8 +179,8 @@ class Session: NSManagedObject {
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
             let work = elem as! Work
-            // For all items but the last one, if it is ongoing
-            if idx != self.work.count-1 || work.isStopped() {
+            // For all ongoing items
+            if work.isStopped() {
                 let task = work.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionTaskSummary[task] {

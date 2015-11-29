@@ -287,12 +287,13 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         // Handle ongoing task
-        if let work = s.getLastWork(),
-            taskIndex = taskList.indexOf(work.task as Task) {
-                taskbuttonviews[taskIndex]?.setNeedsDisplay()
-                if work.isOngoing() {
-                    setLastWorkAsFinished()
+        if let work = s.getLastWork() {
+            if work.isOngoing() {
+                setLastWorkAsFinished()
+                if let taskIndex = taskList.indexOf(work.task as Task) {
+                    taskbuttonviews[taskIndex]?.setNeedsDisplay()
                 }
+            }
         }
 
         // Handle new task
