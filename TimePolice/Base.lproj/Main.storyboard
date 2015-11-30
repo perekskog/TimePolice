@@ -646,8 +646,8 @@
         <image name="PickTask.png" width="19" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cS4-xQ-gF3"/>
         <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="JW7-jI-2S6"/>
         <segue reference="Rbx-w5-iep"/>
     </inferredMetricsTieBreakers>
 </document>
