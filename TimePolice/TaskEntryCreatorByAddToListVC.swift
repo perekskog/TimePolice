@@ -182,6 +182,16 @@ class TaskEntryCreatorByAddToListVC:
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        // This was originally in viewWillAppear, but it seems that viewWillAPpear will be called
+        // when changing session (PageController) and then, when changing TabBar, it will NOT
+        // be called. 
+        // viewDidAppear is always called.
+
+        self.sessionSummary = (0,0)
+        self.sessionSummary = session?.getSessionSummary(moc)
+        redrawAfterSegue()
+        scrollToEnd(workListTableView)
     }
 
 
