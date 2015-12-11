@@ -154,6 +154,8 @@ class MainExportVC: UIViewController,
         }
 
         var s = ""
+        var sessionNameSuffix = ""
+
         for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
             if project.name == "Templates" {
                 continue
@@ -174,7 +176,12 @@ class MainExportVC: UIViewController,
                         heading += "* "
                     }
                 }
-                heading += "\(session.name) \(UtilitiesDate.getStringWithFormat(session.created, format: "dd"))\t"
+                sessionNameSuffix = ""
+                if let e = session.getProperty("extension") {
+                    sessionNameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
+                }
+
+                heading += "\(session.name) \(sessionNameSuffix)\t"
             }
             s += "\(heading)\n"
 
@@ -219,10 +226,18 @@ class MainExportVC: UIViewController,
     // MainExportVC - dumpAllData
     //---------------------------------------------
 
+    class func sessionNameWithExtension(session: Session) -> String {
+        var sessionNameSuffix = ""
+        if let e = session.getProperty("extension") {
+            sessionNameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
+        }
+        return "\(session.name) \(sessionNameSuffix)"
+    }
+
     class func dumpAllData(moc: NSManagedObjectContext) -> String {
         var fetchRequest: NSFetchRequest
         var s: String
-        
+
         do {
             s = ("---------------------------\n")
             s += ("----------Project----------\n\n")
@@ -236,7 +251,9 @@ class MainExportVC: UIViewController,
                     }
                     s += "    [Session container size=\(project.sessions.count)]\n"
                     for session in project.sessions {
-                        s += "    S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n"
+                        if let se = session as? Session {
+                            s += "    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n"
+                        }
                     }
                 }
             }
@@ -252,7 +269,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
-                    s += ("S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
+                    s += ("S: \(sessionNameWithExtension(session)) @ \(UtilitiesDate.getString(session.created))\n")
                     for (key, value) in session.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
@@ -297,7 +314,7 @@ class MainExportVC: UIViewController,
                     for (key, value) in work.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    s += "    S: \(work.session.name) @ \(UtilitiesDate.getString(work.session.created))\n"
+                    s += "    S: \(sessionNameWithExtension(work.session)) @ \(UtilitiesDate.getString(work.session.created))\n"
                     s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
                 }
             }
@@ -319,8 +336,9 @@ class MainExportVC: UIViewController,
                     }
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {
-                        // Indicate if it is belonging to the template project or not.
-                        s += ("    S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n")
+                        if let se = session as? Session {
+                            s += ("    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")
+                        }
                     }
                     s += "    [Work container size=\(task.work.count)]\n"
                     task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
