@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 /*
     // Readonly attribute
@@ -40,10 +41,8 @@ class Work: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
         
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-            dateStyle: NSDateFormatterStyle.ShortStyle,
-            timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = name
         newItem.created = date
         newItem.properties = properties
@@ -76,10 +75,8 @@ class Work: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
 
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                dateStyle: NSDateFormatterStyle.ShortStyle,
-                timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = templateItem.name
         newItem.created = date
         newItem.properties = templateItem.properties
@@ -113,10 +110,8 @@ class Work: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
 
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                dateStyle: NSDateFormatterStyle.ShortStyle,
-                timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Work] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = templateItem.name
         newItem.created = date
         newItem.properties = templateItem.properties

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 /*  TODO
 
@@ -43,10 +44,8 @@ class Session: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Session=\(name)] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "S:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = "\(name)"
         newItem.created = date
         newItem.properties = properties

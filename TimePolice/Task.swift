@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 
 class Task: NSManagedObject {
@@ -33,10 +34,8 @@ class Task: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Task", inManagedObjectContext: moc) as! Task
 
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Task] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "T:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = name
         newItem.created = date
         newItem.properties = properties

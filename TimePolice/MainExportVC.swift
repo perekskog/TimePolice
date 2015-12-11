@@ -245,7 +245,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
                 s += "[Project container size=\(fetchResults.count)]\n"
                 for project in fetchResults {
-                    s += ("P: \(project.name) @ \(UtilitiesDate.getString(project.created))\n")
+                    s += ("P: \(project.name) @ \(UtilitiesDate.getString(project.created)) - \(project.id)\n")
                     for (key, value) in project.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
@@ -269,7 +269,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
-                    s += ("S: \(sessionNameWithExtension(session)) @ \(UtilitiesDate.getString(session.created))\n")
+                    s += ("S: \(sessionNameWithExtension(session)) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
                     for (key, value) in session.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
@@ -307,9 +307,9 @@ class MainExportVC: UIViewController,
                 for work in fetchResults {
                     if work.isStopped() {
                         let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork)) - \(work.id)\n"
                     } else {
-                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
+                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------ - \(work.id)\n"
                     }
                     for (key, value) in work.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
@@ -330,7 +330,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
                 s += "[Task container size=\(fetchResults.count)]\n"
                 for task in fetchResults {
-                    s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created))\n")
+                    s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created)) - \(task.id)\n")
                     for (key, value) in task.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }

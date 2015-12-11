@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit    
 import CoreData
 
 
@@ -32,10 +33,8 @@ class Project: NSManagedObject {
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
 
         let date = NSDate()
-        let dateAndTime = NSDateFormatter.localizedStringFromDate(date,
-                    dateStyle: NSDateFormatterStyle.ShortStyle,
-                    timeStyle: NSDateFormatterStyle.MediumStyle)
-        newItem.id = "[Project] \(dateAndTime) - \(date.timeIntervalSince1970)"
+        let deviceName = UIDevice.currentDevice().name
+        newItem.id = "P:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = name
         newItem.created = date
         newItem.properties = properties
