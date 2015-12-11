@@ -26,7 +26,8 @@ class Work: NSManagedObject {
 
     class func createInMOC(moc: NSManagedObjectContext,
             name: String, session: Session, task: Task) -> Work {
-            
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name))")
+   
         let n = UtilitiesString.getWithoutProperties(name)
         let p = UtilitiesString.getProperties(name)
         return Work.createInMOC(moc, name: n, properties: p, session: session, task: task)
@@ -34,6 +35,7 @@ class Work: NSManagedObject {
     
     class func createInMOC(moc: NSManagedObjectContext,
         name: String, properties: [String: String], session: Session, task: Task) -> Work {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name), props...)")
             
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Work", inManagedObjectContext: moc) as! Work
         
@@ -56,7 +58,7 @@ class Work: NSManagedObject {
         session.addWork(newItem)
         
         let s = UtilitiesString.dumpProperties(properties)
-        UtilitiesApplog.logDefault("Work.createInMOC", logtype: .Debug, message: s)
+        UtilitiesApplog.logDefault("Work properties", logtype: .Debug, message: s)
         
         return newItem
     }
@@ -64,9 +66,10 @@ class Work: NSManagedObject {
 
     class func createInMOCBeforeIndex(moc: NSManagedObjectContext, 
             session: Session, index: Int) -> Work? {
-        
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "createInMOCBeforeIndex(name=\(session.name), index=\(index)")
+
         guard let templateItem = session.getWork(index) else {
-            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCBeforeIndex")
+            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "guard fail createInMOCBeforeIndex")
             return nil
         }
 
@@ -100,9 +103,10 @@ class Work: NSManagedObject {
 
     class func createInMOCAfterIndex(moc: NSManagedObjectContext, 
             session: Session, index: Int) -> Work? {
-        
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "createInMOCAfterIndex(name=\(session.name), index=\(index)")
+
         guard let templateItem = session.getWork(index) else {
-            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "createInMOCAfterIndex")
+            UtilitiesApplog.logDefault("Work", logtype: .Guard, message: "guard fail createInMOCAfterIndex")
             return nil
         }
 
@@ -139,8 +143,13 @@ class Work: NSManagedObject {
     // Work - delete
     //---------------------------------------------
 
-    class func deleteInMOC(moc: NSManagedObjectContext, work: Work) {
+    class func deleteObject(work: Work) {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "deleteObject(name=\(work.name))")
+        guard let moc = work.managedObjectContext else { return }
+        let task = work.task
         moc.deleteObject(work)
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "Purge task if orhpaned")
+        Task.purgeIfEmpty(task, exceptWork: work)
     }
 
 
@@ -161,6 +170,8 @@ class Work: NSManagedObject {
     }
 
     func setStartedAt(time: NSDate) {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "setStartedAt(\(UtilitiesDate.getString(time))")
+
         if isStopped() && time.compare(self.stopTime) == .OrderedDescending {
             // Don't set a stopped item's starttime > stoptime
             return
@@ -173,6 +184,8 @@ class Work: NSManagedObject {
     }
 
     func setStoppedAt(time: NSDate) {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "setStoppedAt(\(UtilitiesDate.getString(time))")
+
         if time.compare(self.startTime) == .OrderedAscending {
             // Don't set an item's stoptime < starttime
             return
@@ -181,6 +194,8 @@ class Work: NSManagedObject {
     }
 
     func setAsOngoing() {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "setAsOngoing()")
+
         self.stopTime = stoptimeOngoing
     }
 

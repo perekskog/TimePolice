@@ -549,7 +549,7 @@ class TaskEntryCreatorByPickTaskVC:
         }
             
         guard let work = s.getLastWork() else {
-                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask lastwork")
+//                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask lastwork")
                 return
         }
         

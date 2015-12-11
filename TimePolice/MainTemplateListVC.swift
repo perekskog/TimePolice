@@ -330,7 +330,7 @@ class MainTemplateListVC: UIViewController,
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = templateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
-                Session.deleteInMOC(moc, session: session)
+                Session.deleteObject(session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()
 

@@ -124,6 +124,29 @@ class MainSettingVC: UIViewController,
         presentViewController(alertContoller, animated: true, completion: nil)
     }
 
+    @IBAction func clearSessions(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "clearSessions")
+
+        let alertContoller = UIAlertController(title: "Delete all sessions?", message: nil,
+            preferredStyle: .Alert)
+        
+        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
+            handler: { action in
+                MainSettingVC.clearAllDataKeepTemplates(self.moc)
+                TimePoliceModelUtils.save(self.moc)
+                self.moc.reset()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all sessions")
+                self.redrawAll(false)
+            })
+        alertContoller.addAction(fillWithPreviousAction)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
+    }
+
     @IBAction func clearApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
         
@@ -220,5 +243,30 @@ class MainSettingVC: UIViewController,
             print("Can't fetch projects for deletion")
         }
     }
+
+    //---------------------------------------------
+    // MainSettingsVC - clearAllDataKeepTemplates
+    //---------------------------------------------
+
+    class func clearAllDataKeepTemplates(moc: NSManagedObjectContext) {
+        var fetchRequest: NSFetchRequest
+
+        do {
+            // Delete all projects
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    if project.name != "Templates" {
+                        Project.deleteObject(project)
+                        //moc.deleteObject(project)
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch projects for deletion")
+        }
+
+    }
+
 
 }

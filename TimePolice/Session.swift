@@ -28,6 +28,7 @@ class Session: NSManagedObject {
 
     class func createInMOC(moc: NSManagedObjectContext, 
         name: String, project: Project, src: String) -> Session {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name))")
 
         let n = UtilitiesString.getWithoutProperties(name)
         let p = UtilitiesString.getProperties(name)
@@ -37,7 +38,8 @@ class Session: NSManagedObject {
 
     class func createInMOC(moc: NSManagedObjectContext, 
         name: String, properties: [String: String], project: Project, src: String) -> Session {
-        
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name), props...)")
+
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
         let date = NSDate()
@@ -56,105 +58,17 @@ class Session: NSManagedObject {
         project.addSession(newItem)
 
         let s = UtilitiesString.dumpProperties(properties)
-        UtilitiesApplog.logDefault("Session.createInMOC", logtype: .Debug, message: s)
+        UtilitiesApplog.logDefault("Session properties", logtype: .Debug, message: s)
 
         return newItem
     }
-
-    //---------------------------------------------
-    // Session - delete
-    //---------------------------------------------
-
-    class func deleteInMOC(moc: NSManagedObjectContext, session: Session) {
-    
-        for work in session.work {
-            Work.deleteInMOC(moc, work: work as! Work)
-        }
-        moc.deleteObject(session)
-    }
-
-
-    //---------------------------------------------
-    // Session - getProperty
-    //---------------------------------------------
-    
-    func getProperty(key: String) -> String? {
-        guard let p = properties as? [String: String] else {
-            return nil
-        }
-        return p[key]
-    }
-
-    //---------------------------------------------
-    // Session - addWork (internal use only)
-    //---------------------------------------------
-
-    func addWork(work: Work) {
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(work)
-        self.work = sw
-    }
-
-
-    //---------------------------------------------
-    // Session - addWork (internal use only)
-    //---------------------------------------------
-
-    func insertWorkBefore(work: Work, index: Int) {
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(work, atIndex: index)
-        self.work = sw
-    }
-
-
-    //---------------------------------------------
-    // Session - addWork (internal use only)
-    //---------------------------------------------
-
-    func insertWorkAfter(work: Work, index: Int) {
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(work, atIndex: index+1)
-        self.work = sw
-    }
-
-
-    //---------------------------------------------
-    // Session - addTask (internal use only)
-    //---------------------------------------------
-
-    func addTask(task: Task) {
-        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
-        st.addObject(task)
-        self.tasks = st
-    }
-
-
-    //---------------------------------------------
-    // Session - addTasks (internal use only)
-    //---------------------------------------------
-
-    func addTasks(taskList: [Task]) {
-        for task in taskList {
-            addTask(task)
-        }
-    }
-
-    //---------------------------------------------
-    // Session - addTasks (internal use only)
-    //---------------------------------------------
-
-    func deleteTask(task: Task) {
-        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
-        st.removeObject(task)
-        self.tasks = st
-    }
-
 
     //---------------------------------------------
     // Session - findInMOC
     //---------------------------------------------
 
     class func findInMOC(moc: NSManagedObjectContext, name: String) -> [Session]? {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "findInMOC(name=\(name))")
 
         let fetchRequest = NSFetchRequest(entityName: "Session")
         let predicate = NSPredicate(format: "name == %@", name) 
@@ -170,11 +84,161 @@ class Session: NSManagedObject {
 
     
     //---------------------------------------------
+    // Session - delete
+    //---------------------------------------------
+
+    class func deleteObject(session: Session) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteObject(name=\(session.name))")
+        guard let moc = session.managedObjectContext else { return }
+        let worklist = session.work
+        let tasklist = session.tasks
+        let project = session.project
+        moc.deleteObject(session)
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Delete all work")
+        for work in worklist {
+            if let w = work as? Work {
+                Work.deleteObject(w)
+            }
+        }
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge all orphaned tasks")
+        for task in tasklist {
+            if let t = task as? Task {
+                Task.purgeIfEmpty(t, exceptSession:session)
+            }
+        }        
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge project if orphaned")
+        Project.purgeIfEmpty(project, exceptSession: session)
+    }
+
+
+    //---------------------------------------------
+    // Session - getProperty
+    //---------------------------------------------
+    
+    func getProperty(key: String) -> String? {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getProperty(key=\(key))")
+        guard let p = properties as? [String: String] else {
+            UtilitiesApplog.logDefault("Session", logtype: .Guard, message: "guard fail getProperty")
+            return nil
+        }
+        return p[key]
+    }
+
+    
+    
+    //---------------------------------------------
+    // Session - addWork (internal use only)
+    //---------------------------------------------
+    
+    func addWork(work: Work) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addWork(work=\(work.name))")
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(work)
+        self.work = sw
+    }
+
+    func insertWorkBefore(work: Work, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertWorkBefore(work=\(work.name), index=\(index))")
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(work, atIndex: index)
+        self.work = sw
+    }
+
+    func insertWorkAfter(work: Work, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertWorkAfter(work=\(work.name), index=\(index))")
+        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(work, atIndex: index+1)
+        self.work = sw
+    }
+
+    //---------------------------------------------
+    // Session - getLastWork
+    //---------------------------------------------
+
+    func getLastWork() -> Work? {
+        // UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getLastWork")
+        if work.count >= 1 {
+            return work[work.count-1] as? Work
+        } else {
+            return nil
+        }
+    }
+
+    //---------------------------------------------
+    // Session - getWork
+    //---------------------------------------------
+
+    func getWork(index: Int) -> Work? {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getWork(index=\(index))")
+        if index >= 0 && work.count > index {
+            return work[index] as? Work
+        } else {
+            return nil
+        }
+    }
+
+
+    //---------------------------------------------
+    // Session - addTask (internal use only)
+    //---------------------------------------------
+
+    func addTask(task: Task) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTask(task=\(task.name))")
+        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
+        st.addObject(task)
+        self.tasks = st
+    }
+
+    func addTasks(taskList: [Task]) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTasks(...)")
+        for task in taskList {
+            addTask(task)
+        }
+    }
+
+
+    //---------------------------------------------
+    // Session - deleteTasks (internal use only)
+    //---------------------------------------------
+
+    func deleteTask(task: Task) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteTask(task=\(task.name))")
+        let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
+        st.removeObject(task)
+        self.tasks = st
+    }
+
+
+    //---------------------------------------------
+    // Session - replaceTasks (internal use only)
+    //---------------------------------------------
+
+    func replaceTasksWith(newTasks: [Task]) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "replaceTasksWith(tasks...)")
+        let oldTasks = self.tasks
+
+
+        let s = NSOrderedSet(array:newTasks)
+        self.tasks = s
+        if let moc = self.managedObjectContext {
+            TimePoliceModelUtils.save(moc)
+        }
+
+        for task in oldTasks {
+            if let t = task as? Task {
+                Task.purgeIfEmpty(t)
+            }
+        }
+    }
+
+    //---------------------------------------------
     // Session - getSessionTaskSummary
     //---------------------------------------------
 
     func getSessionTaskSummary() -> [Task: (Int, NSTimeInterval)] {
         var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
+
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionTaskSummary")
 
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
@@ -203,6 +267,8 @@ class Session: NSManagedObject {
     func getSessionSummary(moc: NSManagedObjectContext) -> (Int, NSTimeInterval) {
         var sessionSummary: (Int, NSTimeInterval) = (0,0)
 
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionSummary")
+
         self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
             let work = elem as! Work
@@ -218,31 +284,6 @@ class Session: NSManagedObject {
         return sessionSummary
     }
     
-    //---------------------------------------------
-    // Session - getLastWork
-    //---------------------------------------------
-
-    func getLastWork() -> Work? {
-        if work.count >= 1 {
-            return work[work.count-1] as? Work
-        } else {
-            return nil
-        }
-    }
-
-
-    //---------------------------------------------
-    // Session - getWork
-    //---------------------------------------------
-
-    func getWork(index: Int) -> Work? {
-        if index >= 0 && work.count > index {
-            return work[index] as? Work
-        } else {
-            return nil
-        }
-    }
-
 
     //---------------------------------------------
     // Session modifications - Rules to follow
@@ -305,6 +346,8 @@ Future extensions
 */
 
     func setStartTime(moc: NSManagedObjectContext, workIndex: Int, desiredStartTime: NSDate) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStartTime(workIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
+
         if workIndex < 0 || workIndex >= work.count  {
             // Index out of bounds
             return
@@ -386,6 +429,8 @@ Future extensions
 
 
     func setStopTime(moc: NSManagedObjectContext, workIndex: Int, desiredStopTime: NSDate) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStopTime(workIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
+
         if workIndex < 0 || workIndex >= work.count  {
             // Index out of bounds
             return
@@ -458,6 +503,8 @@ Future extensions
             1            2     3            4                    1            4
 */
     func deletePreviousWorkAndAlignStart(moc: NSManagedObjectContext, workIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousWorkAndAlignStart(workIndex=\(workIndex))")
+
         if workIndex < 0 || workIndex >= work.count  {
             // Index out of bounds
             return
@@ -472,7 +519,11 @@ Future extensions
         let previousWork = work[workIndex-1] as! Work
         let startTime = previousWork.startTime
 
-        moc.deleteObject(previousWork)
+        Work.deleteObject(previousWork)
+
+        // Purge Task if it is not referenced any longer.
+        Task.purgeIfEmpty(previousWork.task, exceptWork: previousWork)
+
         workToModify.setStartedAt(startTime)
 
         TimePoliceModelUtils.save(moc)
@@ -498,6 +549,8 @@ Future extensions
             1            2     3        4                    1            4
 */
     func deleteNextWorkAndAlignStop(moc: NSManagedObjectContext, workIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousWorkAndAlignStop(workIndex=\(workIndex))")
+
         if workIndex < 0 || workIndex >= work.count  {
             // Index out of bounds
             return
@@ -517,7 +570,10 @@ Future extensions
             workToModify.setStoppedAt(nextWork.stopTime)
         }
 
-        moc.deleteObject(nextWork)
+        Work.deleteObject(nextWork)
+
+        // Purge Task if it is not referenced any longer.
+        Task.purgeIfEmpty(nextWork.task, exceptWork: nextWork)
 
         TimePoliceModelUtils.save(moc)        
     }
@@ -538,13 +594,20 @@ Future extensions
 */
 
     func deleteWork(moc: NSManagedObjectContext, workIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteWork(workIndex=\(workIndex))")
+
         if workIndex < 0 || workIndex >= work.count  {
             // Index out of bounds
             return
         }
 
         let workToModify = work[workIndex] as! Work
-        Work.deleteInMOC(moc, work: workToModify)
+        
+        UtilitiesApplog.logDefault("Session", logtype: .Debug, message: "delete the workitem")
+        
+        // Deete work, this will also try to purge the task.
+        Work.deleteObject(workToModify)
+
         TimePoliceModelUtils.save(moc)        
     }
 

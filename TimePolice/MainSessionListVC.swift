@@ -318,16 +318,22 @@ class MainSessionListVC: UIViewController,
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
 
+            let sessionName = session.name
+
+            var nameSuffix = ""
+            if let e = session.getProperty("extension") {
+                nameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
+            }
+            
+            var taskName = "(empty)"
             if let work = session.getLastWork() {
                 if work.isOngoing() {
-                    let taskName = work.task.name
-                    cell.textLabel?.text = "\(session.name) (\(taskName))"
+                    taskName = work.task.name
                 } else {
-                    cell.textLabel?.text = "\(session.name) (---)"
+                    taskName = "(---)"
                 }
-            } else {
-                cell.textLabel?.text = "\(session.name) (empty)"                
             }
+            cell.textLabel?.text = "\(sessionName) \(nameSuffix) \(taskName)"
         }
 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
@@ -359,7 +365,7 @@ class MainSessionListVC: UIViewController,
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = nonTemplateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
-                Session.deleteInMOC(moc, session: session)
+                Session.deleteObject(session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()
 

@@ -191,7 +191,7 @@ class TimePoliceModelUtils {
 
         // Delete old template session
         if oldTemplateSession != nil {
-            Session.deleteInMOC(moc, session: oldTemplateSession!)
+            Session.deleteObject(oldTemplateSession!)
         }
         
     }

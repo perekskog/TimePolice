@@ -208,7 +208,7 @@ class TaskEntryCreatorBase:
 
     }
     @IBAction func exitUseTemplate(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "(...Base) exitEditWork(unwindsegue=\(unwindSegue.identifier))")
+        appLog.log(logger, logtype: .EnterExit, message: "(...Base) exitUseTemplate(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskEntryTemplateSelectVC
 
@@ -227,7 +227,14 @@ class TaskEntryCreatorBase:
             }
 
             if let s = self.session {
-                s.tasks = session.tasks
+                //s.tasks = session.tasks
+                if let tasks = session.tasks.array as? [Task] {
+                    s.replaceTasksWith(tasks)
+                }
+
+                // Use new properties and src
+                s.properties = session.properties
+                s.src = session.src
                 
                 TimePoliceModelUtils.save(moc)
                 appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
@@ -241,7 +248,7 @@ class TaskEntryCreatorBase:
     }
         
     @IBAction func exitTaskEntryProp(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "e(...Base) xitEditWork(unwindsegue=\(unwindSegue.identifier))")
+        appLog.log(logger, logtype: .EnterExit, message: "e(...Base) exitTaskEntryProp(unwindsegue=\(unwindSegue.identifier))")
 
         let vc = unwindSegue.sourceViewController as! TaskEntryPropVC
 
@@ -268,7 +275,9 @@ class TaskEntryCreatorBase:
             if let t = vc.taskToUse {
                 // Change task if this attribute was set
                 appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork selected task=\(t.name)")
-                s.getWork(i)!.task = t
+                if let w = s.getWork(i) {
+                    w.task = t
+                }
             } else {
                 appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork no task selected")
             }
