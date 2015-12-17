@@ -307,7 +307,7 @@ class TaskEntryCreatorByPickTaskVC:
     }
 
     func handleLongPressTask(sender: UILongPressGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleLongPress")
+        appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTask")
 
         if sender.state != UIGestureRecognizerState.Began {
             return

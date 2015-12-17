@@ -50,6 +50,7 @@ class Session: NSManagedObject {
         newItem.created = date
         newItem.properties = properties
         newItem.src = src
+        newItem.archived = false
         
         newItem.project = project
 

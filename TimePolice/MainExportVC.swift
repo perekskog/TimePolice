@@ -12,6 +12,8 @@ import CoreData
 class MainExportVC: UIViewController,
     AppLoggerDataSource {
 
+    @IBOutlet var sessionSelectionControl: UISegmentedControl!
+
     let theme = BlackGreenTheme()
 
     //---------------------------------------
@@ -84,6 +86,16 @@ class MainExportVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
+
+        sessionSelectionControl.removeAllSegments()
+        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.tintColor = UIColor(red:0.7, green:0.7, blue:0.7, alpha: 1.0)
+        sessionSelectionControl.addTarget(self, action: "selectSessions:", forControlEvents: .TouchUpInside)
+        sessionSelectionControl.selectedSegmentIndex = 0
+
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -163,12 +175,22 @@ class MainExportVC: UIViewController,
             var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
             var setOfTasks = Set<Task>()
             for session in project.sessions {
-                let sessionSummary = (session as! Session).getSessionTaskSummary()
-                for (task, _) in sessionSummary {
-                    setOfTasks.insert(task)
+                if let s = session as? Session {
+                    var includeSession = true
+                    if s.archived==true && sessionSelectionControl.selectedSegmentIndex==2
+                    || s.archived==false && sessionSelectionControl.selectedSegmentIndex==1 {
+                        includeSession = false
+                    }
+                    if includeSession {
+                        let sessionSummary = s.getSessionTaskSummary()
+                        for (task, _) in sessionSummary {
+                            setOfTasks.insert(task)
+                        }
+                        projectSummary[s] = sessionSummary
+                    }
                 }
-                projectSummary[session as! Session] = sessionSummary
             }
+
             var heading = "\t"
             for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                 if let w = session.getLastWork() {
@@ -274,6 +296,11 @@ class MainExportVC: UIViewController,
                         s += "[\(key)]=[\(value)]\n"
                     }
                     s += "src=\(session.src)\n"
+                    if session.archived==true {
+                        s += "archived=true\n"
+                    } else {
+                        s += "archived=false\n"                        
+                    }
                     s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
                     s += "    [Work container size=\(session.work.count)]\n"
                     session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in

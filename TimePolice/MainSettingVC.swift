@@ -124,18 +124,41 @@ class MainSettingVC: UIViewController,
         presentViewController(alertContoller, animated: true, completion: nil)
     }
 
-    @IBAction func clearSessions(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearSessions")
+    @IBAction func clearActiveSessions(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "clearActiveSessions")
 
-        let alertContoller = UIAlertController(title: "Delete all sessions?", message: nil,
+        let alertContoller = UIAlertController(title: "Delete all active sessions?", message: nil,
             preferredStyle: .Alert)
         
         let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
-                MainSettingVC.clearAllDataKeepTemplates(self.moc)
+                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: false)
                 TimePoliceModelUtils.save(self.moc)
                 self.moc.reset()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all sessions")
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all active sessions")
+                self.redrawAll(false)
+            })
+        alertContoller.addAction(fillWithPreviousAction)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
+    }
+
+    @IBAction func clearArchivedSessions(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "clearArchivedSessions")
+
+        let alertContoller = UIAlertController(title: "Delete all archived sessions?", message: nil,
+            preferredStyle: .Alert)
+        
+        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
+            handler: { action in
+                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: true)
+                TimePoliceModelUtils.save(self.moc)
+                self.moc.reset()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all archived sessions")
                 self.redrawAll(false)
             })
         alertContoller.addAction(fillWithPreviousAction)
@@ -175,7 +198,7 @@ class MainSettingVC: UIViewController,
     func redrawAll(refreshCoreData: Bool) {
         if refreshCoreData==true {
         }
-        applogSize.text = "current size = \(self.appLog.logString.characters.count)" 
+        applogSize.text = "\(self.appLog.logString.characters.count)" 
     }
 
     //---------------------------------------------
@@ -247,7 +270,7 @@ class MainSettingVC: UIViewController,
     //---------------------------------------------
     // MainSettingsVC - clearAllDataKeepTemplates
     //---------------------------------------------
-
+/*
     class func clearAllDataKeepTemplates(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
 
@@ -264,6 +287,24 @@ class MainSettingVC: UIViewController,
             }
         } catch {
             print("Can't fetch projects for deletion")
+        }
+
+    }
+*/
+    class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool) {
+        var fetchRequest: NSFetchRequest
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Session")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                for session in fetchResults {
+                    if session.project.name != "Templates" && session.archived == archived {
+                        Session.deleteObject(session)
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch sessions for deletion")
         }
 
     }

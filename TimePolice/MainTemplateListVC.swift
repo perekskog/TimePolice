@@ -240,9 +240,9 @@ class MainTemplateListVC: UIViewController,
             if let nvc = segue.destinationViewController as? UINavigationController,
                     vc = nvc.topViewController as? MainTemplatePropVC {
                 vc.segue = "AddTemplate"
-                var s = "Name\n"
+                var s = "Name#extension=DD hhmmss\n"
                 s += "Task 1\n"
-                s += "Task 2"
+                s += "Task 2#color=f44"
                 vc.template = s
             }
         }

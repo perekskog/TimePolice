@@ -38,6 +38,7 @@ class MainSessionListVC: UIViewController,
     var sessionTableView = UITableView(frame: CGRectZero, style: .Plain)
     let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = WorkListToolView()
+    let sessionSelectionControl = UISegmentedControl(frame: CGRectZero)
     let sessionListBGView = WorkListBGView()
     let addView = WorkListToolView()
     let theme = BlackGreenTheme()
@@ -119,7 +120,18 @@ class MainSessionListVC: UIViewController,
         sessionTableView.rowHeight = 25
         sessionTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         sessionTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTableView:"))
+        sessionTableView.addGestureRecognizer(longPressRecognizer)
         sessionListBGView.addSubview(sessionTableView)
+
+        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
+        sessionSelectionControl.tintColor = UIColor(red:0.0, green:0.7, blue:0.0, alpha: 1.0)
+        sessionSelectionControl.addTarget(self, action: "selectSessions:", forControlEvents: .ValueChanged)
+        sessionSelectionControl.selectedSegmentIndex = 2
+        sessionListBGView.addSubview(sessionSelectionControl)
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
@@ -165,7 +177,9 @@ class MainSessionListVC: UIViewController,
         height = CGRectGetHeight(sessionListBGView.frame)
         let padding = 1
 
-        sessionTableView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), height - 30 - CGFloat(padding))
+        sessionSelectionControl.frame = CGRectMake(0, 0, width, 25)
+
+        sessionTableView.frame = CGRectMake(CGFloat(padding), 25, width - 2*CGFloat(padding), height - 25 - 30 - CGFloat(padding))
         lastview = sessionTableView
 
         addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30 - 2*CGFloat(padding))
@@ -189,24 +203,38 @@ class MainSessionListVC: UIViewController,
 
     func redrawAll(refreshCoreData: Bool) {
         if refreshCoreData==true {
-            let (s1, s2) = getSessions()
+            var s1, s2: [Session]
+            let x = sessionSelectionControl.selectedSegmentIndex
+            switch  x {
+            case 0: (s1, s2) = getSessions(true, archived: true)
+            case 1: (s1, s2) = getSessions(false, archived: true)
+            case 2: (s1, s2) = getSessions(true, archived: false)
+            default: (s1, s2) = getSessions(false, archived: false)
+            }
             self.nonTemplateSessions = s1
             self.templateSessions = s2
         }
         sessionTableView.reloadData()
     }
     
-    func getSessions() -> ([Session], [Session]) {
+    func getSessions(active: Bool, archived: Bool) -> ([Session], [Session]) {
         appLog.log(logger, logtype: .EnterExit, message: "getSessions")
 
         do {
             let fetchRequest = NSFetchRequest(entityName: "Session")
+
             var nonTemplateSessions: [Session] = []
             var templateSessions: [Session] = []
+            
             if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 for session in tmpSessions {
                     if session.project.name != templateProjectName {
-                        nonTemplateSessions.append(session)
+                        if active==true && session.archived==false {
+                            nonTemplateSessions.append(session)
+                        }
+                        if archived==true && session.archived==true {
+                            nonTemplateSessions.append(session)
+                        }
                     } else {
                         templateSessions.append(session)
                     }
@@ -217,6 +245,11 @@ class MainSessionListVC: UIViewController,
         } catch {
             return ([], [])
         }
+    }
+    
+    func selectSessions(sender: UISegmentedControl) {
+        appLog.log(logger, logtype: .EnterExit, message: "selectSessions")
+        redrawAll(true)
     }
     
     //---------------------------------------------
@@ -233,6 +266,49 @@ class MainSessionListVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "addSession")
 
         performSegueWithIdentifier("AddSession", sender: self)
+    }
+
+    func handleLongPressTableView(sender: UILongPressGestureRecognizer) {
+        appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTableView")
+
+        if sender.state != UIGestureRecognizerState.Began {
+            return
+        }
+
+        let locationInView = sender.locationInView(sessionTableView)
+        let indexPath = sessionTableView.indexPathForRowAtPoint(locationInView)
+
+        guard let s = nonTemplateSessions?[(indexPath?.row)!] else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in nonTemplateSessions[indexPath.row]")
+            return
+        }
+
+        var title = "Archive session?"
+        if s.archived==true {
+            title = "Unarchive session?"
+        }
+
+        let alertContoller = UIAlertController(title: title, message: nil,
+            preferredStyle: .Alert)
+        
+        let actionYes = UIAlertAction(title: "Yes", style: .Default,
+            handler: { action in
+                if s.archived==true {
+                    s.archived=false
+                } else {
+                    s.archived=true
+                }
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did \(title)")
+                self.redrawAll(true)
+            })
+        alertContoller.addAction(actionYes)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
+
     }
 
     //---------------------------------------------
@@ -429,5 +505,44 @@ class MainSessionListVC: UIViewController,
         
         return s[sessionForIndex]
     }
+
+/*
+        let alertContoller = UIAlertController(title: "Modify session", message: nil,
+            preferredStyle: .ActionSheet)
+        
+        let fillWithPreviousAction = UIAlertAction(title: "...update with new template", style: .Default,
+            handler: { action in
+            })
+        alertContoller.addAction(fillWithPreviousAction)
+        
+        if let s = session {
+            if s.archived == true {
+                let toggleActive = UIAlertAction(title: "...move to active", style: .Default,
+                    handler: { action in
+                        s.archived = false
+                        self.redrawAll(true)
+                    })
+                    alertContoller.addAction(toggleActive)
+            } else {
+                let toggleActive = UIAlertAction(title: "...move to archive", style: .Default,
+                    handler: { action in
+                        s.archived = true
+                        self.redrawAll(true)
+                    })
+                    alertContoller.addAction(toggleActive)                
+            }
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: { action in
+                if let indexPath = self.workListTableView.indexPathForSelectedRow {
+                    self.workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+                }
+            })
+        alertContoller.addAction(cancel)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
+        
+*/
 
 }
