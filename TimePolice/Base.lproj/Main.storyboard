@@ -379,7 +379,7 @@
                                 </segments>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rk0-Pe-KGj">
-                                <rect key="frame" x="85" y="293" width="150" height="36"/>
+                                <rect key="frame" x="20" y="515" width="150" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Data structures">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -646,8 +646,8 @@ stored data</string>
         <image name="PickTask.png" width="19" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hjh-eJ-Q4q"/>
-        <segue reference="JW7-jI-2S6"/>
         <segue reference="Rbx-w5-iep"/>
+        <segue reference="I7g-5x-ylG"/>
+        <segue reference="cS4-xQ-gF3"/>
     </inferredMetricsTieBreakers>
 </document>

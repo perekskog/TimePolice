@@ -182,7 +182,7 @@ class MainExportVC: UIViewController,
                         includeSession = false
                     }
                     if includeSession {
-                        let sessionSummary = s.getSessionTaskSummary()
+                        let sessionSummary = s.getSessionTaskSummary(true)
                         for (task, _) in sessionSummary {
                             setOfTasks.insert(task)
                         }

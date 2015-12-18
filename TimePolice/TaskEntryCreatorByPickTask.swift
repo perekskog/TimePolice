@@ -141,7 +141,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         layout = GridLayout(rows: rows, columns: columns, padding: padding, toolHeight: toolHeight)
         
-        self.sessionTaskSummary = s.getSessionTaskSummary()
+        self.sessionTaskSummary = s.getSessionTaskSummary(false)
 
         guard let tl = s.tasks.array as? [Task],
             l = layout else {
@@ -345,7 +345,7 @@ class TaskEntryCreatorByPickTaskVC:
     override func redrawAfterSegue() {
         appLog.log(logger, logtype: .EnterExit, message: "redraw")
 
-        sessionTaskSummary = session?.getSessionTaskSummary()
+        sessionTaskSummary = session?.getSessionTaskSummary(false)
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()

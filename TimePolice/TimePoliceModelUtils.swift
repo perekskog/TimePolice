@@ -50,7 +50,7 @@ class TimePoliceModelUtils {
 
     class func getSessionTasks(session: Session) -> String {
         var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
-        let summary = session.getSessionTaskSummary()
+        let summary = session.getSessionTaskSummary(false)
         for task in session.tasks.array as! [Task] {
             if task.name != "" {
                 var time: NSTimeInterval = 0

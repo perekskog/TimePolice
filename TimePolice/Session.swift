@@ -235,7 +235,7 @@ class Session: NSManagedObject {
     // Session - getSessionTaskSummary
     //---------------------------------------------
 
-    func getSessionTaskSummary() -> [Task: (Int, NSTimeInterval)] {
+    func getSessionTaskSummary(includeOngoing: Bool) -> [Task: (Int, NSTimeInterval)] {
         var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
 
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionTaskSummary")
@@ -244,7 +244,7 @@ class Session: NSManagedObject {
 
             let work = elem as! Work
             // For all ongoing items
-            if work.isStopped() {
+            if work.isStopped() || includeOngoing {
                 let task = work.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionTaskSummary[task] {
@@ -252,7 +252,11 @@ class Session: NSManagedObject {
                 }
                 var (activations, totalTime) = taskSummary
                 activations++
-                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                if work.isStopped() {
+                    totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                } else {
+                    totalTime += NSDate().timeIntervalSinceDate(work.startTime)
+                }
                 sessionTaskSummary[task] = (activations, totalTime)
             }
         }
