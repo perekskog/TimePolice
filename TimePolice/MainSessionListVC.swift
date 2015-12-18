@@ -128,7 +128,7 @@ class MainSessionListVC: UIViewController,
         sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
         sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
         sessionSelectionControl.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
-        sessionSelectionControl.tintColor = UIColor(red:0.0, green:0.7, blue:0.0, alpha: 1.0)
+        sessionSelectionControl.tintColor = UIColor(red:0.2, green:0.6, blue:0.2, alpha: 1.0)
         sessionSelectionControl.addTarget(self, action: "selectSessions:", forControlEvents: .ValueChanged)
         sessionSelectionControl.selectedSegmentIndex = 2
         sessionListBGView.addSubview(sessionSelectionControl)
