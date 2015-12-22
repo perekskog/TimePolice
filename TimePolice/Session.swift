@@ -116,7 +116,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
     
     func getProperty(key: String) -> String? {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getProperty(key=\(key))")
+//        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getProperty(key=\(key))")
         guard let p = properties as? [String: String] else {
             UtilitiesApplog.logDefault("Session", logtype: .Guard, message: "guard fail getProperty")
             return nil

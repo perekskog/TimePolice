@@ -91,7 +91,8 @@ class MainExportVC: UIViewController,
         sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
         sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
         sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
-        sessionSelectionControl.tintColor = UIColor(red:0.7, green:0.7, blue:0.7, alpha: 1.0)
+        sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.addTarget(self, action: "selectSessions:", forControlEvents: .TouchUpInside)
         sessionSelectionControl.selectedSegmentIndex = 0
 

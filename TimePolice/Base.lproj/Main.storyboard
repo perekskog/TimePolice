@@ -361,16 +361,6 @@
                                 <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
-                                <rect key="frame" x="75" y="323" width="171" height="36"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Session summary">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
-                                </connections>
-                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GK6-I2-o8Q">
                                 <rect key="frame" x="37" y="367" width="246" height="29"/>
                                 <segments>
@@ -387,6 +377,16 @@
                                 </state>
                                 <connections>
                                     <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
+                                <rect key="frame" x="75" y="403" width="171" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Session summary">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -416,9 +416,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAC-Ek-niD">
-                                <rect key="frame" x="29" y="494" width="73" height="36"/>
+                                <rect key="frame" x="20" y="494" width="109" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="All data">
+                                <state key="normal" title="Delete all data">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -438,33 +438,12 @@
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
-                                <rect key="frame" x="216" y="497" width="88" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearApplog:" destination="jaN-JA-eGe" eventType="touchUpInside" id="KCO-2c-hb0"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X6e-qU-MtH">
                                 <rect key="frame" x="221" y="527" width="79" height="21"/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YuO-Dt-HID">
-                                <rect key="frame" x="91" y="351" width="138" height="33"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Archived sessions">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearArchivedSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="let-8T-ufI"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
                                 <rect key="frame" x="107" y="161" width="108" height="36"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
@@ -472,13 +451,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EC3-rY-XDf">
-                                <rect key="frame" x="92" y="380" width="118" height="36"/>
+                                <rect key="frame" x="100" y="384" width="121" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Active sessions">
+                                <state key="normal" title="Delete sessions">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="clearActiveSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="YAk-Uh-CVz"/>
+                                    <action selector="deleteSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="5JE-Hq-sqi"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ecJ-ET-Yf3">
@@ -489,12 +468,31 @@ stored data</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GXK-1U-UOo">
+                                <rect key="frame" x="37" y="343" width="246" height="29"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GzV-q9-WFt">
+                                <rect key="frame" x="182" y="496" width="101" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Reset applog">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearApplog:" destination="jaN-JA-eGe" eventType="touchUpInside" id="KCO-2c-hb0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.29602819055944057" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
                     <connections>
                         <outlet property="applogSize" destination="X6e-qU-MtH" id="ada-Nw-1Kl"/>
+                        <outlet property="sessionSelectionControl" destination="GXK-1U-UOo" id="doo-yf-zHx"/>
                         <segue destination="SLu-ke-hzb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="IYJ-zg-K2k"/>
                     </connections>
                 </viewController>

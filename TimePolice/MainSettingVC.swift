@@ -13,6 +13,7 @@ class MainSettingVC: UIViewController,
     AppLoggerDataSource {
 
 
+    @IBOutlet var sessionSelectionControl: UISegmentedControl!
     @IBOutlet var applogSize: UILabel!
 
     let theme = BlackGreenTheme()
@@ -89,6 +90,14 @@ class MainSettingVC: UIViewController,
 
         (self.view as! TimePoliceBGView).theme = theme
 
+        sessionSelectionControl.removeAllSegments()
+        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
+        sessionSelectionControl.selectedSegmentIndex = 0
+
         redrawAll(false)
     }
 
@@ -124,18 +133,37 @@ class MainSettingVC: UIViewController,
         presentViewController(alertContoller, animated: true, completion: nil)
     }
 
-    @IBAction func clearActiveSessions(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearActiveSessions")
+    @IBAction func deleteSessions(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "deleteSessions")
 
-        let alertContoller = UIAlertController(title: "Delete all active sessions?", message: nil,
+
+        var prompt: String
+        var active = false
+        var archived = false
+        
+        switch sessionSelectionControl.selectedSegmentIndex {
+        case 0:
+            prompt = "Delete all sessions"
+            archived = true
+            active = true
+        case 1:
+            prompt = "Delete all archived sessions"
+            archived = true
+        case 2:
+            prompt = "Delete all active sessions"
+            active = true
+        default: return
+        }
+        
+        let alertContoller = UIAlertController(title: "\(prompt)?", message: nil,
             preferredStyle: .Alert)
         
         let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
-                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: false)
+                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
                 TimePoliceModelUtils.save(self.moc)
                 self.moc.reset()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all active sessions")
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
                 self.redrawAll(false)
             })
         alertContoller.addAction(fillWithPreviousAction)
@@ -147,28 +175,6 @@ class MainSettingVC: UIViewController,
         presentViewController(alertContoller, animated: true, completion: nil)
     }
 
-    @IBAction func clearArchivedSessions(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearArchivedSessions")
-
-        let alertContoller = UIAlertController(title: "Delete all archived sessions?", message: nil,
-            preferredStyle: .Alert)
-        
-        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
-            handler: { action in
-                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: true)
-                TimePoliceModelUtils.save(self.moc)
-                self.moc.reset()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all archived sessions")
-                self.redrawAll(false)
-            })
-        alertContoller.addAction(fillWithPreviousAction)
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-            handler: nil)
-        alertContoller.addAction(cancel)
-        
-        presentViewController(alertContoller, animated: true, completion: nil)
-    }
 
     @IBAction func clearApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
@@ -291,15 +297,17 @@ class MainSettingVC: UIViewController,
 
     }
 */
-    class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool) {
+    class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool, active: Bool) {
         var fetchRequest: NSFetchRequest
 
         do {
             fetchRequest = NSFetchRequest(entityName: "Session")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 for session in fetchResults {
-                    if session.project.name != "Templates" && session.archived == archived {
-                        Session.deleteObject(session)
+                    if session.project.name != "Templates" {
+                        if session.archived == archived || session.archived != active {
+                            Session.deleteObject(session)
+                        }
                     }
                 }
             }
