@@ -227,7 +227,8 @@ class MainSessionListVC: UIViewController,
             var templateSessions: [Session] = []
             
             if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
-                for session in tmpSessions {
+//                for session in tmpSessions {
+                for session in tmpSessions.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if session.project.name != templateProjectName {
                         if active==true && session.archived==false {
                             nonTemplateSessions.append(session)
@@ -294,9 +295,9 @@ class MainSessionListVC: UIViewController,
         let actionYes = UIAlertAction(title: "Yes", style: .Default,
             handler: { action in
                 if s.archived==true {
-                    s.archived=false
+                    s.setArchivedTo(false)
                 } else {
-                    s.archived=true
+                    s.setArchivedTo(true)
                 }
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did \(title)")
                 self.redrawAll(true)

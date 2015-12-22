@@ -287,7 +287,20 @@ class Session: NSManagedObject {
 
         return sessionSummary
     }
-    
+
+    //---------------------------------------------
+    // Session - archived
+    //---------------------------------------------
+
+    func setArchivedTo(archived: Bool) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionSummary")
+
+        self.archived = archived
+
+        if let moc = self.managedObjectContext {
+            TimePoliceModelUtils.save(moc)
+        }
+    }
 
     //---------------------------------------------
     // Session modifications - Rules to follow
