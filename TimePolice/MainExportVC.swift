@@ -234,7 +234,7 @@ class MainExportVC: UIViewController,
                 if let total = sessionTotal[session] {
                     summaryRow += "\(UtilitiesDate.getString(total))\t"
                 } else {
-                    summaryRow += "0\t"
+                    summaryRow += "0:00:00\t"
                 }
             }
             s += summaryRow
