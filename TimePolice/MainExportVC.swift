@@ -170,8 +170,11 @@ class MainExportVC: UIViewController,
             if project.name == "Templates" {
                 continue
             }
+
             var maxNumberOfWork = 0
             var projectDetails: [Session: ([Work], [Int])] = [:]
+            var finished: [Session: Bool] = [:]
+
             for session in project.sessions {
                 if let s = session as? Session {
                     var includeSession = true
@@ -185,6 +188,7 @@ class MainExportVC: UIViewController,
                             let gap2work = TimePoliceModelUtils.getGap2Work(wl)
                             maxNumberOfWork = max(maxNumberOfWork, gap2work.count)
                             projectDetails[s] = (wl, gap2work)
+                            finished[s] = false
 
                             if let w = s.getLastWork() {
                                 if w.isOngoing() {
@@ -195,30 +199,43 @@ class MainExportVC: UIViewController,
                             if let e = s.getProperty("extension") {
                                 sessionNameSuffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
                             }
-                            heading += "\(s.name) \(sessionNameSuffix)\t\t\t"
+                            heading += "\(s.name) \(sessionNameSuffix)\t\t"
                         }
                     }
                 }
             }
             str = "\(heading)\n"
 
-            for i in 0...maxNumberOfWork-1 {
+
+            // Iterate one step extra to always printout end time of last task entry
+            for i in 0...maxNumberOfWork {
                 for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let (worklist, gap2work) = projectDetails[s] {
                         if i < gap2work.count {
                             if gap2work[i] == -1 {
-                                str += "\t\t\t"
+                                let previousWork = worklist[gap2work[i-1]]
+                                str += "\t\(UtilitiesDate.getStringNoDate(previousWork.stopTime))\t"
                             } else {
                                 let w = worklist[gap2work[i]]
                                 if w.isStopped() {
                                     let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t\(UtilitiesDate.getStringNoDate(w.stopTime))\t"
+                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
                                 } else {
-                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t(ongoing)\t"
+                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
                                 }
                             }
                         } else {
-                            str += "out of bound\t\t\t"
+                            if finished[s] == true {
+                                str += "\t\t"
+                            } else {
+                                let previousWork = worklist[gap2work[i-1]]
+                                if previousWork.isOngoing() {
+                                    str += "\t...\t"
+                                } else {
+                                    str += "\t\(UtilitiesDate.getStringNoDate(previousWork.stopTime))\t"
+                                }
+                                finished[s] = true
+                            }
                         }
                     }
                 }
