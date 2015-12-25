@@ -164,13 +164,13 @@ class MainExportVC: UIViewController,
         }
 
         var str = ""
-        var heading = ""
 
         for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
             if project.name == "Templates" {
                 continue
             }
 
+            var heading = ""
             var maxNumberOfWork = 0
             var projectDetails: [Session: ([Work], [Int])] = [:]
             var finished: [Session: Bool] = [:]
@@ -204,7 +204,7 @@ class MainExportVC: UIViewController,
                     }
                 }
             }
-            str = "\(heading)\n"
+            str += "\(heading)\n"
 
 
             // Iterate one step extra to always printout end time of last task entry
