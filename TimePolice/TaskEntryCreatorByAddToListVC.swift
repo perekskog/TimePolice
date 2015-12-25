@@ -59,36 +59,6 @@ class TaskEntryCreatorByAddToListVC:
         return "TaskEntryCreatorByAddToList"
     }
 
-    func getGap2Work(workList: [Work]) -> [Int] {
-        if workList.count == 0 {
-            return []
-        }
-        // First entry is never a gap
-        var gap2Work: [Int] = [0]
-
-        // If there are more than one element: Go through entire list
-        if workList.count > 1 {
-            var previousTaskEntry = workList[0]
-            for i in 1...workList.count-1 {
-                let te = workList[i]
-                appLog.log(logger, logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
-                appLog.log(logger, logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
-//                if te.startTime.isEqualToDate(previousTaskEntry.stopTime) {
-                if te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime) < 0.5 {
-                    // No gap
-                } else {
-                    let diff = te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime)
-                    appLog.log(logger, logtype: .Debug, message: "(gap=\(diff))")
-                    gap2Work.append(-1)
-                }
-                previousTaskEntry = te
-                gap2Work.append(i)
-            }
-        }
-
-        return gap2Work
-    }
-
     //---------------------------------------------
     // TaskEntryCreatorByAddToList - View lifecycle
     //---------------------------------------------
@@ -104,7 +74,7 @@ class TaskEntryCreatorByAddToListVC:
         gap2work = []
         if let s = session,
             wl = s.work.array as? [Work] {
-            gap2work = getGap2Work(wl)
+            gap2work = TimePoliceModelUtils.getGap2Work(wl)
         }
         var s = ""
         for i in gap2work {
@@ -335,7 +305,7 @@ class TaskEntryCreatorByAddToListVC:
         gap2work = []
         if let s = session,
             wl = s.work.array as? [Work] {
-            gap2work = getGap2Work(wl)
+            gap2work = TimePoliceModelUtils.getGap2Work(wl)
         }
 
         workListTableView.reloadData()
@@ -548,7 +518,7 @@ class TaskEntryCreatorByAddToListVC:
         gap2work = []
         if let s = session,
             wl = s.work.array as? [Work] {
-            gap2work = getGap2Work(wl)
+            gap2work = TimePoliceModelUtils.getGap2Work(wl)
         }
 
         workListTableView.reloadData()

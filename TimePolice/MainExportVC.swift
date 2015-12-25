@@ -136,6 +136,99 @@ class MainExportVC: UIViewController,
         UIPasteboard.generalPasteboard().string = s
     }
 
+    @IBAction func dumpSessionDetails(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "dumpSessionDetails")
+
+        /*
+        for each project p {
+            projectDetails = [session: ([Work], [Int])
+            var maxLength = 0
+            for each session in p {
+                workList = session.work
+                gap2work = TaskEntryCreatorAddToList::getGap2Work(worklist)
+                projectDetails[session] = (worklist, gap2work)
+                maxLength = max(maxLength, gap2work.count)
+                print session heading
+            }
+            for row = 0...maxLength {
+                for each session in projectDetails {
+                    if entry exists for this session: print entry
+                    else print "\t"
+                }
+            }
+        }
+        */
+
+        guard let projects = Project.findInMOC(moc) else {
+            return
+        }
+
+        var str = ""
+        var heading = ""
+
+        for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+            if project.name == "Templates" {
+                continue
+            }
+            var maxNumberOfWork = 0
+            var projectDetails: [Session: ([Work], [Int])] = [:]
+            for session in project.sessions {
+                if let s = session as? Session {
+                    var includeSession = true
+                    if s.archived==true && sessionSelectionControl.selectedSegmentIndex==2
+                    || s.archived==false && sessionSelectionControl.selectedSegmentIndex==1 {
+                        includeSession = false
+                    }
+                    if includeSession {
+                        let worklist = s.work
+                        if let wl = worklist.array as? [Work] {
+                            let gap2work = TimePoliceModelUtils.getGap2Work(wl)
+                            maxNumberOfWork = max(maxNumberOfWork, gap2work.count)
+                            projectDetails[s] = (wl, gap2work)
+
+                            if let w = s.getLastWork() {
+                                if w.isOngoing() {
+                                    heading += "* "
+                                }
+                            }
+                            var sessionNameSuffix = ""
+                            if let e = s.getProperty("extension") {
+                                sessionNameSuffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
+                            }
+                            heading += "\(s.name) \(sessionNameSuffix)\t\t\t"
+                        }
+                    }
+                }
+            }
+            str = "\(heading)\n"
+
+            for i in 0...maxNumberOfWork-1 {
+                for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+                    if let (worklist, gap2work) = projectDetails[s] {
+                        if i < gap2work.count {
+                            if gap2work[i] == -1 {
+                                str += "\t\t\t"
+                            } else {
+                                let w = worklist[gap2work[i]]
+                                if w.isStopped() {
+                                    let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
+                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t\(UtilitiesDate.getStringNoDate(w.stopTime))\t"
+                                } else {
+                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t(ongoing)\t"
+                                }
+                            }
+                        } else {
+                            str += "out of bound\t\t\t"
+                        }
+                    }
+                }
+                str += "\n"
+            }
+        }
+        print(str)
+        UIPasteboard.generalPasteboard().string = str
+    }
+
     @IBAction func dumpSessionSummary(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpSessionSummary")
 
