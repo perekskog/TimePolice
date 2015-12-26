@@ -12,7 +12,7 @@ import UIKit
 
 enum AppLogEntryType {
     case EnterExit
-    case CoreData
+    case CoreDataSnapshot
     case Debug
     case iOS
     case Resource

@@ -307,7 +307,7 @@ class TaskEntryCreatorByPickTaskVC:
         addNewWork(task)
         taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 
-        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+        appLog.log(logger, logtype: .CoreDataSnapshot) { TimePoliceModelUtils.getSessionWork(s) }
     }
 
     func handleLongPressTask(sender: UILongPressGestureRecognizer) {

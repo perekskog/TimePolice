@@ -271,7 +271,7 @@ class MainTemplateListVC: UIViewController,
                 newSrc = vc.updatedTemplate {
                     let st = SessionTemplate()
                     st.parseTemplate(newSrc)
-                    appLog.log(logger, logtype: .CoreData, message: st.getString(st.session, tasks: st.tasks))
+                    appLog.log(logger, logtype: .CoreDataSnapshot, message: st.getString(st.session, tasks: st.tasks))
                     let (reuseTasksFromProject, _) = st.session
                     TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: reuseTasksFromProject, session: st.session, tasks: st.tasks, src: newSrc)
             }

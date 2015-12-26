@@ -131,19 +131,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
             toBeIncluded = false
         }
 */
+/*
   
         if logtype != .GUIAction {
             toBeIncluded = false
         }
-        
-/*
-        switch logtype {
-        case .PeriodicCallback:
-                toBeIncluded = false
-        default:
-                toBeIncluded = true
-        }
 */
+
+        if logtype == .PeriodicCallback {
+            toBeIncluded = false
+        }
+
+        if logtype == .CoreDataSnapshot {
+            toBeIncluded = false
+        }
         
         return toBeIncluded
     }
