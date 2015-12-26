@@ -238,6 +238,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
 
         updateActiveActivityTimer?.invalidate()
         performSegueWithIdentifier("Exit", sender: self)
@@ -245,12 +246,14 @@ class TaskEntryCreatorByPickTaskVC:
 
     func useTemplate(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
+        appLog.log(logger, logtype: .GUIAction, message: "useTemplate")
 
         performSegueWithIdentifier("UseTemplate", sender: self)
     }
 
     func handleTapSigninSignout(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
+        appLog.log(logger, logtype: .GUIAction, message: "handleTapSigninSignout")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -276,6 +279,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     func handleTapTask(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTap")
+        appLog.log(logger, logtype: .GUIAction, message: "handleTap")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -308,6 +312,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     func handleLongPressTask(sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTask")
+        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTask")
 
         if sender.state != UIGestureRecognizerState.Began {
             return
@@ -486,7 +491,7 @@ class TaskEntryCreatorByPickTaskVC:
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkFinished")
 
         guard let work = session?.getLastWork() else {
-            appLog.log(logger, logtype: .EnterExit, message: "no work in list")
+            appLog.log(logger, logtype: .Debug, message: "no work in list")
             appLog.log(logger, logtype: .Guard, message: "guard fail in setLastWorkAsFinished")
             return
         }
@@ -513,7 +518,7 @@ class TaskEntryCreatorByPickTaskVC:
         appLog.log(logger, logtype: .EnterExit, message: "setLastWorkOngoing")
 
         guard let work = session?.getLastWork() else {
-            appLog.log(logger, logtype: .EnterExit, message: "no work in list")
+            appLog.log(logger, logtype: .Debug, message: "no work in list")
             appLog.log(logger, logtype: .Guard, message: "guard fail in setLastWorkAsOngoing")
             return
         }
@@ -553,6 +558,7 @@ class TaskEntryCreatorByPickTaskVC:
         }
             
         guard let work = s.getLastWork() else {
+// Commented out, too frequent...
 //                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask lastwork")
                 return
         }

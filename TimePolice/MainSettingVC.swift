@@ -112,6 +112,7 @@ class MainSettingVC: UIViewController,
     
     @IBAction func clearCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
+        appLog.log(logger, logtype: .GUIAction, message: "clearAllData")
 
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
             preferredStyle: .Alert)
@@ -135,7 +136,7 @@ class MainSettingVC: UIViewController,
 
     @IBAction func deleteSessions(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "deleteSessions")
-
+        appLog.log(logger, logtype: .GUIAction, message: "deleteSessions")
 
         var prompt: String
         var active = false
@@ -178,6 +179,7 @@ class MainSettingVC: UIViewController,
 
     @IBAction func clearApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
+        appLog.log(logger, logtype: .GUIAction, message: "clearApplog")
         
         let alertContoller = UIAlertController(title: "Reset applog?", message: nil,
             preferredStyle: .Alert)
@@ -213,6 +215,7 @@ class MainSettingVC: UIViewController,
 
     @IBAction func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
 
         performSegueWithIdentifier("Exit", sender: self)
     }
@@ -276,27 +279,7 @@ class MainSettingVC: UIViewController,
     //---------------------------------------------
     // MainSettingsVC - clearAllDataKeepTemplates
     //---------------------------------------------
-/*
-    class func clearAllDataKeepTemplates(moc: NSManagedObjectContext) {
-        var fetchRequest: NSFetchRequest
 
-        do {
-            // Delete all projects
-            fetchRequest = NSFetchRequest(entityName: "Project")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
-                for project in fetchResults {
-                    if project.name != "Templates" {
-                        Project.deleteObject(project)
-                        //moc.deleteObject(project)
-                    }
-                }
-            }
-        } catch {
-            print("Can't fetch projects for deletion")
-        }
-
-    }
-*/
     class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool, active: Bool) {
         var fetchRequest: NSFetchRequest
 

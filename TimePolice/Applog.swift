@@ -20,6 +20,7 @@ enum AppLogEntryType {
     case AppLifecycle
     case ViewLifecycle
     case Guard
+    case GUIAction
 }
 
 protocol AppLogger {

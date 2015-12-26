@@ -16,7 +16,10 @@ TODO
 
 import UIKit
 
-class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TaskSelectVC: UIViewController,
+    UITableViewDataSource,
+    UITableViewDelegate,
+    AppLoggerDataSource {
     
     // Input data
     var tasks: [Task]?
@@ -30,6 +33,35 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     let cellReuseId = "SelectTask"
     
     let table = UITableView()
+
+
+    //----------------------------------------------------------------
+    // TaskSelectVC - Lazy properties
+    //----------------------------------------------------------------
+    
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+        }()
+
+    lazy var logger: AppLogger = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
+    }()
+
+    //---------------------------------------------
+    // TaskSelectVC - AppLoggerDataSource
+    //---------------------------------------------
+
+    func getLogDomain() -> String {
+        return "TaskSelectVC"
+    }
+
+    //---------------------------------------------
+    // TaskSelectVC - View lifecycle
+    //---------------------------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,6 +98,9 @@ class TaskSelectVC: UIViewController, UITableViewDataSource, UITableViewDelegate
     // UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         taskIndexSelected = indexPath.row
         performSegueWithIdentifier("DoneSelectTask", sender: self)
     }

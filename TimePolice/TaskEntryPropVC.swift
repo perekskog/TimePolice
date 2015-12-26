@@ -198,10 +198,16 @@ class TaskEntryPropVC:
     // GUI actions
 
     func cancel(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "cancel")
+        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+
         performSegueWithIdentifier("CancelTaskEntry", sender: self)
     }
     
     func save(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "save")
+        appLog.log(logger, logtype: .GUIAction, message: "save")
+
         if let _ = taskSelected {
             // Must have selected a task to save the task entry
             performSegueWithIdentifier("SaveTaskEntry", sender: self)            
@@ -254,6 +260,9 @@ class TaskEntryPropVC:
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         editStart = false
         editStop = false
         

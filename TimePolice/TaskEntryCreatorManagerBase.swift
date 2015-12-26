@@ -146,7 +146,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     }
 
     /////////////////////////
-    // SessionManager public API
+    // TaskEntryCreator public API
     /////////////////////////
 
     func switchTo(newSessionIndex: Int) {

@@ -218,12 +218,14 @@ class MainTemplateListVC: UIViewController,
 
     @IBAction func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
 
         performSegueWithIdentifier("Exit", sender: self)
     }
 
     @IBAction func addTemplate(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "addTemplate")
+        appLog.log(logger, logtype: .GUIAction, message: "addTemplate")
 
         performSegueWithIdentifier("AddTemplate", sender: self)
     }
@@ -319,6 +321,9 @@ class MainTemplateListVC: UIViewController,
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         if let s = templateSessions
         where indexPath.row >= 0 && indexPath.row < s.count {
             selectedTemplateIndex = indexPath.row
@@ -327,6 +332,9 @@ class MainTemplateListVC: UIViewController,
     }
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.commitEditingStyle")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle")
+
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = templateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")

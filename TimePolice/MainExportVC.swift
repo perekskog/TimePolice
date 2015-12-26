@@ -110,6 +110,7 @@ class MainExportVC: UIViewController,
 
     @IBAction func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
 
         performSegueWithIdentifier("Exit", sender: self)
     }
@@ -122,6 +123,7 @@ class MainExportVC: UIViewController,
     
     @IBAction func dumpCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
+        appLog.log(logger, logtype: .GUIAction, message: "dumpCoreData")
 
         let s = MainExportVC.dumpAllData(moc)
         print(s)
@@ -130,6 +132,7 @@ class MainExportVC: UIViewController,
 
     @IBAction func dumpApplog(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpApplog")
+        appLog.log(logger, logtype: .GUIAction, message: "dumpApplog")
 
         let s = appLog.logString
         print(s)
@@ -138,6 +141,7 @@ class MainExportVC: UIViewController,
 
     @IBAction func dumpSessionDetails(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpSessionDetails")
+        appLog.log(logger, logtype: .GUIAction, message: "dumpSessionDetails")
 
         /*
         for each project p {
@@ -247,6 +251,7 @@ class MainExportVC: UIViewController,
 
     @IBAction func dumpSessionSummary(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpSessionSummary")
+        appLog.log(logger, logtype: .GUIAction, message: "dumpSessionSummary")
 
         /*
         for each project p {

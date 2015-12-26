@@ -259,18 +259,21 @@ class MainSessionListVC: UIViewController,
 
     @IBAction func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
 
         performSegueWithIdentifier("Exit", sender: self)
     }
 
     @IBAction func addSession(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "addSession")
+        appLog.log(logger, logtype: .GUIAction, message: "addSession")
 
         performSegueWithIdentifier("AddSession", sender: self)
     }
 
     func handleLongPressTableView(sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTableView")
+        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTableView")
 
         if sender.state != UIGestureRecognizerState.Began {
             return
@@ -431,6 +434,9 @@ class MainSessionListVC: UIViewController,
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         if let s = nonTemplateSessions
         where indexPath.row >= 0 && indexPath.row < s.count {
             selectedSessionIndex = indexPath.row
@@ -439,6 +445,9 @@ class MainSessionListVC: UIViewController,
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.commitEditingStyle")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle")
+
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = nonTemplateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
@@ -506,44 +515,5 @@ class MainSessionListVC: UIViewController,
         
         return s[sessionForIndex]
     }
-
-/*
-        let alertContoller = UIAlertController(title: "Modify session", message: nil,
-            preferredStyle: .ActionSheet)
-        
-        let fillWithPreviousAction = UIAlertAction(title: "...update with new template", style: .Default,
-            handler: { action in
-            })
-        alertContoller.addAction(fillWithPreviousAction)
-        
-        if let s = session {
-            if s.archived == true {
-                let toggleActive = UIAlertAction(title: "...move to active", style: .Default,
-                    handler: { action in
-                        s.archived = false
-                        self.redrawAll(true)
-                    })
-                    alertContoller.addAction(toggleActive)
-            } else {
-                let toggleActive = UIAlertAction(title: "...move to archive", style: .Default,
-                    handler: { action in
-                        s.archived = true
-                        self.redrawAll(true)
-                    })
-                    alertContoller.addAction(toggleActive)                
-            }
-        }
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-            handler: { action in
-                if let indexPath = self.workListTableView.indexPathForSelectedRow {
-                    self.workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
-                }
-            })
-        alertContoller.addAction(cancel)
-        
-        presentViewController(alertContoller, animated: true, completion: nil)
-        
-*/
 
 }

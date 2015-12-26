@@ -29,7 +29,7 @@ class MainTemplatePropVC: UIViewController,
     }
 
     //---------------------------------------
-    // MainSettingsVC - Lazy properties
+    // MainTemplatePropVC - Lazy properties
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
@@ -50,7 +50,7 @@ class MainTemplatePropVC: UIViewController,
     }()
 
     //---------------------------------------------
-    // MainSettingsVC - AppLoggerDataSource
+    // MainTemplatePropVC - AppLoggerDataSource
     //---------------------------------------------
 
     func getLogDomain() -> String {
@@ -60,7 +60,7 @@ class MainTemplatePropVC: UIViewController,
 
 
     //---------------------------------------------
-    // MainSettingsVC - View lifecycle
+    // MainTemplatePropVC - View lifecycle
     //---------------------------------------------
 
     override func viewWillDisappear(animated: Bool) {
@@ -148,10 +148,16 @@ class MainTemplatePropVC: UIViewController,
     // GUI actions
 
     func cancel(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "cancel")
+        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+
         performSegueWithIdentifier("CancelTemplateProp", sender: self)
     }
     
     func save(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "save")
+        appLog.log(logger, logtype: .GUIAction, message: "save")
+
         updatedTemplate = textTemplate.text
         performSegueWithIdentifier("SaveTemplateProp", sender: self)
     }

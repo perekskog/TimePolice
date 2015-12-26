@@ -240,18 +240,21 @@ class TaskEntryCreatorByAddToListVC:
 
     func exit(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "exit")
+        appLog.log(logger, logtype: .GUIAction, message: "exit")
         
         performSegueWithIdentifier("Exit", sender: self)
     }
 
     func useTemplate(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
+        appLog.log(logger, logtype: .GUIAction, message: "useTemplate")
 
         performSegueWithIdentifier("UseTemplate", sender: self)
     }
 
     func switchOngoingFinished(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "switchOngoingFinished")
+        appLog.log(logger, logtype: .GUIAction, message: "switchOngoingFinished")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -280,6 +283,7 @@ class TaskEntryCreatorByAddToListVC:
     
     func addWork(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "addWork")
+        appLog.log(logger, logtype: .GUIAction, message: "addWork")
 
         guard let s = session else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in addWork")
@@ -320,6 +324,9 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         //GAP: Use a popover for a gap, continue if not a gap
         if indexPath.row >= gap2work.count {
             appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [workIndex out of bounds]")

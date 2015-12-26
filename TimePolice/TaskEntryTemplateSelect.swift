@@ -19,7 +19,8 @@ import CoreData
 
 class TaskEntryTemplateSelectVC: UIViewController,
     UITableViewDataSource,
-    UITableViewDelegate {
+    UITableViewDelegate,
+    AppLoggerDataSource {
 
 	// Input data
 	var templates: [Session]?
@@ -33,6 +34,35 @@ class TaskEntryTemplateSelectVC: UIViewController,
     let cellReuseId = "SelectTemplate"
     
     let table = UITableView()
+
+    //----------------------------------------------------------------
+    // TaskEntryTemplateSelectVC - Lazy properties
+    //----------------------------------------------------------------
+    
+    lazy var appLog : AppLog = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.appLog
+        }()
+
+    lazy var logger: AppLogger = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var defaultLogger = appDelegate.getDefaultLogger()
+        defaultLogger.datasource = self
+        return defaultLogger
+    }()
+
+    //---------------------------------------------
+    // TaskEntryTemplateSelectVC - AppLoggerDataSource
+    //---------------------------------------------
+
+    func getLogDomain() -> String {
+        return "TaskEntryTemplateSelectVC"
+    }
+
+    //---------------------------------------------
+    // TaskEntryTemplateSelectVC - View lifecycle
+    //---------------------------------------------
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,12 +102,18 @@ class TaskEntryTemplateSelectVC: UIViewController,
     // GUI actions
 
     func cancel(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "cancel")
+        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+
         performSegueWithIdentifier("CancelUseTemplate", sender: self)
     }
     
     // UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+
         templateIndexSelected = indexPath.row
         performSegueWithIdentifier("DoneUseTemplate", sender: self)
     }
