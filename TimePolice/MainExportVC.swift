@@ -218,7 +218,6 @@ class MainExportVC: UIViewController,
                             } else {
                                 let w = worklist[gap2work[i]]
                                 if w.isStopped() {
-                                    let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
                                     str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
                                 } else {
                                     str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
@@ -300,6 +299,10 @@ class MainExportVC: UIViewController,
                         projectSummary[s] = sessionSummary
                     }
                 }
+            }
+            if projectSummary.isEmpty {
+                // No sessions in current selection active/archived
+                continue
             }
 
             var heading = "\t"
