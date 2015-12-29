@@ -223,6 +223,37 @@ class MainSettingVC: UIViewController,
         alertController.addAction(toggleApplog)
 
 
+
+
+        let noTracesSetting = UIAlertAction(title: "No traces", style: .Default,
+            handler: { action in
+                self.appLog.log(self.logger, logtype: .Debug, message: "Set to no traces")
+                appDelegate.included = noTraces
+            }
+        )
+        alertController.addAction(noTracesSetting)
+        
+
+
+
+        var toggleGUIActionTitle = "+ GUIAction"
+        if appDelegate.included.contains(.GUIAction) {
+            toggleGUIActionTitle = "- GUIAction"
+        }
+        let toggleGUIAction = UIAlertAction(title: toggleGUIActionTitle, style: .Default,
+            handler: { action in
+                if appDelegate.included.contains(.GUIAction) {
+                    appDelegate.included.remove(.GUIAction)
+                } else {
+                    appDelegate.included.insert(.GUIAction)
+                }
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleGUIActionTitle)")
+            }
+        )
+        alertController.addAction(toggleGUIAction)
+
+
+
         var toggleViewLifecycleTitle = "+ ViewLifecycle"
         if appDelegate.included.contains(.ViewLifecycle) {
             toggleViewLifecycleTitle = "- ViewLifecycle"
@@ -241,23 +272,16 @@ class MainSettingVC: UIViewController,
 
 
 
-        var toggleEnterExitTitle = "+ EnterExit"
-        if appDelegate.included.contains(.EnterExit) {
-            toggleEnterExitTitle = "- EnterExit"
-        }
-        let toggleEnterExit = UIAlertAction(title: toggleEnterExitTitle, style: .Default,
+
+
+        let defaultTracesSetting = UIAlertAction(title: "Default traces", style: .Default,
             handler: { action in
-                if appDelegate.included.contains(.EnterExit) {
-                    appDelegate.included.remove(.EnterExit)
-                } else {
-                    appDelegate.included.insert(.EnterExit)
-                }
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleEnterExitTitle)")
+                self.appLog.log(self.logger, logtype: .Debug, message: "Set to default traces")
+                appDelegate.included = defaultTraces
             }
         )
-        alertController.addAction(toggleEnterExit)
-
-
+        alertController.addAction(defaultTracesSetting)
+        
 
 
 
@@ -277,14 +301,9 @@ class MainSettingVC: UIViewController,
         )
         alertController.addAction(togglePeriodicCallback)
 
-        let defaultSettings = UIAlertAction(title: "Default traces", style: .Default,
-            handler: { action in
-                self.appLog.log(self.logger, logtype: .Debug, message: "Set to default traces")
-                appDelegate.included = defaultTraces
-            }
-        )
-        alertController.addAction(defaultSettings)
-        
+
+
+
         let resetApplog = UIAlertAction(title: "Reset applog", style: .Default,
             handler: { action in
                 self.appLog.logString = ""

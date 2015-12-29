@@ -48,6 +48,9 @@ let defaultTraces: Set<AppLogEntryType> = [
     .GUIAction
 ]
 
+let noTraces: Set<AppLogEntryType> = [
+]
+
 protocol AppLogger {
     var datasource: AppLoggerDataSource? { get set }
     func localize(sender: AppLoggerDelegate, message: String)

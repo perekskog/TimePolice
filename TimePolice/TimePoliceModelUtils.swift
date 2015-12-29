@@ -100,7 +100,7 @@ class TimePoliceModelUtils {
         // Find template project, or create it if it does not already exist
         var templateProject: Project
         guard let projects = Project.findInMOC(moc, name: "Templates") else {
-            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "storeTemplate(Templates)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "storeTemplate(Templates)")
             return
         }
         if projects.count > 0 {
@@ -207,7 +207,7 @@ class TimePoliceModelUtils {
         }
         // Find template project (must exist)
         guard let templateProjects = Project.findInMOC(moc, name: "Templates") else {
-            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "cloneSession(Templates)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "cloneSession(Templates)")
             return
         }
         guard templateProjects.count > 0 else {
@@ -232,7 +232,7 @@ class TimePoliceModelUtils {
         // Find project, or create it if it does not already exist
         var project: Project
         guard let projects = Project.findInMOC(moc, name: projectName) else {
-            UtilitiesApplog.logDefault("TestData", logtype: .Guard, message: "cloneSession(Project)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "cloneSession(Project)")
             return
         }
         if projects.count > 0 {
@@ -265,14 +265,14 @@ class TimePoliceModelUtils {
             var previousTaskEntry = workList[0]
             for i in 1...workList.count-1 {
                 let te = workList[i]
-                UtilitiesApplog.logDefault("TestData", logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
-                UtilitiesApplog.logDefault("TestData", logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
+//                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
+//                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
 //                if te.startTime.isEqualToDate(previousTaskEntry.stopTime) {
                 if te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime) < 0.5 {
                     // No gap
                 } else {
                     let diff = te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime)
-                    UtilitiesApplog.logDefault("TestData", logtype: .Debug, message: "(gap=\(diff))")
+                    UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "(gap=\(diff))")
                     gap2Work.append(-1)
                 }
                 previousTaskEntry = te

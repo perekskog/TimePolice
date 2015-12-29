@@ -414,7 +414,7 @@ class MainExportVC: UIViewController,
                     for (key, value) in session.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    s += "src=\(session.src)\n"
+//                    s += "src=\(session.src)\n"
                     if session.archived==true {
                         s += "archived=true\n"
                     } else {
@@ -483,7 +483,11 @@ class MainExportVC: UIViewController,
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {
                         if let se = session as? Session {
-                            s += ("    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")
+                            if se.project.name == "Templates" {
+                                s += ("    S: [\(sessionNameWithExtension(se))] @ \(UtilitiesDate.getString(se.created))\n")
+                            } else {
+                                s += ("    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")                                
+                            }
                         }
                     }
                     s += "    [Work container size=\(task.work.count)]\n"
