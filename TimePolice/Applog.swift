@@ -23,6 +23,31 @@ enum AppLogEntryType {
     case GUIAction
 }
 
+let allTracesIncluded: Set<AppLogEntryType> = [
+    .EnterExit,
+    .CoreDataSnapshot,
+    .Debug,
+    .iOS,
+    .Resource,
+    .PeriodicCallback,
+    .AppLifecycle,
+    .ViewLifecycle,
+    .Guard,
+    .GUIAction
+]
+
+let defaultTraces: Set<AppLogEntryType> = [
+    .EnterExit,
+    .CoreDataSnapshot,
+    .Debug,
+    .iOS,
+    .Resource,
+    .AppLifecycle,
+    .ViewLifecycle,
+    .Guard,
+    .GUIAction
+]
+
 protocol AppLogger {
     var datasource: AppLoggerDataSource? { get set }
     func localize(sender: AppLoggerDelegate, message: String)

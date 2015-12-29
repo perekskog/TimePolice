@@ -124,29 +124,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
 
     // AppLogDelegate
 
+    var enabled = true
+    var included: Set<AppLogEntryType> = defaultTraces
+
     func includeEntry(loggerId: String, logtype: AppLogEntryType) -> Bool {
-        var toBeIncluded = true
-/*
-        if logtype != .Guard {
-            toBeIncluded = false
-        }
-*/
-/*
-  
-        if logtype != .GUIAction {
-            toBeIncluded = false
-        }
-*/
-
-        if logtype == .PeriodicCallback {
-            toBeIncluded = false
-        }
-
-        if logtype == .CoreDataSnapshot {
-            toBeIncluded = false
+        
+        if enabled == false {
+            return false
         }
         
-        return toBeIncluded
+        return included.contains(logtype)
     }
 
 
@@ -182,12 +169,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppLogDelegate, AppLogger
         return logger
     }
     
+/*
     func getDefaultLogger(datasource: AppLoggerDataSource) -> AppLogger {
         var logger = getDefaultLogger()
         logger.datasource = datasource
         return logger
     }
-
+*/
 
     // Class local methods
 

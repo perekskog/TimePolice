@@ -189,7 +189,8 @@ class MainSettingVC: UIViewController,
                 self.appLog.logString = ""
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
                 self.redrawAll(false)
-        })
+            }
+        )
         alertContoller.addAction(fillWithPreviousAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
@@ -197,6 +198,109 @@ class MainSettingVC: UIViewController,
         alertContoller.addAction(cancel)
         
         presentViewController(alertContoller, animated: true, completion: nil)
+    }
+
+    @IBAction func applogActions(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "applogActions")
+        appLog.log(logger, logtype: .GUIAction, message: "applogActions")
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let alertController = UIAlertController(title: "Applog actions", message: nil,
+            preferredStyle: .Alert)
+
+
+        var toggleString = "Enable applog"
+        if appDelegate.enabled == true {
+            toggleString = "Disable applog"
+        }
+        let toggleApplog = UIAlertAction(title: toggleString, style: .Default,
+            handler: { action in
+                appDelegate.enabled = !appDelegate.enabled
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleString)")
+            }
+        )
+        alertController.addAction(toggleApplog)
+
+
+        var toggleViewLifecycleTitle = "+ ViewLifecycle"
+        if appDelegate.included.contains(.ViewLifecycle) {
+            toggleViewLifecycleTitle = "- ViewLifecycle"
+        }
+        let toggleViewLifecycle = UIAlertAction(title: toggleViewLifecycleTitle, style: .Default,
+            handler: { action in
+                if appDelegate.included.contains(.ViewLifecycle) {
+                    appDelegate.included.remove(.ViewLifecycle)
+                } else {
+                    appDelegate.included.insert(.ViewLifecycle)
+                }
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleViewLifecycleTitle)")
+            }
+        )
+        alertController.addAction(toggleViewLifecycle)
+
+
+
+        var toggleEnterExitTitle = "+ EnterExit"
+        if appDelegate.included.contains(.EnterExit) {
+            toggleEnterExitTitle = "- EnterExit"
+        }
+        let toggleEnterExit = UIAlertAction(title: toggleEnterExitTitle, style: .Default,
+            handler: { action in
+                if appDelegate.included.contains(.EnterExit) {
+                    appDelegate.included.remove(.EnterExit)
+                } else {
+                    appDelegate.included.insert(.EnterExit)
+                }
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleEnterExitTitle)")
+            }
+        )
+        alertController.addAction(toggleEnterExit)
+
+
+
+
+
+        var togglePeriodicCallbackTitle = "+ PeriodicCallback"
+        if appDelegate.included.contains(.PeriodicCallback) {
+            togglePeriodicCallbackTitle = "- PeriodicCallback"
+        }
+        let togglePeriodicCallback = UIAlertAction(title: togglePeriodicCallbackTitle, style: .Default,
+            handler: { action in
+                if appDelegate.included.contains(.PeriodicCallback) {
+                    appDelegate.included.remove(.PeriodicCallback)
+                } else {
+                    appDelegate.included.insert(.PeriodicCallback)
+                }
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(togglePeriodicCallbackTitle)")
+            }
+        )
+        alertController.addAction(togglePeriodicCallback)
+
+        let defaultSettings = UIAlertAction(title: "Default traces", style: .Default,
+            handler: { action in
+                self.appLog.log(self.logger, logtype: .Debug, message: "Set to default traces")
+                appDelegate.included = defaultTraces
+            }
+        )
+        alertController.addAction(defaultSettings)
+        
+        let resetApplog = UIAlertAction(title: "Reset applog", style: .Default,
+            handler: { action in
+                self.appLog.logString = ""
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
+                self.redrawAll(false)
+
+            }
+        )
+        alertController.addAction(resetApplog)
+
+
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: nil)
+        alertController.addAction(cancel)
+
+        presentViewController(alertController, animated: true, completion: nil)
     }
 
     //---------------------------------------------
