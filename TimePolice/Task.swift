@@ -106,6 +106,17 @@ class Task: NSManagedObject {
         }
     }
 
+    class func purgeIfEmpty(task: Task, exceptSession session: Session, exceptWork work: Work) {
+        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),session=\(session.name),work=\(work.name))")
+        if (task.work.count==0 || (task.work.count==1 && task.work.containsObject(work))) &&
+            (task.sessions.count==0 || (task.sessions.count==1 && task.sessions.containsObject(session))){
+            Task.deleteObjectOnly(task)
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific work and/or session left.")
+        } else {
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.work.count) work left.")
+        }
+    }
+
     //---------------------------------------------
     // Task - getProperty
     //---------------------------------------------

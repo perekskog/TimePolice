@@ -98,6 +98,7 @@ class Session: NSManagedObject {
         for work in worklist {
             if let w = work as? Work {
                 Work.deleteObject(w)
+                Task.purgeIfEmpty(w.task, exceptSession: session, exceptWork: w)
             }
         }
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge all orphaned tasks")
