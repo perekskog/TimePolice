@@ -10,10 +10,8 @@ import Foundation
 import CoreData
 import UIKit
 
-/*  TODO
-
-- Missing: AppLog
-  Or perhaps throw some errors?
+/*  
+TODO:
 
 */
 
@@ -52,7 +50,7 @@ class TimePoliceModelUtils {
         var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
         let summary = session.getSessionTaskSummary(false)
         for task in session.tasks.array as! [Task] {
-            if task.name != "" {
+            if task.name != spacerName {
                 var time: NSTimeInterval = 0
                 if let (_, t) = summary[task] {
                     time = t
@@ -130,7 +128,7 @@ class TimePoliceModelUtils {
                 for (key,value) in newTaskProperties {
                     mergedProperties[key] = value
                 }
-                if newTaskName == "" {
+                if newTaskName == spacerName {
                     Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
                 } else {
                     // Retain old task, otherwise create new task

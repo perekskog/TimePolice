@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB070BE11C34FE16009A1A3B /* TimePolice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB070BE01C34FE16009A1A3B /* TimePolice.swift */; };
+		CB070BE21C34FE16009A1A3B /* TimePolice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB070BE01C34FE16009A1A3B /* TimePolice.swift */; };
 		CB0B0AE61A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */; };
 		CB0B0AE71A8155E800D22A08 /* TaskPickerStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */; };
 		CB0B0AE91A8158D600D22A08 /* TimePoliceModelUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */; };
@@ -95,6 +97,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CB070BE01C34FE16009A1A3B /* TimePolice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePolice.swift; sourceTree = "<group>"; };
 		CB0B0AE51A8155E800D22A08 /* TaskPickerStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskPickerStrategy.swift; sourceTree = "<group>"; };
 		CB0B0AE81A8158D600D22A08 /* TimePoliceModelUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceModelUtils.swift; sourceTree = "<group>"; };
 		CB0B0AEB1A815B0100D22A08 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 		CBD182BA1A08AAD2007BA9F7 /* TimePolice */ = {
 			isa = PBXGroup;
 			children = (
+				CB070BE01C34FE16009A1A3B /* TimePolice.swift */,
 				CBB51C6B1BF9BD0400C84B11 /* MainVC.swift */,
 				CBB51C5F1BF9B20600C84B11 /* MainTemplateListVC.swift */,
 				CBB51C621BF9B22800C84B11 /* MainTemplatePropVC.swift */,
@@ -394,6 +398,7 @@
 				CBB51C691BF9B29000C84B11 /* MainSettingVC.swift in Sources */,
 				CBAF8DA91C032E6200849C06 /* MainSessionListVC.swift in Sources */,
 				CBA6F84B1BB33E5E003C650D /* Applog.swift in Sources */,
+				CB070BE11C34FE16009A1A3B /* TimePolice.swift in Sources */,
 				CB0E9EAD1BF267AE00DEE193 /* SessionTemplate.swift in Sources */,
 				CBCEFCB01B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,
 				CB0B0AEC1A815B0100D22A08 /* Utilities.swift in Sources */,
@@ -432,6 +437,7 @@
 				CB33BC511B7333C00067DE3F /* TaskSelectVC.swift in Sources */,
 				CB0E9E961BE81B4200DEE193 /* Session+CoreDataProperties.swift in Sources */,
 				CBB51C611BF9B20600C84B11 /* MainTemplateListVC.swift in Sources */,
+				CB070BE21C34FE16009A1A3B /* TimePolice.swift in Sources */,
 				CB3418771A0B4F580062C281 /* TaskEntryCreatorByPickTask.swift in Sources */,
 				CB899E471BA555F500914CDA /* TaskEntryCreatorManagerBase.swift in Sources */,
 				CBCEFCB11B83BCC1008EE427 /* TaskEntryCreatorBase.swift in Sources */,

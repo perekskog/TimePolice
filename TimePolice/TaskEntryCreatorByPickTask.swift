@@ -159,16 +159,19 @@ class TaskEntryCreatorByPickTaskVC:
             view.taskPosition = i
 
             if i < numberOfTasksInSession {
+
+                if tl[i].name != spacerName {
                 
-                let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
-                tapRecognizer.delegate = self
-                view.addGestureRecognizer(tapRecognizer)
-                recognizers[tapRecognizer] = i
-                
-                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
-                tapRecognizer.delegate = self
-                view.addGestureRecognizer(longPressRecognizer)
-                recognizers[longPressRecognizer] = i
+                    let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
+                    tapRecognizer.delegate = self
+                    view.addGestureRecognizer(tapRecognizer)
+                    recognizers[tapRecognizer] = i
+                    
+                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
+                    tapRecognizer.delegate = self
+                    view.addGestureRecognizer(longPressRecognizer)
+                    recognizers[longPressRecognizer] = i
+                }
             }
                 
             taskbuttonviews[i] = view

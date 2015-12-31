@@ -485,7 +485,7 @@ class BlackGreenTheme : Theme {
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
         if let task = selectionAreaInfo.task {
-            if task.name != "" {
+            if task.name != spacerName {
                 if let colorString = task.getProperty("color") {
                     let colorSquare = UtilitiesColor.string2color(colorString).CGColor
                     let colorsSquare = [colorSquare, colorSquare]

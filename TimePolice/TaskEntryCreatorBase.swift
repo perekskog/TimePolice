@@ -148,7 +148,7 @@ class TaskEntryCreatorBase:
 
 
         if segue.identifier == "UseTemplate" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle UseTemplate... Do nothing")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle UseTemplate...")
 
             guard let nvc = segue.destinationViewController as? UINavigationController,
                     let vc = nvc.topViewController as? TaskEntryTemplateSelectVC,
@@ -161,7 +161,7 @@ class TaskEntryCreatorBase:
         }
 
         if segue.identifier == "EditTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle EditTaskEntry... Do nothing")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle EditTaskEntry...")
 
             guard let nvc = segue.destinationViewController as? UINavigationController,
                     let vc = nvc.topViewController as? TaskEntryPropVC,

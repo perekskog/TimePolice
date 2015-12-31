@@ -34,6 +34,8 @@ class TaskSelectVC: UIViewController,
     
     let table = UITableView()
 
+    var cell2task: [Int] = []
+
 
     //----------------------------------------------------------------
     // TaskSelectVC - Lazy properties
@@ -65,6 +67,7 @@ class TaskSelectVC: UIViewController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         self.edgesForExtendedLayout = .None
 
@@ -74,6 +77,17 @@ class TaskSelectVC: UIViewController,
         table.dataSource = self
         table.delegate = self
         self.view.addSubview(table)
+
+        var s = ""
+        if let tl = tasks {
+            for i in 0...tl.count-1 {
+                if tl[i].name != spacerName {
+                    cell2task.append(i)
+                    s += "\(i)\n"
+                }
+            }
+        }
+        appLog.log(logger, logtype: .Debug, message: "cell2task=\n\(s)")
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -101,7 +115,7 @@ class TaskSelectVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
         appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
 
-        taskIndexSelected = indexPath.row
+        taskIndexSelected = cell2task[indexPath.row]
         performSegueWithIdentifier("DoneSelectTask", sender: self)
     }
     
@@ -110,18 +124,14 @@ class TaskSelectVC: UIViewController,
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
-        if let t = tasks?[indexPath.row] {
-            if t.name != "" {
-                cell.textLabel?.text = t.name
+        let i = cell2task[indexPath.row]
+        if let t = tasks?[i] {
+            cell.textLabel?.text = t.name
+   
+            if let colorString = t.getProperty("color") {
+                let color = UtilitiesColor.string2color(colorString)
                 
-                if let colorString = t.getProperty("color") {
-                    let color = UtilitiesColor.string2color(colorString)
-                    
-                    cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
-                }
-            } else {
-                cell.textLabel?.text = "(spacer)"
-                cell.imageView?.image = nil
+                cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
             }
         }
     
@@ -133,11 +143,7 @@ class TaskSelectVC: UIViewController,
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let t = tasks {
-            return t.count
-        } else {
-            return 0
-        }
+        return cell2task.count
     }
     
 }
