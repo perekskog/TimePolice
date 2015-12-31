@@ -390,6 +390,9 @@ class MainExportVC: UIViewController,
                     for (key, value) in project.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
+                    if project.sessions.count==0 {
+                        s += "???orphaned???\n"
+                    }
                     s += "    [Session container size=\(project.sessions.count)]\n"
                     for session in project.sessions {
                         if let se = session as? Session {
@@ -479,6 +482,9 @@ class MainExportVC: UIViewController,
                     s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created)) - \(task.id)\n")
                     for (key, value) in task.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
+                    }
+                    if task.sessions.count==0 && task.work.count==0 {
+                        s += "???orphaned???\n"
                     }
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {

@@ -62,6 +62,8 @@ class MainVC: UIViewController,
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        verifyConstraints(moc)
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -120,4 +122,72 @@ class MainVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "mainVC")
 
     }
+
+
+    //---------------------------------------------
+    // MainVC - verifyConstraints
+    //---------------------------------------------
+
+    func verifyConstraints(moc: NSManagedObjectContext) {
+        if coreDataIsConsistent == false {
+            appLog.log(logger, logtype: .Debug, message: "Core Data is inconsistent - no more checks until restart")
+            return
+        }
+
+        appLog.log(logger, logtype: .Debug, message: "Check for Core Data consistency")
+
+        var fetchRequest: NSFetchRequest
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    if project.sessions.count==0 {
+                        coreDataIsConsistent = false
+                        consistencyAlert("Project \(project.id) has no session", moc: moc)
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch projects")
+        }
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                for task in fetchResults {
+                    if task.sessions.count==0 && task.work.count==0 {
+                        coreDataIsConsistent = false
+                        consistencyAlert("Task \(task.id) has no work and no session", moc: moc)
+                    }
+                }
+            }
+        
+        } catch {
+            print("Can't fetch tasks")
+        }
+    }
+
+    func consistencyAlert(alertMessage: String, moc: NSManagedObjectContext) {
+
+        let alertContoller = UIAlertController(title: "Consistency check failed", message: alertMessage,
+            preferredStyle: .Alert)
+        
+        let dumpCoreDataAction = UIAlertAction(title: "Data structures -> pasteboard", style: .Default,
+            handler: { action in
+                let s = MainExportVC.dumpAllData(moc)
+                print(s)
+                UIPasteboard.generalPasteboard().string = s
+            })
+        alertContoller.addAction(dumpCoreDataAction)
+        
+        let okAction = UIAlertAction(title: "OK", style: .Default,
+            handler: nil)
+        alertContoller.addAction(okAction)
+        
+        presentViewController(alertContoller, animated: true, completion: nil)
+
+    }
+
+
 }

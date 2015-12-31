@@ -9,3 +9,5 @@
 import Foundation
 
 let spacerName = ""
+
+var coreDataIsConsistent = true
