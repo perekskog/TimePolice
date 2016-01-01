@@ -198,7 +198,7 @@ class MainTemplateListVC: UIViewController,
             let fetchRequest = NSFetchRequest(entityName: "Session")
             var templateSessions: [Session] = []
             if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
-                for session in tmpSessions {
+                for session in tmpSessions.sort({ $0.name < $1.name }) {
                     if session.project.name == templateProjectName {
                         templateSessions.append(session)
                     }

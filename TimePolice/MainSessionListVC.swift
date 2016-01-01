@@ -408,9 +408,9 @@ class MainSessionListVC: UIViewController,
             var taskName = "(empty)"
             if let work = session.getLastWork() {
                 if work.isOngoing() {
-                    taskName = work.task.name
+                    taskName = "(\(work.task.name))"
                 } else {
-                    taskName = "(---)"
+                    taskName = "(stopped)"
                 }
             }
             cell.textLabel?.text = "\(sessionName) \(nameSuffix) \(taskName)"
