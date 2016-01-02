@@ -282,7 +282,8 @@ class MainSessionListVC: UIViewController,
         let locationInView = sender.locationInView(sessionTableView)
         let indexPath = sessionTableView.indexPathForRowAtPoint(locationInView)
 
-        guard let s = nonTemplateSessions?[(indexPath?.row)!] else {
+        guard let i = indexPath?.row,
+            s = nonTemplateSessions?[i] else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in nonTemplateSessions[indexPath.row]")
             return
         }
