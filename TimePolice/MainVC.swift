@@ -181,11 +181,52 @@ class MainVC: UIViewController,
             })
         alertContoller.addAction(dumpCoreDataAction)
         
+        let repairCoreDataAction = UIAlertAction(title: "Repair data structures", style: .Default,
+            handler: { action in
+                self.repairDataStructures(moc)
+                TimePoliceModelUtils.save(moc)
+            })
+        alertContoller.addAction(repairCoreDataAction)
+        
         let okAction = UIAlertAction(title: "OK", style: .Default,
             handler: nil)
         alertContoller.addAction(okAction)
         
         presentViewController(alertContoller, animated: true, completion: nil)
+
+    }
+
+    func repairDataStructures(moc: NSManagedObjectContext) {
+        appLog.log(logger, logtype: .Debug, message: "Repair data structures")
+
+        var fetchRequest: NSFetchRequest
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    if project.sessions.count==0 {
+                        Project.deleteObjectOnly(project)
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch projects")
+        }
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                for task in fetchResults {
+                    if task.sessions.count==0 && task.work.count==0 {
+                        Task.deleteObjectOnly(task)
+                    }
+                }
+            }
+        
+        } catch {
+            print("Can't fetch tasks")
+        }
 
     }
 

@@ -413,6 +413,7 @@ class MainSettingVC: UIViewController,
                     if session.project.name != "Templates" {
                         if session.archived == archived || session.archived != active {
                             Session.deleteObject(session)
+                            TimePoliceModelUtils.save(moc)
                         }
                     }
                 }
