@@ -67,6 +67,13 @@ class MainSettingVC: UIViewController,
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
+        if shouldPopupAlert == true {
+            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -117,7 +124,7 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
             preferredStyle: .Alert)
         
-        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
+        let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
                 MainSettingVC.clearAllData(self.moc)
                 TimePoliceModelUtils.save(self.moc)
@@ -125,7 +132,7 @@ class MainSettingVC: UIViewController,
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
                 self.redrawAll(false)
             })
-        alertContoller.addAction(fillWithPreviousAction)
+        alertContoller.addAction(deleteAllDataAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
             handler: nil)
@@ -159,7 +166,7 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "\(prompt)?", message: nil,
             preferredStyle: .Alert)
         
-        let fillWithPreviousAction = UIAlertAction(title: "Delete", style: .Default,
+        let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
                 MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
                 TimePoliceModelUtils.save(self.moc)
@@ -167,7 +174,7 @@ class MainSettingVC: UIViewController,
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
                 self.redrawAll(false)
             })
-        alertContoller.addAction(fillWithPreviousAction)
+        alertContoller.addAction(deleteSessionsAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
             handler: nil)
@@ -184,14 +191,14 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "Reset applog?", message: nil,
             preferredStyle: .Alert)
         
-        let fillWithPreviousAction = UIAlertAction(title: "Reset", style: .Default,
+        let clearApplogAction = UIAlertAction(title: "Reset", style: .Default,
             handler: { action in
                 self.appLog.logString = ""
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
                 self.redrawAll(false)
             }
         )
-        alertContoller.addAction(fillWithPreviousAction)
+        alertContoller.addAction(clearApplogAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
             handler: nil)
@@ -214,13 +221,13 @@ class MainSettingVC: UIViewController,
         if appDelegate.enabled == true {
             toggleString = "Disable applog"
         }
-        let toggleApplog = UIAlertAction(title: toggleString, style: .Default,
+        let toggleApplogAction = UIAlertAction(title: toggleString, style: .Default,
             handler: { action in
                 appDelegate.enabled = !appDelegate.enabled
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleString)")
             }
         )
-        alertController.addAction(toggleApplog)
+        alertController.addAction(toggleApplogAction)
 
 
 
@@ -397,6 +404,8 @@ class MainSettingVC: UIViewController,
         } catch {
             print("Can't fetch projects for deletion")
         }
+
+        coreDataIsConsistent = true
     }
 
     //---------------------------------------------

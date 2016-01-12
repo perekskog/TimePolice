@@ -64,6 +64,13 @@ class MainExportVC: UIViewController,
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
+        if shouldPopupAlert == true {
+            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+
     }
 
     override func viewDidDisappear(animated: Bool) {

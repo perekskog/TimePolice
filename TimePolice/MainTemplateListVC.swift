@@ -82,6 +82,13 @@ class MainTemplateListVC: UIViewController,
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
+        if shouldPopupAlert == true {
+            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -321,8 +328,14 @@ class MainTemplateListVC: UIViewController,
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         if let s = templateSessions
         where indexPath.row >= 0 && indexPath.row < s.count {
@@ -332,8 +345,14 @@ class MainTemplateListVC: UIViewController,
     }
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.commitEditingStyle")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle(\(cellString))")
 
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = templateSessions?[indexPath.row] {

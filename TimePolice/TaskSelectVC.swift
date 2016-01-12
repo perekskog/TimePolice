@@ -112,8 +112,14 @@ class TaskSelectVC: UIViewController,
     // UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         taskIndexSelected = cell2task[indexPath.row]
         performSegueWithIdentifier("DoneSelectTask", sender: self)

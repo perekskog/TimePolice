@@ -282,7 +282,6 @@ class TaskEntryCreatorByPickTaskVC:
 
     func handleTapTask(sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleTap")
-        appLog.log(logger, logtype: .GUIAction, message: "handleTap")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -307,6 +306,9 @@ class TaskEntryCreatorByPickTaskVC:
         // Handle new task
         let taskIndex = recognizers[sender]
         let task = taskList[taskIndex!]
+        
+        appLog.log(logger, logtype: .GUIAction, message: "handleTap(\(task.name))")
+
         addNewWork(task)
         taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 

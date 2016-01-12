@@ -23,6 +23,19 @@ enum AppLogEntryType {
     case GUIAction
 }
 
+let appLogEntryTypeString: [AppLogEntryType: String] = [
+    .EnterExit: "EnterExit",
+    .CoreDataSnapshot: "CoreDataSnapshot",
+    .Debug: "Debug",
+    .iOS: "iOS",
+    .Resource: "Resource",
+    .PeriodicCallback: "PeriodicCallback",
+    .AppLifecycle: "AppLifecycle",
+    .ViewLifecycle: "ViewLifecycle",
+    .Guard: "Guard",
+    .GUIAction: "GUIACtion"
+]
+
 let allTracesIncluded: Set<AppLogEntryType> = [
     .EnterExit,
     .CoreDataSnapshot,
@@ -53,7 +66,7 @@ let noTraces: Set<AppLogEntryType> = [
 
 protocol AppLogger {
     var datasource: AppLoggerDataSource? { get set }
-    func localize(sender: AppLoggerDelegate, message: String)
+    func localize(sender: AppLoggerDelegate, logtype: AppLogEntryType, message: String)
     func appendEntry(entry: String)
     func getContent() -> String
     func reset()
@@ -65,7 +78,7 @@ protocol AppLoggerDataSource {
 }
 
 protocol AppLoggerDelegate {
-    func entryLocalized(sender: AppLogger, localizedEntry: String)
+    func entryLocalized(sender: AppLogger, logtype: AppLogEntryType, localizedEntry: String)
 }
 
 
@@ -91,7 +104,7 @@ class AppLog: AppLoggerDelegate {
             return
         }
         if toBeIncluded {
-            doLog(logger, message: message)
+            doLog(logger, logtype: logtype, message: message)
         }
     }
 
@@ -101,17 +114,21 @@ class AppLog: AppLoggerDelegate {
         }
 
         if toBeIncluded {
-            doLog(logger, message: message())
+            doLog(logger, logtype: logtype, message: message())
         }
     }
 
-    func doLog(logger: AppLogger, message: String) {
-        logger.localize(self, message: message)
+    func doLog(logger: AppLogger, logtype: AppLogEntryType, message: String) {
+        logger.localize(self, logtype: logtype, message: message)
     }
 
-    func entryLocalized(sender: AppLogger, localizedEntry: String) {
+    func entryLocalized(sender: AppLogger, logtype: AppLogEntryType, localizedEntry: String) {
         let now = NSDate()
-        let logEntry = "\(UtilitiesDate.getString(now)): \(localizedEntry)"
+        var typeString = ""
+        if let s = appLogEntryTypeString[logtype] {
+            typeString = s
+        }
+        let logEntry = "\(UtilitiesDate.getString(now)): (\(typeString)) \(localizedEntry)"
         sender.appendEntry(logEntry)
     }
 
@@ -122,14 +139,14 @@ class BasicLogger: AppLogger {
 
     var datasource: AppLoggerDataSource?
     
-	func localize(sender: AppLoggerDelegate, message: String) {
+	func localize(sender: AppLoggerDelegate, logtype: AppLogEntryType, message: String) {
         var entry = ""
         if let domain = datasource?.getLogDomain() {
             entry = "\(domain): \(message)"
         } else {
             entry = "(no domain): \(message)"
         }
-        sender.entryLocalized(self, localizedEntry: entry)
+        sender.entryLocalized(self, logtype: logtype, localizedEntry: entry)
 	}
 
 	func appendEntry(entry: String) {
@@ -257,10 +274,10 @@ class MultiLogger: AppLogger {
     var logger2 = BasicLogger()
     var logger3 = BasicLogger()
 
-    func localize(sender: AppLoggerDelegate, message: String) {
-        logger1.localize(sender, message: message)
-        logger2.localize(sender, message: message)
-        logger3.localize(sender, message: message)
+    func localize(sender: AppLoggerDelegate, logtype: AppLogEntryType, message: String) {
+        logger1.localize(sender, logtype: logtype, message: message)
+        logger2.localize(sender, logtype: logtype, message: message)
+        logger3.localize(sender, logtype: logtype, message: message)
     }
     
     func appendEntry(entry: String) {

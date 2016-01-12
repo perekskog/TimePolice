@@ -282,6 +282,126 @@ class TimePoliceModelUtils {
 
 
 
+    //---------------------------------------------
+    // TimePoliceModelUtils - verifyConstraints
+    //---------------------------------------------
+
+    class func verifyConstraints(moc: NSManagedObjectContext) -> (Bool, String) {
+        if coreDataIsConsistent == false {
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Core Data is inconsistent - no more checks until restart")
+            return (false, "")
+        }
+
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Check for Core Data consistency")
+
+        var fetchRequest: NSFetchRequest
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    if project.sessions.count==0 {
+                        coreDataIsConsistent = false
+                        return (true, "Project \(project.id) has no session")
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch projects")
+        }
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                for task in fetchResults {
+                    if task.sessions.count==0 && task.work.count==0 {
+                        coreDataIsConsistent = false
+                        return (true, "Task \(task.id) has no work and no session")
+                    }
+                }
+            }
+        
+        } catch {
+            print("Can't fetch tasks")
+        }
+
+        return (false, "")
+    }
+
+    class func getConsistencyAlert(alertMessage: String, moc: NSManagedObjectContext) -> UIAlertController {
+
+        let alertContoller = UIAlertController(title: "Consistency check failed", message: alertMessage,
+            preferredStyle: .Alert)
+        
+        let dumpCoreDataAction = UIAlertAction(title: "Export data structures", style: .Default,
+            handler: { action in
+                let s = MainExportVC.dumpAllData(moc)
+                print(s)
+                UIPasteboard.generalPasteboard().string = s
+            })
+        alertContoller.addAction(dumpCoreDataAction)
+        
+        let repairCoreDataAction = UIAlertAction(title: "Repair data structures", style: .Default,
+            handler: { action in
+                self.repairDataStructures(moc)
+                TimePoliceModelUtils.save(moc)
+            })
+        alertContoller.addAction(repairCoreDataAction)
+        
+        let dumpAndRepairCoreDataAction = UIAlertAction(title: "Export and repair", style: .Default,
+            handler: { action in
+                let s = MainExportVC.dumpAllData(moc)
+                print(s)
+                UIPasteboard.generalPasteboard().string = s
+                self.repairDataStructures(moc)
+                TimePoliceModelUtils.save(moc)
+            })
+        alertContoller.addAction(dumpAndRepairCoreDataAction)
+        
+        let okAction = UIAlertAction(title: "Continue", style: .Default,
+            handler: nil)
+        alertContoller.addAction(okAction)
+        
+        return alertContoller
+
+    }
+
+    class func repairDataStructures(moc: NSManagedObjectContext) {
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Repair data structures")
+
+        var fetchRequest: NSFetchRequest
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Project")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+                for project in fetchResults {
+                    if project.sessions.count==0 {
+                        Project.deleteObjectOnly(project)
+                    }
+                }
+            }
+        } catch {
+            print("Can't fetch projects")
+        }
+
+        do {
+            fetchRequest = NSFetchRequest(entityName: "Task")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+                for task in fetchResults {
+                    if task.sessions.count==0 && task.work.count==0 {
+                        Task.deleteObjectOnly(task)
+                    }
+                }
+            }
+        
+        } catch {
+            print("Can't fetch tasks")
+        }
+
+        coreDataIsConsistent = true
+
+    }
+
 }
 
 

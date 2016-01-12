@@ -324,8 +324,14 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         //GAP: Use a popover for a gap, continue if not a gap
         if indexPath.row >= gap2work.count {

@@ -87,6 +87,13 @@ class MainSessionListVC: UIViewController,
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
+        if shouldPopupAlert == true {
+            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -273,7 +280,6 @@ class MainSessionListVC: UIViewController,
 
     func handleLongPressTableView(sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTableView")
-        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTableView")
 
         if sender.state != UIGestureRecognizerState.Began {
             return
@@ -288,6 +294,8 @@ class MainSessionListVC: UIViewController,
             return
         }
 
+        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTableView(\(s.name))")
+
         var title = "Archive session?"
         if s.archived==true {
             title = "Unarchive session?"
@@ -300,8 +308,10 @@ class MainSessionListVC: UIViewController,
             handler: { action in
                 if s.archived==true {
                     s.setArchivedTo(false)
+                    self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(set to non archived)")
                 } else {
                     s.setArchivedTo(true)
+                    self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(set to archived)")
                 }
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did \(title)")
                 self.redrawAll(true)
@@ -309,7 +319,9 @@ class MainSessionListVC: UIViewController,
         alertContoller.addAction(actionYes)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-            handler: nil)
+            handler: { action in
+                self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(cancel)")
+        })
         alertContoller.addAction(cancel)
         
         presentViewController(alertContoller, animated: true, completion: nil)
@@ -435,8 +447,14 @@ class MainSessionListVC: UIViewController,
     //-----------------------------------------
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         if let s = nonTemplateSessions
         where indexPath.row >= 0 && indexPath.row < s.count {
@@ -446,8 +464,14 @@ class MainSessionListVC: UIViewController,
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        var cellString = ""
+        if let cell = tableView.cellForRowAtIndexPath(indexPath),
+            s = cell.textLabel?.text {
+                cellString = s
+        }
+
         appLog.log(logger, logtype: .EnterExit, message: "tableView.commitEditingStyle")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle")
+        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle(\(cellString))")
 
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             if let session = nonTemplateSessions?[indexPath.row] {
