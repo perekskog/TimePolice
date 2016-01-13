@@ -359,6 +359,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
+        sessionNameView.setNeedsDisplay()
 
         for (_, view) in taskbuttonviews {
             view.setNeedsDisplay()
@@ -462,14 +463,22 @@ class TaskEntryCreatorByPickTaskVC:
             }
         }
         
-        var sessionName = ""
+        var sessionName = "---"
+        
         if let s = session {
-            var sessionNameSuffix = ""
-            if let e = s.getProperty("extension") {
-                sessionNameSuffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
+            var name = s.name
+            if let v = s.getProperty(projectVersionAttribute) {
+                name += ".\(v)"
             }
-            sessionName = "\(s.name) \(sessionNameSuffix)"
+
+            var suffix = ""
+            if let e = s.getProperty(sessionExtensionAttribute) {
+                suffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
+            }
+            
+            sessionName = "\(name) \(suffix)"
         }
+
         let toolbarInfo = ToolbarInfo(
             signedIn: signedIn,
             totalTimesActivatedForSession: totalActivations,

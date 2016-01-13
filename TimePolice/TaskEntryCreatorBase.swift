@@ -151,13 +151,12 @@ class TaskEntryCreatorBase:
             appLog.log(logger, logtype: .Debug, message: "(...Base) Handle UseTemplate...")
 
             guard let nvc = segue.destinationViewController as? UINavigationController,
-                    let vc = nvc.topViewController as? TaskEntryTemplateSelectVC,
-                    let projects = Project.findInMOC(moc, name: "Templates")
-                    where projects.count >= 1 else {
+                    let vc = nvc.topViewController as? TaskEntryTemplateSelectVC else {
                 return
             }
-            let p = projects[0]
-            vc.templates = p.sessions.array as? [Session]
+            if let s = session {
+                vc.templates = getTemplates(s.name)
+            }
         }
 
         if segue.identifier == "EditTaskEntry" {
@@ -207,6 +206,7 @@ class TaskEntryCreatorBase:
         }
 
     }
+
     @IBAction func exitUseTemplate(unwindSegue: UIStoryboardSegue ) {
         appLog.log(logger, logtype: .EnterExit, message: "(...Base) exitUseTemplate(unwindsegue=\(unwindSegue.identifier))")
 
@@ -400,6 +400,41 @@ class TaskEntryCreatorBase:
 
     func redrawAfterSegue() {
         // DO nothing here
+    }
+
+    func getTemplates(project: String) -> [Session] {
+        appLog.log(logger, logtype: .EnterExit, message: "getTemplates")
+
+        do {
+            let fetchRequest = NSFetchRequest(entityName: "Session")
+            var templateSessions: [Session] = []
+            if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+                for session in tmpSessions.sort({ (s1:Session, s2:Session) -> Bool in
+                    if s1.name != s2.name {
+                        return s1.name < s2.name
+                    } else {
+                        var v1 = ""
+                        if let s = s1.getProperty(projectVersionAttribute) {
+                            v1 = s
+                        }
+                        var v2 = ""
+                        if let s = s2.getProperty(projectVersionAttribute) {
+                            v2 = s
+                        }
+                        return v1 < v2
+                    }
+                    }) {
+                    if session.project.name == templateProjectName &&
+                        session.name == project {
+                        templateSessions.append(session)
+                    }
+                }
+            }
+            return templateSessions
+
+        } catch {
+            return []
+        }
     }
 
 

@@ -124,7 +124,7 @@ class MainSessionListVC: UIViewController,
         sessionTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "SessionList")
         sessionTableView.dataSource = self
         sessionTableView.delegate = self
-        sessionTableView.rowHeight = 25
+        sessionTableView.rowHeight = CGFloat(selectItemTableRowHeight)
         sessionTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         sessionTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTableView:"))
@@ -243,8 +243,26 @@ class MainSessionListVC: UIViewController,
                         if archived==true && session.archived==true {
                             nonTemplateSessions.append(session)
                         }
+                    }
+                }
+                for session in tmpSessions.sort({ (s1:Session, s2:Session) -> Bool in
+                    if s1.name != s2.name {
+                        return s1.name < s2.name
                     } else {
-                        templateSessions.append(session)
+                        var v1 = ""
+                        if let s = s1.getProperty(projectVersionAttribute) {
+                            v1 = s
+                        }
+                        var v2 = ""
+                        if let s = s2.getProperty(projectVersionAttribute) {
+                            v2 = s
+                        }
+                        return v1 < v2
+                    }
+                })
+                    {
+                        if session.project.name == templateProjectName {
+                            templateSessions.append(session)
                     }
                 }
             }
@@ -376,10 +394,14 @@ class MainSessionListVC: UIViewController,
             if let vc = unwindSegue.sourceViewController as? MainTemplateSelectVC,
                 i = vc.templateIndexSelected,
                 s = templateSessions?[i] {
-                TimePoliceModelUtils.cloneSession(moc, projectName: s.name, sessionName: s.name)
-                TimePoliceModelUtils.save(moc)
-                moc.reset()
-                redrawAll(true)
+                    var version = ""
+                    if let v = s.getProperty(projectVersionAttribute) {
+                        version = v
+                    }
+                    TimePoliceModelUtils.cloneSession(moc, projectName: s.name, projectVersion: version, sessionName: s.name)
+                    TimePoliceModelUtils.save(moc)
+                    moc.reset()
+                    redrawAll(true)
             }
         }
         if unwindSegue.identifier == "CancelTemplateSelect" {
@@ -411,10 +433,14 @@ class MainSessionListVC: UIViewController,
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
 
-            let sessionName = session.name
+            var sessionName = session.name
+
+            if let v = session.getProperty(projectVersionAttribute) {
+                sessionName += ".\(v)"
+            }
 
             var nameSuffix = ""
-            if let e = session.getProperty("extension") {
+            if let e = session.getProperty(sessionExtensionAttribute) {
                 nameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
             }
             

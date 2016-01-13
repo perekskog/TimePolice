@@ -91,27 +91,33 @@ class TimePoliceModelUtils {
 
     class func storeTemplate(moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, [String: String]), tasks: [(String, [String: String])], src: String) {
 
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, message: "storeTemplate(reuseTasksFromProject=\(reuseTasksFromProject),src=\(src))")
+
         defer {
             TimePoliceModelUtils.save(moc)
         }
         // Find template project, or create it if it does not already exist
         var templateProject: Project
-        guard let projects = Project.findInMOC(moc, name: "Templates") else {
+        guard let projects = Project.findInMOC(moc, name: templateProjectName) else {
             UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "storeTemplate(Templates)")
             return
         }
         if projects.count > 0 {
             templateProject = projects[0]
         } else {
-            templateProject = Project.createInMOC(moc, name: "Templates")
+            templateProject = Project.createInMOC(moc, name: templateProjectName)
         }
         
-        // Find session template, or create it if it does not already exist in template project
+        // Find session template to replace, or create it if it does not already exist in template project
         var oldTemplateSession: Session?
         let (sessionName, sessionProps) = session
-        for s in templateProject.sessions {
-            if s.name == "\(sessionName)" {
-                oldTemplateSession = s as? Session
+        let oldSessionVersion = sessionProps[projectVersionAttribute]
+        for item in templateProject.sessions {
+            if let s = item as? Session {
+                let version = s.getProperty(projectVersionAttribute)
+                if s.name == "\(sessionName)" && oldSessionVersion == version {
+                    oldTemplateSession = s
+                }
             }
         }
         
@@ -127,12 +133,16 @@ class TimePoliceModelUtils {
                 for (key,value) in newTaskProperties {
                     mergedProperties[key] = value
                 }
+
+                // Always create new spacers
                 if newTaskName == spacerName {
                     Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
                 } else {
+
                     // Retain old task, otherwise create new task
                     var found = false
 
+/*
                     // First, search among the tasks in the old template
                     if oldTemplateSession != nil {
                         for task in (oldTemplateSession?.tasks)! {
@@ -145,6 +155,31 @@ class TimePoliceModelUtils {
                             }
                         }
                     }
+*/
+                    // First, search among all versions of this project
+
+                    if let projects = Project.findInMOC(moc, name: templateProjectName) {
+                        if projects.count > 0 {
+                            let project = projects[0]
+
+                            for session in project.sessions {
+                                // Search among tasks in all existing versions
+                                if session.name == sessionName {
+                                    for task in (session as! Session).tasks {
+                                        if !found && task.name == newTaskName {
+                                            found = true
+                                            if let t = task as? Task {
+                                                t.properties = mergedProperties
+                                                newTemplateSession.addTask(t)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
                     // Second, search in project
                     // (A task might have been used some time ago)
 
@@ -153,7 +188,7 @@ class TimePoliceModelUtils {
                             let project = projects[0]
 
                             for session in project.sessions {
-                                // Forst, search among tasks
+                                // First, search among tasks
                                 for task in (session as! Session).tasks {
                                     if !found && task.name == newTaskName {
                                         found = true
@@ -197,13 +232,14 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - cloneSession
     //---------------------------------------------
 
-    class func cloneSession(moc: NSManagedObjectContext, projectName: String, sessionName: String) {
+    class func cloneSession(moc: NSManagedObjectContext, projectName: String, projectVersion: String, sessionName: String) {
 
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, message: "cloneSession(projectName=\(projectName), sessionName=\(sessionName)")
         defer {
             TimePoliceModelUtils.save(moc)
         }
         // Find template project (must exist)
-        guard let templateProjects = Project.findInMOC(moc, name: "Templates") else {
+        guard let templateProjects = Project.findInMOC(moc, name: templateProjectName) else {
             UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "cloneSession(Templates)")
             return
         }
@@ -217,7 +253,11 @@ class TimePoliceModelUtils {
         var templateSession: Session!
         var found = false
         for s in templateProject.sessions {
-            if s.name == "\(sessionName)" {
+            var version = ""
+            if let s = s.getProperty(projectVersionAttribute) {
+                version = s
+            }
+            if s.name == sessionName && version == projectVersion {
                 templateSession = s as! Session
                 found = true
             }

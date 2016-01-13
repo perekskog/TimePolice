@@ -101,14 +101,12 @@ class Session: NSManagedObject {
                 Task.purgeIfEmpty(w.task, exceptSession: session, exceptWork: w)
             }
         }
-        /*
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge all orphaned tasks")
         for task in tasklist {
             if let t = task as? Task {
                 Task.purgeIfEmpty(t, exceptSession:session)
             }
         } 
-        */       
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge project if orphaned")
         Project.purgeIfEmpty(project, exceptSession: session)
     }

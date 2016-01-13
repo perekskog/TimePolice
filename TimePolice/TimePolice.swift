@@ -9,5 +9,17 @@
 import Foundation
 
 let spacerName = ""
+let templateProjectName = "Templates"
 
+// Flag that is set when inconsistency has been reported,
+// to keep error message from popping up again.
+// Only reset at app restart,
 var coreDataIsConsistent = true
+
+// Property tags
+let projectVersionAttribute = "version"
+let sessionExtensionAttribute = "extension"
+
+// Sizes
+let selectItemTableRowHeight = 25
+

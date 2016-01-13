@@ -419,7 +419,7 @@ class MainSettingVC: UIViewController,
             fetchRequest = NSFetchRequest(entityName: "Session")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 for session in fetchResults {
-                    if session.project.name != "Templates" {
+                    if session.project.name != templateProjectName {
                         if session.archived == archived || session.archived != active {
                             Session.deleteObject(session)
                             TimePoliceModelUtils.save(moc)

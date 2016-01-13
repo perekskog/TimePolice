@@ -116,7 +116,7 @@ class TaskEntryCreatorByAddToListVC:
         workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
         workListTableView.dataSource = self
         workListTableView.delegate = self
-        workListTableView.rowHeight = 25
+        workListTableView.rowHeight = CGFloat(selectItemTableRowHeight)
         workListTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         workListBGView.addSubview(workListTableView)                
@@ -490,12 +490,18 @@ class TaskEntryCreatorByAddToListVC:
         var sessionName = "---"
 
         if let s = session {
-            var sessionNameSuffix = ""
-            if let e = s.getProperty("extension") {
-                sessionNameSuffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
+
+            var name = s.name
+            if let v = s.getProperty(projectVersionAttribute) {
+                name += ".\(v)"
             }
 
-            sessionName = "\(s.name) \(sessionNameSuffix)"
+            var suffix = ""
+            if let e = s.getProperty(sessionExtensionAttribute) {
+                suffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
+            }
+            
+            sessionName = "\(name) \(suffix)"
 
             if let work = s.getLastWork() {
                 if work.isOngoing() {
@@ -537,6 +543,7 @@ class TaskEntryCreatorByAddToListVC:
         workListTableView.reloadData()
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
+        sessionNameView.setNeedsDisplay()
     }
         
 

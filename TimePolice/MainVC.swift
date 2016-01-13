@@ -111,12 +111,12 @@ class MainVC: UIViewController,
         }
         if segue.identifier == "Templates" {
             if let vc = segue.destinationViewController as? MainTemplateListVC {
-                vc.templateProjectName = "Templates"
+                vc.templateProjectName = templateProjectName
             }
         }
         if segue.identifier == "Sessions" {
             if let vc = segue.destinationViewController as? MainSessionListVC {
-                vc.templateProjectName = "Templates"
+                vc.templateProjectName = templateProjectName
             }
         }
     }

@@ -78,6 +78,7 @@ class MainTemplateSelectVC: UIViewController,
         let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
         self.navigationItem.leftBarButtonItem = buttonCancel
 
+        table.rowHeight = CGFloat(selectItemTableRowHeight)
         table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
         table.dataSource = self
         table.delegate = self
@@ -145,8 +146,14 @@ class MainTemplateSelectVC: UIViewController,
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
 
-        if let s = templates?[indexPath.row] {
-        	cell.textLabel?.text = s.name
+        if let s = templates
+        where indexPath.row >= 0 && indexPath.row <= s.count {
+            let session = s[indexPath.row]
+            if let version = session.getProperty(projectVersionAttribute) {
+                cell.textLabel?.text = "\(session.name).\(version)"
+            } else {
+                cell.textLabel?.text = "\(session.name)"                
+            }
         }
     
         return cell

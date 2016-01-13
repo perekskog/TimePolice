@@ -177,7 +177,7 @@ class MainExportVC: UIViewController,
         var str = ""
 
         for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
-            if project.name == "Templates" {
+            if project.name == templateProjectName {
                 continue
             }
 
@@ -207,7 +207,7 @@ class MainExportVC: UIViewController,
                                 }
                             }
                             var sessionNameSuffix = ""
-                            if let e = s.getProperty("extension") {
+                            if let e = s.getProperty(sessionExtensionAttribute) {
                                 sessionNameSuffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
                             }
                             heading += "\(s.name) \(sessionNameSuffix)\t\t"
@@ -218,7 +218,8 @@ class MainExportVC: UIViewController,
             str += "\(heading)\n"
 
 
-            // Iterate one step extra to always printout end time of last task entry
+            // Stop iteration at maxNumberOfWork (instead of maxNUmberOfWork-1) 
+            // to always printout end time of last task entry
             for i in 0...maxNumberOfWork {
                 for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let (worklist, gap2work) = projectDetails[s] {
@@ -291,7 +292,7 @@ class MainExportVC: UIViewController,
         var sessionNameSuffix = ""
 
         for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
-            if project.name == "Templates" {
+            if project.name == templateProjectName {
                 continue
             }
             var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
@@ -325,7 +326,7 @@ class MainExportVC: UIViewController,
                     }
                 }
                 sessionNameSuffix = ""
-                if let e = session.getProperty("extension") {
+                if let e = session.getProperty(sessionExtensionAttribute) {
                     sessionNameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
                 }
 
@@ -374,12 +375,16 @@ class MainExportVC: UIViewController,
     // MainExportVC - dumpAllData
     //---------------------------------------------
 
-    class func sessionNameWithExtension(session: Session) -> String {
+    class func sessionNameWithVersionAndExtension(session: Session) -> String {
+        var sessionVersion = ""
+        if let v = session.getProperty(projectVersionAttribute) {
+            sessionVersion = ".\(v)"
+        }
         var sessionNameSuffix = ""
-        if let e = session.getProperty("extension") {
+        if let e = session.getProperty(sessionExtensionAttribute) {
             sessionNameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
         }
-        return "\(session.name) \(sessionNameSuffix)"
+        return "\(session.name)\(sessionVersion) (\(sessionNameSuffix))"
     }
 
     class func dumpAllData(moc: NSManagedObjectContext) -> String {
@@ -403,7 +408,7 @@ class MainExportVC: UIViewController,
                     s += "    [Session container size=\(project.sessions.count)]\n"
                     for session in project.sessions {
                         if let se = session as? Session {
-                            s += "    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n"
+                            s += "    S: \(sessionNameWithVersionAndExtension(se)) @ \(UtilitiesDate.getString(se.created))\n"
                         }
                     }
                 }
@@ -420,7 +425,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
-                    s += ("S: \(sessionNameWithExtension(session)) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
+                    s += ("S: \(sessionNameWithVersionAndExtension(session)) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
                     for (key, value) in session.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
@@ -470,7 +475,7 @@ class MainExportVC: UIViewController,
                     for (key, value) in work.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    s += "    S: \(sessionNameWithExtension(work.session)) @ \(UtilitiesDate.getString(work.session.created))\n"
+                    s += "    S: \(sessionNameWithVersionAndExtension(work.session)) @ \(UtilitiesDate.getString(work.session.created))\n"
                     s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
                 }
             }
@@ -496,10 +501,10 @@ class MainExportVC: UIViewController,
                     s += "    [Session container size=\(task.sessions.count)]\n"
                     for session in task.sessions {
                         if let se = session as? Session {
-                            if se.project.name == "Templates" {
-                                s += ("    S: [\(sessionNameWithExtension(se))] @ \(UtilitiesDate.getString(se.created))\n")
+                            if se.project.name == templateProjectName {
+                                s += ("    S: [\(sessionNameWithVersionAndExtension(se))] @ \(UtilitiesDate.getString(se.created))\n")
                             } else {
-                                s += ("    S: \(sessionNameWithExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")                                
+                                s += ("    S: \(sessionNameWithVersionAndExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")                                
                             }
                         }
                     }

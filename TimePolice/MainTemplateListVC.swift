@@ -121,7 +121,7 @@ class MainTemplateListVC: UIViewController,
         templateTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TemplateList")
         templateTableView.dataSource = self
         templateTableView.delegate = self
-        templateTableView.rowHeight = 25
+        templateTableView.rowHeight = CGFloat(selectItemTableRowHeight)
         templateTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         templateTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         templateListBGView.addSubview(templateTableView)                
@@ -205,7 +205,21 @@ class MainTemplateListVC: UIViewController,
             let fetchRequest = NSFetchRequest(entityName: "Session")
             var templateSessions: [Session] = []
             if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
-                for session in tmpSessions.sort({ $0.name < $1.name }) {
+                for session in tmpSessions.sort({ (s1:Session, s2:Session) -> Bool in
+                    if s1.name != s2.name {
+                        return s1.name < s2.name
+                    } else {
+                        var v1 = ""
+                        if let s = s1.getProperty(projectVersionAttribute) {
+                            v1 = s
+                        }
+                        var v2 = ""
+                        if let s = s2.getProperty(projectVersionAttribute) {
+                            v2 = s
+                        }
+                        return v1 < v2
+                    }
+                    }) {
                     if session.project.name == templateProjectName {
                         templateSessions.append(session)
                     }
@@ -278,7 +292,10 @@ class MainTemplateListVC: UIViewController,
                 newSrc = vc.updatedTemplate {
                     let st = SessionTemplate()
                     st.parseTemplate(newSrc)
+                    appLog.log(logger, logtype: .GUIAction, message: "SaveTemplate(\(st.session))")
+
                     appLog.log(logger, logtype: .CoreDataSnapshot, message: st.getString(st.session, tasks: st.tasks))
+
                     let (reuseTasksFromProject, _) = st.session
                     TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: reuseTasksFromProject, session: st.session, tasks: st.tasks, src: newSrc)
             }
@@ -308,7 +325,11 @@ class MainTemplateListVC: UIViewController,
         if let s = templateSessions
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
-            cell.textLabel?.text = session.name
+            if let version = session.getProperty(projectVersionAttribute) {
+                cell.textLabel?.text = "\(session.name).\(version)"
+            } else {
+                cell.textLabel?.text = "\(session.name)"                
+            }
         }
 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
@@ -377,7 +398,7 @@ class MainTemplateListVC: UIViewController,
             signedIn: false,
             totalTimesActivatedForSession: 0,
             totalTimeActiveForSession: 0,
-            sessionName: "Templates")
+            sessionName: templateProjectName!)
         
         return toolbarInfo
     }
