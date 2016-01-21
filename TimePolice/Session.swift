@@ -10,17 +10,20 @@ import Foundation
 import CoreData
 import UIKit
 
-/*  TODO
+/**
+A session in project "Templates" is a template session used to create and reconfigure sessions.
 
-? Session.delete*
-? Session.insert*
-    Must update relations to session and tasks.
+All sessions in project "X" will have name "X". They are using tasks and settings from a template session with same name and version as the session itself.
 
-? Session.deleteWork
-    Ej implementerad, behövs inte för att ta bort en session.
+A session may be reconfigured with another template with the same name but with different version.
 
+- todo:
+- ? Session.delete*
+- ? Session.insert*
+- Must update relations to session and tasks.
+- ? Session.deleteWork
+- Ej implementerad, behövs inte för att ta bort en session.
 */
-
 class Session: NSManagedObject {
 
     //---------------------------------------------

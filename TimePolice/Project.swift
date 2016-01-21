@@ -11,6 +11,12 @@ import UIKit
 import CoreData
 
 
+/**
+The special project "Templates" contains templates for creating sessions.
+ 
+Sessions created from a template session with name "X" will be put in a project named "X". The sessions created will inherit both name and version attributes form the template session.
+
+*/
 class Project: NSManagedObject {
 
     //---------------------------------------------
