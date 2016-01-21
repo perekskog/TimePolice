@@ -178,6 +178,18 @@ class TaskEntryCreatorByPickTaskVC:
             taskPickerBGView.addSubview(view)
         }
 
+        redrawAfterSegue()
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+
+        // This was originally in viewWillAppear, but it seems that viewWillAppear will be called
+        // when changing session (PageController) and then, when changing TabBar, it will NOT
+        // be called. 
+        // viewDidAppear is always called.
+
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
             target: self,
             selector: "updateActiveTask:",
@@ -185,15 +197,17 @@ class TaskEntryCreatorByPickTaskVC:
             repeats: true)
 
         appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
-
-        redrawAfterSegue()
-
     }
-
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+    }
+
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
 
         appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 

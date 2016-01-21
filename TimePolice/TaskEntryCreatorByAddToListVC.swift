@@ -136,14 +136,6 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
 
 
-        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
-                target: self,
-              selector: "updateActiveTask:",
-              userInfo: nil,
-               repeats: true)        
-
-        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
-
         if let indexPath = workListTableView.indexPathForSelectedRow {
             workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
@@ -153,10 +145,18 @@ class TaskEntryCreatorByAddToListVC:
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
 
-        // This was originally in viewWillAppear, but it seems that viewWillAPpear will be called
+        // This was originally in viewWillAppear, but it seems that viewWillAppear will be called
         // when changing session (PageController) and then, when changing TabBar, it will NOT
         // be called. 
         // viewDidAppear is always called.
+
+        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+                target: self,
+              selector: "updateActiveTask:",
+              userInfo: nil,
+               repeats: true)        
+
+        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
 
         self.sessionSummary = (0,0)
         self.sessionSummary = session?.getSessionSummary(moc)
@@ -168,12 +168,17 @@ class TaskEntryCreatorByAddToListVC:
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+    }
+
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
 
         appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
 
         updateActiveActivityTimer?.invalidate()
     }
-
 
 
     override func viewWillLayoutSubviews() {
