@@ -135,7 +135,7 @@ class Work: NSManagedObject {
 
 
     //---------------------------------------------
-    // Work - delete
+    // Work - Core Data manipulation
     //---------------------------------------------
 
     class func deleteObject(work: Work) {
@@ -147,6 +147,13 @@ class Work: NSManagedObject {
         Task.purgeIfEmpty(task, exceptWork: work)
     }
 
+    func changeTaskTo(newTask: Task) {
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "changeTaskTo(name=\(newTask.name))")
+        let oldTask = self.task
+        self.task = newTask
+        UtilitiesApplog.logDefault("Work", logtype: .EnterExit, message: "Purge task if orhpaned")
+        Task.purgeIfEmpty(oldTask, exceptWork: self)
+    }
 
     //---------------------------------------------
     // Work - isOngoing

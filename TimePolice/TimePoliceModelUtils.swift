@@ -398,7 +398,7 @@ class TimePoliceModelUtils {
             })
         alertContoller.addAction(dumpAndRepairCoreDataAction)
         
-        let okAction = UIAlertAction(title: "Continue", style: .Default,
+        let okAction = UIAlertAction(title: "Just continue", style: .Default,
             handler: nil)
         alertContoller.addAction(okAction)
         

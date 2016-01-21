@@ -276,7 +276,8 @@ class TaskEntryCreatorBase:
                 // Change task if this attribute was set
                 appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork selected task=\(t.name)")
                 if let w = s.getWork(i) {
-                    w.task = t
+                    //w.task = t
+                    w.changeTaskTo(t)
                 }
             } else {
                 appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork no task selected")
