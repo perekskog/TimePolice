@@ -15,10 +15,19 @@ TODO
 
 import UIKit
 
+/**
+Utility function to parse a string defining a template.
+ - todo:
+*/
+
 class SessionTemplate {
     var session: (String, [String: String]) = ("", [:])
     var tasks: [(String, [String: String])] = []
 
+    /**
+    Parse a string to be able to store a session template.
+    - parameter string: A string defining the template
+    */
 	func parseTemplate(string: String) {
         tasks = []
         var lines: [String] = string.componentsSeparatedByString("\n")
@@ -37,25 +46,5 @@ class SessionTemplate {
             let props = UtilitiesString.getProperties(s)
 			tasks.append((name, props))
 		}
-	}
-
-    func getString(session: (String, [String: String]), tasks: [(String, [String: String])]) -> String {
-		var s = ""
-
-		let (sessionName, sessionProps) = session
-		s += "\(sessionName)"
-		if sessionProps.count > 0 {
-			s += "#"
-			s += UtilitiesString.getStringFromProperties(sessionProps)
-		}
-
-		for (taskName, taskProperties) in tasks {
-			s += "\n\(taskName)"
-			if taskProperties.count > 0 {
-				s += "#"
-				s += UtilitiesString.getStringFromProperties(taskProperties)
-			}
-		}
-		return s
 	}
   }
