@@ -12,10 +12,12 @@ import UIKit
 
 /**
 A session in project "Templates" is a template session used to create and reconfigure sessions.
-
-All sessions in project "X" will have name "X". They are using tasks and settings from a template session with same name and version as the session itself.
-
 A session may be reconfigured with another template with the same name but with different version.
+
+Each session in the template project has a version, which is the template version (which may be an empty string).
+Each session in a project is using one specific template with the same version attribute as the session itself.
+
+All sessions in project "X" will have name "X". Each session is using tasks and settings from a template session with same name and version as the session itself.
 
 - todo:
 - ? Session.delete*
@@ -24,25 +26,12 @@ A session may be reconfigured with another template with the same name but with 
 - ? Session.deleteWork
 - Ej implementerad, behövs inte för att ta bort en session.
 */
+
 class Session: NSManagedObject {
 
     //---------------------------------------------
     // Session - createInMOC
     //---------------------------------------------
-
-/*
-    Try to live without this method. The properties shuld be extracted before creating a session.
-    If this should exist, should properties be attached to the name or to the version?
-    class func createInMOC(moc: NSManagedObjectContext, 
-        name: String, version: String, project: Project, src: String) -> Session {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name),version=\(version))")
-
-        let n = UtilitiesString.getWithoutProperties(name)
-        let p = UtilitiesString.getProperties(name)
-            let s = Session.createInMOC(moc, name: n, version: version, properties: p, project: project, src: src)
-        return s
-    }
-*/
 
     class func createInMOC(moc: NSManagedObjectContext, 
         name: String, version: String, properties: [String: String], project: Project, src: String) -> Session {
