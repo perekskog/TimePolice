@@ -249,15 +249,7 @@ class MainSessionListVC: UIViewController,
                     if s1.name != s2.name {
                         return s1.name < s2.name
                     } else {
-                        var v1 = ""
-                        if let s = s1.getProperty(projectVersionAttribute) {
-                            v1 = s
-                        }
-                        var v2 = ""
-                        if let s = s2.getProperty(projectVersionAttribute) {
-                            v2 = s
-                        }
-                        return v1 < v2
+                        return s1.version < s2.version
                     }
                 })
                     {
@@ -394,11 +386,7 @@ class MainSessionListVC: UIViewController,
             if let vc = unwindSegue.sourceViewController as? MainTemplateSelectVC,
                 i = vc.templateIndexSelected,
                 s = templateSessions?[i] {
-                    var version = ""
-                    if let v = s.getProperty(projectVersionAttribute) {
-                        version = v
-                    }
-                    TimePoliceModelUtils.cloneSession(moc, projectName: s.name, projectVersion: version, sessionName: s.name)
+                    TimePoliceModelUtils.cloneSession(moc, projectName: s.name, sessionName: s.name, sessionVersion: s.version)
                     TimePoliceModelUtils.save(moc)
                     moc.reset()
                     redrawAll(true)
@@ -433,17 +421,8 @@ class MainSessionListVC: UIViewController,
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
 
-            var sessionName = session.name
+            let name = session.getDisplayNameWithSuffix()
 
-            if let v = session.getProperty(projectVersionAttribute) {
-                sessionName += ".\(v)"
-            }
-
-            var nameSuffix = ""
-            if let e = session.getProperty(sessionExtensionAttribute) {
-                nameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
-            }
-            
             var taskName = "(empty)"
             if let work = session.getLastWork() {
                 if work.isOngoing() {
@@ -452,7 +431,7 @@ class MainSessionListVC: UIViewController,
                     taskName = "(stopped)"
                 }
             }
-            cell.textLabel?.text = "\(sessionName) \(nameSuffix) \(taskName)"
+            cell.textLabel?.text = "\(name) \(taskName)"
         }
 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)

@@ -30,26 +30,31 @@ class Session: NSManagedObject {
     // Session - createInMOC
     //---------------------------------------------
 
+/*
+    Try to live without this method. The properties shuld be extracted before creating a session.
+    If this should exist, should properties be attached to the name or to the version?
     class func createInMOC(moc: NSManagedObjectContext, 
-        name: String, project: Project, src: String) -> Session {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name))")
+        name: String, version: String, project: Project, src: String) -> Session {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name),version=\(version))")
 
         let n = UtilitiesString.getWithoutProperties(name)
         let p = UtilitiesString.getProperties(name)
-            let s = Session.createInMOC(moc, name: n, properties: p, project: project, src: src)
+            let s = Session.createInMOC(moc, name: n, version: version, properties: p, project: project, src: src)
         return s
     }
+*/
 
     class func createInMOC(moc: NSManagedObjectContext, 
-        name: String, properties: [String: String], project: Project, src: String) -> Session {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name), props...)")
+        name: String, version: String, properties: [String: String], project: Project, src: String) -> Session {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name),version=\(version),props...)")
 
         let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
 
         let date = NSDate()
         let deviceName = UIDevice.currentDevice().name
         newItem.id = "S:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
-        newItem.name = "\(name)"
+        newItem.name = name
+        newItem.version = version
         newItem.created = date
         newItem.properties = properties
         newItem.src = src
@@ -116,7 +121,7 @@ class Session: NSManagedObject {
 
 
     //---------------------------------------------
-    // Session - getProperty
+    // Session - get attributes
     //---------------------------------------------
     
     func getProperty(key: String) -> String? {
@@ -128,6 +133,23 @@ class Session: NSManagedObject {
         return p[key]
     }
 
+    func getDisplayName() -> String {
+        var s = self.name
+        if self.version != "" {
+            s += ".\(self.version)"
+        }
+        return s
+    }
+
+    func getDisplayNameWithSuffix() -> String {
+        var s = getDisplayName()
+
+        if let e = self.getProperty(sessionExtensionAttribute) {
+            s += " \(UtilitiesDate.getStringWithFormat(self.created, format: e))"
+        }
+
+        return s
+    }
     
     
     //---------------------------------------------

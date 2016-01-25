@@ -233,6 +233,7 @@ class TaskEntryCreatorBase:
                 }
 
                 // Use new properties and src
+                s.version = session.version
                 s.properties = session.properties
                 s.src = session.src
                 
@@ -414,15 +415,7 @@ class TaskEntryCreatorBase:
                     if s1.name != s2.name {
                         return s1.name < s2.name
                     } else {
-                        var v1 = ""
-                        if let s = s1.getProperty(projectVersionAttribute) {
-                            v1 = s
-                        }
-                        var v2 = ""
-                        if let s = s2.getProperty(projectVersionAttribute) {
-                            v2 = s
-                        }
-                        return v1 < v2
+                        return s1.version < s2.version
                     }
                     }) {
                     if session.project.name == templateProjectName &&

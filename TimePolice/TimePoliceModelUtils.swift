@@ -89,7 +89,7 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - storeTemplate
     //---------------------------------------------
 
-    class func storeTemplate(moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, [String: String]), tasks: [(String, [String: String])], src: String) {
+    class func storeTemplate(moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, String, [String: String]), tasks: [(String, [String: String])], src: String) {
 
         UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, message: "storeTemplate(reuseTasksFromProject=\(reuseTasksFromProject),src=\(src))")
 
@@ -110,18 +110,18 @@ class TimePoliceModelUtils {
         
         // Find session template to replace, or create it if it does not already exist in template project
         var oldTemplateSession: Session?
-        let (sessionName, sessionProps) = session
-        let oldSessionVersion = sessionProps[projectVersionAttribute]
+        let (sessionName, sessionVersion, sessionProps) = session
+        let oldSessionVersion = sessionVersion
         for item in templateProject.sessions {
             if let s = item as? Session {
-                let version = s.getProperty(projectVersionAttribute)
+                let version = s.version
                 if s.name == "\(sessionName)" && oldSessionVersion == version {
                     oldTemplateSession = s
                 }
             }
         }
         
-        let newTemplateSession = Session.createInMOC(moc, name: "\(sessionName)", properties: sessionProps, project: templateProject, src: src)
+        let newTemplateSession = Session.createInMOC(moc, name: "\(sessionName)", version: sessionVersion, properties: sessionProps, project: templateProject, src: src)
 
         var defaultProperties = [String: String]()
 
@@ -232,9 +232,10 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - cloneSession
     //---------------------------------------------
 
-    class func cloneSession(moc: NSManagedObjectContext, projectName: String, projectVersion: String, sessionName: String) {
+    class func cloneSession(moc: NSManagedObjectContext, projectName: String, sessionName: String, sessionVersion: String) {
 
-        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, message: "cloneSession(projectName=\(projectName), sessionName=\(sessionName)")
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, 
+            message: "cloneSession(projectName=\(projectName), sessionName=\(sessionName), sessionVersion=\(sessionVersion))")
         defer {
             TimePoliceModelUtils.save(moc)
         }
@@ -253,11 +254,7 @@ class TimePoliceModelUtils {
         var templateSession: Session!
         var found = false
         for s in templateProject.sessions {
-            var version = ""
-            if let s = s.getProperty(projectVersionAttribute) {
-                version = s
-            }
-            if s.name == sessionName && version == projectVersion {
+            if s.name == sessionName && s.version == sessionVersion {
                 templateSession = s as! Session
                 found = true
             }
@@ -281,7 +278,7 @@ class TimePoliceModelUtils {
         if let p = templateSession.properties as? [String: String] {
             // Create new session
             let session = Session.createInMOC(moc,
-                name: sessionName, properties: p, project: project, src: templateSession.src)
+    name: sessionName, version: sessionVersion, properties: p, project: project, src: templateSession.src)
 
             // Add tasks from template to new session
             if let t = templateSession.tasks.array as? [Task] {

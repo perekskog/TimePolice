@@ -135,6 +135,19 @@ class UtilitiesString {
         return s
     }
 
+    class func get2Parts(s: String, separator: NSCharacterSet) -> (String, String) {
+        let strings = s.componentsSeparatedByCharactersInSet(separator)
+        var s1 = ""
+        var s2 = ""
+        if strings.count >= 1 {
+            s1 = strings[0]
+        }
+        if strings.count >= 2 {
+            s2 = strings[1]
+        }
+        return (s1, s2)
+    }
+
     class func dumpProperties(props: [String: String]) -> String {
     	var s = ""
     	for (key,value) in props {

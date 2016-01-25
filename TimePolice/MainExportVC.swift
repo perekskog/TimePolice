@@ -375,18 +375,6 @@ class MainExportVC: UIViewController,
     // MainExportVC - dumpAllData
     //---------------------------------------------
 
-    class func sessionNameWithVersionAndExtension(session: Session) -> String {
-        var sessionVersion = ""
-        if let v = session.getProperty(projectVersionAttribute) {
-            sessionVersion = ".\(v)"
-        }
-        var sessionNameSuffix = ""
-        if let e = session.getProperty(sessionExtensionAttribute) {
-            sessionNameSuffix = UtilitiesDate.getStringWithFormat(session.created, format: e)
-        }
-        return "\(session.name)\(sessionVersion) (\(sessionNameSuffix))"
-    }
-
     class func dumpAllData(moc: NSManagedObjectContext) -> String {
         var fetchRequest: NSFetchRequest
         var s: String
@@ -408,7 +396,7 @@ class MainExportVC: UIViewController,
                     s += "    [Session container size=\(project.sessions.count)]\n"
                     for session in project.sessions {
                         if let se = session as? Session {
-                            s += "    S: \(sessionNameWithVersionAndExtension(se)) @ \(UtilitiesDate.getString(se.created))\n"
+                            s += "    S: \(se.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(se.created))\n"
                         }
                     }
                 }
@@ -425,7 +413,7 @@ class MainExportVC: UIViewController,
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
-                    s += ("S: \(sessionNameWithVersionAndExtension(session)) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
+                    s += ("S: \(session.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
                     for (key, value) in session.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
@@ -475,7 +463,7 @@ class MainExportVC: UIViewController,
                     for (key, value) in work.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    s += "    S: \(sessionNameWithVersionAndExtension(work.session)) @ \(UtilitiesDate.getString(work.session.created))\n"
+                    s += "    S: \(work.session.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(work.session.created))\n"
                     s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
                 }
             }
@@ -502,9 +490,9 @@ class MainExportVC: UIViewController,
                     for session in task.sessions {
                         if let se = session as? Session {
                             if se.project.name == templateProjectName {
-                                s += ("    S: [\(sessionNameWithVersionAndExtension(se))] @ \(UtilitiesDate.getString(se.created))\n")
+                                s += ("    S: [\(se.getDisplayNameWithSuffix())] @ \(UtilitiesDate.getString(se.created))\n")
                             } else {
-                                s += ("    S: \(sessionNameWithVersionAndExtension(se)) @ \(UtilitiesDate.getString(se.created))\n")                                
+                                s += ("    S: \(se.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(se.created))\n")
                             }
                         }
                     }

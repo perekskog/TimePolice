@@ -209,15 +209,7 @@ class MainTemplateListVC: UIViewController,
                     if s1.name != s2.name {
                         return s1.name < s2.name
                     } else {
-                        var v1 = ""
-                        if let s = s1.getProperty(projectVersionAttribute) {
-                            v1 = s
-                        }
-                        var v2 = ""
-                        if let s = s2.getProperty(projectVersionAttribute) {
-                            v2 = s
-                        }
-                        return v1 < v2
+                        return s1.version < s2.version
                     }
                     }) {
                     if session.project.name == templateProjectName {
@@ -263,7 +255,7 @@ class MainTemplateListVC: UIViewController,
             if let nvc = segue.destinationViewController as? UINavigationController,
                     vc = nvc.topViewController as? MainTemplatePropVC {
                 vc.segue = "AddTemplate"
-                var s = "Name#extension=DD hhmmss\n"
+                var s = "Name.Version#extension=DD hhmmss\n"
                 s += "Task 1\n"
                 s += "Task 2#color=f44"
                 vc.template = s
@@ -293,7 +285,7 @@ class MainTemplateListVC: UIViewController,
                     let st = SessionTemplate()
                     st.parseTemplate(newSrc)
                     appLog.log(logger, logtype: .GUIAction, message: "SaveTemplate(\(st.session))")
-                    let (reuseTasksFromProject, _) = st.session
+                    let (reuseTasksFromProject, _, _) = st.session
                     TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: reuseTasksFromProject, session: st.session, tasks: st.tasks, src: newSrc)
             }
             redrawAll(true)
@@ -322,11 +314,7 @@ class MainTemplateListVC: UIViewController,
         if let s = templateSessions
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
-            if let version = session.getProperty(projectVersionAttribute) {
-                cell.textLabel?.text = "\(session.name).\(version)"
-            } else {
-                cell.textLabel?.text = "\(session.name)"                
-            }
+            cell.textLabel?.text = session.getDisplayName()
         }
 
         cell.backgroundColor = UIColor(white:0.3, alpha:1.0)

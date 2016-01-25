@@ -149,11 +149,7 @@ class MainTemplateSelectVC: UIViewController,
         if let s = templates
         where indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
-            if let version = session.getProperty(projectVersionAttribute) {
-                cell.textLabel?.text = "\(session.name).\(version)"
-            } else {
-                cell.textLabel?.text = "\(session.name)"                
-            }
+            cell.textLabel?.text = session.getDisplayName()
         }
     
         return cell

@@ -496,17 +496,7 @@ class TaskEntryCreatorByAddToListVC:
 
         if let s = session {
 
-            var name = s.name
-            if let v = s.getProperty(projectVersionAttribute) {
-                name += ".\(v)"
-            }
-
-            var suffix = ""
-            if let e = s.getProperty(sessionExtensionAttribute) {
-                suffix = UtilitiesDate.getStringWithFormat(s.created, format: e)
-            }
-            
-            sessionName = "\(name) \(suffix)"
+            sessionName = s.getDisplayNameWithSuffix()
 
             if let work = s.getLastWork() {
                 if work.isOngoing() {

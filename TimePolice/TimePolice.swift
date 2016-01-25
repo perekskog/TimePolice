@@ -17,7 +17,6 @@ let templateProjectName = "Templates"
 var coreDataIsConsistent = true
 
 // Property tags
-let projectVersionAttribute = "version"
 let sessionExtensionAttribute = "extension"
 
 // Sizes

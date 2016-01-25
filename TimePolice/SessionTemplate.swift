@@ -21,7 +21,7 @@ Utility function to parse a string defining a template.
 */
 
 class SessionTemplate {
-    var session: (String, [String: String]) = ("", [:])
+    var session: (String, String, [String: String]) = ("", "", [:])
     var tasks: [(String, [String: String])] = []
 
     /**
@@ -35,9 +35,11 @@ class SessionTemplate {
 			return
 		}
 
-		let sessionName = UtilitiesString.getWithoutProperties(lines[0])
+		let sessionNameVersion = UtilitiesString.getWithoutProperties(lines[0])
+        let (sessionName, sessionVersion) = UtilitiesString.get2Parts(sessionNameVersion, separator: NSCharacterSet(charactersInString: "."))
         let sessionProps = UtilitiesString.getProperties(lines[0])
-        session = (sessionName, sessionProps)
+
+        session = (sessionName, sessionVersion, sessionProps)
 
 		lines.removeFirst()
         
