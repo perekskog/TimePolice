@@ -62,12 +62,12 @@ class Task: NSManagedObject {
     class func deleteObject(task: Task) {
         UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "deleteObject(name=\(task.name))")
         guard let moc = task.managedObjectContext else { return }
-        let worklist = task.work
+        let taskEntries = task.taskEntries
         moc.deleteObject(task)
-        UtilitiesApplog.logDefault("Task", logtype: .Debug, message: "Delete all work")
-        for work in worklist {
-            if let w = work as? Work {
-                Work.deleteObject(w)
+        UtilitiesApplog.logDefault("Task", logtype: .Debug, message: "Delete all taskentries")
+        for taskEntry in taskEntries {
+            if let te = taskEntry as? TaskEntry {
+                TaskEntry.deleteObject(te)
             }
         }
     }
@@ -78,42 +78,42 @@ class Task: NSManagedObject {
 
     class func purgeIfEmpty(task: Task) {
         UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name))")
-        if task.sessions.count==0 && task.work.count==0 {
+        if task.sessions.count==0 && task.taskEntries.count==0 {
             Task.deleteObjectOnly(task)
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because no sessions and no work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because no sessions and no taskentry left.")
         } else {
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.work.count) work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.taskEntries.count) taskentry left.")
         }
     }
 
     class func purgeIfEmpty(task: Task, exceptSession session: Session) {
         UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),session=\(session.name))")
-        if (task.sessions.count==0 || (task.sessions.count==1 && task.sessions.containsObject(session))) && task.work.count==0 {
+        if (task.sessions.count==0 || (task.sessions.count==1 && task.sessions.containsObject(session))) && task.taskEntries.count==0 {
             Task.deleteObjectOnly(task)
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific session left, and no work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific session left, and no taskentry left.")
         } else {
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.work.count) work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.taskEntries.count) taskentry left.")
         }
     }
 
-    class func purgeIfEmpty(task: Task, exceptWork work: Work) {
-        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),work=\(work.name))")
-        if (task.work.count==0 || (task.work.count==1 && task.work.containsObject(work))) && task.sessions.count==0 {
+    class func purgeIfEmpty(task: Task, exceptTaskEntry taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),taskEntry=\(taskEntry.name))")
+        if (task.taskEntries.count==0 || (task.taskEntries.count==1 && task.taskEntries.containsObject(taskEntry))) && task.sessions.count==0 {
             Task.deleteObjectOnly(task)
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific work left, and no sessions left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific taskentry left, and no sessions left.")
         } else {
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.work.count) work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.taskEntries.count) taskentry left.")
         }
     }
 
-    class func purgeIfEmpty(task: Task, exceptSession session: Session, exceptWork work: Work) {
-        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),session=\(session.name),work=\(work.name))")
-        if (task.work.count==0 || (task.work.count==1 && task.work.containsObject(work))) &&
+    class func purgeIfEmpty(task: Task, exceptSession session: Session, exceptTaskEntry taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "purgeIfEmpty(name=\(task.name),session=\(session.name),taskEntry=\(taskEntry.name))")
+        if (task.taskEntries.count==0 || (task.taskEntries.count==1 && task.taskEntries.containsObject(taskEntry))) &&
             (task.sessions.count==0 || (task.sessions.count==1 && task.sessions.containsObject(session))){
             Task.deleteObjectOnly(task)
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific work and/or session left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task deleted because none or only 1 specific taskentry and/or session left.")
         } else {
-            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.work.count) work left.")
+            UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "Task not deleted, \(task.sessions.count) sessions left, \(task.taskEntries.count) taskentry left.")
         }
     }
 
@@ -132,14 +132,14 @@ class Task: NSManagedObject {
 
     
     //---------------------------------------------
-    // Task - addWork
+    // Task - addTaskEntry
     //---------------------------------------------
     
-    func addWork(work: Work) {
-        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "addWork(work=\(work.name))")
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(work)
-        self.work = sw
+    func addTaskEntry(taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("Task", logtype: .EnterExit, message: "addTaskEntry(taskEntry=\(taskEntry.name))")
+        let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(taskEntry)
+        self.taskEntries = sw
     }
     
     //---------------------------------------------

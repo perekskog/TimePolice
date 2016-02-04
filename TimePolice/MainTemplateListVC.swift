@@ -32,9 +32,9 @@ class MainTemplateListVC: UIViewController,
     // GUI
     var templateTableView = UITableView(frame: CGRectZero, style: .Plain)
     let exitButton = UIButton(type: UIButtonType.System)
-    let sessionNameView = WorkListToolView()
-    let templateListBGView = WorkListBGView()
-    let addView = WorkListToolView()
+    let sessionNameView = TaskEntriesToolView()
+    let templateListBGView = TaskEntriesBGView()
+    let addView = TaskEntriesToolView()
     let theme = BlackGreenTheme()
 
 

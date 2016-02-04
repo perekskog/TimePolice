@@ -23,7 +23,7 @@ All sessions in project "X" will have name "X". Each session is using tasks and 
 - ? Session.delete*
 - ? Session.insert*
 - Must update relations to session and tasks.
-- ? Session.deleteWork
+- ? Session.deleteTaskEntry
 - Ej implementerad, behövs inte för att ta bort en session.
 */
 
@@ -87,19 +87,19 @@ class Session: NSManagedObject {
     class func deleteObject(session: Session) {
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteObject(name=\(session.name))")
         guard let moc = session.managedObjectContext else { return }
-        let worklist = session.work
-        let tasklist = session.tasks
+        let taskEntries = session.taskEntries
+        let tasks = session.tasks
         let project = session.project
         moc.deleteObject(session)
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Delete all work")
-        for work in worklist {
-            if let w = work as? Work {
-                Work.deleteObject(w)
-                Task.purgeIfEmpty(w.task, exceptSession: session, exceptWork: w)
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Delete all taskentries")
+        for taskEntry in taskEntries {
+            if let te = taskEntry as? TaskEntry {
+                TaskEntry.deleteObject(te)
+                Task.purgeIfEmpty(te.task, exceptSession: session, exceptTaskEntry: te)
             }
         }
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge all orphaned tasks")
-        for task in tasklist {
+        for task in tasks {
             if let t = task as? Task {
                 Task.purgeIfEmpty(t, exceptSession:session)
             }
@@ -142,51 +142,51 @@ class Session: NSManagedObject {
     
     
     //---------------------------------------------
-    // Session - addWork (internal use only)
+    // Session - addTaskEntry (internal use only)
     //---------------------------------------------
     
-    func addWork(work: Work) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addWork(work=\(work.name))")
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(work)
-        self.work = sw
+    func addTaskEntry(taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTaskEntry(taskEntry=\(taskEntry.name))")
+        let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
+        sw.addObject(taskEntry)
+        self.taskEntries = sw
     }
 
-    func insertWorkBefore(work: Work, index: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertWorkBefore(work=\(work.name), index=\(index))")
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(work, atIndex: index)
-        self.work = sw
+    func insertTaskEntryBefore(taskEntry: TaskEntry, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertTaskEntryBefore(taskEntry=\(taskEntry.name), index=\(index))")
+        let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(taskEntry, atIndex: index)
+        self.taskEntries = sw
     }
 
-    func insertWorkAfter(work: Work, index: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertWorkAfter(work=\(work.name), index=\(index))")
-        let sw = self.work.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(work, atIndex: index+1)
-        self.work = sw
+    func insertTaskEntryAfter(taskEntry: TaskEntry, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertTaskEntryAfter(taskEntry=\(taskEntry.name), index=\(index))")
+        let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
+        sw.insertObject(taskEntry, atIndex: index+1)
+        self.taskEntries = sw
     }
 
     //---------------------------------------------
-    // Session - getLastWork
+    // Session - getLastTaskEntry
     //---------------------------------------------
 
-    func getLastWork() -> Work? {
-        // UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getLastWork")
-        if work.count >= 1 {
-            return work[work.count-1] as? Work
+    func getLastTaskEntry() -> TaskEntry? {
+        // UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getLastTaskEntry")
+        if taskEntries.count >= 1 {
+            return taskEntries[taskEntries.count-1] as? TaskEntry
         } else {
             return nil
         }
     }
 
     //---------------------------------------------
-    // Session - getWork
+    // Session - getTaskEntry
     //---------------------------------------------
 
-    func getWork(index: Int) -> Work? {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getWork(index=\(index))")
-        if index >= 0 && work.count > index {
-            return work[index] as? Work
+    func getTaskEntry(index: Int) -> TaskEntry? {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getTaskEntry(index=\(index))")
+        if index >= 0 && taskEntries.count > index {
+            return taskEntries[index] as? TaskEntry
         } else {
             return nil
         }
@@ -255,22 +255,22 @@ class Session: NSManagedObject {
 
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionTaskSummary")
 
-        self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+        self.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
-            let work = elem as! Work
+            let taskEntry = elem as! TaskEntry
             // For all ongoing items
-            if work.isStopped() || includeOngoing {
-                let task = work.task
+            if taskEntry.isStopped() || includeOngoing {
+                let task = taskEntry.task
                 var taskSummary: (Int, NSTimeInterval) = (0, 0)
                 if let t = sessionTaskSummary[task] {
                     taskSummary = t
                 }
                 var (activations, totalTime) = taskSummary
                 activations++
-                if work.isStopped() {
-                    totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                if taskEntry.isStopped() {
+                    totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
                 } else {
-                    totalTime += NSDate().timeIntervalSinceDate(work.startTime)
+                    totalTime += NSDate().timeIntervalSinceDate(taskEntry.startTime)
                 }
                 sessionTaskSummary[task] = (activations, totalTime)
             }
@@ -288,14 +288,14 @@ class Session: NSManagedObject {
 
         UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionSummary")
 
-        self.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+        self.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
 
-            let work = elem as! Work
+            let taskEntry = elem as! TaskEntry
             // For all items but the last one, if it is ongoing
-            if idx != self.work.count-1 || work.isStopped() {
+            if idx != self.taskEntries.count-1 || taskEntry.isStopped() {
                 var (activations, totalTime) = sessionSummary
                 activations++
-                totalTime += work.stopTime.timeIntervalSinceDate(work.startTime)
+                totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }
         }
@@ -322,7 +322,7 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-    Rules for modification of list of work in a session.
+    Rules for modification of list of taskentry in a session.
 
     * Only last item can be ongoing. 
     * If an item is ongoing, there can't be a successor => stopTime can be changed freely
@@ -347,46 +347,46 @@ class Session: NSManagedObject {
     //---------------------------------------------
 
 /*
-             workToModify
+            taskEntryToModify
     c1      |------------>
          t1       t2          0
     
-             workToModify
+            taskEntryToModify
     c2      |------------| ***
          t1       t2     |
 
-                 previousWork       workToModify
+                previousTaskEntry  taskEntryToModify
     c11     *** |------------| ... |------------?
                 |    t1        t2        t3           0
 
-                 previousWork       workToModify
+                previousTaskEntry  taskEntryToModify
     c12     *** |------------| ... |------------| ***
                 |    t1        t2        t3     |
 
 Future extensions
 
-- t3/t4 depends on other changes (t3/t4 means that workToModify will become ongoing at some future point in time)
+- t3/t4 depends on other changes (t3/t4 means that taskEntryToModify will become ongoing at some future point in time)
 
-             workToModify
+             taskEntryToModify
             |------------?
          t1       t2        0   t3
     
-                 previousWork       workToModify
+                 previousTaskEntry  taskEntryToModify
             *** |------------| ... |------------?
                      t1        t2        t3         0   t4
 
 */
 
-    func setStartTime(moc: NSManagedObjectContext, workIndex: Int, desiredStartTime: NSDate) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStartTime(workIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
+    func setStartTime(moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStartTime: NSDate) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStartTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
 
-        if workIndex < 0 || workIndex >= work.count  {
+        if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
             return
         }
 
         var targetTime = desiredStartTime
-        let workToModify = work[workIndex] as! Work
+        let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
 
         // Never change starttime into the future
         let now = NSDate()
@@ -395,40 +395,40 @@ Future extensions
             targetTime = now
         }
 
-        // Don't set starttime passed a stopped workToModify
-        if workToModify.isStopped() && targetTime.compare(workToModify.stopTime) == .OrderedDescending {
+        // Don't set starttime passed a stopped taskEntryToModify
+        if taskEntryToModify.isStopped() && targetTime.compare(taskEntryToModify.stopTime) == .OrderedDescending {
             // c2, c12
-            targetTime = workToModify.stopTime
+            targetTime = taskEntryToModify.stopTime
         }
 
-        if workIndex == 0 {
+        if taskEntryIndex == 0 {
 
             // c1, c2
-            // Prepare modification of workToModify
+            // Prepare modification of taskEntryToModify
             // ...Everything has already been taken care of
 
         } else {
 
             // c11, c12
-            // Prepare modification of workToModify, also modify previousWork
+            // Prepare modification of taskEntryToModify, also modify previousTaskEntry
 
             // Not the first item => There is a previous item
-            let previousWork = work[workIndex-1] as! Work
+            let previousTaskEntry = taskEntries[taskEntryIndex-1] as! TaskEntry
 
-            // Don't set starttime earlier than start of previous work
-            if targetTime.compare(previousWork.startTime) == .OrderedAscending {
-                targetTime = previousWork.startTime
+            // Don't set starttime earlier than start of previous taskentry
+            if targetTime.compare(previousTaskEntry.startTime) == .OrderedAscending {
+                targetTime = previousTaskEntry.startTime
             }
 
-            if targetTime.compare(previousWork.stopTime) == .OrderedAscending {
+            if targetTime.compare(previousTaskEntry.stopTime) == .OrderedAscending {
                 // c11/c12: t1
-                // workToModify will overlap with previousWork
-                previousWork.setStoppedAt(targetTime)
+                // taskEntryToModify will overlap with previousTaskEntry
+                previousTaskEntry.setStoppedAt(targetTime)
             }
         }
 
-        // Do the modification of workToModify
-        workToModify.setStartedAt(targetTime)
+        // Do the modification of taskEntryToModify
+        taskEntryToModify.setStartedAt(targetTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -438,39 +438,39 @@ Future extensions
     //---------------------------------------------
 
 /*
-                 workToModify
+                taskEntryToModify
     c1      *** |------------?
                 |     t1         0
     
-                 workToModify       nextWork
+                taskEntryToModify  nextTaskEntry
     c11     *** |------------| ... |-------->
                 |     t1        t2     t3        0
 
-                 workToModify       nextWork
+                taskEntryToModify  nextTaskEntry
     c12     *** |------------| ... |--------| ***
                 |     t1        t2     t3   |
 
 Future extensions
 
-- t3/t4 depend on other chnages (t3/t4 = workToModify will be stopped in the future)
+- t3/t4 depend on other chnages (t3/t4 = taskEntryToModify will be stopped in the future)
 
-                 workToModify
+                taskEntryToModify
             *** |------------?
                       t2         0   t3
 */
 
 
-    func setStopTime(moc: NSManagedObjectContext, workIndex: Int, desiredStopTime: NSDate) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStopTime(workIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
+    func setStopTime(moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStopTime: NSDate) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStopTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
 
-        if workIndex < 0 || workIndex >= work.count  {
+        if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
             return
         }
 
         var targetTime = desiredStopTime
 
-        let workToModify = work[workIndex] as! Work
+        let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
 
         // Never change stoptime into the future
         let now = NSDate()
@@ -479,39 +479,39 @@ Future extensions
             targetTime = now
         }
 
-        // Never set stoptime before start of workToModify
-        if targetTime.compare(workToModify.startTime) == .OrderedAscending {
-            targetTime = workToModify.startTime
+        // Never set stoptime before start of taskEntryToModify
+        if targetTime.compare(taskEntryToModify.startTime) == .OrderedAscending {
+            targetTime = taskEntryToModify.startTime
         }
 
-        if workIndex == work.count-1 {
+        if taskEntryIndex == taskEntries.count-1 {
 
             // c1
-            // Prepare modification of workToModify
+            // Prepare modification of taskEntryToModify
             // ...Everything has already been taken care of
 
 
         } else {
             // c11, c12
-            // Prepare modification of workToModify, also modify previousWork
+            // Prepare modification of taskEntryToModify, also modify previousTaskEntry
 
             // Not the last item => There is a next item
-            let nextWork = work[workIndex+1] as! Work
+            let nextTaskEntry = taskEntries[taskEntryIndex+1] as! TaskEntry
 
-            if targetTime.compare(nextWork.startTime) == .OrderedDescending {
-                // Need to adjust next work
+            if targetTime.compare(nextTaskEntry.startTime) == .OrderedDescending {
+                // Need to adjust next taskentry
 
-                if !nextWork.isOngoing() && targetTime.compare(nextWork.stopTime) == .OrderedDescending {
+                if !nextTaskEntry.isOngoing() && targetTime.compare(nextTaskEntry.stopTime) == .OrderedDescending {
                     // c12
-                    targetTime = nextWork.stopTime
+                    targetTime = nextTaskEntry.stopTime
                 }
 
-                nextWork.setStartedAt(targetTime)
+                nextTaskEntry.setStartedAt(targetTime)
             }
         }
 
-        // Do the modification of workToModify
-        workToModify.setStoppedAt(targetTime)
+        // Do the modification of taskEntryToModify
+        taskEntryToModify.setStoppedAt(targetTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -520,43 +520,43 @@ Future extensions
 
 
     //---------------------------------------------
-    // Session - deletePreviousWorkAndAlignStart
+    // Session - deletePreviousTaskEntryAndAlignStart
     //---------------------------------------------
 
 /*
     GUI operation: "swipeUp"
 
-             workToModify
+            taskEntryToModify
     N/A     |------------? ***
 
 
-             previousWork       workToModify                      workToModify
+            previousTaskEntry  taskEntryToModify                 taskEntryToModify
     pc1 *** |------------| ... |------------? ***     ==>    *** |------------? ***
             1            2     3            4                    1            4
 */
-    func deletePreviousWorkAndAlignStart(moc: NSManagedObjectContext, workIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousWorkAndAlignStart(workIndex=\(workIndex))")
+    func deletePreviousTaskEntryAndAlignStart(moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousTaskEntryAndAlignStart(taskEntryIndex=\(taskEntryIndex))")
 
-        if workIndex < 0 || workIndex >= work.count  {
+        if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
             return
         }
 
-        if workIndex == 0 {
+        if taskEntryIndex == 0 {
             // No previous item
             return
         }
 
-        let workToModify = work[workIndex] as! Work
-        let previousWork = work[workIndex-1] as! Work
-        let startTime = previousWork.startTime
+        let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
+        let previousTaskEntry = taskEntries[taskEntryIndex-1] as! TaskEntry
+        let startTime = previousTaskEntry.startTime
 
-        Work.deleteObject(previousWork)
+        TaskEntry.deleteObject(previousTaskEntry)
 
         // Purge Task if it is not referenced any longer.
-        Task.purgeIfEmpty(previousWork.task, exceptWork: previousWork)
+        Task.purgeIfEmpty(previousTaskEntry.task, exceptTaskEntry: previousTaskEntry)
 
-        workToModify.setStartedAt(startTime)
+        taskEntryToModify.setStartedAt(startTime)
 
         TimePoliceModelUtils.save(moc)
     }
@@ -565,47 +565,47 @@ Future extensions
 
 
     //---------------------------------------------
-    // Session - deleteNextWorkAndAlignStop
+    // Session - deleteNextTaskEntryAndAlignStop
     //---------------------------------------------
 
 /*
     GUI operation: "swipeDown"
 
 
-             workToModify
+            taskEntryToModify
     N/A *** |------------?
 
 
-             workToModify       nextWork                      workToModify
+            taskEntryToModify  nextTaskEntry                 taskEntryToModify
     pc1 *** |------------| ... |--------? ***     ==>    *** |------------? ***
             1            2     3        4                    1            4
 */
-    func deleteNextWorkAndAlignStop(moc: NSManagedObjectContext, workIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousWorkAndAlignStop(workIndex=\(workIndex))")
+    func deleteNextTaskEntryAndAlignStop(moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousTaskEntryAndAlignStop(taskEntryIndex=\(taskEntryIndex))")
 
-        if workIndex < 0 || workIndex >= work.count  {
+        if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
             return
         }
 
-        if workIndex == work.count-1 {
-            // No next work
+        if taskEntryIndex == taskEntries.count-1 {
+            // No next taskentry
             return
         }
 
-        let workToModify = work[workIndex] as! Work
-        let nextWork = work[workIndex+1] as! Work
+        let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
+        let nextTaskEntry = taskEntries[taskEntryIndex+1] as! TaskEntry
 
-        if nextWork.isOngoing() {
-            workToModify.setAsOngoing()
+        if nextTaskEntry.isOngoing() {
+            taskEntryToModify.setAsOngoing()
         } else {
-            workToModify.setStoppedAt(nextWork.stopTime)
+            taskEntryToModify.setStoppedAt(nextTaskEntry.stopTime)
         }
 
-        Work.deleteObject(nextWork)
+        TaskEntry.deleteObject(nextTaskEntry)
 
         // Purge Task if it is not referenced any longer.
-        Task.purgeIfEmpty(nextWork.task, exceptWork: nextWork)
+        Task.purgeIfEmpty(nextTaskEntry.task, exceptTaskEntry: nextTaskEntry)
 
         TimePoliceModelUtils.save(moc)        
     }
@@ -615,30 +615,30 @@ Future extensions
 
 
     //---------------------------------------------
-    // Session - deleteWork
+    // Session - deleteTaskEntry
     //---------------------------------------------
 
 /*
     GUI operation: "swipeLR"
 
-             workToModify
+            taskEntryToModify
     pc1 *** |------------? ***                       ==>  ***  (removed)  ***
 */
 
-    func deleteWork(moc: NSManagedObjectContext, workIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteWork(workIndex=\(workIndex))")
+    func deleteTaskEntry(moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteTaskEntry(taskEntryIndex=\(taskEntryIndex))")
 
-        if workIndex < 0 || workIndex >= work.count  {
+        if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
             return
         }
 
-        let workToModify = work[workIndex] as! Work
+        let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
         
-        UtilitiesApplog.logDefault("Session", logtype: .Debug, message: "delete the workitem")
+        UtilitiesApplog.logDefault("Session", logtype: .Debug, message: "delete the taskentry item")
         
-        // Deete work, this will also try to purge the task.
-        Work.deleteObject(workToModify)
+        // Deete taskentry, this will also try to purge the task.
+        TaskEntry.deleteObject(taskEntryToModify)
 
         TimePoliceModelUtils.save(moc)        
     }

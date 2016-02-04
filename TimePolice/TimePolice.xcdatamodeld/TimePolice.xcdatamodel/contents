@@ -8,7 +8,7 @@
         <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Session" inverseName="project" inverseEntity="Session" syncable="YES"/>
     </entity>
     <entity name="Session" representedClassName="TimePolice.Session" syncable="YES">
-        <attribute name="archived" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="archived" attributeType="Boolean" syncable="YES"/>
         <attribute name="created" attributeType="Date" syncable="YES"/>
         <attribute name="id" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -16,8 +16,8 @@
         <attribute name="src" attributeType="String" syncable="YES"/>
         <attribute name="version" attributeType="String" syncable="YES"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="sessions" inverseEntity="Project" syncable="YES"/>
+        <relationship name="taskEntries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskEntry" inverseName="session" inverseEntity="TaskEntry" syncable="YES"/>
         <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Task" inverseName="sessions" inverseEntity="Task" syncable="YES"/>
-        <relationship name="work" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Work" inverseName="session" inverseEntity="Work" syncable="YES"/>
     </entity>
     <entity name="Task" representedClassName="TimePolice.Task" syncable="YES">
         <attribute name="created" attributeType="Date" syncable="YES"/>
@@ -25,22 +25,22 @@
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="properties" attributeType="Transformable" syncable="YES"/>
         <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="tasks" inverseEntity="Session" syncable="YES"/>
-        <relationship name="work" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Work" inverseName="task" inverseEntity="Work" syncable="YES"/>
+        <relationship name="taskEntries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TaskEntry" inverseName="task" inverseEntity="TaskEntry" syncable="YES"/>
     </entity>
-    <entity name="Work" representedClassName="TimePolice.Work" syncable="YES">
+    <entity name="TaskEntry" representedClassName="TimePolice.TaskEntry" syncable="YES">
         <attribute name="created" attributeType="Date" syncable="YES"/>
         <attribute name="id" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="properties" attributeType="Transformable" syncable="YES"/>
         <attribute name="startTime" attributeType="Date" syncable="YES"/>
         <attribute name="stopTime" attributeType="Date" syncable="YES"/>
-        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="work" inverseEntity="Session" syncable="YES"/>
-        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Task" inverseName="work" inverseEntity="Task" syncable="YES"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="taskEntries" inverseEntity="Session" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Task" inverseName="taskEntries" inverseEntity="Task" syncable="YES"/>
     </entity>
     <elements>
         <element name="Project" positionX="-342" positionY="-151" width="128" height="120"/>
         <element name="Session" positionX="-146" positionY="-166" width="128" height="195"/>
         <element name="Task" positionX="-29" positionY="149" width="128" height="135"/>
-        <element name="Work" positionX="88" positionY="-153" width="128" height="165"/>
+        <element name="TaskEntry" positionX="88" positionY="-153" width="128" height="165"/>
     </elements>
 </model>

@@ -62,23 +62,23 @@ class TimePoliceModelUtils {
 
 
     //---------------------------------------------
-    // TimePoliceModelUtils - getSessionWork
+    // TimePoliceModelUtils - getSessionTaskEntry
     //---------------------------------------------
 
-    class func getSessionWork(session: Session) -> String {
+    class func getSessionTaskEntries(session: Session) -> String {
 
         var s: String
 
         s = "Current Session:\n"
         s += "S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n"
         s += "    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n"
-        session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-            let work = elem as! Work
-            if work.isStopped() {
-                let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+        session.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+            let taskEntry = elem as! TaskEntry
+            if taskEntry.isStopped() {
+                let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
             } else {
-                s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
+                s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
             }
         }
 
@@ -201,12 +201,12 @@ class TimePoliceModelUtils {
                                 // Second, search among TaskEntries
                                 // It might be that there is a TaskEntry since long before
                                 // but the corresponding Task is not part of the session.
-                                for work in (session as! Session).work {
-                                    if !found && work.task.name == newTaskName {
+                                for taskEntry in (session as! Session).taskEntries {
+                                    if !found && taskEntry.task.name == newTaskName {
                                         found = true
-                                        if let w = work as? Work {
-                                            w.task.properties = mergedProperties
-                                            newTemplateSession.addTask(w.task)
+                                        if let te = taskEntry as? TaskEntry {
+                                            te.task.properties = mergedProperties
+                                            newTemplateSession.addTask(te.task)
                                         }
                                     }
                                 }
@@ -287,18 +287,18 @@ class TimePoliceModelUtils {
         }
     }
 
-    class func getGap2Work(workList: [Work]) -> [Int] {
-        if workList.count == 0 {
+    class func getGap2TaskEntry(taskEntryList: [TaskEntry]) -> [Int] {
+        if taskEntryList.count == 0 {
             return []
         }
         // First entry is never a gap
-        var gap2Work: [Int] = [0]
+        var gap2TaskEntry: [Int] = [0]
 
         // If there are more than one element: Go through entire list
-        if workList.count > 1 {
-            var previousTaskEntry = workList[0]
-            for i in 1...workList.count-1 {
-                let te = workList[i]
+        if taskEntryList.count > 1 {
+            var previousTaskEntry = taskEntryList[0]
+            for i in 1...taskEntryList.count-1 {
+                let te = taskEntryList[i]
 //                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
 //                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
 //                if te.startTime.isEqualToDate(previousTaskEntry.stopTime) {
@@ -307,14 +307,14 @@ class TimePoliceModelUtils {
                 } else {
                     let diff = te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime)
                     UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "(gap=\(diff))")
-                    gap2Work.append(-1)
+                    gap2TaskEntry.append(-1)
                 }
                 previousTaskEntry = te
-                gap2Work.append(i)
+                gap2TaskEntry.append(i)
             }
         }
 
-        return gap2Work
+        return gap2TaskEntry
     }
 
 
@@ -351,9 +351,9 @@ class TimePoliceModelUtils {
             fetchRequest = NSFetchRequest(entityName: "Task")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
                 for task in fetchResults {
-                    if task.sessions.count==0 && task.work.count==0 {
+                    if task.sessions.count==0 && task.taskEntries.count==0 {
                         coreDataIsConsistent = false
-                        return (true, "Task \(task.id) has no work and no session")
+                        return (true, "Task \(task.id) has no taskentry and no session")
                     }
                 }
             }
@@ -425,7 +425,7 @@ class TimePoliceModelUtils {
             fetchRequest = NSFetchRequest(entityName: "Task")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
                 for task in fetchResults {
-                    if task.sessions.count==0 && task.work.count==0 {
+                    if task.sessions.count==0 && task.taskEntries.count==0 {
                         Task.deleteObjectOnly(task)
                     }
                 }

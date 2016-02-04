@@ -19,6 +19,6 @@ extension Task {
     @NSManaged var name: String
     @NSManaged var properties: NSObject
     @NSManaged var sessions: NSSet
-    @NSManaged var work: NSOrderedSet
+    @NSManaged var taskEntries: NSOrderedSet
 
 }

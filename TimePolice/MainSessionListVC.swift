@@ -37,10 +37,10 @@ class MainSessionListVC: UIViewController,
     // GUI
     var sessionTableView = UITableView(frame: CGRectZero, style: .Plain)
     let exitButton = UIButton(type: UIButtonType.System)
-    let sessionNameView = WorkListToolView()
+    let sessionNameView = TaskEntriesToolView()
     let sessionSelectionControl = UISegmentedControl(frame: CGRectZero)
-    let sessionListBGView = WorkListBGView()
-    let addView = WorkListToolView()
+    let sessionListBGView = TaskEntriesBGView()
+    let addView = TaskEntriesToolView()
     let theme = BlackGreenTheme()
 
 
@@ -424,9 +424,9 @@ class MainSessionListVC: UIViewController,
             let name = session.getDisplayNameWithSuffix()
 
             var taskName = "(empty)"
-            if let work = session.getLastWork() {
-                if work.isOngoing() {
-                    taskName = "(\(work.task.name))"
+            if let taskEntry = session.getLastTaskEntry() {
+                if taskEntry.isOngoing() {
+                    taskName = "(\(taskEntry.task.name))"
                 } else {
                     taskName = "(stopped)"
                 }

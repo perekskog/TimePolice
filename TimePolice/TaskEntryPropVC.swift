@@ -10,7 +10,7 @@
 
 TODO
 
-- Redigera Work.name. Behöver bara vara synligt i WorkProp (så jag kan kolla i efterhand varför jag valde en diverse-task)
+- Redigera TaskEntry.name. Behöver bara vara synligt i TaskEntryProp (så jag kan kolla i efterhand varför jag valde en diverse-task)
 
 */
 
@@ -31,7 +31,7 @@ class TaskEntryPropVC:
     AppLoggerDataSource  {
 
     // Input data
-    var taskEntryTemplate: Work?
+    var taskEntryTemplate: TaskEntry?
     var segue: String?
     var taskList: [Task] = []
     var minimumDate: NSDate?
@@ -54,9 +54,9 @@ class TaskEntryPropVC:
     // Table and table cells
     var table: UITableView!
     
-    let cellStartTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type1")
-    let cellStopTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type2")
-    let cellTask = UITableViewCell(style: .Value1, reuseIdentifier: "EditWork-type3")
+    let cellStartTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type1")
+    let cellStopTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type2")
+    let cellTask = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type3")
 
     // Hold TaskEntry attributes while editing
     let datePickerStart = UIDatePicker()

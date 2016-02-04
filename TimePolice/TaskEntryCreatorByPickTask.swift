@@ -277,21 +277,21 @@ class TaskEntryCreatorByPickTaskVC:
 
         guard let s = session,
                 taskList = s.tasks.array as? [Task],
-                work = s.getLastWork() else {
+                taskEntry = s.getLastTaskEntry() else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in handleTapSigninSignout")
             return
         }
 
-        if work.isOngoing() {
-            setLastWorkAsFinished()
+        if taskEntry.isOngoing() {
+            setLastTaskEntryAsFinished()
         } else {
-            setLastWorkAsOngoing()
+            setLastTaskEntryAsOngoing()
         }
-        if let taskIndex = taskList.indexOf(work.task as Task) {
+        if let taskIndex = taskList.indexOf(taskEntry.task as Task) {
             taskbuttonviews[taskIndex]?.setNeedsDisplay()
         }
 
-        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
     func handleTapTask(sender: UITapGestureRecognizer) {
@@ -307,13 +307,13 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         // Handle ongoing task
-        if let work = s.getLastWork() {
-            if let taskIndex = taskList.indexOf(work.task as Task) {
+        if let taskEntry = s.getLastTaskEntry() {
+            if let taskIndex = taskList.indexOf(taskEntry.task as Task) {
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
             }
 
-            if work.isOngoing() {
-                setLastWorkAsFinished()
+            if taskEntry.isOngoing() {
+                setLastTaskEntryAsFinished()
             }
         }
 
@@ -323,10 +323,10 @@ class TaskEntryCreatorByPickTaskVC:
         
         appLog.log(logger, logtype: .GUIAction, message: "handleTap(\(task.name))")
 
-        addNewWork(task)
+        addNewTaskEntry(task)
         taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 
-        appLog.log(logger, logtype: .CoreDataSnapshot) { TimePoliceModelUtils.getSessionWork(s) }
+        appLog.log(logger, logtype: .CoreDataSnapshot) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
     func handleLongPressTask(sender: UILongPressGestureRecognizer) {
@@ -343,20 +343,20 @@ class TaskEntryCreatorByPickTaskVC:
             return
         }
         
-        guard let work = s.getLastWork() else {
-            appLog.log(logger, logtype: .EnterExit, message: "No last work")
+        guard let taskEntry = s.getLastTaskEntry() else {
+            appLog.log(logger, logtype: .EnterExit, message: "No last taskentry")
             appLog.log(logger, logtype: .Guard, message: "guard fail in handleLongPress 2")
             return
         }
         
         let taskPressedIndex = recognizers[sender]
         let taskPressed = taskList[taskPressedIndex!]
-        if work.isOngoing() && work.task != taskPressed {
-            appLog.log(logger, logtype: .EnterExit, message: "Work is ongoing, LongPress on inactive task")
+        if taskEntry.isOngoing() && taskEntry.task != taskPressed {
+            appLog.log(logger, logtype: .EnterExit, message: "TaskEntry is ongoing, LongPress on inactive task")
             return
         }
 
-        selectedWorkIndex = s.work.count - 1
+        selectedTaskEntryIndex = s.taskEntries.count - 1
 
         performSegueWithIdentifier("EditTaskEntry", sender: self)
     }
@@ -426,16 +426,16 @@ class TaskEntryCreatorByPickTaskVC:
             }
         }
         
-        guard let work = s.getLastWork() else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in getSelectionAreaInfo getLastWork")
+        guard let taskEntry = s.getLastTaskEntry() else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in getSelectionAreaInfo getLastTaskEntry")
             return sai
         }
 
         if selectionArea >= 0 && selectionArea < taskList.count {
-            if taskList[selectionArea] == work.task {
+            if taskList[selectionArea] == taskEntry.task {
                 sai.active = true
-                sai.activatedAt = work.startTime
-                if work.isOngoing() {
+                sai.activatedAt = taskEntry.startTime
+                if taskEntry.isOngoing() {
                     sai.ongoing = true
                 } else {
                     sai.ongoing = false
@@ -465,13 +465,13 @@ class TaskEntryCreatorByPickTaskVC:
         }
         
         var signedIn = false
-        if let work = session?.getLastWork() {
-            if work.isOngoing() {
+        if let taskEntry = session?.getLastTaskEntry() {
+            if taskEntry.isOngoing() {
                 signedIn = true
                 
                 let now = NSDate()
-                if(now.compare(work.startTime) == .OrderedDescending) {
-                    let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                if(now.compare(taskEntry.startTime) == .OrderedDescending) {
+                    let timeForActiveTask = NSDate().timeIntervalSinceDate(taskEntry.startTime)
                     totalTime += timeForActiveTask
                 }
             }
@@ -493,68 +493,68 @@ class TaskEntryCreatorByPickTaskVC:
     }
 
     //--------------------------------------------
-    //  TaskEntryCreatorByPickTask - Sign int/out, add new work
+    //  TaskEntryCreatorByPickTask - Sign int/out, add new taskEntry
     //--------------------------------------------
 
-    func addNewWork(task: Task) {
-        appLog.log(logger, logtype: .EnterExit, message: "addWork")
+    func addNewTaskEntry(task: Task) {
+        appLog.log(logger, logtype: .EnterExit, message: "addTaskEntry")
 
         if let s = session {
-            Work.createInMOC(moc, name: "", session: s, task: task)
+            TaskEntry.createInMOC(moc, name: "", session: s, task: task)
             TimePoliceModelUtils.save(moc)
         }
     }
 
-    func setLastWorkAsFinished() {
-        appLog.log(logger, logtype: .EnterExit, message: "setLastWorkFinished")
+    func setLastTaskEntryAsFinished() {
+        appLog.log(logger, logtype: .EnterExit, message: "setLastTaskEntryFinished")
 
-        guard let work = session?.getLastWork() else {
-            appLog.log(logger, logtype: .Debug, message: "no work in list")
-            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastWorkAsFinished")
+        guard let taskEntry = session?.getLastTaskEntry() else {
+            appLog.log(logger, logtype: .Debug, message: "no taskentry in list")
+            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastTaskEntryAsFinished")
             return
         }
         
-        if work.isOngoing() {
-            work.setStoppedAt(NSDate())
+        if taskEntry.isOngoing() {
+            taskEntry.setStoppedAt(NSDate())
 
             var taskSummary: (Int, NSTimeInterval) = (0, 0)
-            if let t = sessionTaskSummary[work.task] {
+            if let t = sessionTaskSummary[taskEntry.task] {
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
             numberOfTimesActivated++
-            totalTimeActive += work.stopTime.timeIntervalSinceDate(work.startTime)
-            sessionTaskSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+            totalTimeActive += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+            sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 
             TimePoliceModelUtils.save(moc)
         } else {
-            appLog.log(logger, logtype: .EnterExit, message: "last work not ongoing")
+            appLog.log(logger, logtype: .EnterExit, message: "last taskentry not ongoing")
         }
     }
 
-    func setLastWorkAsOngoing() {
-        appLog.log(logger, logtype: .EnterExit, message: "setLastWorkOngoing")
+    func setLastTaskEntryAsOngoing() {
+        appLog.log(logger, logtype: .EnterExit, message: "setLastTaskEntryOngoing")
 
-        guard let work = session?.getLastWork() else {
-            appLog.log(logger, logtype: .Debug, message: "no work in list")
-            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastWorkAsOngoing")
+        guard let taskEntry = session?.getLastTaskEntry() else {
+            appLog.log(logger, logtype: .Debug, message: "no taskEntry in list")
+            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastTaskEntryAsOngoing")
             return
         }
-        if !work.isOngoing() {
+        if !taskEntry.isOngoing() {
             var taskSummary: (Int, NSTimeInterval) = (0, 0)
-            if let t = sessionTaskSummary[work.task] {
+            if let t = sessionTaskSummary[taskEntry.task] {
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
             numberOfTimesActivated--
-            totalTimeActive -= work.stopTime.timeIntervalSinceDate(work.startTime)
-            sessionTaskSummary[work.task] = (numberOfTimesActivated, totalTimeActive)
+            totalTimeActive -= taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+            sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 
-            work.setAsOngoing()
+            taskEntry.setAsOngoing()
 
             TimePoliceModelUtils.save(moc)
         } else {
-            appLog.log(logger, logtype: .EnterExit, message: "last work not finished")
+            appLog.log(logger, logtype: .EnterExit, message: "last taskEntry not finished")
         }
     }
 
@@ -575,9 +575,9 @@ class TaskEntryCreatorByPickTaskVC:
             return
         }
             
-        guard let work = s.getLastWork() else {
+        guard let taskEntry = s.getLastTaskEntry() else {
 // Commented out, too frequent...
-//                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask lastwork")
+//                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask lasttaskentry")
                 return
         }
         
@@ -586,7 +586,7 @@ class TaskEntryCreatorByPickTaskVC:
                 return
         }
         
-        guard let taskIndex = taskList.indexOf(work.task as Task) else {
+        guard let taskIndex = taskList.indexOf(taskEntry.task as Task) else {
                 appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask taskindex")
                 return
         }

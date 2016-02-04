@@ -25,11 +25,11 @@ class TaskEntryCreatorByAddToListVC:
     
     var sourceController: MainSessionListVC?
 
-    var workListTableView = UITableView(frame: CGRectZero, style: .Plain)
+    var taskEntriesTableView = UITableView(frame: CGRectZero, style: .Plain)
 
     var sessionLabel: UILabel?
 
-    var selectedWork: Work?
+    var selectedTaskEntry: TaskEntry?
 
 
     // Cached values, calculated at startup
@@ -38,13 +38,13 @@ class TaskEntryCreatorByAddToListVC:
     var updateActiveActivityTimer: NSTimer?
 
     let exitButton = UIButton(type: UIButtonType.System)
-    let sessionNameView = WorkListToolView()
-    let workListBGView = WorkListBGView()
-    let signInSignOutView = WorkListToolView()
-    let addView = WorkListToolView()
-    let infoAreaView = WorkListToolView()
+    let sessionNameView = TaskEntriesToolView()
+    let taskEntriesBGView = TaskEntriesBGView()
+    let signInSignOutView = TaskEntriesToolView()
+    let addView = TaskEntriesToolView()
+    let infoAreaView = TaskEntriesToolView()
 
-    var gap2work: [Int] = []
+    var gap2taskEntry: [Int] = []
 
     let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
@@ -71,13 +71,13 @@ class TaskEntryCreatorByAddToListVC:
         (self.view as! TimePoliceBGView).theme = theme
 
         //GAP: Update list of gaps
-        gap2work = []
+        gap2taskEntry = []
         if let s = session,
-            wl = s.work.array as? [Work] {
-            gap2work = TimePoliceModelUtils.getGap2Work(wl)
+            wl = s.taskEntries.array as? [TaskEntry] {
+            gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
         var s = ""
-        for i in gap2work {
+        for i in gap2taskEntry {
             s += "\(i)\t"
         }
         appLog.log(logger, logtype: .Debug, message: s)
@@ -96,13 +96,13 @@ class TaskEntryCreatorByAddToListVC:
         sessionNameView.addGestureRecognizer(recognizer)
         self.view.addSubview(sessionNameView)
 
-        workListBGView.theme = theme
-        self.view.addSubview(workListBGView)
+        taskEntriesBGView.theme = theme
+        self.view.addSubview(taskEntriesBGView)
 
         infoAreaView.theme = theme
         infoAreaView.toolbarInfoDelegate = self
         infoAreaView.tool = .InfoArea
-        workListBGView.addSubview(infoAreaView)
+        taskEntriesBGView.addSubview(infoAreaView)
 
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
@@ -110,24 +110,24 @@ class TaskEntryCreatorByAddToListVC:
         recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
         recognizer.delegate = self
         signInSignOutView.addGestureRecognizer(recognizer)
-        workListBGView.addSubview(signInSignOutView)
+        taskEntriesBGView.addSubview(signInSignOutView)
 
 
-        workListTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "WorkListWorkCell")
-        workListTableView.dataSource = self
-        workListTableView.delegate = self
-        workListTableView.rowHeight = CGFloat(selectItemTableRowHeight)
-        workListTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
-        workListTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
-        workListBGView.addSubview(workListTableView)                
+        taskEntriesTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TaskEntriesCell")
+        taskEntriesTableView.dataSource = self
+        taskEntriesTableView.delegate = self
+        taskEntriesTableView.rowHeight = CGFloat(selectItemTableRowHeight)
+        taskEntriesTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
+        taskEntriesTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
+        taskEntriesBGView.addSubview(taskEntriesTableView)
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = .Add
-        recognizer = UITapGestureRecognizer(target:self, action:Selector("addWork:"))
+        recognizer = UITapGestureRecognizer(target:self, action:Selector("addTaskEntry:"))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
-        workListBGView.addSubview(addView)
+        taskEntriesBGView.addSubview(addView)
 
     }
 
@@ -136,8 +136,8 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
 
 
-        if let indexPath = workListTableView.indexPathForSelectedRow {
-            workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if let indexPath = taskEntriesTableView.indexPathForSelectedRow {
+            taskEntriesTableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
 
@@ -161,7 +161,7 @@ class TaskEntryCreatorByAddToListVC:
         self.sessionSummary = (0,0)
         self.sessionSummary = session?.getSessionSummary(moc)
         redrawAfterSegue()
-        scrollToEnd(workListTableView)
+        scrollToEnd(taskEntriesTableView)
     }
 
 
@@ -196,11 +196,11 @@ class TaskEntryCreatorByAddToListVC:
         sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
         lastview = sessionNameView
 
-        workListBGView.frame = CGRectMake(0, 55, width, height - 55)
-        lastview = workListBGView
+        taskEntriesBGView.frame = CGRectMake(0, 55, width, height - 55)
+        lastview = taskEntriesBGView
 
-        width = CGRectGetWidth(workListBGView.frame)
-        height = CGRectGetHeight(workListBGView.frame)
+        width = CGRectGetWidth(taskEntriesBGView.frame)
+        height = CGRectGetHeight(taskEntriesBGView.frame)
         let padding = 1
 
         infoAreaView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), 30)
@@ -209,8 +209,8 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
         lastview = signInSignOutView
 
-        workListTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
-        lastview = workListTableView
+        taskEntriesTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
+        lastview = taskEntriesTableView
 
         addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
         lastview = addView
@@ -223,7 +223,7 @@ class TaskEntryCreatorByAddToListVC:
         self.sessionSummary = (0,0)
         self.sessionSummary = session?.getSessionSummary(moc)
         redrawAfterSegue()
-        scrollToEnd(workListTableView)
+        scrollToEnd(taskEntriesTableView)
 
     }
 
@@ -232,10 +232,10 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
 
         // Inset to left edge on cells with text
-        workListTableView.separatorInset = UIEdgeInsetsZero
+        taskEntriesTableView.separatorInset = UIEdgeInsetsZero
 
         // Inset to left edge on empty cells
-        workListTableView.layoutMargins = UIEdgeInsetsZero
+        taskEntriesTableView.layoutMargins = UIEdgeInsetsZero
     }
 
     //-----------------------------------------
@@ -264,7 +264,7 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
 
-        guard let w = session?.getLastWork() else {
+        guard let w = session?.getLastTaskEntry() else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in switchOngoingFinished")
             return
         }
@@ -282,43 +282,43 @@ class TaskEntryCreatorByAddToListVC:
             sessionSummary = (activations, totalTime)
             w.setAsOngoing()
         }
-        workListTableView.reloadData()
-        scrollToEnd(workListTableView)        
+        taskEntriesTableView.reloadData()
+        scrollToEnd(taskEntriesTableView)
     }
     
-    func addWork(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "addWork")
-        appLog.log(logger, logtype: .GUIAction, message: "addWork")
+    func addTaskEntry(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "addTaskEntry")
+        appLog.log(logger, logtype: .GUIAction, message: "addTaskEntry")
 
         guard let s = session else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in addWork")
+            appLog.log(logger, logtype: .Guard, message: "guard fail in addTaskEntry")
             return
         }
 
         let now = NSDate()
         var task = s.tasks[0] as! Task
-        if let lastWork = s.getLastWork() {
-            task = lastWork.task
-            if lastWork.isOngoing() {
-                lastWork.setStoppedAt(now)
+        if let lastTaskEntry = s.getLastTaskEntry() {
+            task = lastTaskEntry.task
+            if lastTaskEntry.isOngoing() {
+                lastTaskEntry.setStoppedAt(now)
                 var (activations, totalTime) = sessionSummary
                 activations++
-                totalTime += lastWork.stopTime.timeIntervalSinceDate(lastWork.startTime)
+                totalTime += lastTaskEntry.stopTime.timeIntervalSinceDate(lastTaskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }
         }
 
-        Work.createInMOC(moc, name: "", session: s, task: task)
+        TaskEntry.createInMOC(moc, name: "", session: s, task: task)
         TimePoliceModelUtils.save(moc)
 
-        gap2work = []
+        gap2taskEntry = []
         if let s = session,
-            wl = s.work.array as? [Work] {
-            gap2work = TimePoliceModelUtils.getGap2Work(wl)
+            wl = s.taskEntries.array as? [TaskEntry] {
+            gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
 
-        workListTableView.reloadData()
-        scrollToEnd(workListTableView)
+        taskEntriesTableView.reloadData()
+        scrollToEnd(taskEntriesTableView)
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
@@ -339,14 +339,14 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         //GAP: Use a popover for a gap, continue if not a gap
-        if indexPath.row >= gap2work.count {
-            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [workIndex out of bounds]")
+        if indexPath.row >= gap2taskEntry.count {
+            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskENtryIndex out of bounds]")
             
             return
         }
 
-        if gap2work[indexPath.row] == -1 {
-            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [workIndex=gap]")
+        if gap2taskEntry[indexPath.row] == -1 {
+            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskEntryIndex=gap]")
             
             // A gap is never first or last in the list => There is always a choice between fill with previous or next
             
@@ -367,8 +367,8 @@ class TaskEntryCreatorByAddToListVC:
             
             let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
                 handler: { action in
-                    if let indexPath = self.workListTableView.indexPathForSelectedRow {
-                        self.workListTableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    if let indexPath = self.taskEntriesTableView.indexPathForSelectedRow {
+                        self.taskEntriesTableView.deselectRowAtIndexPath(indexPath, animated: true)
                     }
                 })
             alertContoller.addAction(cancel)
@@ -377,17 +377,17 @@ class TaskEntryCreatorByAddToListVC:
             
             return
         }
-        let workIndex = gap2work[indexPath.row]
+        let taskEntryIndex = gap2taskEntry[indexPath.row]
 
-        guard let w = session?.work[workIndex] as? Work else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [work]")
+        guard let te = session?.taskEntries[taskEntryIndex] as? TaskEntry else {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskentry]")
             return
         }
 
-        selectedWork = w
-        selectedWorkIndex = workIndex
+        selectedTaskEntry = te
+        selectedTaskEntryIndex = taskEntryIndex
         
-        appLog.log(logger, logtype: .Debug) { "selected(row=\(workIndex), work=\(w.task.name))" }
+        appLog.log(logger, logtype: .Debug) { "selected(row=\(taskEntryIndex), taskentry=\(te.task.name))" }
 
         performSegueWithIdentifier("EditTaskEntry", sender: self)
     }
@@ -395,10 +395,10 @@ class TaskEntryCreatorByAddToListVC:
     func handleDeleteFillWithPrevious(index: Int) {
         appLog.log(logger, logtype: .Debug, message: "Fill with previous")
         if let s = session {
-            let previousWorkIndex = gap2work[index-1]
-            let nextWorkIndex = gap2work[index+1]
-            let nextStartTime = s.work[nextWorkIndex].startTime
-            s.setStopTime(moc, workIndex: previousWorkIndex, desiredStopTime: nextStartTime)
+            let previousTaskEntryIndex = gap2taskEntry[index-1]
+            let nextTaskEntryIndex = gap2taskEntry[index+1]
+            let nextStartTime = s.taskEntries[nextTaskEntryIndex].startTime
+            s.setStopTime(moc, taskEntryIndex: previousTaskEntryIndex, desiredStopTime: nextStartTime)
             redrawAfterSegue()
         }
     }
@@ -407,10 +407,10 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .Debug, message: "Fill with next")
 
         if let s = session {
-            let previousWorkIndex = gap2work[index-1]
-            let nextWorkIndex = gap2work[index+1]
-            let previousStopTime = s.work[previousWorkIndex].stopTime
-            s.setStartTime(moc, workIndex: nextWorkIndex, desiredStartTime: previousStopTime)
+            let previousTaskEntryIndex = gap2taskEntry[index-1]
+            let nextTaskEntryIndex = gap2taskEntry[index+1]
+            let previousStopTime = s.taskEntries[previousTaskEntryIndex].stopTime
+            s.setStartTime(moc, taskEntryIndex: nextTaskEntryIndex, desiredStartTime: previousStopTime)
             redrawAfterSegue()
         }
     }
@@ -421,25 +421,25 @@ class TaskEntryCreatorByAddToListVC:
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //GAP: Include gaps in count
-        if let _ = session?.work {
-            return gap2work.count
+        if let _ = session?.taskEntries {
+            return gap2taskEntry.count
         } else {
             return 0
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("WorkListWorkCell")!
+        let cell = tableView.dequeueReusableCellWithIdentifier("TaskEntriesCell")!
 
         //GAP: Special handling for gaps, should return a cell with other formatting
-        if indexPath.row >= gap2work.count {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [workIndex]")
+        if indexPath.row >= gap2taskEntry.count {
+            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskEntryIndex]")
             return cell
         }
         
-        let workIndex = gap2work[indexPath.row]
+        let taskEntryIndex = gap2taskEntry[indexPath.row]
         
-        if workIndex == -1 {
+        if taskEntryIndex == -1 {
             cell.textLabel?.text = "---"
 
             cell.backgroundColor = UIColor(white:0.2, alpha:1.0)
@@ -454,14 +454,14 @@ class TaskEntryCreatorByAddToListVC:
             return cell
         }
 
-        guard let w = session?.work[workIndex] as? Work else {
+        guard let w = session?.taskEntries[taskEntryIndex] as? TaskEntry else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
             return cell
         }
 
         if w.isStopped() {
-            let timeForWork = w.stopTime.timeIntervalSinceDate(w.startTime)
-            cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+            let timeForTaskEntry = w.stopTime.timeIntervalSinceDate(w.startTime)
+            cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
         } else {
             cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->(ongoing) = ------\n"
         }     
@@ -498,13 +498,13 @@ class TaskEntryCreatorByAddToListVC:
 
             sessionName = s.getDisplayNameWithSuffix()
 
-            if let work = s.getLastWork() {
-                if work.isOngoing() {
+            if let taskEntry = s.getLastTaskEntry() {
+                if taskEntry.isOngoing() {
                     signedIn = true
 
                     let now = NSDate()
-                    if(now.compare(work.startTime) == .OrderedDescending) {
-                        let timeForActiveTask = NSDate().timeIntervalSinceDate(work.startTime)
+                    if(now.compare(taskEntry.startTime) == .OrderedDescending) {
+                        let timeForActiveTask = NSDate().timeIntervalSinceDate(taskEntry.startTime)
                         totalTime += timeForActiveTask
                     }
                 }
@@ -529,13 +529,13 @@ class TaskEntryCreatorByAddToListVC:
 
     override func redrawAfterSegue() {
         //GAP: Update list of gaps, there may be new ones, or old ones may be "removed"
-        gap2work = []
+        gap2taskEntry = []
         if let s = session,
-            wl = s.work.array as? [Work] {
-            gap2work = TimePoliceModelUtils.getGap2Work(wl)
+            wl = s.taskEntries.array as? [TaskEntry] {
+            gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
 
-        workListTableView.reloadData()
+        taskEntriesTableView.reloadData()
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
         sessionNameView.setNeedsDisplay()

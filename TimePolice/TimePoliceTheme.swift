@@ -53,17 +53,17 @@ class TaskPickerBGView: UIView {
     }
 }
 
-class WorkListBGView: UIView {
+class TaskEntriesBGView: UIView {
 
     var theme: Theme?
 
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext() else {
-            UtilitiesApplog.logDefault("WorkListBGView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TaskEntriesBGView", logtype: .Guard, message: "drawRect")
             return
         }
-        theme?.drawWorkListBG(context, parent: rect)
+        theme?.drawTaskEntriesBG(context, parent: rect)
     }
 }
 
@@ -103,7 +103,7 @@ class TaskPickerToolView: UIView {
     }
 }
 
-class WorkListToolView: UIView {
+class TaskEntriesToolView: UIView {
     
     var tool: ViewType?
     var toolbarInfoDelegate: ToolbarInfoDelegate?
@@ -114,10 +114,10 @@ class WorkListToolView: UIView {
         guard let context = UIGraphicsGetCurrentContext(),
                 i = tool ,
                 toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
-            UtilitiesApplog.logDefault("WorkListToolView", logtype: .Guard, message: "drawRect")
+            UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
             return
         }
-        theme?.drawWorkListTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
+        theme?.drawTaskEntriesTool(context, parent: rect, viewType: i, toolbarInfo: toolbarInfo)
     }
 }
 
@@ -163,8 +163,8 @@ protocol Theme {
     func drawTaskPickerTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
     func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
     
-    func drawWorkListBG(context: CGContextRef, parent: CGRect)
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
+    func drawTaskEntriesBG(context: CGContextRef, parent: CGRect)
+    func drawTaskEntriesTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
 }
 
 
@@ -206,7 +206,7 @@ class BasicTheme : Theme {
     
 
 
-    func drawWorkListBG(context: CGContextRef, parent: CGRect) {
+    func drawTaskEntriesBG(context: CGContextRef, parent: CGRect) {
         drawTaskPickerBG(context, parent: parent)
     }
 
@@ -231,7 +231,7 @@ class BasicTheme : Theme {
 
 
 
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
+    func drawTaskEntriesTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
         drawTaskPickerTool(context, parent: parent, viewType: viewType, toolbarInfo: toolbarInfo)
     }
     
@@ -378,7 +378,7 @@ class BlackGreenTheme : Theme {
     
 
 
-    func drawWorkListBG(context: CGContextRef, parent: CGRect) {
+    func drawTaskEntriesBG(context: CGContextRef, parent: CGRect) {
         drawTaskPickerBG(context, parent: parent)
     }
     
@@ -400,7 +400,7 @@ class BlackGreenTheme : Theme {
 
 
 
-    func drawWorkListTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
+    func drawTaskEntriesTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo) {
         drawTaskPickerTool(context, parent: parent, viewType: viewType, toolbarInfo: toolbarInfo)
     }
     

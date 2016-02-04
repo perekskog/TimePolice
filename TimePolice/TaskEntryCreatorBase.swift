@@ -34,7 +34,7 @@ class TaskEntryCreatorBase:
     var sessionIndex: Int?
     var delegate: TaskEntryCreatorDelegate?
 
-    var selectedWorkIndex: Int?
+    var selectedTaskEntryIndex: Int?
 
 
 	//--------------------------------------------------------
@@ -166,12 +166,12 @@ class TaskEntryCreatorBase:
                     let vc = nvc.topViewController as? TaskEntryPropVC,
                     let s = session,
                     let tl = s.tasks.array as? [Task],
-                    let wl = s.work.array as? [Work],
-                    let i = selectedWorkIndex else {
+                    let wl = s.taskEntries.array as? [TaskEntry],
+                    let i = selectedTaskEntryIndex else {
                 appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in prepareForSegue")
                return
             }
-            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionWork(s) }
+            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
 
             vc.taskList = tl
 
@@ -238,7 +238,7 @@ class TaskEntryCreatorBase:
                 s.src = session.src
                 
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
 
             }
@@ -262,26 +262,26 @@ class TaskEntryCreatorBase:
             appLog.log(logger, logtype: .Debug, message: "(...Base) Handle SaveTaskEntry")
 
             guard let s = session,
-                     i = selectedWorkIndex  else {
+                     i = selectedTaskEntryIndex  else {
                 appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp SaveTaskEntry")
                 return
             }
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             if let t = vc.taskToUse {
                 // Change task if this attribute was set
-                appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork selected task=\(t.name)")
-                if let w = s.getWork(i) {
+                appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected task=\(t.name)")
+                if let w = s.getTaskEntry(i) {
                     //w.task = t
                     w.changeTaskTo(t)
                 }
             } else {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork no task selected")
+                appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry no task selected")
             }
 
             // Default: First adjust starttime, then adjust stoptime.
@@ -314,7 +314,7 @@ class TaskEntryCreatorBase:
             appLog.log(logger, logtype: .Debug, message: "(...Base) Handle DeleteTaskEntry")
 
             guard let s = session,
-                     i = selectedWorkIndex,
+                     i = selectedTaskEntryIndex,
                      delete = vc.delete else {
                 appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp DeleteTaskEntry")
                 return
@@ -322,20 +322,20 @@ class TaskEntryCreatorBase:
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             switch delete {
-            case .FillWithNone: // Nothing, deleteWork
+            case .FillWithNone: // Nothing, delete task entry
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with nothing")
-                s.deleteWork(moc, workIndex: i)
-            case .FillWithPrevious: // Previous item, deleteNextWorkAndAlignStop
+                s.deleteTaskEntry(moc, taskEntryIndex: i)
+            case .FillWithPrevious: // Previous item, deleteNextTaskEntryAndAlignStop
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with previous")
-                s.deleteNextWorkAndAlignStop(moc, workIndex: i-1)
-            case .FillWithNext: // Next item, deletePreviousWorkAndAlignStart
+                s.deleteNextTaskEntryAndAlignStop(moc, taskEntryIndex: i-1)
+            case .FillWithNext: // Next item, deletePreviousTaskEntryAndAlignStart
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with next")
-                s.deletePreviousWorkAndAlignStart(moc, workIndex: i+1)
+                s.deletePreviousTaskEntryAndAlignStart(moc, taskEntryIndex: i+1)
             }
         }
 
@@ -344,7 +344,7 @@ class TaskEntryCreatorBase:
             appLog.log(logger, logtype: .Debug, message: "(...Base) Handle InsertNewTaskEntry")
 
             guard let s = session,
-                     i = selectedWorkIndex,
+                     i = selectedTaskEntryIndex,
                      insert = vc.insert else {
                 appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp InsertNewTaskEntry")
                 return
@@ -352,17 +352,17 @@ class TaskEntryCreatorBase:
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionWork(s) }
+                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             switch insert {
             case .InsertNewBeforeThis:
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Insert new before this (index=\(i))")
-                Work.createInMOCBeforeIndex(moc, session: s, index: i)
+                TaskEntry.createInMOCBeforeIndex(moc, session: s, index: i)
             case .InsertNewAfterThis:
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Insert new after this (index=\(i))")
-                Work.createInMOCAfterIndex(moc, session: s, index: i)
+                TaskEntry.createInMOCAfterIndex(moc, session: s, index: i)
             }
 
         }        
@@ -370,13 +370,13 @@ class TaskEntryCreatorBase:
     
     func adjustStartTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStartDate {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork initial start date=\(UtilitiesDate.getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork selected start date=\(UtilitiesDate.getString(vc.datePickerStart.date))")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry initial start date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected start date=\(UtilitiesDate.getString(vc.datePickerStart.date))")
             
             if initialDate != vc.datePickerStart.date {
                 // The initial starttime was changed
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Selected starttime != initial starttime, setting starttime")
-                s.setStartTime(moc, workIndex: i, desiredStartTime: vc.datePickerStart.date)
+                s.setStartTime(moc, taskEntryIndex: i, desiredStartTime: vc.datePickerStart.date)
             } else {
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Selected starttime = initial starttime, don't set starttime")
             }
@@ -385,13 +385,13 @@ class TaskEntryCreatorBase:
     
     func adjustStopTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStopDate {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork initial stop date=\(UtilitiesDate.getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditWork selected stop date=\(UtilitiesDate.getString(vc.datePickerStop.date))")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry initial stop date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected stop date=\(UtilitiesDate.getString(vc.datePickerStop.date))")
             
             if initialDate != vc.datePickerStop.date {
                 // The initial stoptime was changed
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Selected stoptime != initial stoptime, setting stoptime")
-                s.setStopTime(moc, workIndex: i, desiredStopTime: vc.datePickerStop.date)
+                s.setStopTime(moc, taskEntryIndex: i, desiredStopTime: vc.datePickerStop.date)
             } else {
                 appLog.log(logger, logtype: .Debug, message: "(...Base) Selected stoptime = initial stoptime, don't set stoptime")
             }

@@ -152,13 +152,13 @@ class MainExportVC: UIViewController,
 
         /*
         for each project p {
-            projectDetails = [session: ([Work], [Int])
+            projectDetails = [session: ([TaskEntry], [Int])
             var maxLength = 0
             for each session in p {
-                workList = session.work
-                gap2work = TaskEntryCreatorAddToList::getGap2Work(worklist)
-                projectDetails[session] = (worklist, gap2work)
-                maxLength = max(maxLength, gap2work.count)
+                taskEntries = session.taskEntries
+                gap2taskEntry = TaskEntryCreatorAddToList::getGap2TaskEntry(taskEntries)
+                projectDetails[session] = (taskEntries, gap2taskEntry)
+                maxLength = max(maxLength, gap2taskEntry.count)
                 print session heading
             }
             for row = 0...maxLength {
@@ -182,8 +182,8 @@ class MainExportVC: UIViewController,
             }
 
             var heading = ""
-            var maxNumberOfWork = 0
-            var projectDetails: [Session: ([Work], [Int])] = [:]
+            var maxNumberOfTaskEntries = 0
+            var projectDetails: [Session: ([TaskEntry], [Int])] = [:]
             var finished: [Session: Bool] = [:]
 
             for session in project.sessions {
@@ -194,15 +194,15 @@ class MainExportVC: UIViewController,
                         includeSession = false
                     }
                     if includeSession {
-                        let worklist = s.work
-                        if let wl = worklist.array as? [Work] {
-                            let gap2work = TimePoliceModelUtils.getGap2Work(wl)
-                            maxNumberOfWork = max(maxNumberOfWork, gap2work.count)
-                            projectDetails[s] = (wl, gap2work)
+                        let taskEntries = s.taskEntries
+                        if let taskEntryList = taskEntries.array as? [TaskEntry] {
+                            let gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(taskEntryList)
+                            maxNumberOfTaskEntries = max(maxNumberOfTaskEntries, gap2taskEntry.count)
+                            projectDetails[s] = (taskEntryList, gap2taskEntry)
                             finished[s] = false
 
-                            if let w = s.getLastWork() {
-                                if w.isOngoing() {
+                            if let te = s.getLastTaskEntry() {
+                                if te.isOngoing() {
                                     heading += "* "
                                 }
                             }
@@ -218,32 +218,32 @@ class MainExportVC: UIViewController,
             str += "\(heading)\n"
 
 
-            // Stop iteration at maxNumberOfWork (instead of maxNUmberOfWork-1) 
+            // Stop iteration at maxNumberOfTaskEntries (instead of maxNUmberOfTaskEntries-1)
             // to always printout end time of last task entry
-            for i in 0...maxNumberOfWork {
+            for i in 0...maxNumberOfTaskEntries {
                 for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
-                    if let (worklist, gap2work) = projectDetails[s] {
-                        if i < gap2work.count {
-                            if gap2work[i] == -1 {
-                                let previousWork = worklist[gap2work[i-1]]
-                                str += "\t\(UtilitiesDate.getStringNoDate(previousWork.stopTime))\t"
+                    if let (taskEntries, gap2taskEntry) = projectDetails[s] {
+                        if i < gap2taskEntry.count {
+                            if gap2taskEntry[i] == -1 {
+                                let previousTaskEntry = taskEntries[gap2taskEntry[i-1]]
+                                str += "\t\(UtilitiesDate.getStringNoDate(previousTaskEntry.stopTime))\t"
                             } else {
-                                let w = worklist[gap2work[i]]
-                                if w.isStopped() {
-                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
+                                let te = taskEntries[gap2taskEntry[i]]
+                                if te.isStopped() {
+                                    str += "\(te.task.name)\t\(UtilitiesDate.getStringNoDate(te.startTime))\t"
                                 } else {
-                                    str += "\(w.task.name)\t\(UtilitiesDate.getStringNoDate(w.startTime))\t"
+                                    str += "\(te.task.name)\t\(UtilitiesDate.getStringNoDate(te.startTime))\t"
                                 }
                             }
                         } else {
                             if finished[s] == true {
                                 str += "\t\t"
                             } else {
-                                let previousWork = worklist[gap2work[i-1]]
-                                if previousWork.isOngoing() {
+                                let previousTaskEntry = taskEntries[gap2taskEntry[i-1]]
+                                if previousTaskEntry.isOngoing() {
                                     str += "\t...\t"
                                 } else {
-                                    str += "\t\(UtilitiesDate.getStringNoDate(previousWork.stopTime))\t"
+                                    str += "\t\(UtilitiesDate.getStringNoDate(previousTaskEntry.stopTime))\t"
                                 }
                                 finished[s] = true
                             }
@@ -320,7 +320,7 @@ class MainExportVC: UIViewController,
 
             var heading = "\t"
             for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
-                if let w = session.getLastWork() {
+                if let w = session.getLastTaskEntry() {
                     if w.isOngoing() {
                         heading += "* "
                     }
@@ -424,14 +424,14 @@ class MainExportVC: UIViewController,
                         s += "archived=false\n"                        
                     }
                     s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
-                    s += "    [Work container size=\(session.work.count)]\n"
-                    session.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                        let work = elem as! Work
-                        if work.isStopped() {
-                            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+                    s += "    [TaskEntry container size=\(session.taskEntries.count)]\n"
+                    session.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let taskEntry = elem as! TaskEntry
+                        if taskEntry.isStopped() {
+                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                            s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
                         } else {
-                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
+                            s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
                         }
                     }
                     s += "    [Task container size=\(session.tasks.count)]\n"
@@ -449,26 +449,26 @@ class MainExportVC: UIViewController,
         do {
             s += "\n"
             s += ("------------------------\n")
-            s += ("----------Work----------\n\n")
-            fetchRequest = NSFetchRequest(entityName: "Work")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Work] {
-                s += "[Work container size=\(fetchResults.count)]\n"
-                for work in fetchResults {
-                    if work.isStopped() {
-                        let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork)) - \(work.id)\n"
+            s += ("----------TaskEntry----------\n\n")
+            fetchRequest = NSFetchRequest(entityName: "TaskEntry")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [TaskEntry] {
+                s += "[TaskEntry container size=\(fetchResults.count)]\n"
+                for taskEntry in fetchResults {
+                    if taskEntry.isStopped() {
+                        let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                        s += "TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry)) - \(taskEntry.id)\n"
                     } else {
-                        s += "W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------ - \(work.id)\n"
+                        s += "TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------ - \(taskEntry.id)\n"
                     }
-                    for (key, value) in work.properties as! [String: String] {
+                    for (key, value) in taskEntry.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    s += "    S: \(work.session.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(work.session.created))\n"
-                    s += "    T: \(work.task.name) @ \(UtilitiesDate.getString(work.task.created))\n"
+                    s += "    S: \(taskEntry.session.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(taskEntry.session.created))\n"
+                    s += "    T: \(taskEntry.task.name) @ \(UtilitiesDate.getString(taskEntry.task.created))\n"
                 }
             }
         } catch {
-            print("Can't fetch work")
+            print("Can't fetch taskEntry")
         }
         
         do {
@@ -483,7 +483,7 @@ class MainExportVC: UIViewController,
                     for (key, value) in task.properties as! [String: String] {
                         s += "[\(key)]=[\(value)]\n"
                     }
-                    if task.sessions.count==0 && task.work.count==0 {
+                    if task.sessions.count==0 && task.taskEntries.count==0 {
                         s += "???orphaned???\n"
                     }
                     s += "    [Session container size=\(task.sessions.count)]\n"
@@ -496,14 +496,14 @@ class MainExportVC: UIViewController,
                             }
                         }
                     }
-                    s += "    [Work container size=\(task.work.count)]\n"
-                    task.work.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-                        let work = elem as! Work
-                        if work.isStopped() {
-                            let timeForWork = work.stopTime.timeIntervalSinceDate(work.startTime)
-                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->\(UtilitiesDate.getStringNoDate(work.stopTime)) = \(UtilitiesDate.getString(timeForWork))\n"
+                    s += "    [TaskEntry container size=\(task.taskEntries.count)]\n"
+                    task.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                        let taskEntry = elem as! TaskEntry
+                        if taskEntry.isStopped() {
+                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                            s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
                         } else {
-                            s += "    W: \(work.task.name) \(UtilitiesDate.getString(work.startTime))->(ongoing) = ------\n"
+                            s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
                         }
                     }
                 }

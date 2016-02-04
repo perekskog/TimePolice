@@ -23,6 +23,6 @@ extension Session {
     @NSManaged var version: String
     @NSManaged var project: Project
     @NSManaged var tasks: NSOrderedSet
-    @NSManaged var work: NSOrderedSet
+    @NSManaged var taskEntries: NSOrderedSet
 
 }

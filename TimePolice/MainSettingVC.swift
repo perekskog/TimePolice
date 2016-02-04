@@ -358,15 +358,15 @@ class MainSettingVC: UIViewController,
         var fetchRequest: NSFetchRequest
 
         do {
-            // Delete all work
-            fetchRequest = NSFetchRequest(entityName: "Work")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Work] {
-                for work in fetchResults {
-                    moc.deleteObject(work)
+            // Delete all task entries
+            fetchRequest = NSFetchRequest(entityName: "TaskEntry")
+            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [TaskEntry] {
+                for taskEntry in fetchResults {
+                    moc.deleteObject(taskEntry)
                 }
             }
         } catch {
-            print("Can't fetch work for deletion")
+            print("Can't fetch task entries for deletion")
         }
         
         do {
