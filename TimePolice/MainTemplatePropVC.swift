@@ -158,8 +158,27 @@ class MainTemplatePropVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "save")
         appLog.log(logger, logtype: .GUIAction, message: "save")
 
-        updatedTemplate = textTemplate.text
-        performSegueWithIdentifier("SaveTemplateProp", sender: self)
+        let st = SessionTemplate()
+        st.parseTemplate(textTemplate.text)
+        if(st.templateOk) {
+            appLog.log(logger, logtype: .Debug, message: "Syntax check ok")
+            updatedTemplate = self.textTemplate.text
+            performSegueWithIdentifier("SaveTemplateProp", sender: self)
+        } else {
+            appLog.log(logger, logtype: .Debug, message: "Check template NOT ok (\(st.errorMessage))")
+            // Display alert with error message, only have an "Ok" or "dismiss" button.
+            let alertController = getSyntaxErrorAlert("Problems with template", errorMessage: st.errorMessage)
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+
+    func getSyntaxErrorAlert(prompt: String, errorMessage: String) -> UIAlertController
+    {
+        let alertContoller = UIAlertController(title: "\(prompt)?", message: errorMessage,
+            preferredStyle: .Alert)
+        let ok = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+        alertContoller.addAction(ok)
+        return alertContoller
     }
 
     func keyboardWillShow(notification: NSNotification) {
