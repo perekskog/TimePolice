@@ -154,6 +154,8 @@ class TaskEntryCreatorByPickTaskVC:
         for i in 0..<numberOfButtonsToDraw {
             let view = TaskPickerButtonView()
             view.theme = theme
+            view.frame = l.getViewRect(taskPickerBGView.frame, buttonNumber: i)
+
 
             view.selectionAreaInfoDelegate = self
             view.taskPosition = i

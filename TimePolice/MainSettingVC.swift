@@ -12,10 +12,19 @@ import CoreData
 class MainSettingVC: UIViewController,
     AppLoggerDataSource {
 
+    @IBOutlet var settingsLabel: UILabel!
 
     @IBOutlet var sessionSelectionControl: UISegmentedControl!
-    @IBOutlet var applogSize: UILabel!
+    
+    @IBOutlet var deleteSessionsButton: UIButton!
+    
+    @IBOutlet var applogSizeKeyLabel: UILabel!
+    @IBOutlet var applogSizeValueLabel: UILabel!
 
+    @IBOutlet var manageApplogButton: UIButton!
+    
+    @IBOutlet var deleteAllDataButton: UIButton!
+    
     let theme = BlackGreenTheme()
 
 
@@ -84,6 +93,36 @@ class MainSettingVC: UIViewController,
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+
+        var textRect = CGRectMake(0, height/4, width, 50)
+        settingsLabel.frame = textRect
+
+        textRect.origin.y += height/5
+        sessionSelectionControl.frame.origin.y = textRect.origin.y
+        sessionSelectionControl.frame.origin.x = width*0.15
+        sessionSelectionControl.frame.size.width = width*0.7
+        textRect.origin.y += height/20
+        deleteSessionsButton.frame = textRect
+
+        textRect.origin.y += height/10
+        textRect.size.width = width/2
+
+        textRect.origin.x = 0
+        applogSizeKeyLabel.frame = textRect
+        textRect.origin.x = width/2
+        textRect.size.width = width/4
+        applogSizeValueLabel.frame = textRect
+
+        textRect.origin.x = 0
+        textRect.origin.y += height/20
+        textRect.size.width = width
+        manageApplogButton.frame = textRect
+
+        deleteAllDataButton.frame.origin.y = height - deleteAllDataButton.frame.size.height
+        deleteAllDataButton.frame.origin.x = width*0.05
     }
 
     override func viewDidLayoutSubviews() {
@@ -336,7 +375,7 @@ class MainSettingVC: UIViewController,
     func redrawAll(refreshCoreData: Bool) {
         if refreshCoreData==true {
         }
-        applogSize.text = "\(self.appLog.logString.characters.count)" 
+        applogSizeValueLabel.text = "\(self.appLog.logString.characters.count)"
     }
 
     //---------------------------------------------

@@ -15,6 +15,14 @@ class MainVC: UIViewController,
     let theme = BlackGreenTheme()
 
 
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var templatesButton: UIButton!
+    @IBOutlet var sessionsButton: UIButton!
+    @IBOutlet var exportButton: UIButton!
+    @IBOutlet var settingsButton: UIButton!
+
+    let label = UILabel()
+    
     //---------------------------------------
     // MainVC - Lazy properties
     //---------------------------------------
@@ -78,6 +86,20 @@ class MainVC: UIViewController,
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+
+        var textRect = CGRectMake(0, height/4, width, 50)
+        titleLabel.frame = textRect
+        textRect.origin.y += height/5
+        templatesButton.frame = textRect
+        textRect.origin.y += height/15
+        sessionsButton.frame = textRect
+        textRect.origin.y += height/15
+        exportButton.frame = textRect
+        textRect.origin.y += height/15
+        settingsButton.frame = textRect
     }
 
     override func viewDidLayoutSubviews() {
@@ -90,6 +112,9 @@ class MainVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
+        
+        label.text = "Hello, world!!!"
+        self.view.addSubview(label)
     }
 
     override func didReceiveMemoryWarning() {

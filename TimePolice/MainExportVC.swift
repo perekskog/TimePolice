@@ -12,8 +12,15 @@ import CoreData
 class MainExportVC: UIViewController,
     AppLoggerDataSource {
 
+    
+    @IBOutlet var exportLabel: UILabel!
+    @IBOutlet var exportInstructionLabel: UILabel!
     @IBOutlet var sessionSelectionControl: UISegmentedControl!
-
+    @IBOutlet var sessionSummaryButton: UIButton!
+    @IBOutlet var sessionDetailsButton: UIButton!
+    @IBOutlet var dataStructuresButton: UIButton!
+    @IBOutlet var applogButton: UIButton!
+    
     let theme = BlackGreenTheme()
 
     //---------------------------------------
@@ -81,6 +88,32 @@ class MainExportVC: UIViewController,
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+
+        var textRect = CGRectMake(0, height/4, width, 50)
+        exportLabel.frame = textRect
+
+        textRect.origin.y += height/15
+        textRect.origin.x = width*0.1
+        textRect.size.width = width * 0.8
+        exportInstructionLabel.frame = textRect
+
+        textRect.origin.y += height/5
+        sessionSelectionControl.frame.origin.y = textRect.origin.y
+        sessionSelectionControl.frame.origin.x = width*0.15
+        sessionSelectionControl.frame.size.width = width*0.7
+        textRect.origin.y += height/20
+        sessionSummaryButton.frame = textRect
+        textRect.origin.y += height/20
+        sessionDetailsButton.frame = textRect
+
+        dataStructuresButton.frame.origin.y = height - dataStructuresButton.frame.size.height
+        dataStructuresButton.frame.origin.x = width*0.05
+
+        applogButton.frame.origin.y = dataStructuresButton.frame.origin.y
+        applogButton.frame.origin.x = width - applogButton.frame.size.width - width*0.05
     }
 
     override func viewDidLayoutSubviews() {

@@ -438,10 +438,8 @@ class MainSessionListVC: UIViewController,
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
 
-        cell.separatorInset = UIEdgeInsetsZero
-        cell.layoutMargins = UIEdgeInsetsZero
-
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
+//        cell.separatorInset = UIEdgeInsetsZero
+//        cell.layoutMargins = UIEdgeInsetsZero
 
         return cell
     }

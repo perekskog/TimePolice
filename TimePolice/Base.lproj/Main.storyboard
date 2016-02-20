@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="h2A-Ro-PcX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="h2A-Ro-PcX">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
@@ -9,10 +9,6 @@
         <scene sceneID="aa4-5I-Fc1">
             <objects>
                 <viewController id="Irr-mv-VTQ" userLabel="MainTemplateListVC" customClass="MainTemplateListVC" customModule="TimePolice" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="p3T-ZM-xAF"/>
-                        <viewControllerLayoutGuide type="bottom" id="5NS-hd-nY5"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -34,10 +30,6 @@
         <scene sceneID="nN3-jG-VGX">
             <objects>
                 <viewController id="kUl-Z4-YiI" userLabel="MainTemplatePropVC" customClass="MainTemplatePropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="bjB-bv-4tP"/>
-                        <viewControllerLayoutGuide type="bottom" id="SBW-at-YEg"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Hgy-cC-Rfq">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -58,10 +50,6 @@
         <scene sceneID="b4w-RP-6if">
             <objects>
                 <viewController id="ibE-kE-IVF" userLabel="MainSessionListVC" customClass="MainSessionListVC" customModule="TimePolice" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="54z-OJ-CMk"/>
-                        <viewControllerLayoutGuide type="bottom" id="Vka-ag-VfY"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uMu-Gj-jXc" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -85,10 +73,6 @@
         <scene sceneID="z98-2o-bEw">
             <objects>
                 <viewController id="mfS-TQ-VpO" userLabel="MainTemplateSelectVC" customClass="MainTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="R3o-CL-REZ"/>
-                        <viewControllerLayoutGuide type="bottom" id="0ob-64-CwQ"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ohm-CD-deu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -109,14 +93,10 @@
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController storyboardIdentifier="TaskEntryCreatorByPickTask" id="vXZ-lx-hvc" userLabel="TaskEntryCreatorByPickTaskVC" customClass="TaskEntryCreatorByPickTaskVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
-                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="PickTask" id="tKP-7b-sfM"/>
                     <navigationItem key="navigationItem" id="lIo-Le-7fv"/>
@@ -135,10 +115,6 @@
         <scene sceneID="z8q-n2-lJG">
             <objects>
                 <viewController id="dbK-Rd-6L5" userLabel="SessionManagerForPickTask" customClass="TaskEntryCreatorManagerForPickTask" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Cp6-Oo-xeg"/>
-                        <viewControllerLayoutGuide type="bottom" id="R7J-kZ-mWG"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="0lZ-XA-JZB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -154,10 +130,6 @@
         <scene sceneID="VTu-hB-Jde">
             <objects>
                 <viewController id="FNn-dD-6RS" userLabel="SessionManagerForAddToList" customClass="TaskEntryCreatorManagerForAddToList" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="d9k-V2-O8A"/>
-                        <viewControllerLayoutGuide type="bottom" id="R9D-DB-Bco"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dLM-Hw-a9v">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -173,10 +145,6 @@
         <scene sceneID="wps-ek-s8l">
             <objects>
                 <viewController storyboardIdentifier="TaskEntryCreatorByAddToList" id="QbM-a3-K2L" userLabel="TaskEntryCreatorByAddToListVC" customClass="TaskEntryCreatorByAddToListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9VG-A1-ay2"/>
-                        <viewControllerLayoutGuide type="bottom" id="9gW-V1-TPd"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -199,10 +167,6 @@
         <scene sceneID="d2u-oH-QeM">
             <objects>
                 <viewController id="dzU-1d-OfS" userLabel="TaskEntryPropVC" customClass="TaskEntryPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Fsg-Qu-mhy"/>
-                        <viewControllerLayoutGuide type="bottom" id="OC8-9I-IBs"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Zqu-r5-rZm">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -226,10 +190,6 @@
         <scene sceneID="VvP-X4-uFq">
             <objects>
                 <viewController id="tNe-a1-HVm" userLabel="TaskSelectVC" customClass="TaskSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="J9v-GY-g7w"/>
-                        <viewControllerLayoutGuide type="bottom" id="A1c-Qb-ihc"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZeU-h1-S4t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -249,16 +209,13 @@
         <scene sceneID="Hk9-N5-ZWe">
             <objects>
                 <viewController id="eLJ-bB-2C6" userLabel="MainVC" customClass="MainVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="JhE-lg-WDg"/>
-                        <viewControllerLayoutGuide type="bottom" id="iDV-7q-SL9"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BEL-M0-Gy8" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7G-KF-Reh">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L7G-KF-Reh">
                                 <rect key="frame" x="96" y="265" width="140" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Sessions">
                                     <color key="titleColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
@@ -267,8 +224,9 @@
                                     <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RE4-zX-HtF">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="RE4-zX-HtF">
                                 <rect key="frame" x="110" y="310" width="113" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Export">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -277,25 +235,28 @@
                                     <segue destination="SF8-YH-e6F" kind="push" identifier="Export" id="dBH-RE-CZO"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZG-iV-Vgl">
-                                <rect key="frame" x="87" y="220" width="159" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VZG-iV-Vgl">
+                                <rect key="frame" x="87" y="214" width="159" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Projects">
+                                <state key="normal" title="Templates">
                                     <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G4i-xD-Haj">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TimePolice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="G4i-xD-Haj">
                                 <rect key="frame" x="32" y="94" width="268" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="black" pointSize="40"/>
                                 <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rVL-WA-YrK">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rVL-WA-YrK">
                                 <rect key="frame" x="89" y="355" width="154" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Settings">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -309,6 +270,13 @@
                         <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
+                    <connections>
+                        <outlet property="exportButton" destination="RE4-zX-HtF" id="KZk-K0-tN2"/>
+                        <outlet property="sessionsButton" destination="L7G-KF-Reh" id="BoW-5y-Ugj"/>
+                        <outlet property="settingsButton" destination="rVL-WA-YrK" id="RZ5-Gf-Hgo"/>
+                        <outlet property="templatesButton" destination="VZG-iV-Vgl" id="NXs-Yj-RCj"/>
+                        <outlet property="titleLabel" destination="G4i-xD-Haj" id="8pN-Gp-MZJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WJJ-DQ-rtD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -318,16 +286,13 @@
         <scene sceneID="xKi-Ul-NQu">
             <objects>
                 <viewController id="SF8-YH-e6F" userLabel="MainExportVC" customClass="MainExportVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="g80-vh-Otz"/>
-                        <viewControllerLayoutGuide type="bottom" id="pf1-W3-eNp"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="mGh-7y-Ctg" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="304-oV-hmY">
-                                <rect key="frame" x="231" y="518" width="77" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="304-oV-hmY">
+                                <rect key="frame" x="231" y="519" width="77" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Applog">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -337,8 +302,9 @@
                                     <action selector="dumpApplog:" destination="SF8-YH-e6F" eventType="touchUpInside" id="F4J-es-VeJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O9I-4w-amE">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9I-4w-amE">
                                 <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
@@ -349,27 +315,31 @@
                                     <action selector="exit:" destination="SF8-YH-e6F" eventType="touchUpInside" id="6bl-fe-S1a"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Data will be copied and can be pasted in, for example, Notes." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vPJ-Ki-LJa">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data will be copied and can be pasted in, for example, Notes." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vPJ-Ki-LJa">
                                 <rect key="frame" x="43" y="142" width="235" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NB9-zW-I8r">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NB9-zW-I8r">
                                 <rect key="frame" x="101" y="84" width="118" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
                                 <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GK6-I2-o8Q">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GK6-I2-o8Q">
                                 <rect key="frame" x="37" y="214" width="246" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="First"/>
                                     <segment title="Second"/>
                                 </segments>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rk0-Pe-KGj">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rk0-Pe-KGj">
                                 <rect key="frame" x="20" y="515" width="150" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Data structures">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -379,8 +349,9 @@
                                     <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omB-QH-XO7">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="omB-QH-XO7">
                                 <rect key="frame" x="75" y="257" width="171" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Session summary">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -389,8 +360,9 @@
                                     <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fmP-kT-2l0">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fmP-kT-2l0">
                                 <rect key="frame" x="75" y="289" width="171" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Session details">
                                     <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
@@ -404,7 +376,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="Op2-MH-YBM"/>
                     <connections>
+                        <outlet property="applogButton" destination="304-oV-hmY" id="ajc-gl-Afo"/>
+                        <outlet property="dataStructuresButton" destination="rk0-Pe-KGj" id="NaW-lm-H4u"/>
+                        <outlet property="exportInstructionLabel" destination="vPJ-Ki-LJa" id="ldJ-Rd-Hdv"/>
+                        <outlet property="exportLabel" destination="NB9-zW-I8r" id="rhi-PT-o44"/>
+                        <outlet property="sessionDetailsButton" destination="fmP-kT-2l0" id="jSu-on-dii"/>
                         <outlet property="sessionSelectionControl" destination="GK6-I2-o8Q" id="ug1-db-4Jx"/>
+                        <outlet property="sessionSummaryButton" destination="omB-QH-XO7" id="rC7-gj-81U"/>
                         <segue destination="pKT-ae-mHb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="MO6-1c-cNm"/>
                     </connections>
                 </viewController>
@@ -417,16 +395,13 @@
         <scene sceneID="HHE-Vn-6fp">
             <objects>
                 <viewController id="jaN-JA-eGe" userLabel="MainSettingsVC" customClass="MainSettingVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Qdm-jD-G6q"/>
-                        <viewControllerLayoutGuide type="bottom" id="Uz7-rG-grc"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uKX-cz-dYV" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="joo-kf-e6R">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="joo-kf-e6R">
                                 <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
@@ -437,27 +412,31 @@
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X6e-qU-MtH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="X6e-qU-MtH">
                                 <rect key="frame" x="170" y="347" width="79" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVc-xG-n18">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lVc-xG-n18">
                                 <rect key="frame" x="97" y="89" width="126" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
                                 <color key="textColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GXK-1U-UOo">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GXK-1U-UOo">
                                 <rect key="frame" x="37" y="188" width="246" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="First"/>
                                     <segment title="Second"/>
                                 </segments>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EC3-rY-XDf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="EC3-rY-XDf">
                                 <rect key="frame" x="100" y="235" width="121" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Delete sessions">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -466,14 +445,16 @@
                                     <action selector="deleteSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="5JE-Hq-sqi"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Applog size:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aIB-re-uDs">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Applog size:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aIB-re-uDs">
                                 <rect key="frame" x="68" y="347" width="94" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1be-JN-Dkf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1be-JN-Dkf">
                                 <rect key="frame" x="101" y="386" width="119" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Manage applog">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -483,8 +464,9 @@
                                     <action selector="applogActions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="0e1-zz-Fg7"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAC-Ek-niD">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qAC-Ek-niD">
                                 <rect key="frame" x="191" y="524" width="109" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Delete all data">
                                     <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -499,8 +481,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
                     <connections>
-                        <outlet property="applogSize" destination="X6e-qU-MtH" id="ada-Nw-1Kl"/>
+                        <outlet property="applogSizeKeyLabel" destination="aIB-re-uDs" id="Fk1-oi-Pp7"/>
+                        <outlet property="applogSizeValueLabel" destination="X6e-qU-MtH" id="BG4-fi-TXh"/>
+                        <outlet property="deleteAllDataButton" destination="qAC-Ek-niD" id="rSF-2i-Ns1"/>
+                        <outlet property="deleteSessionsButton" destination="EC3-rY-XDf" id="zHg-g8-Ae8"/>
+                        <outlet property="manageApplogButton" destination="1be-JN-Dkf" id="V1G-Pd-lqQ"/>
                         <outlet property="sessionSelectionControl" destination="GXK-1U-UOo" id="doo-yf-zHx"/>
+                        <outlet property="settingsLabel" destination="lVc-xG-n18" id="WQ8-9j-VCf"/>
                         <segue destination="SLu-ke-hzb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="IYJ-zg-K2k"/>
                     </connections>
                 </viewController>
@@ -513,10 +500,6 @@
         <scene sceneID="wZb-cd-unN">
             <objects>
                 <viewController id="K31-sT-C4m" userLabel="TaskEntryUseTemplate" customClass="TaskEntryTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="WMf-Fp-ys6"/>
-                        <viewControllerLayoutGuide type="bottom" id="BqU-Gu-kdU"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lCk-0v-Vni">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
