@@ -42,12 +42,12 @@ class SessionTemplate {
         let sessionProps = UtilitiesString.getProperties(lines[0])
 
         if sessionName==templateProjectName {
-            errorMessage += "Template name \(sessionName) can't be used.\n"
+            errorMessage += "Template name \"\(sessionName)\" can't be used.\n"
             templateOk = false
         }
         for propKey in sessionProps.keys {
             if propKey != "extension" && propKey != "columns" {
-                errorMessage += "Session propery \(propKey) is undefined."
+                errorMessage += "Session propery \"\(propKey)\" is undefined.\n"
                 templateOk = false
             }
         }
@@ -61,12 +61,12 @@ class SessionTemplate {
 			let name = UtilitiesString.getWithoutProperties(s)
             let props = UtilitiesString.getProperties(s)
             if usedTasks.contains(name) {
-                errorMessage += "Task name \(name) used more than once in the same template."
+                errorMessage += "Task name \"\(name)\" used more than once in the same template.\n"
                 templateOk = false
             }
             for tag in props.keys {
                 if tag != "color" {
-                    errorMessage += "Task property \(tag) for task \(name) is undefined."
+                    errorMessage += "Task property \"\(tag)\" for task \"\(name)\" is undefined.\n"
                     templateOk = false
                 }
             }

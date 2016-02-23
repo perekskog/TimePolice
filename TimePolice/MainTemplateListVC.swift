@@ -281,9 +281,8 @@ class MainTemplateListVC: UIViewController,
         if unwindSegue.identifier == "SaveTemplateProp" {
             // Update template
             if let vc = unwindSegue.sourceViewController as? MainTemplatePropVC,
-                newSrc = vc.updatedTemplate {
-                    let st = SessionTemplate()
-                    st.parseTemplate(newSrc)
+                newSrc = vc.updatedTemplateSrc,
+                st = vc.parsedUpdatedTemplate {
                     appLog.log(logger, logtype: .GUIAction, message: "SaveTemplate(\(st.session))")
                     let (reuseTasksFromProject, _, _) = st.session
                     TimePoliceModelUtils.storeTemplate(moc, reuseTasksFromProject: reuseTasksFromProject, session: st.session, tasks: st.tasks, src: newSrc)

@@ -17,7 +17,8 @@ class MainTemplatePropVC: UIViewController,
     var segue: String?
 
     // Output data
-    var updatedTemplate: String?
+    var updatedTemplateSrc: String?
+    var parsedUpdatedTemplate: SessionTemplate?
     
     // Internal
     let textTemplate = UITextView(frame: CGRectZero)
@@ -162,7 +163,8 @@ class MainTemplatePropVC: UIViewController,
         st.parseTemplate(textTemplate.text)
         if(st.templateOk) {
             appLog.log(logger, logtype: .Debug, message: "Syntax check ok")
-            updatedTemplate = self.textTemplate.text
+            updatedTemplateSrc = textTemplate.text
+            parsedUpdatedTemplate = st
             performSegueWithIdentifier("SaveTemplateProp", sender: self)
         } else {
             appLog.log(logger, logtype: .Debug, message: "Check template NOT ok (\(st.errorMessage))")
