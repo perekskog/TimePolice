@@ -60,7 +60,9 @@ class SessionTemplate {
 		for s in lines {
 			let name = UtilitiesString.getWithoutProperties(s)
             let props = UtilitiesString.getProperties(s)
-            if usedTasks.contains(name) {
+            if name=="" || name.hasPrefix("=") {
+                // OK to have these strings several times in the same template
+            } else if usedTasks.contains(name) {
                 errorMessage += "Task name \"\(name)\" used more than once in the same template.\n"
                 templateOk = false
             }
