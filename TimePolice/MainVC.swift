@@ -151,8 +151,5 @@ class MainVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "mainVC")
 
     }
-
-
-
-
+    
 }
