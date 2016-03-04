@@ -22,3 +22,6 @@ let sessionExtensionAttribute = "extension"
 // Sizes
 let selectItemTableRowHeight = 25
 
+// Minimum vertical spacing between buttons and labels.
+let minimumComponentSpacing = 35
+

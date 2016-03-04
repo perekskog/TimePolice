@@ -94,11 +94,11 @@ class MainVC: UIViewController,
         titleLabel.frame = textRect
         textRect.origin.y += height/5
         templatesButton.frame = textRect
-        textRect.origin.y += height/15
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         sessionsButton.frame = textRect
-        textRect.origin.y += height/15
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         exportButton.frame = textRect
-        textRect.origin.y += height/15
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         settingsButton.frame = textRect
     }
 

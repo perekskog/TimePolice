@@ -95,7 +95,7 @@ class MainExportVC: UIViewController,
         var textRect = CGRectMake(0, height/4, width, 50)
         exportLabel.frame = textRect
 
-        textRect.origin.y += height/15
+        textRect.origin.y += max(height/13, CGFloat(minimumComponentSpacing))
         textRect.origin.x = width*0.1
         textRect.size.width = width * 0.8
         exportInstructionLabel.frame = textRect
@@ -104,9 +104,9 @@ class MainExportVC: UIViewController,
         sessionSelectionControl.frame.origin.y = textRect.origin.y
         sessionSelectionControl.frame.origin.x = width*0.15
         sessionSelectionControl.frame.size.width = width*0.7
-        textRect.origin.y += height/20
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         sessionSummaryButton.frame = textRect
-        textRect.origin.y += height/20
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         sessionDetailsButton.frame = textRect
 
         dataStructuresButton.frame.origin.y = height - dataStructuresButton.frame.size.height

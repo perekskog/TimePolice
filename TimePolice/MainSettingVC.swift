@@ -104,7 +104,7 @@ class MainSettingVC: UIViewController,
         sessionSelectionControl.frame.origin.y = textRect.origin.y
         sessionSelectionControl.frame.origin.x = width*0.15
         sessionSelectionControl.frame.size.width = width*0.7
-        textRect.origin.y += height/20
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         deleteSessionsButton.frame = textRect
 
         textRect.origin.y += height/10
@@ -117,7 +117,7 @@ class MainSettingVC: UIViewController,
         applogSizeValueLabel.frame = textRect
 
         textRect.origin.x = 0
-        textRect.origin.y += height/20
+        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         textRect.size.width = width
         manageApplogButton.frame = textRect
 
