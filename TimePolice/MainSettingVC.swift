@@ -143,8 +143,31 @@ class MainSettingVC: UIViewController,
         sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.selectedSegmentIndex = 0
+        
+        let r = UILongPressGestureRecognizer(target: self, action: Selector("fakeCrash:"))
+        deleteAllDataButton.addGestureRecognizer(r)
 
         redrawAll(false)
+    }
+    
+    func fakeCrash(sender: UILongPressGestureRecognizer) {
+        appLog.log(logger, logtype: .GUIAction, message: "fakeCrash")
+        
+        let alertContoller = UIAlertController(title: "Crash?", message: nil,
+            preferredStyle: .Alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            handler: { action in
+                self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(cancel)")
+        })
+        alertContoller.addAction(cancel)
+        let ok = UIAlertAction(title: "OK", style: .Default,
+            handler: { action in
+                self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
+                assertionFailure("Fake crash")
+        })
+        alertContoller.addAction(ok)
+
+        presentViewController(alertContoller, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
