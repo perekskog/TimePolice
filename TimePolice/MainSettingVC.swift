@@ -167,7 +167,8 @@ class MainSettingVC: UIViewController,
         let ok = UIAlertAction(title: "OK", style: .Default,
             handler: { action in
                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-                fatalError("Fake crash")
+                var vc: UIViewController?
+                let _ = vc!.isViewLoaded()
         })
         alertContoller.addAction(ok)
 
@@ -277,7 +278,9 @@ class MainSettingVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "applogActions")
         appLog.log(logger, logtype: .GUIAction, message: "applogActions")
 
-        fatalError("Fake crash")
+        var vc: UIViewController?
+        let _ = vc!.isViewLoaded()
+        
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
