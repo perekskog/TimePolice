@@ -151,6 +151,10 @@ class MainSettingVC: UIViewController,
     }
     
     func fakeCrash(sender: UILongPressGestureRecognizer) {
+        guard sender.state == .Began else {
+            return
+        }
+        
         appLog.log(logger, logtype: .GUIAction, message: "fakeCrash")
         
         let alertContoller = UIAlertController(title: "Crash?", message: nil,
@@ -163,7 +167,7 @@ class MainSettingVC: UIViewController,
         let ok = UIAlertAction(title: "OK", style: .Default,
             handler: { action in
                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-                assertionFailure("Fake crash")
+                fatalError("Fake crash")
         })
         alertContoller.addAction(ok)
 
