@@ -277,6 +277,8 @@ class MainSettingVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "applogActions")
         appLog.log(logger, logtype: .GUIAction, message: "applogActions")
 
+        fatalError("Fake crash")
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let alertController = UIAlertController(title: "Applog actions", message: nil,
