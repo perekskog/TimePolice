@@ -185,8 +185,8 @@ class MainSettingVC: UIViewController,
     //----------------------------------------
     
     @IBAction func clearCoreData(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearAllData")
-        appLog.log(logger, logtype: .GUIAction, message: "clearAllData")
+        appLog.log(logger, logtype: .EnterExit, message: "clearCoreData")
+        appLog.log(logger, logtype: .GUIAction, message: "clearCoreData")
 
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
             preferredStyle: .Alert)
@@ -250,37 +250,9 @@ class MainSettingVC: UIViewController,
         presentViewController(alertContoller, animated: true, completion: nil)
     }
 
-
-    @IBAction func clearApplog(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearApplog")
-        appLog.log(logger, logtype: .GUIAction, message: "clearApplog")
-        
-        let alertContoller = UIAlertController(title: "Reset applog?", message: nil,
-            preferredStyle: .Alert)
-        
-        let clearApplogAction = UIAlertAction(title: "Reset", style: .Default,
-            handler: { action in
-                self.appLog.logString = ""
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
-                self.redrawAll(false)
-            }
-        )
-        alertContoller.addAction(clearApplogAction)
-        
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-            handler: nil)
-        alertContoller.addAction(cancel)
-        
-        presentViewController(alertContoller, animated: true, completion: nil)
-    }
-
     @IBAction func applogActions(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "applogActions")
         appLog.log(logger, logtype: .GUIAction, message: "applogActions")
-
-        var vc: UIViewController?
-        let _ = vc!.isViewLoaded()
-        
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
@@ -480,7 +452,7 @@ class MainSettingVC: UIViewController,
     }
 
     //---------------------------------------------
-    // MainSettingsVC - clearAllDataKeepTemplates
+    // MainSettingsVC - clearSessionsKeepTemplates
     //---------------------------------------------
 
     class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool, active: Bool) {
