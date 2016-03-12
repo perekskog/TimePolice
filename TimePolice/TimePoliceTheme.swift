@@ -216,8 +216,8 @@ protocol Theme {
 
 class BasicTheme : Theme {
     
-    let bigSize:CGFloat = 13.0
-    let smallSize:CGFloat = 11.0
+    let bigSize:CGFloat = CGFloat(themeBigTextSize)
+    let smallSize:CGFloat = CGFloat(themeSmallTextSize)
     
 
     func drawTimePoliceBG(context: CGContextRef, parent: CGRect) {
@@ -414,8 +414,8 @@ class BasicTheme : Theme {
 
 class BlackGreenTheme : Theme {
     
-    let bigSize:CGFloat = 13.0
-    let smallSize:CGFloat = 11.0
+    let bigSize:CGFloat = CGFloat(themeBigTextSize)
+    let smallSize:CGFloat = CGFloat(themeSmallTextSize)
     
 
     func drawTimePoliceBG(context: CGContextRef, parent: CGRect) {
@@ -642,7 +642,7 @@ class ThemeUtilities {
             size: size)
         let textPath    = CGPathCreateWithRect(textRect, nil)
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: attributedString.length), textPath, nil)
+        let frame       = CTFramesetterCreateFrame(frameSetter, CFRange(location: 0, length: 0), textPath, nil)
         CTFrameDraw(frame, context)
         CGContextRestoreGState(context)
         

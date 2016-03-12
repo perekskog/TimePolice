@@ -19,9 +19,25 @@ var coreDataIsConsistent = true
 // Property tags
 let sessionExtensionAttribute = "extension"
 
-// Sizes
-let selectItemTableRowHeight = 25
+// Height of table rows
+let selectItemTableRowHeight = 35
 
 // Minimum vertical spacing between buttons and labels.
 let minimumComponentSpacing = 35
+
+// Minimum height of components.
+let minimumComponentHeight = 35
+
+// Height of SegmentedControl (for indicating subsets)
+let segmentControlHeight = 35
+
+// Theme based type size
+let themeBigTextSize = 17.0
+let themeSmallTextSize = 14.0
+
+// Instructions
+let textTitleSize = 30.0
+let textBodySize = 16.0
+
+
 

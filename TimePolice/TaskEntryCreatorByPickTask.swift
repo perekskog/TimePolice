@@ -51,8 +51,6 @@ class TaskEntryCreatorByPickTaskVC:
     let taskSelectionStrategy = TaskSelectAny()
 
 
-
-
     //---------------------------------------------
     // TaskEntryCreatorByPickTask - AppLoggerDataSource
     //---------------------------------------------
@@ -77,6 +75,7 @@ class TaskEntryCreatorByPickTaskVC:
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
@@ -128,7 +127,7 @@ class TaskEntryCreatorByPickTaskVC:
         }
 
         let padding: CGFloat = 1
-        let toolHeight: CGFloat = 30
+        let toolHeight: CGFloat = CGFloat(minimumComponentHeight)
 
         var columns: Int = 1 + s.tasks.count/10
 
@@ -227,15 +226,15 @@ class TaskEntryCreatorByPickTaskVC:
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame) - 50
 
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
         
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 25)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRectMake(70, 50, width-70, 5)
+        pageIndicatorView.frame = CGRectMake(70, 25 + CGFloat(minimumComponentHeight) - 5, width-70, 5)
         pageIndicatorView.toolbarInfoDelegate = self
-        
-        taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
+
+        taskPickerBGView.frame = CGRectMake(0, 25 + CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
 
         guard let l = layout else {
             appLog.log(logger, logtype: .Guard, message: "guard fail in viewWillLayoutSubviews")

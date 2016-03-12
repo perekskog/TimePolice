@@ -86,6 +86,7 @@ class TaskEntryCreatorByAddToListVC:
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
@@ -194,32 +195,33 @@ class TaskEntryCreatorByAddToListVC:
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 25)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRectMake(70, 50, width-70, 5)
+        pageIndicatorView.frame = CGRectMake(70, 25 + CGFloat(minimumComponentHeight) - 5, width-70, 5)
         pageIndicatorView.toolbarInfoDelegate = self
+        lastview = pageIndicatorView
 
-        taskEntriesBGView.frame = CGRectMake(0, 55, width, height - 55)
+        taskEntriesBGView.frame = CGRectMake(0, 25 + CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
         lastview = taskEntriesBGView
 
         width = CGRectGetWidth(taskEntriesBGView.frame)
         height = CGRectGetHeight(taskEntriesBGView.frame)
         let padding = 1
 
-        infoAreaView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), 30)
+        infoAreaView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
         lastview = infoAreaView
 
-        signInSignOutView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        signInSignOutView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
         lastview = signInSignOutView
 
-        taskEntriesTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - 30)
+        taskEntriesTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - CGFloat(minimumComponentHeight))
         lastview = taskEntriesTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30)
+        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
         lastview = addView
 
         // This was originally in viewWillAppear, but it seems that viewWillAPpear will be called

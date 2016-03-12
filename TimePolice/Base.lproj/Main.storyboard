@@ -303,7 +303,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9I-4w-amE">
-                                <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <rect key="frame" x="0.0" y="25" width="70" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -378,6 +378,7 @@
                     <connections>
                         <outlet property="applogButton" destination="304-oV-hmY" id="ajc-gl-Afo"/>
                         <outlet property="dataStructuresButton" destination="rk0-Pe-KGj" id="NaW-lm-H4u"/>
+                        <outlet property="exitButton" destination="O9I-4w-amE" id="yBq-V4-b1J"/>
                         <outlet property="exportInstructionLabel" destination="vPJ-Ki-LJa" id="ldJ-Rd-Hdv"/>
                         <outlet property="exportLabel" destination="NB9-zW-I8r" id="rhi-PT-o44"/>
                         <outlet property="sessionDetailsButton" destination="fmP-kT-2l0" id="jSu-on-dii"/>
@@ -400,7 +401,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="joo-kf-e6R">
-                                <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <rect key="frame" x="0.0" y="25" width="70" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -485,6 +486,7 @@
                         <outlet property="applogSizeValueLabel" destination="X6e-qU-MtH" id="BG4-fi-TXh"/>
                         <outlet property="deleteAllDataButton" destination="qAC-Ek-niD" id="rSF-2i-Ns1"/>
                         <outlet property="deleteSessionsButton" destination="EC3-rY-XDf" id="zHg-g8-Ae8"/>
+                        <outlet property="exitButton" destination="joo-kf-e6R" id="CYS-s0-f88"/>
                         <outlet property="manageApplogButton" destination="1be-JN-Dkf" id="V1G-Pd-lqQ"/>
                         <outlet property="sessionSelectionControl" destination="GXK-1U-UOo" id="doo-yf-zHx"/>
                         <outlet property="settingsLabel" destination="lVc-xG-n18" id="WQ8-9j-VCf"/>

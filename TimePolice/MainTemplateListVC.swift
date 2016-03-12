@@ -107,6 +107,7 @@ class MainTemplateListVC: UIViewController,
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
@@ -156,23 +157,23 @@ class MainTemplateListVC: UIViewController,
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight))
         lastview = sessionNameView
 
-        templateListBGView.frame = CGRectMake(0, 55, width, height - 55)
+        templateListBGView.frame = CGRectMake(0, 25+CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
         lastview = templateListBGView
 
         width = CGRectGetWidth(templateListBGView.frame)
         height = CGRectGetHeight(templateListBGView.frame)
         let padding = 1
 
-        templateTableView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), height - 30 - CGFloat(padding))
+        templateTableView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), height - CGFloat(minimumComponentHeight) - CGFloat(padding))
         lastview = templateTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30 - 2*CGFloat(padding))
+        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight) - 2*CGFloat(padding))
         lastview = addView
 
     }

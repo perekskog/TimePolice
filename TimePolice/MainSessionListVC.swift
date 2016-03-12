@@ -110,6 +110,7 @@ class MainSessionListVC: UIViewController,
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
         exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
@@ -171,25 +172,25 @@ class MainSessionListVC: UIViewController,
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 25, 70, 30)
+        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight))
         lastview = sessionNameView
 
-        sessionListBGView.frame = CGRectMake(0, 55, width, height - 55)
+        sessionListBGView.frame = CGRectMake(0, 25+CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
         lastview = sessionListBGView
 
         width = CGRectGetWidth(sessionListBGView.frame)
         height = CGRectGetHeight(sessionListBGView.frame)
         let padding = 1
 
-        sessionSelectionControl.frame = CGRectMake(0, 0, width, 25)
+        sessionSelectionControl.frame = CGRectMake(0, 0, width, CGFloat(segmentControlHeight))
 
-        sessionTableView.frame = CGRectMake(CGFloat(padding), 25, width - 2*CGFloat(padding), height - 25 - 30 - CGFloat(padding))
+        sessionTableView.frame = CGRectMake(CGFloat(padding), CGFloat(segmentControlHeight), width - 2*CGFloat(padding), height - CGFloat(segmentControlHeight) - CGFloat(minimumComponentHeight) - CGFloat(padding))
         lastview = sessionTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), 30 - CGFloat(padding))
+        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight) - CGFloat(padding))
         lastview = addView
     }
 
@@ -350,6 +351,8 @@ class MainSessionListVC: UIViewController,
                 if let vcs = tbvc.viewControllers,
                     i = selectedSessionIndex,
                     s = nonTemplateSessions {
+                        let tb = tbvc.tabBar
+                        tb.tintColor = UIColor.init(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
                         taskEntryCreatorManagers = vcs
                         for vc in vcs {
                             if var tecm = vc as? TaskEntryCreatorManager {

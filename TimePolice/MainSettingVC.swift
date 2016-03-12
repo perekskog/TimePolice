@@ -12,17 +12,13 @@ import CoreData
 class MainSettingVC: UIViewController,
     AppLoggerDataSource {
 
+    @IBOutlet var exitButton: UIButton!
     @IBOutlet var settingsLabel: UILabel!
-
     @IBOutlet var sessionSelectionControl: UISegmentedControl!
-    
     @IBOutlet var deleteSessionsButton: UIButton!
-    
     @IBOutlet var applogSizeKeyLabel: UILabel!
     @IBOutlet var applogSizeValueLabel: UILabel!
-
     @IBOutlet var manageApplogButton: UIButton!
-    
     @IBOutlet var deleteAllDataButton: UIButton!
     
     let theme = BlackGreenTheme()
@@ -97,6 +93,8 @@ class MainSettingVC: UIViewController,
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
+        exitButton.frame.size.height = CGFloat(minimumComponentHeight)
+
         var textRect = CGRectMake(0, height/4, width, 50)
         settingsLabel.frame = textRect
 
@@ -104,6 +102,7 @@ class MainSettingVC: UIViewController,
         sessionSelectionControl.frame.origin.y = textRect.origin.y
         sessionSelectionControl.frame.origin.x = width*0.15
         sessionSelectionControl.frame.size.width = width*0.7
+        sessionSelectionControl.frame.size.height = CGFloat(segmentControlHeight)
         textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         deleteSessionsButton.frame = textRect
 
@@ -135,6 +134,10 @@ class MainSettingVC: UIViewController,
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
+
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
+
+        settingsLabel.font = UIFont.boldSystemFontOfSize(CGFloat(textTitleSize))
 
         sessionSelectionControl.removeAllSegments()
         sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)

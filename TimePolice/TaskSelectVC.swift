@@ -73,6 +73,7 @@ class TaskSelectVC: UIViewController,
 
         self.title = "Select Task"
         
+        table.rowHeight = CGFloat(selectItemTableRowHeight)
         table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
         table.dataSource = self
         table.delegate = self

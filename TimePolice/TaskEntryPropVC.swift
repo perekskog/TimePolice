@@ -250,10 +250,10 @@ class TaskEntryPropVC:
                 } else {
                     height = 0
                 }
-            default: height = 30
+            default: height = CGFloat(selectItemTableRowHeight)
             }
         default:
-            height = 30
+            height = CGFloat(selectItemTableRowHeight)
         }
 
         return height

@@ -13,6 +13,7 @@ class MainExportVC: UIViewController,
     AppLoggerDataSource {
 
     
+    @IBOutlet var exitButton: UIButton!
     @IBOutlet var exportLabel: UILabel!
     @IBOutlet var exportInstructionLabel: UILabel!
     @IBOutlet var sessionSelectionControl: UISegmentedControl!
@@ -92,6 +93,8 @@ class MainExportVC: UIViewController,
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
+        exitButton.frame.size.height = CGFloat(minimumComponentHeight)
+
         var textRect = CGRectMake(0, height/4, width, 50)
         exportLabel.frame = textRect
 
@@ -104,6 +107,7 @@ class MainExportVC: UIViewController,
         sessionSelectionControl.frame.origin.y = textRect.origin.y
         sessionSelectionControl.frame.origin.x = width*0.15
         sessionSelectionControl.frame.size.width = width*0.7
+        sessionSelectionControl.frame.size.height = CGFloat(segmentControlHeight)
         textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
         sessionSummaryButton.frame = textRect
         textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
@@ -127,6 +131,11 @@ class MainExportVC: UIViewController,
 
         (self.view as! TimePoliceBGView).theme = theme
 
+        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
+
+        exportLabel.font = UIFont.boldSystemFontOfSize(CGFloat(textTitleSize))
+        exportInstructionLabel.font = UIFont.italicSystemFontOfSize(CGFloat(textBodySize))
+        
         sessionSelectionControl.removeAllSegments()
         sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
         sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
