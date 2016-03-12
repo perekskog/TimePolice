@@ -42,6 +42,7 @@ class TaskEntryCreatorManagerForAddToList: TaskEntryCreatorManagerBase {
             bundle: NSBundle.mainBundle())
         if let newVC = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByAddToList") as? TaskEntryCreatorBase {
             newVC.sessionIndex = index
+            newVC.numberOfSessions = self.numberOfSessions
             newVC.session = s
             newVC.delegate = self
                             

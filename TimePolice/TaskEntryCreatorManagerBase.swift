@@ -26,6 +26,7 @@ protocol TaskEntryCreatorManager {
     var dataSource: TaskEntryCreatorManagerDataSource? {get set}
     var delegate: TaskEntryCreatorManagerDelegate? {get set}
     var currentSessionIndex: Int? {get set}
+    var numberOfSessions: Int? {get set}
 
     func switchTo(newSessionIndex: Int)
 }
@@ -40,6 +41,7 @@ class TaskEntryCreatorManagerBase: UIViewController,
     var dataSource: TaskEntryCreatorManagerDataSource?
     var delegate: TaskEntryCreatorManagerDelegate?
     var currentSessionIndex: Int?
+    var numberOfSessions: Int?
     
     let pageViewController: UIPageViewController = TaskEntryCreatorManagerPageViewController()
 

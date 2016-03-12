@@ -348,13 +348,15 @@ class MainSessionListVC: UIViewController,
         if segue.identifier == "TaskEntryCreatorManagers" {
             if let tbvc = segue.destinationViewController as? UITabBarController {
                 if let vcs = tbvc.viewControllers,
-                    i = selectedSessionIndex {
+                    i = selectedSessionIndex,
+                    s = nonTemplateSessions {
                         taskEntryCreatorManagers = vcs
                         for vc in vcs {
                             if var tecm = vc as? TaskEntryCreatorManager {
                                 tecm.dataSource = self
                                 tecm.delegate = self
                                 tecm.currentSessionIndex = i
+                                tecm.numberOfSessions = s.count
                             }
                         }
                 }
@@ -500,7 +502,9 @@ class MainSessionListVC: UIViewController,
             signedIn: false,
             totalTimesActivatedForSession: 0,
             totalTimeActiveForSession: 0,
-            sessionName: "Sessions")
+            sessionName: "Sessions",
+            numberOfPages: 0,
+            currentPage: 0)
         
         return toolbarInfo
     }

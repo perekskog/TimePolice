@@ -18,6 +18,7 @@ import CoreData
 protocol TaskEntryCreator {
     var session: Session? { get set }
     var sessionIndex: Int? { get set }
+    var numberOfSessions: Int? {get set}
     var delegate: TaskEntryCreatorDelegate? { get set }
 }
 
@@ -32,6 +33,7 @@ class TaskEntryCreatorBase:
 
     var session: Session?
     var sessionIndex: Int?
+    var numberOfSessions: Int?
     var delegate: TaskEntryCreatorDelegate?
 
     var selectedTaskEntryIndex: Int?

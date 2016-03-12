@@ -121,6 +121,36 @@ class TaskEntriesToolView: UIView {
     }
 }
 
+class TaskPickerPageIndicatorView : UIView {
+    var toolbarInfoDelegate: ToolbarInfoDelegate?
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        guard let context = UIGraphicsGetCurrentContext(),
+            toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+                UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
+                return
+            }
+        theme?.drawTaskPickerPageIndicator(context, parent: rect, numberOfPages: toolbarInfo.numberOfPages, currentPage: toolbarInfo.currentPage)
+    }
+}
+
+class TaskEntriesPageIndicatorView : UIView {
+    var toolbarInfoDelegate: ToolbarInfoDelegate?
+    var theme: Theme?
+
+    override func drawRect(rect: CGRect) {
+        super.drawRect(rect)
+        guard let context = UIGraphicsGetCurrentContext(),
+            toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+                UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
+                return
+            }
+        theme?.drawTaskEntriesPageIndicator(context, parent: rect, numberOfPages: toolbarInfo.numberOfPages, currentPage: toolbarInfo.currentPage)
+    }
+}
+
 /////////////// --- Delegates --- //////////////////
 
 
@@ -146,11 +176,16 @@ class ToolbarInfo {
     var totalTimesActivatedForSession: Int
     var totalTimeActiveForSession: NSTimeInterval
     var sessionName: String
-    init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval, sessionName: String) {
+    var numberOfPages: Int
+    var currentPage: Int
+    init(signedIn: Bool, totalTimesActivatedForSession: Int, totalTimeActiveForSession: NSTimeInterval, sessionName: String,
+        numberOfPages: Int, currentPage: Int) {
         self.signedIn = signedIn
         self.totalTimesActivatedForSession = totalTimesActivatedForSession
         self.totalTimeActiveForSession = totalTimeActiveForSession
         self.sessionName = sessionName
+        self.numberOfPages = numberOfPages
+        self.currentPage = currentPage
     }
 }
 
@@ -162,9 +197,11 @@ protocol Theme {
     func drawTaskPickerBG(context: CGContextRef, parent: CGRect)
     func drawTaskPickerTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
     func drawTaskPickerButton(context: CGContextRef, parent: CGRect, taskPosition: Int, selectionAreaInfo: SelectionAreaInfo)
+    func drawTaskPickerPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int)
     
     func drawTaskEntriesBG(context: CGContextRef, parent: CGRect)
     func drawTaskEntriesTool(context: CGContextRef, parent: CGRect, viewType: ViewType, toolbarInfo: ToolbarInfo)
+    func drawTaskEntriesPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int)
 }
 
 
@@ -332,6 +369,37 @@ class BasicTheme : Theme {
             }
         }
     }
+
+    func drawTaskEntriesPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int) {
+        drawTaskPickerPageIndicator(context, parent: parent, numberOfPages: numberOfPages, currentPage: currentPage)
+    }
+
+    func drawTaskPickerPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int) {
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        let colorsCurrent = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!]
+        let gradientCurrent = CGGradientCreateWithColors(colorSpaceRGB,
+            colorsCurrent, locations)
+        let colorsNotCurrent = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!]
+        let gradientNotCurrent = CGGradientCreateWithColors(colorSpaceRGB,
+            colorsNotCurrent, locations)
+
+        let indicatorWidth = parent.size.width / CGFloat(numberOfPages)
+        for i in 0...numberOfPages-1 {
+            let startPoint = CGPoint(x: CGFloat(i)*indicatorWidth + 1, y: 0.0)
+            let endPoint = CGPoint(x: CGFloat(i+1)*indicatorWidth - 1, y: 0.0)
+            if i == currentPage {
+                CGContextDrawLinearGradient(context, gradientCurrent,
+                    startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
+            } else {
+                CGContextDrawLinearGradient(context, gradientNotCurrent,
+                    startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
+            }
+        }
+    }
+
 }
 
 
@@ -519,10 +587,38 @@ class BlackGreenTheme : Theme {
             }
         }
     }
-
     
-}
+    func drawTaskEntriesPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int) {
+        drawTaskPickerPageIndicator(context, parent: parent, numberOfPages: numberOfPages, currentPage: currentPage)
+    }
 
+    func drawTaskPickerPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int) {
+        let locations: [CGFloat] = [ 0.0, 1.0 ]
+        let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
+        let colorsCurrent = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!]
+        let gradientCurrent = CGGradientCreateWithColors(colorSpaceRGB,
+            colorsCurrent, locations)
+        let colorsNotCurrent = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!]
+        let gradientNotCurrent = CGGradientCreateWithColors(colorSpaceRGB,
+            colorsNotCurrent, locations)
+
+        let indicatorWidth = parent.size.width / CGFloat(numberOfPages)
+        for i in 0...numberOfPages-1 {
+            let startPoint = CGPoint(x: CGFloat(i)*indicatorWidth + 1, y: 0.0)
+            let endPoint = CGPoint(x: CGFloat(i+1)*indicatorWidth - 1, y: 0.0)
+            if i == currentPage {
+                CGContextDrawLinearGradient(context, gradientCurrent,
+                    startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
+            } else {
+                CGContextDrawLinearGradient(context, gradientNotCurrent,
+                    startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
+            }
+        }
+    }
+
+}
 
 
 

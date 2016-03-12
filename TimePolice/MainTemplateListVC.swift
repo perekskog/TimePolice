@@ -380,7 +380,9 @@ class MainTemplateListVC: UIViewController,
             signedIn: false,
             totalTimesActivatedForSession: 0,
             totalTimeActiveForSession: 0,
-            sessionName: templateProjectName!)
+            sessionName: templateProjectName!,
+            numberOfPages: 0,
+            currentPage: 0)
         
         return toolbarInfo
     }

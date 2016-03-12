@@ -39,6 +39,7 @@ class TaskEntryCreatorByAddToListVC:
 
     let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = TaskEntriesToolView()
+    let pageIndicatorView = TaskPickerPageIndicatorView()
     let taskEntriesBGView = TaskEntriesBGView()
     let signInSignOutView = TaskEntriesToolView()
     let addView = TaskEntriesToolView()
@@ -95,6 +96,9 @@ class TaskEntryCreatorByAddToListVC:
         recognizer.delegate = self
         sessionNameView.addGestureRecognizer(recognizer)
         self.view.addSubview(sessionNameView)
+
+        pageIndicatorView.theme = theme
+        self.view.addSubview(pageIndicatorView)
 
         taskEntriesBGView.theme = theme
         self.view.addSubview(taskEntriesBGView)
@@ -193,8 +197,11 @@ class TaskEntryCreatorByAddToListVC:
         exitButton.frame = CGRectMake(0, 25, 70, 30)
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
-        lastview = sessionNameView
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 25)
+        sessionNameView.toolbarInfoDelegate = self
+
+        pageIndicatorView.frame = CGRectMake(70, 50, width-70, 5)
+        pageIndicatorView.toolbarInfoDelegate = self
 
         taskEntriesBGView.frame = CGRectMake(0, 55, width, height - 55)
         lastview = taskEntriesBGView
@@ -510,12 +517,24 @@ class TaskEntryCreatorByAddToListVC:
                 }
             }
         }
-
+        
+        var currentPage = 0
+        if let n = sessionIndex {
+            currentPage = n
+        }
+        
+        var numberOfPages = 1
+        if let n = numberOfSessions {
+            numberOfPages = n
+        }
+        
         let toolbarInfo = ToolbarInfo(
             signedIn: signedIn,
             totalTimesActivatedForSession: totalActivations,
             totalTimeActiveForSession: totalTime,
-            sessionName: sessionName)
+            sessionName: sessionName,
+            numberOfPages: numberOfPages,
+            currentPage: currentPage)
 
         return toolbarInfo
     }
@@ -539,6 +558,7 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
         sessionNameView.setNeedsDisplay()
+        pageIndicatorView.setNeedsDisplay()
     }
         
 

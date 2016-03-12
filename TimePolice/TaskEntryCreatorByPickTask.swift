@@ -30,6 +30,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     let exitButton = UIButton(type: UIButtonType.System)
     let sessionNameView = TaskPickerToolView()
+    let pageIndicatorView = TaskPickerPageIndicatorView()
     let signInSignOutView = TaskPickerToolView()
     let infoAreaView = TaskPickerToolView()
 
@@ -84,9 +85,11 @@ class TaskEntryCreatorByPickTaskVC:
         var recognizer = UITapGestureRecognizer(target:self, action:Selector("useTemplate:"))
         recognizer.delegate = self
         sessionNameView.addGestureRecognizer(recognizer)
-
         self.view.addSubview(sessionNameView)
-        
+
+        pageIndicatorView.theme = theme
+        self.view.addSubview(pageIndicatorView)
+                
         taskPickerBGView.theme = theme
         self.view.addSubview(taskPickerBGView)
 
@@ -226,8 +229,11 @@ class TaskEntryCreatorByPickTaskVC:
 
         exitButton.frame = CGRectMake(0, 25, 70, 30)
         
-        sessionNameView.frame = CGRectMake(70, 25, width-70, 30)
+        sessionNameView.frame = CGRectMake(70, 25, width-70, 25)
         sessionNameView.toolbarInfoDelegate = self
+
+        pageIndicatorView.frame = CGRectMake(70, 50, width-70, 5)
+        pageIndicatorView.toolbarInfoDelegate = self
         
         taskPickerBGView.frame = CGRectMake(0, 55, width, height - 55)
 
@@ -376,6 +382,7 @@ class TaskEntryCreatorByPickTaskVC:
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
         sessionNameView.setNeedsDisplay()
+        pageIndicatorView.setNeedsDisplay()
 
         for (_, view) in taskbuttonviews {
             view.setNeedsDisplay()
@@ -480,16 +487,27 @@ class TaskEntryCreatorByPickTaskVC:
         }
         
         var sessionName = "---"
-        
         if let s = session {
             sessionName = s.getDisplayNameWithSuffix()
+        }
+
+        var currentPage = 0
+        if let n = sessionIndex {
+            currentPage = n
+        }
+
+        var numberOfPages = 1
+        if let n = numberOfSessions {
+            numberOfPages = n
         }
 
         let toolbarInfo = ToolbarInfo(
             signedIn: signedIn,
             totalTimesActivatedForSession: totalActivations,
             totalTimeActiveForSession: totalTime,
-            sessionName: sessionName)
+            sessionName: sessionName,
+            numberOfPages: numberOfPages,
+            currentPage: currentPage)
         
         return toolbarInfo
     }

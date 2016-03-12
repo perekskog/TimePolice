@@ -40,12 +40,13 @@ class TaskEntryCreatorManagerForPickTask: TaskEntryCreatorManagerBase {
         
 	    let storyBoard = UIStoryboard(name: "Main",
 	        bundle: NSBundle.mainBundle())
-        if let newVc = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByPickTask") as? TaskEntryCreatorBase {
-	        newVc.sessionIndex = index
-            newVc.session = s
-            newVc.delegate = self
+        if let newVC = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByPickTask") as? TaskEntryCreatorBase {
+	        newVC.sessionIndex = index
+            newVC.numberOfSessions = self.numberOfSessions
+            newVC.session = s
+            newVC.delegate = self
 	        
-	        return newVc
+	        return newVC
 	    }
 
 	    return nil
