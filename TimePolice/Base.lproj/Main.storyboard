@@ -1,209 +1,172 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="NPP-pM-9ME">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="h2A-Ro-PcX">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
-        <!--Time PoliceVC-->
-        <scene sceneID="b4w-RP-6if">
+        <!--MainTemplateListVC-->
+        <scene sceneID="aa4-5I-Fc1">
             <objects>
-                <viewController id="ibE-kE-IVF" customClass="TimePoliceVC" customModule="TimePolice" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="54z-OJ-CMk"/>
-                        <viewControllerLayoutGuide type="bottom" id="Vka-ag-VfY"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="uMu-Gj-jXc">
+                <viewController id="Irr-mv-VTQ" userLabel="MainTemplateListVC" customClass="MainTemplateListVC" customModule="TimePolice" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hjR-LU-Jkq">
-                                <rect key="frame" x="66" y="44" width="68" height="30"/>
-                                <state key="normal" title="Core data">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearCoreData:" destination="ibE-kE-IVF" eventType="touchUpInside" id="90W-eW-rbX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHb-0v-TCS">
-                                <rect key="frame" x="68" y="120" width="48" height="30"/>
-                                <state key="normal" title="Private">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="loadDataPrivate:" destination="ibE-kE-IVF" eventType="touchUpInside" id="INH-hH-9Cf"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TimePolice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZwB-DC-1Hy">
-                                <rect key="frame" x="118" y="15" width="85" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Create" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igq-HE-rsE">
-                                <rect key="frame" x="9" y="124" width="51" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldv-k9-PK6">
-                                <rect key="frame" x="126" y="120" width="36" height="30"/>
-                                <state key="normal" title="Work">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="loadDataWork:" destination="ibE-kE-IVF" eventType="touchUpInside" id="UAe-Da-wjz"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RuT-t6-eC1">
-                                <rect key="frame" x="179" y="120" width="57" height="30"/>
-                                <state key="normal" title="Daytime">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="loadDataDaytime:" destination="ibE-kE-IVF" eventType="touchUpInside" id="Wgf-HY-lLG"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="View" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q1L-QQ-XNe">
-                                <rect key="frame" x="9" y="159" width="51" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Wq5-Lu-cAa">
-                                <rect key="frame" x="66" y="152" width="194" height="29"/>
-                                <segments>
-                                    <segment title="switcher"/>
-                                    <segment title="list"/>
-                                </segments>
-                            </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKw-39-d1n">
-                                <rect key="frame" x="145" y="82" width="49" height="30"/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dumpApplog:" destination="ibE-kE-IVF" eventType="touchUpInside" id="XBa-4I-2Tj"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20A-tb-NFv">
-                                <rect key="frame" x="66" y="82" width="65" height="30"/>
-                                <state key="normal" title="CoreData">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dumpCoreData:" destination="ibE-kE-IVF" eventType="touchUpInside" id="cqI-Iw-0gT"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Copy" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-Un-Ypd">
-                                <rect key="frame" x="9" y="86" width="51" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-Eh-bSr">
-                                <rect key="frame" x="221" y="86" width="84" height="21"/>
-                                <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcV-Bp-bb0">
-                                <rect key="frame" x="9" y="48" width="51" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dIL-h8-acL">
-                                <rect key="frame" x="145" y="44" width="49" height="30"/>
-                                <state key="normal" title="Applog">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearApplog:" destination="ibE-kE-IVF" eventType="touchUpInside" id="9UR-4t-ySS"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U4B-9D-Acs">
-                                <rect key="frame" x="248" y="120" width="30" height="30"/>
-                                <state key="normal" title="Test">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="loadDataTest:" destination="ibE-kE-IVF" eventType="touchUpInside" id="R4f-0E-a3w"/>
-                                </connections>
-                            </button>
-                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7dW-GI-dvj"/>
+                    <connections>
+                        <segue destination="xKM-2J-WlK" kind="modal" identifier="AddTemplate" id="UQc-Rc-4Y0"/>
+                        <segue destination="3jP-wD-9bJ" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Wa2-3f-W4B"/>
+                        <segue destination="xKM-2J-WlK" kind="modal" identifier="EditTemplate" id="Rbx-w5-iep"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qu7-rQ-Yhg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="3jP-wD-9bJ" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3227" y="-578"/>
+        </scene>
+        <!--MainTemplatePropVC-->
+        <scene sceneID="nN3-jG-VGX">
+            <objects>
+                <viewController id="kUl-Z4-YiI" userLabel="MainTemplatePropVC" customClass="MainTemplatePropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hgy-cC-Rfq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="USl-RV-TM6"/>
+                    <connections>
+                        <segue destination="Nvm-JO-pky" kind="unwind" identifier="CancelTemplateProp" unwindAction="exitTemplateProp:" id="axe-EH-C4l"/>
+                        <segue destination="Nvm-JO-pky" kind="unwind" identifier="SaveTemplateProp" unwindAction="exitTemplateProp:" id="V5g-mN-y1A"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HQc-tn-hSD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Nvm-JO-pky" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="4322" y="-578"/>
+        </scene>
+        <!--MainSessionListVC-->
+        <scene sceneID="b4w-RP-6if">
+            <objects>
+                <viewController id="ibE-kE-IVF" userLabel="MainSessionListVC" customClass="MainSessionListVC" customModule="TimePolice" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uMu-Gj-jXc" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="0sO-rL-U6m">
                         <barButtonItem key="rightBarButtonItem" title="Item" id="uxp-TD-gik"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="appLogSize" destination="3tR-Eh-bSr" id="dpB-F3-dLZ"/>
-                        <outlet property="defaultVC" destination="Wq5-Lu-cAa" id="CxQ-hm-veh"/>
-                        <segue destination="vXZ-lx-hvc" kind="push" identifier="TaskPicker" id="Q4B-Bv-Ow3"/>
-                        <segue destination="QbM-a3-K2L" kind="push" identifier="WorkList" id="7bm-qM-hnF"/>
+                        <segue destination="bYn-0s-WYr" kind="push" identifier="TaskEntryCreatorManagers" id="A2k-t4-VXx"/>
+                        <segue destination="zcu-y0-IBg" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="Eex-Ti-mQC"/>
+                        <segue destination="nEv-Wf-VRv" kind="modal" identifier="AddSession" id="kpq-o5-Dsg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cpz-F9-Kfn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="zcu-y0-IBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1793" y="115"/>
+            <point key="canvasLocation" x="3219" y="486"/>
         </scene>
-        <!--Task PickerVC-->
+        <!--MainTemplateSelectVC-->
+        <scene sceneID="z98-2o-bEw">
+            <objects>
+                <viewController id="mfS-TQ-VpO" userLabel="MainTemplateSelectVC" customClass="MainTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ohm-CD-deu">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="d9x-TN-yOa"/>
+                    <connections>
+                        <segue destination="QfW-Yk-j1o" kind="unwind" identifier="DoneTemplateSelect" unwindAction="exitSelectTemplate:" id="Vm6-bN-251"/>
+                        <segue destination="QfW-Yk-j1o" kind="unwind" identifier="CancelTemplateSelect" unwindAction="exitSelectTemplate:" id="gYr-eg-L2q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gNg-Ed-hyu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="QfW-Yk-j1o" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3663" y="1219"/>
+        </scene>
+        <!--TaskEntryCreatorByPickTaskVC-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="TaskPickerVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
-                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
-                    </layoutGuides>
+                <viewController storyboardIdentifier="TaskEntryCreatorByPickTask" id="vXZ-lx-hvc" userLabel="TaskEntryCreatorByPickTaskVC" customClass="TaskEntryCreatorByPickTaskVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="PickTask" id="tKP-7b-sfM"/>
                     <navigationItem key="navigationItem" id="lIo-Le-7fv"/>
                     <connections>
                         <segue destination="Ts8-bs-c8R" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="nDQ-cN-cBa"/>
-                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditWork" id="I7g-5x-ylG"/>
+                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="I7g-5x-ylG"/>
+                        <segue destination="Ouh-dk-s8P" kind="modal" identifier="UseTemplate" id="cS4-xQ-gF3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <exit id="Ts8-bs-c8R" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2267" y="115"/>
+            <point key="canvasLocation" x="5287" y="259"/>
         </scene>
-        <!--Work ListVC-->
+        <!--SessionManagerForPickTask-->
+        <scene sceneID="z8q-n2-lJG">
+            <objects>
+                <viewController id="dbK-Rd-6L5" userLabel="SessionManagerForPickTask" customClass="TaskEntryCreatorManagerForPickTask" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0lZ-XA-JZB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Pick task" image="PickTask.png" selectedImage="PickTask.png" id="qvg-By-36f"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="71P-IP-wZC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4670" y="259"/>
+        </scene>
+        <!--SessionManagerForAddToList-->
+        <scene sceneID="VTu-hB-Jde">
+            <objects>
+                <viewController id="FNn-dD-6RS" userLabel="SessionManagerForAddToList" customClass="TaskEntryCreatorManagerForAddToList" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dLM-Hw-a9v">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Add to list" image="AddToList.png" id="ylp-rN-Xxe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kyt-k8-gCq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4670" y="981"/>
+        </scene>
+        <!--TaskEntryCreatorByAddToListVC-->
         <scene sceneID="wps-ek-s8l">
             <objects>
-                <viewController id="QbM-a3-K2L" customClass="WorkListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9VG-A1-ay2"/>
-                        <viewControllerLayoutGuide type="bottom" id="9gW-V1-TPd"/>
-                    </layoutGuides>
+                <viewController storyboardIdentifier="TaskEntryCreatorByAddToList" id="QbM-a3-K2L" userLabel="TaskEntryCreatorByAddToListVC" customClass="TaskEntryCreatorByAddToListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.064999889510000006" green="0.74704583899999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="AddToList" id="RdQ-G0-15G"/>
                     <navigationItem key="navigationItem" id="dxa-gD-taX"/>
                     <connections>
                         <segue destination="DP0-0d-1WN" kind="unwind" identifier="Exit" unwindAction="exitVC:" id="6gh-5z-Q9W"/>
-                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditWork" id="hjh-eJ-Q4q"/>
+                        <segue destination="nCY-7c-hUA" kind="modal" identifier="EditTaskEntry" id="hjh-eJ-Q4q"/>
+                        <segue destination="Ouh-dk-s8P" kind="modal" identifier="UseTemplate" id="JW7-jI-2S6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwM-jx-N4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="DP0-0d-1WN" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2267" y="838"/>
+            <point key="canvasLocation" x="5287" y="981"/>
         </scene>
-        <!--WorkPropVC-->
+        <!--TaskEntryPropVC-->
         <scene sceneID="d2u-oH-QeM">
             <objects>
-                <viewController id="dzU-1d-OfS" userLabel="WorkPropVC" customClass="WorkPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Fsg-Qu-mhy"/>
-                        <viewControllerLayoutGuide type="bottom" id="OC8-9I-IBs"/>
-                    </layoutGuides>
+                <viewController id="dzU-1d-OfS" userLabel="TaskEntryPropVC" customClass="TaskEntryPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zqu-r5-rZm">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -211,25 +174,22 @@
                     </view>
                     <navigationItem key="navigationItem" id="6ZT-nV-5Yo"/>
                     <connections>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="CancelTaskEntry" unwindAction="exitEditWork:" id="Af4-DQ-And"/>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="SaveTaskEntry" unwindAction="exitEditWork:" id="fTC-ee-ZR0"/>
-                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteTaskEntry" unwindAction="exitEditWork:" id="nAc-LQ-DHj"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="CancelTaskEntry" unwindAction="exitTaskEntryProp:" id="Af4-DQ-And"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="SaveTaskEntry" unwindAction="exitTaskEntryProp:" id="fTC-ee-ZR0"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="DeleteTaskEntry" unwindAction="exitTaskEntryProp:" id="nAc-LQ-DHj"/>
                         <segue destination="tNe-a1-HVm" kind="push" identifier="SelectTask" id="faT-s4-dMw"/>
+                        <segue destination="eM6-nC-ER0" kind="unwind" identifier="InsertNewTaskEntry" unwindAction="exitTaskEntryProp:" id="D7f-kQ-lMs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yei-av-ysS" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="eM6-nC-ER0" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3438" y="431"/>
+            <point key="canvasLocation" x="6602" y="739"/>
         </scene>
         <!--TaskSelectVC-->
         <scene sceneID="VvP-X4-uFq">
             <objects>
                 <viewController id="tNe-a1-HVm" userLabel="TaskSelectVC" customClass="TaskSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="J9v-GY-g7w"/>
-                        <viewControllerLayoutGuide type="bottom" id="A1c-Qb-ihc"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZeU-h1-S4t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -243,25 +203,318 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Ot-zO-r7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MHh-sN-e8a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3820" y="427"/>
+            <point key="canvasLocation" x="7098" y="739"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="5jz-c1-GdA">
+        <!--MainVC-->
+        <scene sceneID="Hk9-N5-ZWe">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="NPP-pM-9ME" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wg7-SK-ffS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
+                <viewController id="eLJ-bB-2C6" userLabel="MainVC" customClass="MainVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BEL-M0-Gy8" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L7G-KF-Reh">
+                                <rect key="frame" x="96" y="265" width="140" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Sessions">
+                                    <color key="titleColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="RE4-zX-HtF">
+                                <rect key="frame" x="110" y="310" width="113" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Export">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="SF8-YH-e6F" kind="push" identifier="Export" id="dBH-RE-CZO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VZG-iV-Vgl">
+                                <rect key="frame" x="87" y="214" width="159" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Templates">
+                                    <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TimePolice" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="G4i-xD-Haj">
+                                <rect key="frame" x="32" y="94" width="268" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="40"/>
+                                <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rVL-WA-YrK">
+                                <rect key="frame" x="89" y="355" width="154" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Settings">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="jaN-JA-eGe" kind="push" identifier="Settings" id="MQT-qG-4tx"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.30389532342657344" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
                     <connections>
-                        <segue destination="ibE-kE-IVF" kind="relationship" relationship="rootViewController" id="qZY-Cn-nnO"/>
+                        <outlet property="exportButton" destination="RE4-zX-HtF" id="KZk-K0-tN2"/>
+                        <outlet property="sessionsButton" destination="L7G-KF-Reh" id="BoW-5y-Ugj"/>
+                        <outlet property="settingsButton" destination="rVL-WA-YrK" id="RZ5-Gf-Hgo"/>
+                        <outlet property="templatesButton" destination="VZG-iV-Vgl" id="NXs-Yj-RCj"/>
+                        <outlet property="titleLabel" destination="G4i-xD-Haj" id="8pN-Gp-MZJ"/>
                     </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pNx-jO-sik" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WJJ-DQ-rtD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1236" y="115"/>
+            <point key="canvasLocation" x="2283" y="148"/>
+        </scene>
+        <!--MainExportVC-->
+        <scene sceneID="xKi-Ul-NQu">
+            <objects>
+                <viewController id="SF8-YH-e6F" userLabel="MainExportVC" customClass="MainExportVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mGh-7y-Ctg" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="304-oV-hmY">
+                                <rect key="frame" x="231" y="519" width="77" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Applog">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpApplog:" destination="SF8-YH-e6F" eventType="touchUpInside" id="F4J-es-VeJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9I-4w-amE">
+                                <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="exit:" destination="SF8-YH-e6F" eventType="touchUpInside" id="6bl-fe-S1a"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data will be copied and can be pasted in, for example, Notes." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vPJ-Ki-LJa">
+                                <rect key="frame" x="43" y="142" width="235" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="italicSystem" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NB9-zW-I8r">
+                                <rect key="frame" x="101" y="84" width="118" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GK6-I2-o8Q">
+                                <rect key="frame" x="37" y="214" width="246" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rk0-Pe-KGj">
+                                <rect key="frame" x="20" y="515" width="150" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Data structures">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="omB-QH-XO7">
+                                <rect key="frame" x="75" y="257" width="171" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Session summary">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fmP-kT-2l0">
+                                <rect key="frame" x="75" y="289" width="171" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Session details">
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="dumpSessionDetails:" destination="SF8-YH-e6F" eventType="touchUpInside" id="Mbf-Ss-BDr"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.29848666958041958" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Op2-MH-YBM"/>
+                    <connections>
+                        <outlet property="applogButton" destination="304-oV-hmY" id="ajc-gl-Afo"/>
+                        <outlet property="dataStructuresButton" destination="rk0-Pe-KGj" id="NaW-lm-H4u"/>
+                        <outlet property="exportInstructionLabel" destination="vPJ-Ki-LJa" id="ldJ-Rd-Hdv"/>
+                        <outlet property="exportLabel" destination="NB9-zW-I8r" id="rhi-PT-o44"/>
+                        <outlet property="sessionDetailsButton" destination="fmP-kT-2l0" id="jSu-on-dii"/>
+                        <outlet property="sessionSelectionControl" destination="GK6-I2-o8Q" id="ug1-db-4Jx"/>
+                        <outlet property="sessionSummaryButton" destination="omB-QH-XO7" id="rC7-gj-81U"/>
+                        <segue destination="pKT-ae-mHb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="MO6-1c-cNm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qr4-jv-DAj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="pKT-ae-mHb" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2476" y="1001"/>
+        </scene>
+        <!--MainSettingsVC-->
+        <scene sceneID="HHE-Vn-6fp">
+            <objects>
+                <viewController id="jaN-JA-eGe" userLabel="MainSettingsVC" customClass="MainSettingVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uKX-cz-dYV" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="joo-kf-e6R">
+                                <rect key="frame" x="0.0" y="25" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="X6e-qU-MtH">
+                                <rect key="frame" x="170" y="347" width="79" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lVc-xG-n18">
+                                <rect key="frame" x="97" y="89" width="126" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
+                                <color key="textColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GXK-1U-UOo">
+                                <rect key="frame" x="37" y="188" width="246" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="EC3-rY-XDf">
+                                <rect key="frame" x="100" y="235" width="121" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Delete sessions">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="5JE-Hq-sqi"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Applog size:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aIB-re-uDs">
+                                <rect key="frame" x="68" y="347" width="94" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1be-JN-Dkf">
+                                <rect key="frame" x="101" y="386" width="119" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Manage applog">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="applogActions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="0e1-zz-Fg7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qAC-Ek-niD">
+                                <rect key="frame" x="191" y="524" width="109" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Delete all data">
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearCoreData:" destination="jaN-JA-eGe" eventType="touchUpInside" id="woR-cP-Y6t"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.29602819055944057" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
+                    <connections>
+                        <outlet property="applogSizeKeyLabel" destination="aIB-re-uDs" id="Fk1-oi-Pp7"/>
+                        <outlet property="applogSizeValueLabel" destination="X6e-qU-MtH" id="BG4-fi-TXh"/>
+                        <outlet property="deleteAllDataButton" destination="qAC-Ek-niD" id="rSF-2i-Ns1"/>
+                        <outlet property="deleteSessionsButton" destination="EC3-rY-XDf" id="zHg-g8-Ae8"/>
+                        <outlet property="manageApplogButton" destination="1be-JN-Dkf" id="V1G-Pd-lqQ"/>
+                        <outlet property="sessionSelectionControl" destination="GXK-1U-UOo" id="doo-yf-zHx"/>
+                        <outlet property="settingsLabel" destination="lVc-xG-n18" id="WQ8-9j-VCf"/>
+                        <segue destination="SLu-ke-hzb" kind="unwind" identifier="Exit" unwindAction="mainVC:" id="IYJ-zg-K2k"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FoT-qM-lBj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="SLu-ke-hzb" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2087" y="1001"/>
+        </scene>
+        <!--TaskEntryUseTemplate-->
+        <scene sceneID="wZb-cd-unN">
+            <objects>
+                <viewController id="K31-sT-C4m" userLabel="TaskEntryUseTemplate" customClass="TaskEntryTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lCk-0v-Vni">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="guz-W2-o7i"/>
+                    <connections>
+                        <segue destination="0Ra-kf-VIz" kind="unwind" identifier="CancelUseTemplate" unwindAction="exitUseTemplate:" id="lgV-lg-DXZ"/>
+                        <segue destination="0Ra-kf-VIz" kind="unwind" identifier="DoneUseTemplate" unwindAction="exitUseTemplate:" id="WWx-l5-XDW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tO2-Xu-7m4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0Ra-kf-VIz" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6602" y="-20"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="B5B-BN-JiH">
@@ -279,15 +532,111 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LoU-fD-5P2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2906" y="431"/>
+            <point key="canvasLocation" x="6070" y="739"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="t25-xF-g8Y">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="bYn-0s-WYr" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="wfp-8f-Yzk"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="Mdf-Pt-r24">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" white="0.25193036130536123" alpha="1" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="dbK-Rd-6L5" kind="relationship" relationship="viewControllers" id="1Av-G5-DqJ"/>
+                        <segue destination="FNn-dD-6RS" kind="relationship" relationship="viewControllers" id="yOc-aZ-3fL"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WWf-dK-40d" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3805" y="486"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="6uX-GU-Bqg">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="h2A-Ro-PcX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3Gz-bL-3qq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="eLJ-bB-2C6" kind="relationship" relationship="rootViewController" id="hWH-zD-y88"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Iy-5j-Zub" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1751" y="148"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="QW0-n4-WFa">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xKM-2J-WlK" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="cNY-tf-Pao"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="26V-3P-75g">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="kUl-Z4-YiI" kind="relationship" relationship="rootViewController" id="UTa-6L-GW9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4kX-3r-oDu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3805" y="-578"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="64S-Cs-NdT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nEv-Wf-VRv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="2kF-8a-jW3"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dbq-Bf-IIa">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="mfS-TQ-VpO" kind="relationship" relationship="rootViewController" id="xG3-CG-FE3"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qN8-7L-Vl4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3219" y="1219"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WF8-on-koo">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ouh-dk-s8P" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cDe-Te-MJr">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="K31-sT-C4m" kind="relationship" relationship="rootViewController" id="OoG-px-FFl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zXE-ct-TiK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6070" y="-20"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
+    <resources>
+        <image name="AddToList.png" width="19" height="23"/>
+        <image name="PickTask.png" width="19" height="25"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hjh-eJ-Q4q"/>
+        <segue reference="Rbx-w5-iep"/>
+        <segue reference="I7g-5x-ylG"/>
+        <segue reference="cS4-xQ-gF3"/>
     </inferredMetricsTieBreakers>
 </document>

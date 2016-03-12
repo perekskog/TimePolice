@@ -1,9 +1,9 @@
 //
-//  TaskSelectVC.swift
+//  MainTemplateListVC.swift
 //  TimePolice
 //
-//  Created by Per Ekskog on 2015-08-11.
-//  Copyright (c) 2015 Per Ekskog. All rights reserved.
+//  Created by Per Ekskog on 2015-11-22.
+//  Copyright © 2015 Per Ekskog. All rights reserved.
 //
 
 /*
@@ -15,36 +15,39 @@ TODO
 */
 
 import UIKit
+import CoreData
 
-class TaskSelectVC: UIViewController,
+class MainTemplateSelectVC: UIViewController,
     UITableViewDataSource,
     UITableViewDelegate,
     AppLoggerDataSource {
-    
-    // Input data
-    var tasks: [Task]?
-    
-    // Output data
-    var taskIndexSelected: Int?
-    
-    
+
+	// Input data
+	var templates: [Session]?
+
+	// Output data
+	var templateIndexSelected: Int?
+
+
     // Internal
     
-    let cellReuseId = "SelectTask"
+    let cellReuseId = "SelectTemplate"
     
     let table = UITableView()
 
-    var cell2task: [Int] = []
+    //---------------------------------------
+    // MainTemplateSelectVC - Lazy properties
+    //---------------------------------------
 
+    lazy var moc : NSManagedObjectContext = {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.managedObjectContext
+        }()
 
-    //----------------------------------------------------------------
-    // TaskSelectVC - Lazy properties
-    //----------------------------------------------------------------
-    
     lazy var appLog : AppLog = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.appLog
-        }()
+    }()
 
     lazy var logger: AppLogger = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -54,40 +57,32 @@ class TaskSelectVC: UIViewController,
     }()
 
     //---------------------------------------------
-    // TaskSelectVC - AppLoggerDataSource
+    // MainTemplateSelectVC - AppLoggerDataSource
     //---------------------------------------------
 
     func getLogDomain() -> String {
-        return "TaskSelectVC"
+        return "MainTemplateSelectVC"
     }
 
     //---------------------------------------------
-    // TaskSelectVC - View lifecycle
+    // MainTemplateSelectVC - View lifecycle
     //---------------------------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
 
         self.edgesForExtendedLayout = .None
 
-        self.title = "Select Task"
+        self.title = "Select Template"
         
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
+        self.navigationItem.leftBarButtonItem = buttonCancel
+
+        table.rowHeight = CGFloat(selectItemTableRowHeight)
         table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
         table.dataSource = self
         table.delegate = self
         self.view.addSubview(table)
-
-        var s = ""
-        if let tl = tasks {
-            for i in 0...tl.count-1 {
-                if tl[i].name != spacerName {
-                    cell2task.append(i)
-                    s += "\(i)\n"
-                }
-            }
-        }
-        appLog.log(logger, logtype: .Debug, message: "cell2task=\n\(s)")
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -108,6 +103,15 @@ class TaskSelectVC: UIViewController,
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    // GUI actions
+
+    func cancel(sender: UIButton) {
+        appLog.log(logger, logtype: .EnterExit, message: "cancel")
+        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+
+        performSegueWithIdentifier("CancelTemplateSelect", sender: self)
+    }
     
     // UITableViewDelegate
     
@@ -121,35 +125,33 @@ class TaskSelectVC: UIViewController,
         appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
         appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
-        taskIndexSelected = cell2task[indexPath.row]
-        performSegueWithIdentifier("DoneSelectTask", sender: self)
+        templateIndexSelected = indexPath.row
+        performSegueWithIdentifier("DoneTemplateSelect", sender: self)
     }
     
     // UITableViewDataSource
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
-
-        let i = cell2task[indexPath.row]
-        if let t = tasks?[i] {
-            cell.textLabel?.text = t.name
-   
-            if let colorString = t.getProperty("color") {
-                let color = UtilitiesColor.string2color(colorString)
-                
-                cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 15.0, height: 15.0)
-            }
-        }
-    
-        return cell
-    }
-
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cell2task.count
+        if let t = templates {
+            return t.count
+        } else {
+            return 0
+        }
     }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
+
+        if let s = templates
+        where indexPath.row >= 0 && indexPath.row <= s.count {
+            let session = s[indexPath.row]
+            cell.textLabel?.text = session.getDisplayName()
+        }
     
+        return cell
+    }
 }

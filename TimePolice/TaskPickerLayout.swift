@@ -7,10 +7,8 @@
 //
 
 /*
-TODO
 
-x Flytta ViewType till Theme när jag införlivat Layout i TaskPicker (det är bara där den används)
-    => Nja, den passar väl bra så här?
+TODO
 
 */
 
