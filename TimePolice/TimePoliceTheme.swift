@@ -595,12 +595,12 @@ class BlackGreenTheme : Theme {
     func drawTaskPickerPageIndicator(context: CGContextRef, parent: CGRect, numberOfPages: Int, currentPage: Int) {
         let locations: [CGFloat] = [ 0.0, 1.0 ]
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
-        let colorsCurrent = [CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!,
-            CGColorCreate(colorSpaceRGB, [1.0, 1.0, 1.0, 1.0])!]
+        let colorsCurrent = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!]
         let gradientCurrent = CGGradientCreateWithColors(colorSpaceRGB,
             colorsCurrent, locations)
-        let colorsNotCurrent = [CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!,
-            CGColorCreate(colorSpaceRGB, [0.5, 0.5, 0.5, 1.0])!]
+        let colorsNotCurrent = [CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!,
+            CGColorCreate(colorSpaceRGB, [0.3, 0.3, 0.3, 1.0])!]
         let gradientNotCurrent = CGGradientCreateWithColors(colorSpaceRGB,
             colorsNotCurrent, locations)
 
