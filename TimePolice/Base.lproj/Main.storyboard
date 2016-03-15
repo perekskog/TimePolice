@@ -214,7 +214,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L7G-KF-Reh">
-                                <rect key="frame" x="96" y="265" width="140" height="30"/>
+                                <rect key="frame" x="154" y="269" width="140" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Sessions">
@@ -224,19 +224,8 @@
                                     <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="RE4-zX-HtF">
-                                <rect key="frame" x="110" y="310" width="113" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Export">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <segue destination="SF8-YH-e6F" kind="push" identifier="Export" id="dBH-RE-CZO"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VZG-iV-Vgl">
-                                <rect key="frame" x="87" y="214" width="159" height="42"/>
+                                <rect key="frame" x="27" y="203" width="159" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -254,15 +243,24 @@
                                 <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rVL-WA-YrK">
-                                <rect key="frame" x="89" y="355" width="154" height="42"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Right3.png" id="ROk-kF-3rJ">
+                                <rect key="frame" x="107" y="251" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Settings">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="MFh-Hz-h4z">
+                                <rect key="frame" x="32" y="498" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="Settings.png"/>
                                 <connections>
-                                    <segue destination="jaN-JA-eGe" kind="push" identifier="Settings" id="MQT-qG-4tx"/>
+                                    <segue destination="jaN-JA-eGe" kind="modal" id="wPz-NF-Wiw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bea-hD-rYn">
+                                <rect key="frame" x="244" y="498" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="Export.png"/>
+                                <connections>
+                                    <segue destination="SF8-YH-e6F" kind="modal" id="Ujy-eR-x28"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -271,9 +269,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
                     <connections>
-                        <outlet property="exportButton" destination="RE4-zX-HtF" id="KZk-K0-tN2"/>
+                        <outlet property="arrowView" destination="ROk-kF-3rJ" id="doM-cX-eLk"/>
+                        <outlet property="exportButton" destination="bea-hD-rYn" id="xT3-eV-Gqj"/>
                         <outlet property="sessionsButton" destination="L7G-KF-Reh" id="BoW-5y-Ugj"/>
-                        <outlet property="settingsButton" destination="rVL-WA-YrK" id="RZ5-Gf-Hgo"/>
+                        <outlet property="settingsButton" destination="MFh-Hz-h4z" id="5dy-BE-s0g"/>
                         <outlet property="templatesButton" destination="VZG-iV-Vgl" id="NXs-Yj-RCj"/>
                         <outlet property="titleLabel" destination="G4i-xD-Haj" id="8pN-Gp-MZJ"/>
                     </connections>
@@ -634,7 +633,10 @@
     </scenes>
     <resources>
         <image name="AddToList.png" width="19" height="23"/>
+        <image name="Export.png" width="100" height="100"/>
         <image name="PickTask.png" width="19" height="25"/>
+        <image name="Right3.png" width="100" height="100"/>
+        <image name="Settings.png" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Rbx-w5-iep"/>

@@ -18,6 +18,8 @@ class MainVC: UIViewController,
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var templatesButton: UIButton!
     @IBOutlet var sessionsButton: UIButton!
+    
+    @IBOutlet var arrowView: UIImageView!
     @IBOutlet var exportButton: UIButton!
     @IBOutlet var settingsButton: UIButton!
 
@@ -92,14 +94,27 @@ class MainVC: UIViewController,
 
         var textRect = CGRectMake(0, height/4, width, 50)
         titleLabel.frame = textRect
+
         textRect.origin.y += height/5
         templatesButton.frame = textRect
-        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
+        templatesButton.frame.origin.x -= arrowView.frame.size.width*1.2
+        
+        arrowView.frame.origin.x = templatesButton.frame.origin.x + (templatesButton.frame.size.width / 2)
+        arrowView.frame.origin.y = templatesButton.frame.origin.y + templatesButton.frame.size.height
+
+        textRect.origin.y += arrowView.frame.size.height*1.1
         sessionsButton.frame = textRect
-        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
-        exportButton.frame = textRect
-        textRect.origin.y += max(height/15, CGFloat(minimumComponentSpacing))
-        settingsButton.frame = textRect
+        sessionsButton.frame.origin.x += arrowView.frame.size.width*1.2
+        
+
+        let padding = width * 0.05
+
+        settingsButton.frame.origin.y = height - settingsButton.frame.size.height - padding
+        settingsButton.frame.origin.x = padding
+
+        exportButton.frame.origin.y = height - exportButton.frame.size.height - padding
+        exportButton.frame.origin.x = width - exportButton.frame.size.width - padding
+
     }
 
     override func viewDidLayoutSubviews() {
