@@ -32,8 +32,8 @@ let minimumComponentHeight = 35
 let segmentControlHeight = 35
 
 // Theme based type size
-let themeBigTextSize = 17.0
-let themeSmallTextSize = 14.0
+let themeBigTextSize = 16.0
+let themeSmallTextSize = 13.0
 
 // Instructions
 let textTitleSize = 30.0
