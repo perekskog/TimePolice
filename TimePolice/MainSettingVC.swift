@@ -23,6 +23,8 @@ class MainSettingVC: UIViewController,
     
     let theme = BlackGreenTheme()
 
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+
 
     //---------------------------------------
     // MainSettingsVC - Lazy properties
@@ -149,6 +151,10 @@ class MainSettingVC: UIViewController,
         
         let r = UILongPressGestureRecognizer(target: self, action: Selector("fakeCrash:"))
         deleteAllDataButton.addGestureRecognizer(r)
+        
+        activityIndicator.frame = self.view.frame
+        self.activityIndicator.hidesWhenStopped = true
+        self.view.addSubview(activityIndicator)
 
         redrawAll(false)
     }
@@ -196,12 +202,28 @@ class MainSettingVC: UIViewController,
         
         let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
+
+            // Dispatch long running job on its own queue
+            self.activityIndicator.startAnimating()
+            self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+            let q = dispatch_queue_create("Delete all data", nil)
+            dispatch_async(q, {
+                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+
                 MainSettingVC.clearAllData(self.moc)
                 TimePoliceModelUtils.save(self.moc)
                 self.moc.reset()
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
-                self.redrawAll(false)
+
+                // Hide activity indicator
+                // Must e done on main queue so it is hidden immediatly
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                    self.activityIndicator.stopAnimating()
+                    self.redrawAll(false)
+                })
             })
+        })
         alertContoller.addAction(deleteAllDataAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
@@ -238,11 +260,27 @@ class MainSettingVC: UIViewController,
         
         let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
-                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
-                TimePoliceModelUtils.save(self.moc)
-                self.moc.reset()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
-                self.redrawAll(false)
+                
+                // Dispatch long running job on its own queue
+                self.activityIndicator.startAnimating()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+                let q = dispatch_queue_create("Delete sessions", nil)
+                dispatch_async(q, {
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+                    
+                    MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
+                    TimePoliceModelUtils.save(self.moc)
+                    self.moc.reset()
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
+                    
+                    // Hide activity indicator
+                    // Must e done on main queue so it is hidden immediatly
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                        self.activityIndicator.stopAnimating()
+                        self.redrawAll(false)
+                    })
+                })
             })
         alertContoller.addAction(deleteSessionsAction)
         
@@ -402,7 +440,7 @@ class MainSettingVC: UIViewController,
 
     class func clearAllData(moc: NSManagedObjectContext) {
         var fetchRequest: NSFetchRequest
-
+        
         do {
             // Delete all task entries
             fetchRequest = NSFetchRequest(entityName: "TaskEntry")
@@ -450,7 +488,7 @@ class MainSettingVC: UIViewController,
         } catch {
             print("Can't fetch projects for deletion")
         }
-
+        
         coreDataIsConsistent = true
     }
 
@@ -461,6 +499,7 @@ class MainSettingVC: UIViewController,
     class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool, active: Bool) {
         var fetchRequest: NSFetchRequest
 
+        
         do {
             fetchRequest = NSFetchRequest(entityName: "Session")
             if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
