@@ -130,10 +130,11 @@ class MainTemplatePropVC: UIViewController,
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
-        textTemplate.frame = CGRectMake(10, 10, width-20, height-CGFloat(spaceAtBottom))
+        let textTemplateHeight = height-CGFloat(spaceAtBottom)
+        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
+
         // lastview = textTemplate
-
-
     }
 
     override func viewDidLayoutSubviews() {
@@ -188,6 +189,11 @@ class MainTemplatePropVC: UIViewController,
             appLog.log(logger, logtype: .Debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20 + Int(keyboardSize.height)
         }
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+        let textTemplateHeight = height-CGFloat(spaceAtBottom)
+        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
     }
 
     func keyboardWillHide(notification: NSNotification) {
@@ -195,6 +201,11 @@ class MainTemplatePropVC: UIViewController,
             appLog.log(logger, logtype: .Debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20
         }
+        let width = CGRectGetWidth(self.view.frame)
+        let height = CGRectGetHeight(self.view.frame)
+        let textTemplateHeight = height-CGFloat(spaceAtBottom)
+        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
     }
 }
 
