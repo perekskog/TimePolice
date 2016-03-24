@@ -108,7 +108,7 @@ class MainTemplateListVC: UIViewController,
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.addTarget(self, action: #selector(MainTemplateListVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -130,7 +130,7 @@ class MainTemplateListVC: UIViewController,
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = .Add
-        let recognizer = UITapGestureRecognizer(target:self, action:Selector("addTemplate:"))
+        let recognizer = UITapGestureRecognizer(target:self, action:#selector(MainTemplateListVC.addTemplate(_:)))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         templateListBGView.addSubview(addView)

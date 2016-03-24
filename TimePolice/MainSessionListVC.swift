@@ -111,7 +111,7 @@ class MainSessionListVC: UIViewController,
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.addTarget(self, action: #selector(MainSessionListVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -128,7 +128,7 @@ class MainSessionListVC: UIViewController,
         sessionTableView.rowHeight = CGFloat(selectItemTableRowHeight)
         sessionTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
         sessionTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTableView:"))
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(MainSessionListVC.handleLongPressTableView(_:)))
         sessionTableView.addGestureRecognizer(longPressRecognizer)
         sessionListBGView.addSubview(sessionTableView)
 
@@ -137,14 +137,14 @@ class MainSessionListVC: UIViewController,
         sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
         sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
-        sessionSelectionControl.addTarget(self, action: "selectSessions:", forControlEvents: .ValueChanged)
+        sessionSelectionControl.addTarget(self, action: #selector(MainSessionListVC.selectSessions(_:)), forControlEvents: .ValueChanged)
         sessionSelectionControl.selectedSegmentIndex = 2
         sessionListBGView.addSubview(sessionSelectionControl)
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = .Add
-        let recognizer = UITapGestureRecognizer(target:self, action:Selector("addSession:"))
+        let recognizer = UITapGestureRecognizer(target:self, action:#selector(MainSessionListVC.addSession(_:)))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         sessionListBGView.addSubview(addView)

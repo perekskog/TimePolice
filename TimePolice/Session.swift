@@ -266,7 +266,7 @@ class Session: NSManagedObject {
                     taskSummary = t
                 }
                 var (activations, totalTime) = taskSummary
-                activations++
+                activations += 1
                 if taskEntry.isStopped() {
                     totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
                 } else {
@@ -294,7 +294,7 @@ class Session: NSManagedObject {
             // For all items but the last one, if it is ongoing
             if idx != self.taskEntries.count-1 || taskEntry.isStopped() {
                 var (activations, totalTime) = sessionSummary
-                activations++
+                activations += 1
                 totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }

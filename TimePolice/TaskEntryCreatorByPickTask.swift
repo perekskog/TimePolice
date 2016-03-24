@@ -76,12 +76,12 @@ class TaskEntryCreatorByPickTaskVC:
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByPickTaskVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
         sessionNameView.tool = .SessionName
-        var recognizer = UITapGestureRecognizer(target:self, action:Selector("useTemplate:"))
+        var recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByPickTaskVC.useTemplate(_:)))
         recognizer.delegate = self
         sessionNameView.addGestureRecognizer(recognizer)
         self.view.addSubview(sessionNameView)
@@ -95,7 +95,7 @@ class TaskEntryCreatorByPickTaskVC:
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = .SignInSignOut
-        recognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapSigninSignout:"))
+        recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByPickTaskVC.handleTapSigninSignout(_:)))
         signInSignOutView.addGestureRecognizer(recognizer)
         taskPickerBGView.addSubview(signInSignOutView)
             
@@ -138,7 +138,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         var rows: Int = s.tasks.count/columns
         if s.tasks.count % columns > 0 {
-            rows++
+            rows += 1
         }
 
         layout = GridLayout(rows: rows, columns: columns, padding: padding, toolHeight: toolHeight)
@@ -166,12 +166,12 @@ class TaskEntryCreatorByPickTaskVC:
 
                 if tl[i].name != spacerName {
                 
-                    let tapRecognizer = UITapGestureRecognizer(target:self, action:Selector("handleTapTask:"))
+                    let tapRecognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByPickTaskVC.handleTapTask(_:)))
                     tapRecognizer.delegate = self
                     view.addGestureRecognizer(tapRecognizer)
                     recognizers[tapRecognizer] = i
                     
-                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPressTask:"))
+                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskEntryCreatorByPickTaskVC.handleLongPressTask(_:)))
                     tapRecognizer.delegate = self
                     view.addGestureRecognizer(longPressRecognizer)
                     recognizers[longPressRecognizer] = i
@@ -196,7 +196,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
             target: self,
-            selector: "updateActiveTask:",
+            selector: #selector(TaskEntryCreatorByPickTaskVC.updateActiveTask(_:)),
             userInfo: nil,
             repeats: true)
 
@@ -541,7 +541,7 @@ class TaskEntryCreatorByPickTaskVC:
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
-            numberOfTimesActivated++
+            numberOfTimesActivated += 1
             totalTimeActive += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
             sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 
@@ -565,7 +565,7 @@ class TaskEntryCreatorByPickTaskVC:
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
-            numberOfTimesActivated--
+            numberOfTimesActivated -= 1
             totalTimeActive -= taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
             sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 

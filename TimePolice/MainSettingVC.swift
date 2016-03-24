@@ -149,7 +149,7 @@ class MainSettingVC: UIViewController,
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.selectedSegmentIndex = 0
         
-        let r = UILongPressGestureRecognizer(target: self, action: Selector("fakeCrash:"))
+        let r = UILongPressGestureRecognizer(target: self, action: #selector(MainSettingVC.fakeCrash(_:)))
         deleteAllDataButton.addGestureRecognizer(r)
         
         activityIndicator.frame = self.view.frame
@@ -176,8 +176,8 @@ class MainSettingVC: UIViewController,
         let ok = UIAlertAction(title: "OK", style: .Default,
             handler: { action in
                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-                var vc: UIViewController?
-                let _ = vc!.isViewLoaded()
+//                let vc: UIViewController?
+//                let _ = vc!.isViewLoaded()
         })
         alertContoller.addAction(ok)
 

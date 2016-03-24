@@ -87,13 +87,13 @@ class TaskEntryCreatorByAddToListVC:
         exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         exitButton.setTitle("EXIT", forState: UIControlState.Normal)
         exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: "exit:", forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByAddToListVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
         sessionNameView.tool = .SessionName
         sessionNameView.toolbarInfoDelegate = self
-        var recognizer = UITapGestureRecognizer(target:self, action:Selector("useTemplate:"))
+        var recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.useTemplate(_:)))
         recognizer.delegate = self
         sessionNameView.addGestureRecognizer(recognizer)
         self.view.addSubview(sessionNameView)
@@ -112,7 +112,7 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
         signInSignOutView.tool = .SignInSignOut
-        recognizer = UITapGestureRecognizer(target:self, action:Selector("switchOngoingFinished:"))
+        recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.switchOngoingFinished(_:)))
         recognizer.delegate = self
         signInSignOutView.addGestureRecognizer(recognizer)
         taskEntriesBGView.addSubview(signInSignOutView)
@@ -129,7 +129,7 @@ class TaskEntryCreatorByAddToListVC:
         addView.theme = theme
         addView.toolbarInfoDelegate = self
         addView.tool = .Add
-        recognizer = UITapGestureRecognizer(target:self, action:Selector("addTaskEntry:"))
+        recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.addTaskEntry(_:)))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
         taskEntriesBGView.addSubview(addView)
@@ -157,7 +157,7 @@ class TaskEntryCreatorByAddToListVC:
 
         updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
                 target: self,
-              selector: "updateActiveTask:",
+              selector: #selector(TaskEntryCreatorByAddToListVC.updateActiveTask(_:)),
               userInfo: nil,
                repeats: true)        
 
@@ -281,12 +281,12 @@ class TaskEntryCreatorByAddToListVC:
         if w.isOngoing() {
             w.setStoppedAt(NSDate())
             var (activations, totalTime) = sessionSummary
-            activations++
+            activations += 1
             totalTime += w.stopTime.timeIntervalSinceDate(w.startTime)
             sessionSummary = (activations, totalTime)
         } else {
             var (activations, totalTime) = sessionSummary
-            activations--
+            activations -= 1
             totalTime -= w.stopTime.timeIntervalSinceDate(w.startTime)
             sessionSummary = (activations, totalTime)
             w.setAsOngoing()
@@ -311,7 +311,7 @@ class TaskEntryCreatorByAddToListVC:
             if lastTaskEntry.isOngoing() {
                 lastTaskEntry.setStoppedAt(now)
                 var (activations, totalTime) = sessionSummary
-                activations++
+                activations += 1
                 totalTime += lastTaskEntry.stopTime.timeIntervalSinceDate(lastTaskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }

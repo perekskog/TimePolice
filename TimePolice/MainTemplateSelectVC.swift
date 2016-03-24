@@ -75,7 +75,7 @@ class MainTemplateSelectVC: UIViewController,
 
         self.title = "Select Template"
         
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplateSelectVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
 
         table.rowHeight = CGFloat(selectItemTableRowHeight)

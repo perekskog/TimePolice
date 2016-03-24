@@ -96,9 +96,9 @@ class MainTemplatePropVC: UIViewController,
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: "save:")
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
 
         textTemplate.text = "Lorem ipsum"
@@ -114,8 +114,8 @@ class MainTemplatePropVC: UIViewController,
 
         spaceAtBottom = 20
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil);
     }
 
     override func viewWillAppear(animated: Bool) {

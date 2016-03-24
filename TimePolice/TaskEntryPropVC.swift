@@ -127,9 +127,9 @@ class TaskEntryPropVC:
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "cancel:")
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TaskEntryPropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: "save:")
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TaskEntryPropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
 
         table = UITableView(frame: self.view.frame, style: .Grouped)
@@ -140,8 +140,8 @@ class TaskEntryPropVC:
         let now = NSDate()
         datePickerStart.date = now
         datePickerStop.date = now
-        datePickerStart.addTarget(self, action: "datePickerChanged:", forControlEvents: UIControlEvents.ValueChanged)
-        datePickerStop.addTarget(self, action: "datePickerChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        datePickerStart.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerStop.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
         datePickerStart.minimumDate = minimumDate
         datePickerStart.maximumDate = maximumDate
         datePickerStop.minimumDate = minimumDate
@@ -366,11 +366,11 @@ class TaskEntryPropVC:
             var n = 1
             // If not first, show "delete, fill with previous"
             if !first {
-                n++
+                n += 1
             }
             // If not last, show "delete, fill with next"
             if !last {
-                n++
+                n += 1
             }
             return n
             // Insert
@@ -379,7 +379,7 @@ class TaskEntryPropVC:
             var n = 1
             // If not ongoing, show "insert after"
             if !ongoing {
-                n++
+                n += 1
             }
             return n
         default:
