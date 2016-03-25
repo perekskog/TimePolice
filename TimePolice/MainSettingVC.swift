@@ -176,8 +176,8 @@ class MainSettingVC: UIViewController,
         let ok = UIAlertAction(title: "OK", style: .Default,
             handler: { action in
                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-//                let vc: UIViewController?
-//                let _ = vc!.isViewLoaded()
+                var vc: UIViewController?
+                let _ = vc!.isViewLoaded()
         })
         alertContoller.addAction(ok)
 
@@ -200,30 +200,45 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
             preferredStyle: .Alert)
         
+// >>> Not using a queue        
         let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
-
-            // Dispatch long running job on its own queue
-            self.activityIndicator.startAnimating()
-            self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
-            let q = dispatch_queue_create("Delete all data", nil)
-            dispatch_async(q, {
-                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
 
                 MainSettingVC.clearAllData(self.moc)
                 TimePoliceModelUtils.save(self.moc)
                 self.moc.reset()
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
-
-                // Hide activity indicator
-                // Must e done on main queue so it is hidden immediatly
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
-                    self.activityIndicator.stopAnimating()
-                    self.redrawAll(false)
-                })
+                self.redrawAll(false)
             })
-        })
+// <<< Not using a queue    
+
+// >>> Using a queue        
+        // let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
+        //     handler: { action in
+
+        //     // Dispatch long running job on its own queue
+        //     self.activityIndicator.startAnimating()
+        //     self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+        //     let q = dispatch_queue_create("Delete all data", nil)
+        //     dispatch_async(q, {
+        //         self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+
+        //         MainSettingVC.clearAllData(self.moc)
+        //         TimePoliceModelUtils.save(self.moc)
+        //         self.moc.reset()
+        //         self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
+
+        //         // Hide activity indicator
+        //         // Must e done on main queue so it is hidden immediatly
+        //         dispatch_async(dispatch_get_main_queue(), {
+        //             self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+        //             self.activityIndicator.stopAnimating()
+        //             self.redrawAll(false)
+        //         })
+        //     })
+        // })
+// <<< Using a queue        
+
         alertContoller.addAction(deleteAllDataAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
@@ -257,31 +272,45 @@ class MainSettingVC: UIViewController,
         
         let alertContoller = UIAlertController(title: "\(prompt)?", message: nil,
             preferredStyle: .Alert)
-        
+
+// >>> Not using a queue        
         let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
-            handler: { action in
-                
-                // Dispatch long running job on its own queue
-                self.activityIndicator.startAnimating()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
-                let q = dispatch_queue_create("Delete sessions", nil)
-                dispatch_async(q, {
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
-                    
-                    MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
-                    TimePoliceModelUtils.save(self.moc)
-                    self.moc.reset()
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
-                    
-                    // Hide activity indicator
-                    // Must e done on main queue so it is hidden immediatly
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
-                        self.activityIndicator.stopAnimating()
-                        self.redrawAll(false)
-                    })
-                })
+            handler: { action in                
+                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
+                TimePoliceModelUtils.save(self.moc)
+                self.moc.reset()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")                    
+                self.redrawAll(false)
             })
+// <<< Not using a queue        
+
+// >>> Using a queue                
+        // let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
+        //     handler: { action in
+                
+        //         // Dispatch long running job on its own queue
+        //         self.activityIndicator.startAnimating()
+        //         self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+        //         let q = dispatch_queue_create("Delete sessions", nil)
+        //         dispatch_async(q, {
+        //             self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+                    
+        //             MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
+        //             TimePoliceModelUtils.save(self.moc)
+        //             self.moc.reset()
+        //             self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
+                    
+        //             // Hide activity indicator
+        //             // Must e done on main queue so it is hidden immediatly
+        //             dispatch_async(dispatch_get_main_queue(), {
+        //                 self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+        //                 self.activityIndicator.stopAnimating()
+        //                 self.redrawAll(false)
+        //             })
+        //         })
+        //     })
+// <<< Using a queue
+
         alertContoller.addAction(deleteSessionsAction)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
