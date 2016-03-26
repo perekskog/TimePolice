@@ -30,7 +30,7 @@ class MainSettingVC: UIViewController,
     // MainSettingsVC - Lazy properties
     //---------------------------------------
 
-    lazy var moc : NSManagedObjectContext = {
+    lazy var mainQueueMOC : NSManagedObjectContext = {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
@@ -75,9 +75,9 @@ class MainSettingVC: UIViewController,
         super.viewDidAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
 
-        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
+        let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(mainQueueMOC)
         if shouldPopupAlert == true {
-            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
+            let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: mainQueueMOC)
             presentViewController(alertController, animated: true, completion: nil)
         }
 
@@ -200,44 +200,41 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
             preferredStyle: .Alert)
         
-// >>> Not using a queue        
         let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
             handler: { action in
 
-                MainSettingVC.clearAllData(self.moc)
-                TimePoliceModelUtils.save(self.moc)
-                self.moc.reset()
+            // Dispatch long running job on its own queue
+            self.activityIndicator.startAnimating()
+            self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+
+
+            let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+            privateMOC.parentContext = self.mainQueueMOC
+
+
+            privateMOC.performBlock({
+                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+
+                MainSettingVC.clearAllData(privateMOC)
+
+                do {
+                    try privateMOC.save()
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
+
                 self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
-                self.redrawAll(false)
+
+                // Hide activity indicator
+                // Must e done on main queue so it is hidden immediatly
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                    self.activityIndicator.stopAnimating()
+                    self.redrawAll(false)
+                })
             })
-// <<< Not using a queue    
 
-// >>> Using a queue        
-        // let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
-        //     handler: { action in
-
-        //     // Dispatch long running job on its own queue
-        //     self.activityIndicator.startAnimating()
-        //     self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
-        //     let q = dispatch_queue_create("Delete all data", nil)
-        //     dispatch_async(q, {
-        //         self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
-
-        //         MainSettingVC.clearAllData(self.moc)
-        //         TimePoliceModelUtils.save(self.moc)
-        //         self.moc.reset()
-        //         self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
-
-        //         // Hide activity indicator
-        //         // Must e done on main queue so it is hidden immediatly
-        //         dispatch_async(dispatch_get_main_queue(), {
-        //             self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
-        //             self.activityIndicator.stopAnimating()
-        //             self.redrawAll(false)
-        //         })
-        //     })
-        // })
-// <<< Using a queue        
+        })
 
         alertContoller.addAction(deleteAllDataAction)
         
@@ -273,43 +270,39 @@ class MainSettingVC: UIViewController,
         let alertContoller = UIAlertController(title: "\(prompt)?", message: nil,
             preferredStyle: .Alert)
 
-// >>> Not using a queue        
         let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
-            handler: { action in                
-                MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
-                TimePoliceModelUtils.save(self.moc)
-                self.moc.reset()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")                    
-                self.redrawAll(false)
-            })
-// <<< Not using a queue        
-
-// >>> Using a queue                
-        // let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
-        //     handler: { action in
+            handler: { action in
                 
-        //         // Dispatch long running job on its own queue
-        //         self.activityIndicator.startAnimating()
-        //         self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
-        //         let q = dispatch_queue_create("Delete sessions", nil)
-        //         dispatch_async(q, {
-        //             self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+                // Dispatch long running job on its own queue
+                self.activityIndicator.startAnimating()
+                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+
+                let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+                privateMOC.parentContext = self.mainQueueMOC
+
+
+                privateMOC.performBlock({
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
                     
-        //             MainSettingVC.clearSessionsKeepTemplates(self.moc, archived: archived, active: active)
-        //             TimePoliceModelUtils.save(self.moc)
-        //             self.moc.reset()
-        //             self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
+                    MainSettingVC.clearSessionsKeepTemplates(privateMOC, archived: archived, active: active)
+
+                    do {
+                        try privateMOC.save()
+                    } catch {
+                        fatalError("Failure to save context: \(error)")
+                    }
+
+                    self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
                     
-        //             // Hide activity indicator
-        //             // Must e done on main queue so it is hidden immediatly
-        //             dispatch_async(dispatch_get_main_queue(), {
-        //                 self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
-        //                 self.activityIndicator.stopAnimating()
-        //                 self.redrawAll(false)
-        //             })
-        //         })
-        //     })
-// <<< Using a queue
+                    // Hide activity indicator
+                    // Must e done on main queue so it is hidden immediatly
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                        self.activityIndicator.stopAnimating()
+                        self.redrawAll(false)
+                    })
+                })
+            })
 
         alertContoller.addAction(deleteSessionsAction)
         
