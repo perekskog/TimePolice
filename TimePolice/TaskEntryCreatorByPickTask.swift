@@ -38,7 +38,7 @@ class TaskEntryCreatorByPickTaskVC:
 
     var layout: Layout?
 
-    var sessionTaskSummary: [Task: (Int, NSTimeInterval)]!
+    var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
 
     var recognizers: [UIGestureRecognizer: Int] = [:]
     var taskbuttonviews: [Int: TaskPickerButtonView] = [:]
@@ -376,7 +376,9 @@ class TaskEntryCreatorByPickTaskVC:
     override func redrawAfterSegue() {
         appLog.log(logger, logtype: .EnterExit, message: "redraw")
 
-        sessionTaskSummary = session?.getSessionTaskSummary(false)
+        if let s = session?.getSessionTaskSummary(false) {
+            sessionTaskSummary = s
+        }
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()

@@ -33,7 +33,7 @@ class TaskEntryCreatorByAddToListVC:
 
 
     // Cached values, calculated at startup
-    var sessionSummary: (Int, NSTimeInterval)!
+    var sessionSummary: (Int, NSTimeInterval) = (0,0)
 
     var updateActiveActivityTimer: NSTimer?
 
@@ -164,7 +164,9 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
 
         self.sessionSummary = (0,0)
-        self.sessionSummary = session?.getSessionSummary(moc)
+        if let s = session?.getSessionSummary(moc) {
+            self.sessionSummary = s
+        }
         redrawAfterSegue()
         scrollToEnd(taskEntriesTableView)
     }
@@ -230,7 +232,9 @@ class TaskEntryCreatorByAddToListVC:
         // viewWillLayoutSubviews is always called, often several times.
 
         self.sessionSummary = (0,0)
-        self.sessionSummary = session?.getSessionSummary(moc)
+        if let s = session?.getSessionSummary(moc) {
+            self.sessionSummary = s
+        }
         redrawAfterSegue()
         scrollToEnd(taskEntriesTableView)
 
