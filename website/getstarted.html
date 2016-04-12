@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+  </head>
+  <body>
+
+  <div class="container">
+
+<nav class="navbar navbar-light bg-faded">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+    &#9776;
+  </button>
+</nav>
+<div class="collapse" id="exCollapsingNavbar">
+<nav class="navbar navbar-light bg-faded">
+  <div class="nav navbar-nav">
+    <a class="nav-item nav-link" href="index.html">Home</a>
+    <a class="nav-item nav-link active" href="getstarted.html">Get started</a>
+    <a class="nav-item nav-link" href="support.html">Support</a>
+  </div>
+</nav>
+</div>
+
+    <h3>Get started</h3>
+
+    <h4>Concepts</h4>
+
+    <dl>
+    <dt>Session</dt>
+    <dd>A session is created manually by selecting a template with tasks.</dd>
+    <dt>Template</dt>
+    <dd>A template is a named list of tasks and is created manually. There may be several templates with the same base name, followed by a . and a suffix. A session created using a template can use tasks from all templates with the same base name. This way you can show a subset of tasks dependning on your context.</dd>
+    <dt>Project</dt>
+    <dd>A project is a collection of templates and sessions and is created and deleted automatically to keep related sessions and templates together.</dd>
+    <dt>Task</dt>
+    <dd>Tasks are created and deleted automatically from the templates you define.</dd>
+    <dt>Task entry</dt>
+    <dd>Task entries are created manually by switching between different tasks.</dd>
+    </dl>
+
+    <h4>Templates</h4>
+
+    <p>Template can be edited in the app, or they can be edited using a texteditor and pasted into the app.</p>
+
+    <h5>Examples</h5>
+
+    <div class="container">
+    <div class="row">
+
+    <div class="col-md-6">
+    <div class="card"><div class="card-block">
+    <p class="card-header">Simple list of tasks.</p>
+    <pre>
+    Work
+    Idle
+    Email
+    Project 1
+    Project 2
+    Project 3
+    </pre>
+    </div></div></div>
+
+    <div class="col-md-6">
+    <div class="card"><div class="card-block">
+    <p class="card-header">Style your session.</p>
+    <pre>
+    Work#columns=3,extension=dd
+    Idle
+    Email
+    Project 1
+    Project 2
+    Project 3
+    </pre>
+    <p>This will layout tasks in 3 columns and add the current day to a session when it is created. "extnsion" follows Apples format for formatting dates.</p>
+    </div></div></div>
+
+    <div class="col-md-6">
+    <div class="card"><div class="card-block">
+    <p class="card-header">Style your tasks.</p>
+    <pre>
+    Work#columns=3,extension=dd
+    Idle#color=888
+    Email#color=f88
+    =#color=8f8
+    Project 1
+    Project 2
+    Project 3
+    </pre>
+    <p>This will color idle task grey, email task red and all project tasks green.</p>
+    </div></div></div>
+
+    <div class="col-md-6">
+    <div class="card"><div class="card-block">
+    <p class="card-header">Two versions of a template.</p>
+    <pre>
+    Work.projects#columns=3,extension=dd
+    Idle#color=888
+    Email#color=f88
+    =#color=8f8
+    Project 1
+    Project 2
+    Project 3
+    </pre>
+    <pre>
+    Work.internal#columns=3,extension=dd
+    Idle#color=888
+    Email#color=f88
+    =#color=8f8
+    Planning
+    Followup
+    </pre>
+    <p>This will give you two different layouts to use for the same type of sessions. Switch the set of tasks when needed.</p>
+    </div></div></div>
+
+    <h4>Edit task entries</h4>
+
+    <p>When editing task entries, Timpolice will always make sure your data is consistent and follows a few rules.</p>
+    <ul>
+    <li>The most common case is that the stop time for one task entry is exactly the same as start time for the next task entry.</li>
+    <li>Start and end times for task entries can not overlap. If you change start time for one task entry and it overlaps with end time for the previous task entry, the stop time for the previous entry will be updated as well. When changing stop time, the start time for the next entry will be changed in the same way.</li>
+    <li>Automatic change of a start or end time is limited to the closest neighbour and will not cascade any further than the closest neighbour.</li>
+    <li>Gaps are defined as periods of time where no task has been active. Gaps are displayed as empty boxes. Gaps can be created in two ways: Deleting a task entry or changing start and/or stop time so a task entry is no longer attached to its closest neighbor. By selecting a gap, it can be deleted by extending either the previous task or the following task to fill the gap.</li>
+    </ul>
+
+    <h4>Export data</h4>
+
+    <p>Export of data is accomplished using the pasteboard on your device.</p>
+    <ul>
+    <li>Select the sessions to export (all, archived or active). [as buttons]</li>
+    <li>Hit the export button (SessionSummary or SessionDetails). [as buttons]</li>
+    <li>Open a spreadsheet app like Numbers or Excel.</li>
+    <li>Paste your tracking data</li>
+    </ul>
+
+    <p><button type="button" class="btn btn-secondary">Session summary</button> will summarize task entries for each task in a project and add one row for each task and one columns for each session in a project.</p>
+    <p><button type="button" class="btn btn-secondary">Session details</button> will add one row for each task entry in a session and one column for each session in a project.</p>
+
+</div>
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+  </body>
+</html>
