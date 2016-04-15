@@ -11,43 +11,62 @@
   </head>
   <body>
 
+<header class="navbar navbar-light navbar-static-top bd-navbar" role="banner"> 
+  <div class="clearfix">
+    <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#main-nav">
+      &#9776;
+    </button>
+    <a class="navbar-brand hidden-sm-up" href="index.html">
+      Timepolice
+    </a>
+  </div>
+  <div class="collapse navbar-toggleable-xs" id="main-nav">
+    <nav class="nav navbar-nav">
+      <a class="nav-item nav-link" href="index.html">Timepolice</a>
+      <a class="nav-item nav-link" href="getstarted.html">Getting started</a>
+      <a class="nav-item nav-link" href="support.html">Support</a>
+    </nav>
+  </div>
+</header>
+
+
   <div class="container">
 
-<nav class="navbar navbar-light bg-faded">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-    &#9776;
-  </button>
-</nav>
-<div class="collapse" id="exCollapsingNavbar">
-<nav class="navbar navbar-light bg-faded">
-  <div class="nav navbar-nav">
-    <a class="nav-item nav-link" href="index.html">Home</a>
-    <a class="nav-item nav-link active" href="getstarted.html">Get started</a>
-    <a class="nav-item nav-link" href="support.html">Support</a>
-  </div>
-</nav>
-</div>
 
-    <h3>Get started</h3>
+    <div class="jumbotron">
+    <h2 class="display-4">Timepolice</h2>
+    <p class="lead">The time tracker that focus on tracking time.</p>
+    </div>
+
+
 
     <h4>Concepts</h4>
+    
 
-    <dl>
-    <dt>Session</dt>
-    <dd>A session is created manually by selecting a template with tasks.</dd>
-    <dt>Template</dt>
-    <dd>A template is a named list of tasks and is created manually. There may be several templates with the same base name, followed by a . and a suffix. A session created using a template can use tasks from all templates with the same base name. This way you can show a subset of tasks dependning on your context.</dd>
-    <dt>Project</dt>
-    <dd>A project is a collection of templates and sessions and is created and deleted automatically to keep related sessions and templates together.</dd>
-    <dt>Task</dt>
-    <dd>Tasks are created and deleted automatically from the templates you define.</dd>
-    <dt>Task entry</dt>
-    <dd>Task entries are created manually by switching between different tasks.</dd>
+    <dl class="dl-horizontal m-x-0">
+
+    <dt class="col-sm-3">Template</dt>
+    <dd class="col-sm-9">A <strong>template</strong> is a named list of tasks and is created manually. There may be several templates with the same base name, followed by a . and a suffix.</dd>
+
+    <dt class="col-sm-3">Session</dt>
+    <dd class="col-sm-9">A <strong>session</strong> is created manually.
+    A session created using a template can use tasks from all templates with the same base name. This way you can define several related templates to show a subset of tasks dependning on your context.</dd>
+
+    <dt class="col-sm-3">Project</dt>
+    <dd class="col-sm-9">A <strong>project</strong> is a collection of all sessions created from templates with the same base name. Projects are created and deleted automatically.</dd>
+
+    <dt class="col-sm-3">Task</dt>
+    <dd class="col-sm-9"><strong>Tasks</strong> are created and deleted automatically depending on the list of tasks in the templates you provide.</dd>
+
+    <dt class="col-sm-3">Task entry</dt>
+    <dd class="col-sm-9">Each time you switch to a new task, a new <strong>task entry</strong> is created. A task entry will store the task ongoing, when it is started and when it is ended.</dd>
+
     </dl>
+
 
     <h4>Templates</h4>
 
-    <p>Template can be edited in the app, or they can be edited using a texteditor and pasted into the app.</p>
+    <p>A template can be edited in the app. Templates can also be edited in any text editor - just copy and paste the content to the app.</p>
 
     <h5>Examples</h5>
 
@@ -78,7 +97,7 @@
     Project 2
     Project 3
     </pre>
-    <p>This will layout tasks in 3 columns and add the current day to a session when it is created. "extnsion" follows Apples format for formatting dates.</p>
+    <p>This will layout tasks in 3 columns and add the current day to the name of a session when it is created. "extension" follows Apple's format for formatting dates.</p>
     </div></div></div>
 
     <div class="col-md-6">
@@ -116,31 +135,36 @@
     Planning
     Followup
     </pre>
-    <p>This will give you two different layouts to use for the same type of sessions. Switch the set of tasks when needed.</p>
+    <p>This will give you two different sets of tasks to use for sessions in the same project. Switch the set of tasks when needed.</p>
     </div></div></div>
+
+
 
     <h4>Edit task entries</h4>
 
     <p>When editing task entries, Timpolice will always make sure your data is consistent and follows a few rules.</p>
     <ul>
-    <li>The most common case is that the stop time for one task entry is exactly the same as start time for the next task entry.</li>
-    <li>Start and end times for task entries can not overlap. If you change start time for one task entry and it overlaps with end time for the previous task entry, the stop time for the previous entry will be updated as well. When changing stop time, the start time for the next entry will be changed in the same way.</li>
-    <li>Automatic change of a start or end time is limited to the closest neighbour and will not cascade any further than the closest neighbour.</li>
+    <li>The most common case is that the stop time for one task entry is exactly the same as the start time for the next task entry.</li>
+    <li>Start and end times for task entries can not overlap. If you change start time for one task entry and it overlaps with stop time for the previous task entry, the stop time for the previous entry will be changed as well. When changing stop time, the start time for the next entry will be changed in the same way.</li>
+    <li>Start time for a task entry can not be set earlier than start time for the previous task entry. Stop time for a task entry can not be set later than stop time for the next task entry.</li>
     <li>Gaps are defined as periods of time where no task has been active. Gaps are displayed as empty boxes. Gaps can be created in two ways: Deleting a task entry or changing start and/or stop time so a task entry is no longer attached to its closest neighbor. By selecting a gap, it can be deleted by extending either the previous task or the following task to fill the gap.</li>
     </ul>
+
+    
+
 
     <h4>Export data</h4>
 
     <p>Export of data is accomplished using the pasteboard on your device.</p>
     <ul>
-    <li>Select the sessions to export (all, archived or active). [as buttons]</li>
-    <li>Hit the export button (SessionSummary or SessionDetails). [as buttons]</li>
+    <li>Select the sessions to export (<button type="button" class="btn btn-primary-outline btn-sm">all</button>, <button type="button" class="btn btn-primary-outline btn-sm">archived</button> or <button type="button" class="btn btn-primary-outline btn-sm">active</button>).</li>
+    <li>Hit the export button (<button type="button" class="btn btn-primary-outline btn-sm">Session summary</button> or <button type="button" class="btn btn-primary-outline btn-sm">Session details</button>).</li>
     <li>Open a spreadsheet app like Numbers or Excel.</li>
     <li>Paste your tracking data</li>
     </ul>
 
-    <p><button type="button" class="btn btn-secondary">Session summary</button> will summarize task entries for each task in a project and add one row for each task and one columns for each session in a project.</p>
-    <p><button type="button" class="btn btn-secondary">Session details</button> will add one row for each task entry in a session and one column for each session in a project.</p>
+    <p>Session summary will summarize task entries for each task in a project and add one row for each task and one columns for each session in a project.</p>
+    <p>Session details will add one row for each task entry in a session and one column for each session in a project.</p>
 
 </div>
 

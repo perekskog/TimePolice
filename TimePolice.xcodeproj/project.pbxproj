@@ -37,10 +37,6 @@
 		CB1EDE9B1BBAED2A007FD39C /* PickTask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE991BBAED29007FD39C /* PickTask@2x.png */; };
 		CB1EDE9E1BBAF3E6007FD39C /* AddToList.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */; };
 		CB1EDE9F1BBAF3E6007FD39C /* PickTask.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1EDE9D1BBAF3E6007FD39C /* PickTask.png */; };
-		CB31A0001C988D8100809883 /* Export.png in Resources */ = {isa = PBXBuildFile; fileRef = CB319FFC1C988D8000809883 /* Export.png */; };
-		CB31A0011C988D8100809883 /* Folder.png in Resources */ = {isa = PBXBuildFile; fileRef = CB319FFD1C988D8100809883 /* Folder.png */; };
-		CB31A0021C988D8100809883 /* Right3.png in Resources */ = {isa = PBXBuildFile; fileRef = CB319FFE1C988D8100809883 /* Right3.png */; };
-		CB31A0031C988D8100809883 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = CB319FFF1C988D8100809883 /* Settings.png */; };
 		CB33BC501B7333C00067DE3F /* TaskSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */; };
 		CB33BC511B7333C00067DE3F /* TaskSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */; };
 		CB3418771A0B4F580062C281 /* TaskEntryCreatorByPickTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD182BF1A08AAD2007BA9F7 /* TaskEntryCreatorByPickTask.swift */; };
@@ -48,6 +44,9 @@
 		CB623C0E1A7ED728004AE917 /* TimePoliceTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */; };
 		CB623C101A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */; };
 		CB623C111A7ED7A9004AE917 /* TaskPickerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */; };
+		CB7166071CC0AA2100A94314 /* 160330 timepolice icons_Arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = CB7166041CC0AA2100A94314 /* 160330 timepolice icons_Arrow.png */; };
+		CB7166081CC0AA2100A94314 /* 160330 timepolice icons_Export.png in Resources */ = {isa = PBXBuildFile; fileRef = CB7166051CC0AA2100A94314 /* 160330 timepolice icons_Export.png */; };
+		CB7166091CC0AA2100A94314 /* 160330 timepolice icons_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = CB7166061CC0AA2100A94314 /* 160330 timepolice icons_Settings.png */; };
 		CB867F501B0134AA00AA8C8A /* TaskEntryPropVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA1A47A1AFD02F7005403F7 /* TaskEntryPropVC.swift */; };
 		CB899E441BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB899E431BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift */; };
 		CB899E461BA5521600914CDA /* TaskEntryCreatorManagerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB899E451BA5521600914CDA /* TaskEntryCreatorManagerBase.swift */; };
@@ -118,13 +117,12 @@
 		CB1EDE991BBAED29007FD39C /* PickTask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PickTask@2x.png"; sourceTree = "<group>"; };
 		CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddToList.png; sourceTree = "<group>"; };
 		CB1EDE9D1BBAF3E6007FD39C /* PickTask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PickTask.png; sourceTree = "<group>"; };
-		CB319FFC1C988D8000809883 /* Export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Export.png; sourceTree = "<group>"; };
-		CB319FFD1C988D8100809883 /* Folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Folder.png; sourceTree = "<group>"; };
-		CB319FFE1C988D8100809883 /* Right3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Right3.png; sourceTree = "<group>"; };
-		CB319FFF1C988D8100809883 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
 		CB33BC4F1B7333C00067DE3F /* TaskSelectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskSelectVC.swift; sourceTree = "<group>"; };
 		CB623C0C1A7ED728004AE917 /* TimePoliceTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePoliceTheme.swift; sourceTree = "<group>"; };
 		CB623C0F1A7ED7A9004AE917 /* TaskPickerLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskPickerLayout.swift; sourceTree = "<group>"; };
+		CB7166041CC0AA2100A94314 /* 160330 timepolice icons_Arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "160330 timepolice icons_Arrow.png"; sourceTree = "<group>"; };
+		CB7166051CC0AA2100A94314 /* 160330 timepolice icons_Export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "160330 timepolice icons_Export.png"; sourceTree = "<group>"; };
+		CB7166061CC0AA2100A94314 /* 160330 timepolice icons_Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "160330 timepolice icons_Settings.png"; sourceTree = "<group>"; };
 		CB899E431BA5498100914CDA /* TaskEntryCreatorManagerForPickTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorManagerForPickTask.swift; sourceTree = "<group>"; };
 		CB899E451BA5521600914CDA /* TaskEntryCreatorManagerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorManagerBase.swift; sourceTree = "<group>"; };
 		CB899E4A1BA556EB00914CDA /* TaskEntryCreatorManagerForAddToList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEntryCreatorManagerForAddToList.swift; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 		CBD182CD1A08AAD2007BA9F7 /* TimePoliceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimePoliceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBD182D21A08AAD2007BA9F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CBD182D31A08AAD2007BA9F7 /* TimePoliceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePoliceTests.swift; sourceTree = "<group>"; };
-		CBDA2E601A4019FB00F5C568 /* bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bug.png; sourceTree = "<group>"; };
 		CBDBCE4D1A88273B00E33072 /* TimePolice.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TimePolice.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -276,15 +273,13 @@
 		CBDA2E5F1A4019CC00F5C568 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				CB319FFC1C988D8000809883 /* Export.png */,
-				CB319FFD1C988D8100809883 /* Folder.png */,
-				CB319FFE1C988D8100809883 /* Right3.png */,
-				CB319FFF1C988D8100809883 /* Settings.png */,
+				CB7166041CC0AA2100A94314 /* 160330 timepolice icons_Arrow.png */,
+				CB7166051CC0AA2100A94314 /* 160330 timepolice icons_Export.png */,
+				CB7166061CC0AA2100A94314 /* 160330 timepolice icons_Settings.png */,
 				CB1EDE9C1BBAF3E6007FD39C /* AddToList.png */,
 				CB1EDE9D1BBAF3E6007FD39C /* PickTask.png */,
 				CB1EDE981BBAED29007FD39C /* AddToList@2x.png */,
 				CB1EDE991BBAED29007FD39C /* PickTask@2x.png */,
-				CBDA2E601A4019FB00F5C568 /* bug.png */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -374,15 +369,14 @@
 			files = (
 				CB1EDE9E1BBAF3E6007FD39C /* AddToList.png in Resources */,
 				CBD182C31A08AAD2007BA9F7 /* Main.storyboard in Resources */,
-				CB31A0011C988D8100809883 /* Folder.png in Resources */,
+				CB7166071CC0AA2100A94314 /* 160330 timepolice icons_Arrow.png in Resources */,
 				CB1EDE9B1BBAED2A007FD39C /* PickTask@2x.png in Resources */,
-				CB31A0031C988D8100809883 /* Settings.png in Resources */,
 				CB1EDE9A1BBAED2A007FD39C /* AddToList@2x.png in Resources */,
 				CB1EDE9F1BBAF3E6007FD39C /* PickTask.png in Resources */,
+				CB7166081CC0AA2100A94314 /* 160330 timepolice icons_Export.png in Resources */,
 				CBD182C81A08AAD2007BA9F7 /* LaunchScreen.xib in Resources */,
 				CBD182C51A08AAD2007BA9F7 /* Images.xcassets in Resources */,
-				CB31A0021C988D8100809883 /* Right3.png in Resources */,
-				CB31A0001C988D8100809883 /* Export.png in Resources */,
+				CB7166091CC0AA2100A94314 /* 160330 timepolice icons_Settings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
