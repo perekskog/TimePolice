@@ -1,6 +1,6 @@
-Does your time fly away and you have no idea where?
-
-Do you have a need to track time in several different ways at the same time?
+- Does your time fly away and you have no idea where?
+- Do you have a need to track time in several different ways at the same time?
+- Have you tried other time trackers and think they are too cumbersome to use?
 
 Timepolice will let you track time in a very flexible way, with high granularity
 and with a minimum of interactions.
@@ -9,7 +9,7 @@ The workflow is simple:
 
 1. Define templates with lists of tasks to pick from.
 2. Create sessions from templates.
-3. As you do different things, swipe between sessions and mark each switch of task with a simple touch.
+3. As you do different things, swipe between active sessions and mark each switch of task with a simple touch.
 4. Export tracking data for use in a spreadsheet like Numbers or Excel.
 
 What makes Timepolice different from other time trackers?
