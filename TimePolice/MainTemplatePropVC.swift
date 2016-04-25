@@ -23,6 +23,8 @@ class MainTemplatePropVC: UIViewController,
     // Internal
     let textTemplate = UITextView(frame: CGRectZero)
     var spaceAtBottom = 0
+    let padding = 10
+    let buttonInstructions = UIButton(type: UIButtonType.System)
 
 
     deinit {
@@ -100,6 +102,7 @@ class MainTemplatePropVC: UIViewController,
         self.navigationItem.leftBarButtonItem = buttonCancel
         let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
+        
 
         textTemplate.text = ""
         if let t = template {
@@ -109,8 +112,15 @@ class MainTemplatePropVC: UIViewController,
         textTemplate.backgroundColor = UIColor.whiteColor()
         textTemplate.font = UIFont.systemFontOfSize(16)
         self.view.addSubview(textTemplate)
+        
+        buttonInstructions.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+        buttonInstructions.setTitle("How to write a template", forState: UIControlState.Normal)
+        buttonInstructions.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
+        buttonInstructions.addTarget(self, action: #selector(MainTemplatePropVC.displayTemplateInstructions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
 
-        self.view.backgroundColor = UIColor.grayColor()
+        self.view.addSubview(buttonInstructions)
+
+        self.view.backgroundColor = UIColor.lightGrayColor()
 
         spaceAtBottom = 20
 
@@ -130,11 +140,14 @@ class MainTemplatePropVC: UIViewController,
         let width = CGRectGetWidth(self.view.frame)
         let height = CGRectGetHeight(self.view.frame)
 
-        let textTemplateHeight = height-CGFloat(spaceAtBottom)
+        let textTemplateHeight = height - CGFloat(spaceAtBottom) - 30
         appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
         textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
-
-        // lastview = textTemplate
+        
+        buttonInstructions.frame.origin.y = CGRectGetMaxY(textTemplate.frame)
+        buttonInstructions.frame.size.height = 30
+        buttonInstructions.frame.size.width = width - 20
+        buttonInstructions.center.x = width/2
     }
 
     override func viewDidLayoutSubviews() {
@@ -206,6 +219,17 @@ class MainTemplatePropVC: UIViewController,
         let textTemplateHeight = height-CGFloat(spaceAtBottom)
         appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
         textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
+    }
+    
+    func displayTemplateInstructions(sender: UIButton)
+    {
+        appLog.log(logger, logtype: .EnterExit, message: "displayTemplateInstructions")
+        appLog.log(logger, logtype: .GUIAction, message: "displayTemplateInstructions")
+        
+        if let u = NSURL(string: "http://timepolice.perekskog.se/getstarted.html#templates")
+        {
+            UIApplication.sharedApplication().openURL(u)
+        }
     }
 }
 
