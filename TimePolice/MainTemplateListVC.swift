@@ -256,13 +256,6 @@ class MainTemplateListVC: UIViewController,
             if let nvc = segue.destinationViewController as? UINavigationController,
                     vc = nvc.topViewController as? MainTemplatePropVC {
                 vc.segue = "AddTemplate"
-                var s = "At work\n"
-                s += "Email\n"
-                s += "Meeting\n"
-                s += "Productive work\n"
-                s += "# This is just an example, delete it\n"
-                s += "# Find more examples at timepolice.perekskog.se/getstarted.html#templates"
-                vc.template = s
             }
         }
         if segue.identifier == "EditTemplate" {

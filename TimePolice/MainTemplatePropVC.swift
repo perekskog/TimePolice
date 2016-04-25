@@ -101,13 +101,13 @@ class MainTemplatePropVC: UIViewController,
         let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
 
-        textTemplate.text = "Lorem ipsum"
+        textTemplate.text = ""
         if let t = template {
             textTemplate.text = t
         }
         textTemplate.textColor = UIColor.blackColor()
         textTemplate.backgroundColor = UIColor.whiteColor()
-        textTemplate.font = UIFont(name: textTemplate.font!.fontName, size: 16)
+        textTemplate.font = UIFont.systemFontOfSize(16)
         self.view.addSubview(textTemplate)
 
         self.view.backgroundColor = UIColor.grayColor()
