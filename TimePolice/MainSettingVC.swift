@@ -149,8 +149,8 @@ class MainSettingVC: UIViewController,
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.selectedSegmentIndex = 0
         
-//        let r = UILongPressGestureRecognizer(target: self, action: #selector(MainSettingVC.fakeCrash(_:)))
-//        deleteAllDataButton.addGestureRecognizer(r)
+        let r = UILongPressGestureRecognizer(target: self, action: #selector(MainSettingVC.fakeCrash(_:)))
+        deleteAllDataButton.addGestureRecognizer(r)
         
         activityIndicator.frame = self.view.frame
         self.activityIndicator.hidesWhenStopped = true
@@ -159,30 +159,30 @@ class MainSettingVC: UIViewController,
         redrawAll(false)
     }
     
-    // func fakeCrash(sender: UILongPressGestureRecognizer) {
-    //     guard sender.state == .Began else {
-    //         return
-    //     }
+     func fakeCrash(sender: UILongPressGestureRecognizer) {
+         guard sender.state == .Began else {
+             return
+         }
         
-    //     appLog.log(logger, logtype: .GUIAction, message: "fakeCrash")
+         appLog.log(logger, logtype: .GUIAction, message: "fakeCrash")
         
-    //     let alertContoller = UIAlertController(title: "Crash?", message: nil,
-    //         preferredStyle: .Alert)
-    //     let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
-    //         handler: { action in
-    //             self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(cancel)")
-    //     })
-    //     alertContoller.addAction(cancel)
-    //     let ok = UIAlertAction(title: "OK", style: .Default,
-    //         handler: { action in
-    //             self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-    //             var vc: UIViewController?
-    //             let _ = vc!.isViewLoaded()
-    //     })
-    //     alertContoller.addAction(ok)
+         let alertContoller = UIAlertController(title: "Crash?", message: nil,
+             preferredStyle: .Alert)
+         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+             handler: { action in
+                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(cancel)")
+         })
+         alertContoller.addAction(cancel)
+         let ok = UIAlertAction(title: "OK", style: .Default,
+             handler: { action in
+                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
+                 var vc: UIViewController?
+                 let _ = vc!.isViewLoaded()
+         })
+         alertContoller.addAction(ok)
 
-    //     presentViewController(alertContoller, animated: true, completion: nil)
-    // }
+         presentViewController(alertContoller, animated: true, completion: nil)
+     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
