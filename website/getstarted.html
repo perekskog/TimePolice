@@ -6,32 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
+    <meta name="description" content="">
+    <meta name="author" content="Per Ekskog">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+<!--    <link rel="stylesheet" href="offline/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous"> --> <!-- IE -->
+    <!-- <link rel="stylesheet" href="offline/bootstrap.min.css">  Chrome, IE -->
+      <link rel="stylesheet" href="v4alpha2.css">
   </head>
-  <body>
+<body>
 
-<header class="navbar navbar-light navbar-static-top bd-navbar" role="banner"> 
-  <div class="clearfix">
-    <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#main-nav">
-      &#9776;
-    </button>
-    <a class="navbar-brand hidden-sm-up" href="index.html">
-      Timepolice
-    </a>
-  </div>
-  <div class="collapse navbar-toggleable-xs" id="main-nav">
-    <nav class="nav navbar-nav">
-      <a class="nav-item nav-link" href="index.html">Timepolice</a>
-      <a class="nav-item nav-link" href="getstarted.html">Getting started</a>
-      <a class="nav-item nav-link" href="support.html">Support</a>
-    </nav>
-  </div>
-</header>
+  <header class="navbar navbar-fixed-top navbar-light bd-navbar" role="banner" style="background-color:white">
+      <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#main-nav">
+        &#9776;
+      </button>
+      <a class="navbar-brand" href="index.html">
+        Timepolice
+      </a>
+    <div class="collapse navbar-toggleable-xs" id="main-nav">
+      <nav class="nav navbar-nav">
+        <a class="nav-item nav-link" href="index.html">Home</a>
+        <a class="nav-item nav-link" href="getstarted.html">Getting started</a>
+        <a class="nav-item nav-link" href="support.html">Support</a>
+      </nav>
+    </div>
+  </header>
 
 
   <div class="container">
 
+    <p>-</p>
 
     <div class="jumbotron">
     <h2 class="display-4">Timepolice</h2>
@@ -41,7 +47,7 @@
 
 
     <h4>Concepts</h4>
-    
+
 
     <dl class="dl-horizontal m-x-0">
 
@@ -99,11 +105,11 @@
     </pre>
     <p>This will layout tasks in 3 columns and add the current day to the name of a session when it is created. "extension" follows Apple's format for formatting dates.</p>
     </div></div></div>
-    
+
     </div>
 
     <div class="row">
-          
+
     <div class="col-md-6">
     <div class="card"><div class="card-block">
     <p class="card-header">Style your tasks.</p>
@@ -142,7 +148,7 @@
     <p>This will give you two different sets of tasks to use for sessions related to "work". <br>
     After selecting a session you can switch template to use: Click on the name of the session (top right corner) to popup a list of templates that can be used for this sesion, then select the one you wish to use.</p>
     </div></div></div>
-          
+
     </div>
 
 
@@ -157,7 +163,7 @@
     <li>Gaps are defined as periods of time where no task has been active. Gaps are displayed as empty boxes. Gaps can be created in two ways: Deleting a task entry or changing start and/or stop time so a task entry is no longer attached to its closest neighbor. By selecting a gap, it can be deleted by extending either the previous task or the following task to fill the gap.</li>
     </ul>
 
-    
+
 
 
     <h4>Export data</h4>
@@ -177,6 +183,11 @@
 
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script> -->
+    <!-- jQuery first, then Bootstrap JS.
+    <script src="offline/jquery.min.js"></script>
+    <script src="offline/bootstrap.min.js"></script> Chrome -->
+    <!-- <script src="offline/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7"></script> --> <!-- IE -->
+<!--    <script src="offline/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script> -->
   </body>
 </html>

@@ -11,21 +11,23 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+<!--    <link rel="stylesheet" href="offline/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous"> --> <!-- IE -->
+    <!-- <link rel="stylesheet" href="offline/bootstrap.min.css">  Chrome, IE -->
+    <link rel="stylesheet" href="v4alpha2.css">
   </head>
 <body>
 
-<header class="navbar navbar-light navbar-static-top bd-navbar" role="banner"> 
-  <div class="clearfix">
+<header class="navbar navbar-fixed-top navbar-light bd-navbar" role="banner" style="background-color:white;opacity:50%">
     <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#main-nav">
       &#9776;
     </button>
-    <a class="navbar-brand hidden-sm-up" href="index.html">
+    <a class="navbar-brand" href="index.html">
       Timepolice
     </a>
-  </div>
   <div class="collapse navbar-toggleable-xs" id="main-nav">
     <nav class="nav navbar-nav">
-      <a class="nav-item nav-link" href="index.html">Timepolice</a>
+      <a class="nav-item nav-link" href="index.html">Home</a>
       <a class="nav-item nav-link" href="getstarted.html">Getting started</a>
       <a class="nav-item nav-link" href="support.html">Support</a>
     </nav>
@@ -34,7 +36,9 @@
 
 
     <div class="container">
-        
+
+      <p>-</p>
+
     <div class="jumbotron">
     <h2 class="display-4">Timepolice</h2>
     <p class="lead">The time tracker that focus on tracking time.</p>
@@ -50,7 +54,7 @@
     <h3>Features</h3>
 
     <div class="row">
-        
+
     <div class="col-md-4"><div class="card"><div class="card-block">
     <h5 class="card-header">Create templates</h5>
     <p>Create templates using your favourite texteditor och do it directly in the app.</p>
@@ -65,7 +69,7 @@
     <h5 class="card-header">Switch tasks</h5>
     <p>Switch between different task by just one touch on the screen.</p>
     </div></div></div>
-        
+
     </div>
     <div class="row">
 
@@ -78,13 +82,18 @@
     <h5 class="card-header">Postprocess data</h5>
     <p>Use standard office tools like text editors and spreadsheets to process data.</p>
     </div></div></div>
-        
+
     </div>
-        
+
   </div>
 
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script> -->
+    <!-- jQuery first, then Bootstrap JS.
+    <script src="offline/jquery.min.js"></script>
+    <script src="offline/bootstrap.min.js"></script> Chrome -->
+    <!-- <script src="offline/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7"></script> --> <!-- IE -->
+<!--    <script src="offline/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script> -->
 </body>
 </html>

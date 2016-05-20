@@ -1,0 +1,15 @@
+/*       
+<a class="nav-item nav-link" href="index.html">Home</a>
+*/
+@media(max-width:34em) {
+    .navbar .navbar-nav>.nav-item {
+        float: none;
+        margin-left: .1rem;
+    }
+    .navbar .navbar-nav {
+        float:none !important;
+    }
+    .navbar .collapse.in, .navbar .collapsing  {
+        clear:both;
+    }
+}
