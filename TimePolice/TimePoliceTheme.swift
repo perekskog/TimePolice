@@ -76,8 +76,8 @@ class TaskPickerButtonView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext(),
-                i = taskPosition,
-                selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) else {
+                let i = taskPosition,
+                let selectionAreaInfo = selectionAreaInfoDelegate?.getSelectionAreaInfo(i) else {
             UtilitiesApplog.logDefault("TaskPickerButtonView", logtype: .Guard, message: "drawRect")
             return
         }
@@ -94,8 +94,8 @@ class TaskPickerToolView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext(),
-                i = tool,
-                toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+                let i = tool,
+                let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
             UtilitiesApplog.logDefault("TaskPickerToolView", logtype: .Guard, message: "drawRect")
             return
         }
@@ -112,8 +112,8 @@ class TaskEntriesToolView: UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext(),
-                i = tool ,
-                toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+                let i = tool ,
+                let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
             UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
             return
         }
@@ -128,7 +128,7 @@ class TaskPickerPageIndicatorView : UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext(),
-            toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+            let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
                 UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
                 return
             }
@@ -143,7 +143,7 @@ class TaskEntriesPageIndicatorView : UIView {
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
         guard let context = UIGraphicsGetCurrentContext(),
-            toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
+            let toolbarInfo = toolbarInfoDelegate?.getToolbarInfo() else {
                 UtilitiesApplog.logDefault("TaskEntriesToolView", logtype: .Guard, message: "drawRect")
                 return
             }
@@ -236,7 +236,7 @@ class BasicTheme : Theme {
         startPoint.y = 0.0
         endPoint.x = 0
         endPoint.y = 700
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
     }
@@ -262,7 +262,7 @@ class BasicTheme : Theme {
         startPoint.y = 0.0
         endPoint.x = 0
         endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
     }
 
@@ -314,7 +314,7 @@ class BasicTheme : Theme {
         startPoint.y = 0.0
         endPoint.x = 0
         endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         ThemeUtilities.addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
@@ -343,7 +343,7 @@ class BasicTheme : Theme {
         startPoint.y = 0.0
         endPoint.x = 0
         endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         let color = UIColor(white: 0.0, alpha: 1.0).CGColor
@@ -391,10 +391,10 @@ class BasicTheme : Theme {
             let startPoint = CGPoint(x: CGFloat(i)*indicatorWidth + 1, y: 0.0)
             let endPoint = CGPoint(x: CGFloat(i+1)*indicatorWidth - 1, y: 0.0)
             if i == currentPage {
-                CGContextDrawLinearGradient(context, gradientCurrent,
+                CGContextDrawLinearGradient(context, gradientCurrent!,
                     startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
             } else {
-                CGContextDrawLinearGradient(context, gradientNotCurrent,
+                CGContextDrawLinearGradient(context, gradientNotCurrent!,
                     startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
             }
         }
@@ -429,7 +429,7 @@ class BlackGreenTheme : Theme {
             colors1, locations1)
         let startPoint1 = CGPoint(x:0.0, y:0.0)
         let endPoint1 =  CGPoint(x:0.0, y:25.0)
-        CGContextDrawLinearGradient(context, gradient1,
+        CGContextDrawLinearGradient(context, gradient1!,
             startPoint1, endPoint1, CGGradientDrawingOptions(rawValue: 0))
 
         // Gradient
@@ -440,7 +440,7 @@ class BlackGreenTheme : Theme {
             colors2, locations2)
         let startPoint2 = CGPoint(x:0.0, y:25.0)
         let endPoint2 =  CGPoint(x:0.0, y:parent.height)
-        CGContextDrawLinearGradient(context, gradient2,
+        CGContextDrawLinearGradient(context, gradient2!,
             startPoint2, endPoint2, CGGradientDrawingOptions(rawValue: 0))
     }
     
@@ -461,7 +461,7 @@ class BlackGreenTheme : Theme {
             colors, locations)
         let startPoint = CGPoint(x:0.0, y:0.0)
         let endPoint =  CGPoint(x:0.0, y:parent.height)
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
     }
 
@@ -517,7 +517,7 @@ class BlackGreenTheme : Theme {
         startPoint.y = 0.0
         endPoint.x = 0
         endPoint.y = parent.height
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         ThemeUtilities.addText(context, text: text, origin: CGPoint(x:parent.width/2, y:parent.height/2), fontSize: bigSize, withFrame: false, foregroundColor: foregroundColor)
@@ -548,7 +548,7 @@ class BlackGreenTheme : Theme {
             colors, locations)
         let startPoint = CGPoint(x: 0.0, y:0.0)
         let endPoint =  CGPoint(x:0, y:parent.height)
-        CGContextDrawLinearGradient(context, gradient,
+        CGContextDrawLinearGradient(context, gradient!,
             startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
         
         let color = UIColor(white: 1.0, alpha: 1.0).CGColor
@@ -563,7 +563,7 @@ class BlackGreenTheme : Theme {
                     let endPointSquare = CGPoint(x: 8, y: 8)
                     CGContextSaveGState(context)
                     //            CGContextClipToRect(context, CGRectMake(3, 3, 7, 7))
-                    CGContextDrawLinearGradient(context, gradientSquare, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
+                    CGContextDrawLinearGradient(context, gradientSquare!, startPointSquare, endPointSquare, CGGradientDrawingOptions(rawValue: 0))
                     CGContextRestoreGState(context)
                 }
                 ThemeUtilities.addText(context, text: task.name, origin: CGPoint(x:parent.width/2, y:parent.height/4), fontSize: bigSize, withFrame: false, foregroundColor: color)
@@ -609,10 +609,10 @@ class BlackGreenTheme : Theme {
             let startPoint = CGPoint(x: CGFloat(i)*indicatorWidth + 1, y: 0.0)
             let endPoint = CGPoint(x: CGFloat(i+1)*indicatorWidth - 1, y: 0.0)
             if i == currentPage {
-                CGContextDrawLinearGradient(context, gradientCurrent,
+                CGContextDrawLinearGradient(context, gradientCurrent!,
                     startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
             } else {
-                CGContextDrawLinearGradient(context, gradientNotCurrent,
+                CGContextDrawLinearGradient(context, gradientNotCurrent!,
                     startPoint, endPoint, CGGradientDrawingOptions(rawValue: 0))
             }
         }

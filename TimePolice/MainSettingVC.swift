@@ -176,8 +176,10 @@ class MainSettingVC: UIViewController,
          let ok = UIAlertAction(title: "OK", style: .Default,
              handler: { action in
                  self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
-                 var vc: UIViewController?
-                 let _ = vc!.isViewLoaded()
+                 // This code is supposed to force a crash that can be seen on the device page in XCode.
+                 // In Swift 2.3, this produced a build error
+                 //let vc: UIViewController?
+                 //let _ = vc!.isViewLoaded()
          })
          alertContoller.addAction(ok)
 
