@@ -12,7 +12,7 @@ import CoreData
 class MainExportVC: UIViewController,
     AppLoggerDataSource {
 
-    
+
     @IBOutlet var exitButton: UIButton!
     @IBOutlet var exportLabel: UILabel!
     @IBOutlet var exportInstructionLabel: UILabel!
@@ -21,7 +21,7 @@ class MainExportVC: UIViewController,
     @IBOutlet var sessionDetailsButton: UIButton!
     @IBOutlet var dataStructuresButton: UIButton!
     @IBOutlet var applogButton: UIButton!
-    
+
     let theme = BlackGreenTheme()
 
     //---------------------------------------
@@ -63,7 +63,7 @@ class MainExportVC: UIViewController,
         super.viewWillAppear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
     }
-    
+
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
@@ -135,7 +135,7 @@ class MainExportVC: UIViewController,
 
         exportLabel.font = UIFont.boldSystemFontOfSize(CGFloat(textTitleSize))
         exportInstructionLabel.font = UIFont.italicSystemFontOfSize(CGFloat(textBodySize))
-        
+
         sessionSelectionControl.removeAllSegments()
         sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
         sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
@@ -168,7 +168,7 @@ class MainExportVC: UIViewController,
     //----------------------------------------
     // MainExportVC - Buttons
     //----------------------------------------
-    
+
     @IBAction func dumpCoreData(sender: UIButton) {
         appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
         appLog.log(logger, logtype: .GUIAction, message: "dumpCoreData")
@@ -264,6 +264,9 @@ class MainExportVC: UIViewController,
             for i in 0...maxNumberOfTaskEntries {
                 for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
                     if let (taskEntries, gap2taskEntry) = projectDetails[s] {
+                        if gap2taskEntry.count == 0 {
+                            finished[s] = true
+                        }
                         if i < gap2taskEntry.count {
                             if gap2taskEntry[i] == -1 {
                                 let previousTaskEntry = taskEntries[gap2taskEntry[i-1]]
@@ -462,7 +465,7 @@ class MainExportVC: UIViewController,
                     if session.archived==true {
                         s += "archived=true\n"
                     } else {
-                        s += "archived=false\n"                        
+                        s += "archived=false\n"
                     }
                     s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
                     s += "    [TaskEntry container size=\(session.taskEntries.count)]\n"
@@ -485,8 +488,8 @@ class MainExportVC: UIViewController,
         } catch {
             print("Can't fetch sessions")
         }
-        
-        
+
+
         do {
             s += "\n"
             s += ("------------------------\n")
@@ -511,7 +514,7 @@ class MainExportVC: UIViewController,
         } catch {
             print("Can't fetch taskEntry")
         }
-        
+
         do {
             s += "\n"
             s += ("------------------------\n")
@@ -549,7 +552,7 @@ class MainExportVC: UIViewController,
                     }
                 }
             }
-        
+
         } catch {
             print("Can't fetch tasks")
         }
