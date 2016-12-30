@@ -47,7 +47,7 @@ def session_summary(session):
         totaltime = taskentry['stop']-taskentry['start']
         if name=="STOD dok (???)":
             add_task(summary, "STOD Vz", totaltime*2/3)
-            add_task(summary, "CMCC", totaltime/3)
+            add_task(summary, "CMCC 9480 4018", totaltime/3)
         else:
             add_task(summary, name, totaltime)
     return summary
