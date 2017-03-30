@@ -30,17 +30,17 @@ class MainVC: UIViewController,
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -59,40 +59,40 @@ class MainVC: UIViewController,
     // MainVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
         if shouldPopupAlert == true {
             let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         }
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
 
-        var textRect = CGRectMake(0, height/4, width, 50)
+        var textRect = CGRect(x: 0, y: height/4, width: width, height: 50)
         titleLabel.frame = textRect
 
         textRect.origin.y += height/5
@@ -119,12 +119,12 @@ class MainVC: UIViewController,
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
         
@@ -134,7 +134,7 @@ class MainVC: UIViewController,
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
 
@@ -143,27 +143,27 @@ class MainVC: UIViewController,
     // MainVC - Segue handling
     //---------------------------------------------
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        appLog.log(logger, logtype: .enterExit, message: "prepareForSegue")
 
         if segue.identifier == "Exit" {
             // Nothing to prepare
         }
         if segue.identifier == "Templates" {
-            if let vc = segue.destinationViewController as? MainTemplateListVC {
+            if let vc = segue.destination as? MainTemplateListVC {
                 vc.templateProjectName = templateProjectName
             }
         }
         if segue.identifier == "Sessions" {
-            if let vc = segue.destinationViewController as? MainSessionListVC {
+            if let vc = segue.destination as? MainSessionListVC {
                 vc.templateProjectName = templateProjectName
             }
         }
     }
 
 
-    @IBAction func mainVC(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "mainVC")
+    @IBAction func mainVC(_ unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .enterExit, message: "mainVC")
 
     }
     

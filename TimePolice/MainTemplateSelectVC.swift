@@ -40,17 +40,17 @@ class MainTemplateSelectVC: UIViewController,
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -71,23 +71,23 @@ class MainTemplateSelectVC: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.edgesForExtendedLayout = .None
+        self.edgesForExtendedLayout = UIRectEdge()
 
         self.title = "Select Template"
         
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplateSelectVC.cancel(_:)))
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MainTemplateSelectVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
 
         table.rowHeight = CGFloat(selectItemTableRowHeight)
-        table.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
+        table.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: cellReuseId)
         table.dataSource = self
         table.delegate = self
         self.view.addSubview(table)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if let indexPath = table.indexPathForSelectedRow {
-            table.deselectRowAtIndexPath(indexPath, animated: true)
+            table.deselectRow(at: indexPath, animated: true)
         }
     }
 
@@ -95,7 +95,7 @@ class MainTemplateSelectVC: UIViewController,
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        table.frame = CGRectMake(5, 0, width-10, height-25)        
+        table.frame = CGRect(x: 5, y: 0, width: width-10, height: height-25)        
     }
 
 
@@ -106,36 +106,36 @@ class MainTemplateSelectVC: UIViewController,
 
     // GUI actions
 
-    func cancel(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "cancel")
-        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+    func cancel(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "cancel")
+        appLog.log(logger, logtype: .guiAction, message: "cancel")
 
-        performSegueWithIdentifier("CancelTemplateSelect", sender: self)
+        performSegue(withIdentifier: "CancelTemplateSelect", sender: self)
     }
     
     // UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var cellString = ""
-        if let cell = tableView.cellForRowAtIndexPath(indexPath),
-            s = cell.textLabel?.text {
+        if let cell = tableView.cellForRow(at: indexPath),
+            let s = cell.textLabel?.text {
                 cellString = s
         }
 
-        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
+        appLog.log(logger, logtype: .enterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .guiAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         templateIndexSelected = indexPath.row
-        performSegueWithIdentifier("DoneTemplateSelect", sender: self)
+        performSegue(withIdentifier: "DoneTemplateSelect", sender: self)
     }
     
     // UITableViewDataSource
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let t = templates {
             return t.count
         } else {
@@ -143,11 +143,10 @@ class MainTemplateSelectVC: UIViewController,
         }
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseId, forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath)
 
-        if let s = templates
-        where indexPath.row >= 0 && indexPath.row <= s.count {
+        if let s = templates, indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
             cell.textLabel?.text = session.getDisplayName()
         }

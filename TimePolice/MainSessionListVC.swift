@@ -35,10 +35,10 @@ class MainSessionListVC: UIViewController,
     var templateSessions: [Session]?
 
     // GUI
-    var sessionTableView = UITableView(frame: CGRectZero, style: .Plain)
-    let exitButton = UIButton(type: UIButtonType.System)
+    var sessionTableView = UITableView(frame: CGRect.zero, style: .plain)
+    let exitButton = UIButton(type: UIButtonType.system)
     let sessionNameView = TaskEntriesToolView()
-    let sessionSelectionControl = UISegmentedControl(frame: CGRectZero)
+    let sessionSelectionControl = UISegmentedControl(frame: CGRect.zero)
     let sessionListBGView = TaskEntriesBGView()
     let addView = TaskEntriesToolView()
     let theme = BlackGreenTheme()
@@ -49,17 +49,17 @@ class MainSessionListVC: UIViewController,
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -79,50 +79,50 @@ class MainSessionListVC: UIViewController,
     // MainSessionListVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
         if shouldPopupAlert == true {
             let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         }
 
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(MainSessionListVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.setTitleColor(UIColor.white, for: UIControlState())
+        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
+        exitButton.addTarget(self, action: #selector(MainSessionListVC.exit(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
-        sessionNameView.tool = .SessionName
+        sessionNameView.tool = .sessionName
         sessionNameView.toolbarInfoDelegate = self
         self.view.addSubview(sessionNameView)
 
         sessionListBGView.theme = theme
         self.view.addSubview(sessionListBGView)
 
-        sessionTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "SessionList")
+        sessionTableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "SessionList")
         sessionTableView.dataSource = self
         sessionTableView.delegate = self
         sessionTableView.rowHeight = CGFloat(selectItemTableRowHeight)
@@ -132,18 +132,18 @@ class MainSessionListVC: UIViewController,
         sessionTableView.addGestureRecognizer(longPressRecognizer)
         sessionListBGView.addSubview(sessionTableView)
 
-        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Active", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Archived", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "All", at: 0, animated: false)
         sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
-        sessionSelectionControl.addTarget(self, action: #selector(MainSessionListVC.selectSessions(_:)), forControlEvents: .ValueChanged)
+        sessionSelectionControl.addTarget(self, action: #selector(MainSessionListVC.selectSessions(_:)), for: .valueChanged)
         sessionSelectionControl.selectedSegmentIndex = 2
         sessionListBGView.addSubview(sessionSelectionControl)
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
-        addView.tool = .Add
+        addView.tool = .add
         let recognizer = UITapGestureRecognizer(target:self, action:#selector(MainSessionListVC.addSession(_:)))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
@@ -153,63 +153,63 @@ class MainSessionListVC: UIViewController,
     }
 
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
 
         if let indexPath = sessionTableView.indexPathForSelectedRow {
-            sessionTableView.deselectRowAtIndexPath(indexPath, animated: true)
+            sessionTableView.deselectRow(at: indexPath, animated: true)
         }
 
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        var width = CGRectGetWidth(self.view.frame)
-        var height = CGRectGetHeight(self.view.frame)
+        var width = self.view.frame.width
+        var height = self.view.frame.height
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight))
+        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight))
         lastview = sessionNameView
 
-        sessionListBGView.frame = CGRectMake(0, 25+CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
+        sessionListBGView.frame = CGRect(x: 0, y: 25+CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
         lastview = sessionListBGView
 
-        width = CGRectGetWidth(sessionListBGView.frame)
-        height = CGRectGetHeight(sessionListBGView.frame)
+        width = sessionListBGView.frame.width
+        height = sessionListBGView.frame.height
         let padding = 1
 
-        sessionSelectionControl.frame = CGRectMake(0, 0, width, CGFloat(segmentControlHeight))
+        sessionSelectionControl.frame = CGRect(x: 0, y: 0, width: width, height: CGFloat(segmentControlHeight))
 
-        sessionTableView.frame = CGRectMake(CGFloat(padding), CGFloat(segmentControlHeight), width - 2*CGFloat(padding), height - CGFloat(segmentControlHeight) - CGFloat(minimumComponentHeight) - CGFloat(padding))
+        sessionTableView.frame = CGRect(x: CGFloat(padding), y: CGFloat(segmentControlHeight), width: width - 2*CGFloat(padding), height: height - CGFloat(segmentControlHeight) - CGFloat(minimumComponentHeight) - CGFloat(padding))
         lastview = sessionTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight) - CGFloat(padding))
+        addView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight) - CGFloat(padding))
         lastview = addView
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
     }
 
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     //---------------------------------------------
     // MainSessionListVC - Data and GUI updates
     //---------------------------------------------
 
-    func redrawAll(refreshCoreData: Bool) {
+    func redrawAll(_ refreshCoreData: Bool) {
         if refreshCoreData==true {
             var s1, s2: [Session]
             let x = sessionSelectionControl.selectedSegmentIndex
@@ -225,18 +225,18 @@ class MainSessionListVC: UIViewController,
         sessionTableView.reloadData()
     }
     
-    func getSessions(active: Bool, archived: Bool) -> ([Session], [Session]) {
-        appLog.log(logger, logtype: .EnterExit, message: "getSessions")
+    func getSessions(_ active: Bool, archived: Bool) -> ([Session], [Session]) {
+        appLog.log(logger, logtype: .enterExit, message: "getSessions")
 
         do {
-            let fetchRequest = NSFetchRequest(entityName: "Session")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Session")
 
             var nonTemplateSessions: [Session] = []
             var templateSessions: [Session] = []
             
-            if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+            if let tmpSessions = try moc.fetch(fetchRequest) as? [Session] {
 //                for session in tmpSessions {
-                for session in tmpSessions.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+                for session in tmpSessions.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
                     if session.project.name != templateProjectName {
                         if active==true && session.archived==false {
                             nonTemplateSessions.append(session)
@@ -246,7 +246,7 @@ class MainSessionListVC: UIViewController,
                         }
                     }
                 }
-                for session in tmpSessions.sort({ (s1:Session, s2:Session) -> Bool in
+                for session in tmpSessions.sorted(by: { (s1:Session, s2:Session) -> Bool in
                     if s1.name != s2.name {
                         return s1.name < s2.name
                     } else {
@@ -266,8 +266,8 @@ class MainSessionListVC: UIViewController,
         }
     }
     
-    func selectSessions(sender: UISegmentedControl) {
-        appLog.log(logger, logtype: .EnterExit, message: "selectSessions")
+    func selectSessions(_ sender: UISegmentedControl) {
+        appLog.log(logger, logtype: .enterExit, message: "selectSessions")
         redrawAll(true)
     }
     
@@ -275,37 +275,37 @@ class MainSessionListVC: UIViewController,
     // MainSessionListVC - GUI actions
     //---------------------------------------------
 
-    @IBAction func exit(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "exit")
-        appLog.log(logger, logtype: .GUIAction, message: "exit")
+    @IBAction func exit(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "exit")
+        appLog.log(logger, logtype: .guiAction, message: "exit")
 
-        performSegueWithIdentifier("Exit", sender: self)
+        performSegue(withIdentifier: "Exit", sender: self)
     }
 
-    @IBAction func addSession(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "addSession")
-        appLog.log(logger, logtype: .GUIAction, message: "addSession")
+    @IBAction func addSession(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "addSession")
+        appLog.log(logger, logtype: .guiAction, message: "addSession")
 
-        performSegueWithIdentifier("AddSession", sender: self)
+        performSegue(withIdentifier: "AddSession", sender: self)
     }
 
-    func handleLongPressTableView(sender: UILongPressGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTableView")
+    func handleLongPressTableView(_ sender: UILongPressGestureRecognizer) {
+        appLog.log(logger, logtype: .enterExit, message: "handleLongPressTableView")
 
-        if sender.state != UIGestureRecognizerState.Began {
+        if sender.state != UIGestureRecognizerState.began {
             return
         }
 
-        let locationInView = sender.locationInView(sessionTableView)
-        let indexPath = sessionTableView.indexPathForRowAtPoint(locationInView)
+        let locationInView = sender.location(in: sessionTableView)
+        let indexPath = sessionTableView.indexPathForRow(at: locationInView)
 
         guard let i = indexPath?.row,
-            s = nonTemplateSessions?[i] else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in nonTemplateSessions[indexPath.row]")
+            let s = nonTemplateSessions?[i] else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in nonTemplateSessions[indexPath.row]")
             return
         }
 
-        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTableView(\(s.name))")
+        appLog.log(logger, logtype: .guiAction, message: "handleLongPressTableView(\(s.name))")
 
         var title = "Archive session?"
         if s.archived==true {
@@ -313,29 +313,29 @@ class MainSessionListVC: UIViewController,
         }
 
         let alertContoller = UIAlertController(title: title, message: nil,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let actionYes = UIAlertAction(title: "Yes", style: .Default,
+        let actionYes = UIAlertAction(title: "Yes", style: .default,
             handler: { action in
                 if s.archived==true {
                     s.setArchivedTo(false)
-                    self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(set to non archived)")
+                    self.appLog.log(self.logger, logtype: .guiAction, message: "handleLongPressTableView(set to non archived)")
                 } else {
                     s.setArchivedTo(true)
-                    self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(set to archived)")
+                    self.appLog.log(self.logger, logtype: .guiAction, message: "handleLongPressTableView(set to archived)")
                 }
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did \(title)")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did \(title)")
                 self.redrawAll(true)
             })
         alertContoller.addAction(actionYes)
         
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,
             handler: { action in
-                self.appLog.log(self.logger, logtype: .GUIAction, message: "handleLongPressTableView(cancel)")
+                self.appLog.log(self.logger, logtype: .guiAction, message: "handleLongPressTableView(cancel)")
         })
         alertContoller.addAction(cancel)
         
-        presentViewController(alertContoller, animated: true, completion: nil)
+        present(alertContoller, animated: true, completion: nil)
 
     }
 
@@ -343,14 +343,14 @@ class MainSessionListVC: UIViewController,
     // MainSessionListVC - Segue handling
     //---------------------------------------------
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger, logtype: .EnterExit, message: "prepareForSegue")
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        appLog.log(logger, logtype: .enterExit, message: "prepareForSegue")
 
         if segue.identifier == "TaskEntryCreatorManagers" {
-            if let tbvc = segue.destinationViewController as? UITabBarController {
+            if let tbvc = segue.destination as? UITabBarController {
                 if let vcs = tbvc.viewControllers,
-                    i = selectedSessionIndex,
-                    s = nonTemplateSessions {
+                    let i = selectedSessionIndex,
+                    let s = nonTemplateSessions {
                         let tb = tbvc.tabBar
                         tb.tintColor = UIColor.init(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
                         taskEntryCreatorManagers = vcs
@@ -369,28 +369,28 @@ class MainSessionListVC: UIViewController,
             // Nothing to prepare
         }
         if segue.identifier == "AddSession" {
-            if let nvc = segue.destinationViewController as? UINavigationController,
-                    vc = nvc.topViewController as? MainTemplateSelectVC {
+            if let nvc = segue.destination as? UINavigationController,
+                    let vc = nvc.topViewController as? MainTemplateSelectVC {
                 vc.templates = templateSessions
             }
         }
     }
 
-    @IBAction func exitVC(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "exitVC")
+    @IBAction func exitVC(_ unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .enterExit, message: "exitVC")
 
         taskEntryCreatorManagers = nil
         
         redrawAll(false)
     }
 
-    @IBAction func exitSelectTemplate(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "exitSelectTemplate(unwindsegue=\(unwindSegue.identifier))")
+    @IBAction func exitSelectTemplate(_ unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .enterExit, message: "exitSelectTemplate(unwindsegue=\(String(describing: unwindSegue.identifier)))")
 
         if unwindSegue.identifier == "DoneTemplateSelect" {
-            if let vc = unwindSegue.sourceViewController as? MainTemplateSelectVC,
-                i = vc.templateIndexSelected,
-                s = templateSessions?[i] {
+            if let vc = unwindSegue.source as? MainTemplateSelectVC,
+                let i = vc.templateIndexSelected,
+                let s = templateSessions?[i] {
                     TimePoliceModelUtils.cloneSession(moc, projectName: s.name, sessionName: s.name, sessionVersion: s.version)
                     TimePoliceModelUtils.save(moc)
                     moc.reset()
@@ -407,11 +407,11 @@ class MainSessionListVC: UIViewController,
     // MainSessionListVC - UITableViewDataSource
     //-----------------------------------------
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let s = nonTemplateSessions {
             return s.count
         } else {
@@ -419,11 +419,10 @@ class MainSessionListVC: UIViewController,
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SessionList", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SessionList", for: indexPath)
 
-        if let s = nonTemplateSessions
-        where indexPath.row >= 0 && indexPath.row <= s.count {
+        if let s = nonTemplateSessions, indexPath.row >= 0 && indexPath.row <= s.count {
             let session = s[indexPath.row]
 
             let name = session.getDisplayNameWithSuffix()
@@ -454,36 +453,35 @@ class MainSessionListVC: UIViewController,
     // MainSessionListVC - UITableViewDelegate
     //-----------------------------------------
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var cellString = ""
-        if let cell = tableView.cellForRowAtIndexPath(indexPath),
-            s = cell.textLabel?.text {
+        if let cell = tableView.cellForRow(at: indexPath),
+            let s = cell.textLabel?.text {
                 cellString = s
         }
 
-        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
+        appLog.log(logger, logtype: .enterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .guiAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
-        if let s = nonTemplateSessions
-        where indexPath.row >= 0 && indexPath.row < s.count {
+        if let s = nonTemplateSessions, indexPath.row >= 0 && indexPath.row < s.count {
             selectedSessionIndex = indexPath.row
-            performSegueWithIdentifier("TaskEntryCreatorManagers", sender: self)
+            performSegue(withIdentifier: "TaskEntryCreatorManagers", sender: self)
         }
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         var cellString = ""
-        if let cell = tableView.cellForRowAtIndexPath(indexPath),
-            s = cell.textLabel?.text {
+        if let cell = tableView.cellForRow(at: indexPath),
+            let s = cell.textLabel?.text {
                 cellString = s
         }
 
-        appLog.log(logger, logtype: .EnterExit, message: "tableView.commitEditingStyle")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.commitEditingStyle(\(cellString))")
+        appLog.log(logger, logtype: .enterExit, message: "tableView.commitEditingStyle")
+        appLog.log(logger, logtype: .guiAction, message: "tableView.commitEditingStyle(\(cellString))")
 
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
             if let session = nonTemplateSessions?[indexPath.row] {
-                appLog.log(logger, logtype: .Debug, message: "Delete row \(indexPath.row)")
+                appLog.log(logger, logtype: .debug, message: "Delete row \(indexPath.row)")
                 Session.deleteObject(session)
                 TimePoliceModelUtils.save(moc)
                 moc.reset()
@@ -499,7 +497,7 @@ class MainSessionListVC: UIViewController,
     //----------------------------------------------
     
     func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
+        appLog.log(logger, logtype: .periodicCallback, message: "getToolbarInfo")
         
         let toolbarInfo = ToolbarInfo(
             signedIn: false,
@@ -518,12 +516,12 @@ class MainSessionListVC: UIViewController,
     //-----------------------------------------
 
 
-    func taskEntryCreatorManager(sessionManager: TaskEntryCreatorManager, willChangeActiveSessionTo: Int) {
-        appLog.log(logger, logtype: .EnterExit, message: "willChangeActiveSession to \(willChangeActiveSessionTo)")
+    func taskEntryCreatorManager(_ sessionManager: TaskEntryCreatorManager, willChangeActiveSessionTo: Int) {
+        appLog.log(logger, logtype: .enterExit, message: "willChangeActiveSession to \(willChangeActiveSessionTo)")
 
         guard let s = nonTemplateSessions,
-                tecms =  taskEntryCreatorManagers else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in taskEntryCreatorManager willChangeActiveSessionTo(\(willChangeActiveSessionTo)")
+                let tecms =  taskEntryCreatorManagers else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in taskEntryCreatorManager willChangeActiveSessionTo(\(willChangeActiveSessionTo)")
             return
         }
 
@@ -532,19 +530,18 @@ class MainSessionListVC: UIViewController,
 
             for vc in tecms {
                 if let tecm = vc as? TaskEntryCreatorManager {
-                    appLog.log(logger, logtype: .Debug, message: "MainSessionsVC: switchTo(\(willChangeActiveSessionTo))")
+                    appLog.log(logger, logtype: .debug, message: "MainSessionsVC: switchTo(\(willChangeActiveSessionTo))")
                     tecm.switchTo(willChangeActiveSessionTo)
                 }
             }
         }
     }
 
-    func taskEntryCreatorManager(taskEntryCreatorManager: TaskEntryCreatorManager, sessionForIndex: Int) -> Session? {
-        appLog.log(logger, logtype: .EnterExit, message: "sessionForIndex(\(sessionForIndex))")
+    func taskEntryCreatorManager(_ taskEntryCreatorManager: TaskEntryCreatorManager, sessionForIndex: Int) -> Session? {
+        appLog.log(logger, logtype: .enterExit, message: "sessionForIndex(\(sessionForIndex))")
 
-        guard let s = nonTemplateSessions
-            where sessionForIndex >= 0 && sessionForIndex < s.count else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in taskEntryCreatorManager sessionForIndex(\(sessionForIndex))")
+        guard let s = nonTemplateSessions, sessionForIndex >= 0 && sessionForIndex < s.count else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in taskEntryCreatorManager sessionForIndex(\(sessionForIndex))")
             return nil
         }
         

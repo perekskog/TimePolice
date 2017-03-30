@@ -29,7 +29,7 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - save
     //---------------------------------------------
 
-    class func save(moc: NSManagedObjectContext) {
+    class func save(_ moc: NSManagedObjectContext) {
         do {
             try moc.save()
             print("Save: ok")
@@ -45,12 +45,12 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - getSessionTasks
     //---------------------------------------------
 
-    class func getSessionTasks(session: Session) -> String {
+    class func getSessionTasks(_ session: Session) -> String {
         var s = "\(session.name)-\(UtilitiesDate.getString(session.created))\n"
         let summary = session.getSessionTaskSummary(false)
         for task in session.tasks.array as! [Task] {
             if task.name != spacerName {
-                var time: NSTimeInterval = 0
+                var time: TimeInterval = 0
                 if let (_, t) = summary[task] {
                     time = t
                 }
@@ -65,22 +65,22 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - getSessionTaskEntry
     //---------------------------------------------
 
-    class func getSessionTaskEntries(session: Session) -> String {
+    class func getSessionTaskEntries(_ session: Session) -> String {
 
         var s: String
 
         s = "Current Session:\n"
         s += "S: \(session.name) @ \(UtilitiesDate.getString(session.created))\n"
         s += "    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n"
-        session.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+        session.taskEntries.enumerateObjects({ (elem, idx, stop) -> Void in
             let taskEntry = elem as! TaskEntry
             if taskEntry.isStopped() {
-                let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                let timeForTaskEntry = taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                 s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
             } else {
                 s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
             }
-        }
+        })
 
         return s
     }
@@ -89,9 +89,9 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - storeTemplate
     //---------------------------------------------
 
-    class func storeTemplate(moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, String, [String: String]), tasks: [(String, [String: String])], src: String) {
+    class func storeTemplate(_ moc: NSManagedObjectContext, reuseTasksFromProject: String, session: (String, String, [String: String]), tasks: [(String, [String: String])], src: String) {
 
-        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, message: "storeTemplate(reuseTasksFromProject=\(reuseTasksFromProject),src=\(src))")
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .enterExit, message: "storeTemplate(reuseTasksFromProject=\(reuseTasksFromProject),src=\(src))")
 
         defer {
             TimePoliceModelUtils.save(moc)
@@ -99,7 +99,7 @@ class TimePoliceModelUtils {
         // Find template project, or create it if it does not already exist
         var templateProject: Project
         guard let projects = Project.findInMOC(moc, name: templateProjectName) else {
-            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "storeTemplate(Templates)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .guard, message: "storeTemplate(Templates)")
             return
         }
         if projects.count > 0 {
@@ -136,7 +136,7 @@ class TimePoliceModelUtils {
 
                 // Always create new spacers
                 if newTaskName == spacerName {
-                    Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
+                    _ = Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
                 } else {
 
                     // Retain old task, otherwise create new task
@@ -164,12 +164,12 @@ class TimePoliceModelUtils {
 
                             for session in project.sessions {
                                 // Search among tasks in all existing versions
-                                if session.name == sessionName {
+                                if (session as AnyObject).name == sessionName {
                                     for task in (session as! Session).tasks {
-                                        if !found && task.name == newTaskName {
+                                        if !found && (task as AnyObject).name == newTaskName {
                                             found = true
                                             if let t = task as? Task {
-                                                t.properties = mergedProperties
+                                                t.properties = mergedProperties as NSObject
                                                 newTemplateSession.addTask(t)
                                             }
                                         }
@@ -190,10 +190,10 @@ class TimePoliceModelUtils {
                             for session in project.sessions {
                                 // First, search among tasks
                                 for task in (session as! Session).tasks {
-                                    if !found && task.name == newTaskName {
+                                    if !found && (task as AnyObject).name == newTaskName {
                                         found = true
                                         if let t = task as? Task {
-                                            t.properties = mergedProperties
+                                            t.properties = mergedProperties as NSObject
                                             newTemplateSession.addTask(t)
                                         }
                                     }
@@ -202,10 +202,10 @@ class TimePoliceModelUtils {
                                 // It might be that there is a TaskEntry since long before
                                 // but the corresponding Task is not part of the session.
                                 for taskEntry in (session as! Session).taskEntries {
-                                    if !found && taskEntry.task.name == newTaskName {
+                                    if !found && (taskEntry as AnyObject).task.name == newTaskName {
                                         found = true
                                         if let te = taskEntry as? TaskEntry {
-                                            te.task.properties = mergedProperties
+                                            te.task.properties = mergedProperties as NSObject
                                             newTemplateSession.addTask(te.task)
                                         }
                                     }
@@ -215,7 +215,7 @@ class TimePoliceModelUtils {
                     }
                     // Only create task if it could not be reused
                     if !found {
-                        Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
+                        _ = Task.createInMOC(moc, name: newTaskName, properties: mergedProperties, session: newTemplateSession)
                     }
                 }
             }
@@ -232,16 +232,16 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - cloneSession
     //---------------------------------------------
 
-    class func cloneSession(moc: NSManagedObjectContext, projectName: String, sessionName: String, sessionVersion: String) {
+    class func cloneSession(_ moc: NSManagedObjectContext, projectName: String, sessionName: String, sessionVersion: String) {
 
-        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .EnterExit, 
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .enterExit, 
             message: "cloneSession(projectName=\(projectName), sessionName=\(sessionName), sessionVersion=\(sessionVersion))")
         defer {
             TimePoliceModelUtils.save(moc)
         }
         // Find template project (must exist)
         guard let templateProjects = Project.findInMOC(moc, name: templateProjectName) else {
-            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "cloneSession(Templates)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .guard, message: "cloneSession(Templates)")
             return
         }
         guard templateProjects.count > 0 else {
@@ -254,7 +254,7 @@ class TimePoliceModelUtils {
         var templateSession: Session!
         var found = false
         for s in templateProject.sessions {
-            if s.name == sessionName && s.version == sessionVersion {
+            if (s as AnyObject).name == sessionName && (s as AnyObject).version == sessionVersion {
                 templateSession = s as! Session
                 found = true
             }
@@ -266,7 +266,7 @@ class TimePoliceModelUtils {
         // Find project, or create it if it does not already exist
         var project: Project
         guard let projects = Project.findInMOC(moc, name: projectName) else {
-            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Guard, message: "cloneSession(Project)")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .guard, message: "cloneSession(Project)")
             return
         }
         if projects.count > 0 {
@@ -287,7 +287,7 @@ class TimePoliceModelUtils {
         }
     }
 
-    class func getGap2TaskEntry(taskEntryList: [TaskEntry]) -> [Int] {
+    class func getGap2TaskEntry(_ taskEntryList: [TaskEntry]) -> [Int] {
         if taskEntryList.count == 0 {
             return []
         }
@@ -302,11 +302,11 @@ class TimePoliceModelUtils {
 //                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Prev=\(previousTaskEntry.id), stop=\(previousTaskEntry.stopTime)")
 //                UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Curr=\(te.id), start=\(te.startTime)")
 //                if te.startTime.isEqualToDate(previousTaskEntry.stopTime) {
-                if te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime) < 0.5 {
+                if te.startTime.timeIntervalSince(previousTaskEntry.stopTime) < 0.5 {
                     // No gap
                 } else {
-                    let diff = te.startTime.timeIntervalSinceDate(previousTaskEntry.stopTime)
-                    UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "(gap=\(diff))")
+                    let diff = te.startTime.timeIntervalSince(previousTaskEntry.stopTime)
+                    UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .debug, message: "(gap=\(diff))")
                     gap2TaskEntry.append(-1)
                 }
                 previousTaskEntry = te
@@ -323,19 +323,19 @@ class TimePoliceModelUtils {
     // TimePoliceModelUtils - verifyConstraints
     //---------------------------------------------
 
-    class func verifyConstraints(moc: NSManagedObjectContext) -> (Bool, String) {
+    class func verifyConstraints(_ moc: NSManagedObjectContext) -> (Bool, String) {
         if coreDataIsConsistent == false {
-            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Core Data is inconsistent - no more checks until restart")
+            UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .debug, message: "Core Data is inconsistent - no more checks until restart")
             return (false, "")
         }
 
-        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Check for Core Data consistency")
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .debug, message: "Check for Core Data consistency")
 
-        var fetchRequest: NSFetchRequest
+        var fetchRequest: NSFetchRequest<NSFetchRequestResult>
 
         do {
             fetchRequest = NSFetchRequest(entityName: "Project")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Project] {
                 for project in fetchResults {
                     if project.sessions.count==0 {
                         coreDataIsConsistent = false
@@ -349,7 +349,7 @@ class TimePoliceModelUtils {
 
         do {
             fetchRequest = NSFetchRequest(entityName: "Task")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Task] {
                 for task in fetchResults {
                     if task.sessions.count==0 && task.taskEntries.count==0 {
                         coreDataIsConsistent = false
@@ -365,37 +365,37 @@ class TimePoliceModelUtils {
         return (false, "")
     }
 
-    class func getConsistencyAlert(alertMessage: String, moc: NSManagedObjectContext) -> UIAlertController {
+    class func getConsistencyAlert(_ alertMessage: String, moc: NSManagedObjectContext) -> UIAlertController {
 
         let alertContoller = UIAlertController(title: "Consistency check failed", message: alertMessage,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let dumpCoreDataAction = UIAlertAction(title: "Export data structures", style: .Default,
+        let dumpCoreDataAction = UIAlertAction(title: "Export data structures", style: .default,
             handler: { action in
                 let s = MainExportVC.dumpAllData(moc)
                 print(s)
-                UIPasteboard.generalPasteboard().string = s
+                UIPasteboard.general.string = s
             })
         alertContoller.addAction(dumpCoreDataAction)
         
-        let repairCoreDataAction = UIAlertAction(title: "Repair data structures", style: .Default,
+        let repairCoreDataAction = UIAlertAction(title: "Repair data structures", style: .default,
             handler: { action in
                 self.repairDataStructures(moc)
                 TimePoliceModelUtils.save(moc)
             })
         alertContoller.addAction(repairCoreDataAction)
         
-        let dumpAndRepairCoreDataAction = UIAlertAction(title: "Export and repair", style: .Default,
+        let dumpAndRepairCoreDataAction = UIAlertAction(title: "Export and repair", style: .default,
             handler: { action in
                 let s = MainExportVC.dumpAllData(moc)
                 print(s)
-                UIPasteboard.generalPasteboard().string = s
+                UIPasteboard.general.string = s
                 self.repairDataStructures(moc)
                 TimePoliceModelUtils.save(moc)
             })
         alertContoller.addAction(dumpAndRepairCoreDataAction)
         
-        let okAction = UIAlertAction(title: "Just continue", style: .Default,
+        let okAction = UIAlertAction(title: "Just continue", style: .default,
             handler: nil)
         alertContoller.addAction(okAction)
         
@@ -403,14 +403,14 @@ class TimePoliceModelUtils {
 
     }
 
-    class func repairDataStructures(moc: NSManagedObjectContext) {
-        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .Debug, message: "Repair data structures")
+    class func repairDataStructures(_ moc: NSManagedObjectContext) {
+        UtilitiesApplog.logDefault("TimePoliceModelUtils", logtype: .debug, message: "Repair data structures")
 
-        var fetchRequest: NSFetchRequest
+        var fetchRequest: NSFetchRequest<NSFetchRequestResult>
 
         do {
             fetchRequest = NSFetchRequest(entityName: "Project")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Project] {
                 for project in fetchResults {
                     if project.sessions.count==0 {
                         Project.deleteObjectOnly(project)
@@ -423,7 +423,7 @@ class TimePoliceModelUtils {
 
         do {
             fetchRequest = NSFetchRequest(entityName: "Task")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Task] {
                 for task in fetchResults {
                     if task.sessions.count==0 && task.taskEntries.count==0 {
                         Task.deleteObjectOnly(task)

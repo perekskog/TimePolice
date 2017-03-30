@@ -29,17 +29,17 @@ class MainExportVC: UIViewController,
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -59,43 +59,43 @@ class MainExportVC: UIViewController,
     // MainExportVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(moc)
         if shouldPopupAlert == true {
             let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: moc)
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         }
 
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
 
         exitButton.frame.size.height = CGFloat(minimumComponentHeight)
 
-        var textRect = CGRectMake(0, height/4, width, 50)
+        var textRect = CGRect(x: 0, y: height/4, width: width, height: 50)
         exportLabel.frame = textRect
 
         textRect.origin.y += max(height/13, CGFloat(minimumComponentSpacing))
@@ -122,24 +122,24 @@ class MainExportVC: UIViewController,
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
-        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
 
-        exportLabel.font = UIFont.boldSystemFontOfSize(CGFloat(textTitleSize))
-        exportInstructionLabel.font = UIFont.italicSystemFontOfSize(CGFloat(textBodySize))
+        exportLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(textTitleSize))
+        exportInstructionLabel.font = UIFont.italicSystemFont(ofSize: CGFloat(textBodySize))
 
         sessionSelectionControl.removeAllSegments()
-        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Active", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Archived", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "All", at: 0, animated: false)
         sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.selectedSegmentIndex = 0
@@ -149,18 +149,18 @@ class MainExportVC: UIViewController,
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     //---------------------------------------------
     // MainExportVC - GUI actions
     //---------------------------------------------
 
-    @IBAction func exit(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "exit")
-        appLog.log(logger, logtype: .GUIAction, message: "exit")
+    @IBAction func exit(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "exit")
+        appLog.log(logger, logtype: .guiAction, message: "exit")
 
-        performSegueWithIdentifier("Exit", sender: self)
+        performSegue(withIdentifier: "Exit", sender: self)
     }
 
 
@@ -169,27 +169,27 @@ class MainExportVC: UIViewController,
     // MainExportVC - Buttons
     //----------------------------------------
 
-    @IBAction func dumpCoreData(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "dumpAllCoreData")
-        appLog.log(logger, logtype: .GUIAction, message: "dumpCoreData")
+    @IBAction func dumpCoreData(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "dumpAllCoreData")
+        appLog.log(logger, logtype: .guiAction, message: "dumpCoreData")
 
         let s = MainExportVC.dumpAllData(moc)
         print(s)
-        UIPasteboard.generalPasteboard().string = s
+        UIPasteboard.general.string = s
     }
 
-    @IBAction func dumpApplog(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "dumpApplog")
-        appLog.log(logger, logtype: .GUIAction, message: "dumpApplog")
+    @IBAction func dumpApplog(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "dumpApplog")
+        appLog.log(logger, logtype: .guiAction, message: "dumpApplog")
 
         let s = appLog.logString
         print(s)
-        UIPasteboard.generalPasteboard().string = s
+        UIPasteboard.general.string = s
     }
 
-    @IBAction func dumpSessionDetails(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "dumpSessionDetails")
-        appLog.log(logger, logtype: .GUIAction, message: "dumpSessionDetails")
+    @IBAction func dumpSessionDetails(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "dumpSessionDetails")
+        appLog.log(logger, logtype: .guiAction, message: "dumpSessionDetails")
 
         /*
         for each project p {
@@ -217,7 +217,7 @@ class MainExportVC: UIViewController,
 
         var str = ""
 
-        for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+        for project in projects.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
             if project.name == templateProjectName {
                 continue
             }
@@ -262,7 +262,7 @@ class MainExportVC: UIViewController,
             // Stop iteration at maxNumberOfTaskEntries (instead of maxNUmberOfTaskEntries-1)
             // to always printout end time of last task entry
             for i in 0...maxNumberOfTaskEntries {
-                for s in projectDetails.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+                for s in projectDetails.keys.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
                     if let (taskEntries, gap2taskEntry) = projectDetails[s] {
                         if gap2taskEntry.count == 0 {
                             finished[s] = true
@@ -298,12 +298,12 @@ class MainExportVC: UIViewController,
             }
         }
         print(str)
-        UIPasteboard.generalPasteboard().string = str
+        UIPasteboard.general.string = str
     }
 
-    @IBAction func dumpSessionSummary(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "dumpSessionSummary")
-        appLog.log(logger, logtype: .GUIAction, message: "dumpSessionSummary")
+    @IBAction func dumpSessionSummary(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "dumpSessionSummary")
+        appLog.log(logger, logtype: .guiAction, message: "dumpSessionSummary")
 
         /*
         for each project p {
@@ -335,11 +335,11 @@ class MainExportVC: UIViewController,
         var s = ""
         var sessionNameSuffix = ""
 
-        for project in projects.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+        for project in projects.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
             if project.name == templateProjectName {
                 continue
             }
-            var projectSummary: [Session: [Task: (Int, NSTimeInterval)]] = [:]
+            var projectSummary: [Session: [Task: (Int, TimeInterval)]] = [:]
             var setOfTasks = Set<Task>()
             for session in project.sessions {
                 if let s = session as? Session {
@@ -363,7 +363,7 @@ class MainExportVC: UIViewController,
             }
 
             var heading = "\t"
-            for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+            for session in projectSummary.keys.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
                 if let w = session.getLastTaskEntry() {
                     if w.isOngoing() {
                         heading += "* "
@@ -379,14 +379,14 @@ class MainExportVC: UIViewController,
             s += "\(heading)\n"
 
             var taskRow = ""
-            var sessionTotal: [Session: NSTimeInterval] = [:]
-            for task in setOfTasks.sort({ $0.name < $1.name }) {
+            var sessionTotal: [Session: TimeInterval] = [:]
+            for task in setOfTasks.sorted(by: { $0.name < $1.name }) {
                 taskRow = "\(task.name)\t"
-                for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+                for session in projectSummary.keys.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
                     if let sessionSummary = projectSummary[session] {
                         if let (_, time) = sessionSummary[task] {
                             taskRow += "\(UtilitiesDate.getString(time))\t"
-                            var total: NSTimeInterval = 0
+                            var total: TimeInterval = 0
                             if let t = sessionTotal[session] {
                                 total = t
                             }
@@ -400,7 +400,7 @@ class MainExportVC: UIViewController,
                 s += "\(taskRow)\n"
             }
             var summaryRow = "Total\t"
-            for session in projectSummary.keys.sort({ $0.created.compare($1.created) == .OrderedAscending }) {
+            for session in projectSummary.keys.sorted(by: { $0.created.compare($1.created) == .orderedAscending }) {
                 if let total = sessionTotal[session] {
                     summaryRow += "\(UtilitiesDate.getString(total))\t"
                 } else {
@@ -411,7 +411,7 @@ class MainExportVC: UIViewController,
             s += "\n"
         }
         print(s)
-        UIPasteboard.generalPasteboard().string = s
+        UIPasteboard.general.string = s
     }
 
 
@@ -419,15 +419,15 @@ class MainExportVC: UIViewController,
     // MainExportVC - dumpAllData
     //---------------------------------------------
 
-    class func dumpAllData(moc: NSManagedObjectContext) -> String {
-        var fetchRequest: NSFetchRequest
+    class func dumpAllData(_ moc: NSManagedObjectContext) -> String {
+        var fetchRequest: NSFetchRequest<NSFetchRequestResult>
         var s: String
 
         do {
             s = ("---------------------------\n")
             s += ("----------Project----------\n\n")
             fetchRequest = NSFetchRequest(entityName: "Project")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Project] {
                 s += "[Project container size=\(fetchResults.count)]\n"
                 for project in fetchResults {
                     s += ("P: \(project.name) @ \(UtilitiesDate.getString(project.created)) - \(project.id)\n")
@@ -454,7 +454,7 @@ class MainExportVC: UIViewController,
             s += ("---------------------------\n")
             s += ("----------Session----------\n\n")
             fetchRequest = NSFetchRequest(entityName: "Session")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Session] {
                 s += "[Session container size=\(fetchResults.count)]\n"
                 for session in fetchResults {
                     s += ("S: \(session.getDisplayNameWithSuffix()) @ \(UtilitiesDate.getString(session.created)) - \(session.id)\n")
@@ -469,20 +469,20 @@ class MainExportVC: UIViewController,
                     }
                     s += ("    P: \(session.project.name) @ \(UtilitiesDate.getString(session.project.created))\n")
                     s += "    [TaskEntry container size=\(session.taskEntries.count)]\n"
-                    session.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    session.taskEntries.enumerateObjects({ (elem, idx, stop) -> Void in
                         let taskEntry = elem as! TaskEntry
                         if taskEntry.isStopped() {
-                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                             s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
                         } else {
                             s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
                         }
-                    }
+                    })
                     s += "    [Task container size=\(session.tasks.count)]\n"
-                    session.tasks.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    session.tasks.enumerateObjects({ (elem, idx, stop) -> Void in
                         let task = elem as! Task
                         s += "    T: \(task.name) @ \(UtilitiesDate.getString(task.created))\n"
-                    }
+                    })
                 }
             }
         } catch {
@@ -495,11 +495,11 @@ class MainExportVC: UIViewController,
             s += ("------------------------\n")
             s += ("----------TaskEntry----------\n\n")
             fetchRequest = NSFetchRequest(entityName: "TaskEntry")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [TaskEntry] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [TaskEntry] {
                 s += "[TaskEntry container size=\(fetchResults.count)]\n"
                 for taskEntry in fetchResults {
                     if taskEntry.isStopped() {
-                        let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                        let timeForTaskEntry = taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                         s += "TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry)) - \(taskEntry.id)\n"
                     } else {
                         s += "TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------ - \(taskEntry.id)\n"
@@ -520,7 +520,7 @@ class MainExportVC: UIViewController,
             s += ("------------------------\n")
             s += ("----------Task----------\n\n")
             fetchRequest = NSFetchRequest(entityName: "Task")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Task] {
                 s += "[Task container size=\(fetchResults.count)]\n"
                 for task in fetchResults {
                     s += ("T: \(task.name) @ \(UtilitiesDate.getString(task.created)) - \(task.id)\n")
@@ -541,15 +541,15 @@ class MainExportVC: UIViewController,
                         }
                     }
                     s += "    [TaskEntry container size=\(task.taskEntries.count)]\n"
-                    task.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
+                    task.taskEntries.enumerateObjects({ (elem, idx, stop) -> Void in
                         let taskEntry = elem as! TaskEntry
                         if taskEntry.isStopped() {
-                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                            let timeForTaskEntry = taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                             s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->\(UtilitiesDate.getStringNoDate(taskEntry.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
                         } else {
                             s += "    TE: \(taskEntry.task.name) \(UtilitiesDate.getString(taskEntry.startTime))->(ongoing) = ------\n"
                         }
-                    }
+                    })
                 }
             }
 

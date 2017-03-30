@@ -21,14 +21,14 @@ class MainTemplatePropVC: UIViewController,
     var parsedUpdatedTemplate: SessionTemplate?
     
     // Internal
-    let textTemplate = UITextView(frame: CGRectZero)
+    let textTemplate = UITextView(frame: CGRect.zero)
     var spaceAtBottom = 0
     let padding = 10
-    let buttonInstructions = UIButton(type: UIButtonType.System)
+    let buttonInstructions = UIButton(type: UIButtonType.system)
 
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self);
+        NotificationCenter.default.removeObserver(self);
     }
 
     //---------------------------------------
@@ -36,17 +36,17 @@ class MainTemplatePropVC: UIViewController,
     //---------------------------------------
 
     lazy var moc : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -66,26 +66,26 @@ class MainTemplatePropVC: UIViewController,
     // MainTemplatePropVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
-        self.edgesForExtendedLayout = .None
+        self.edgesForExtendedLayout = UIRectEdge()
 
         if let s = segue {
             switch s {
@@ -98,9 +98,9 @@ class MainTemplatePropVC: UIViewController,
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.cancel(_:)))
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MainTemplatePropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
         
 
@@ -108,43 +108,43 @@ class MainTemplatePropVC: UIViewController,
         if let t = template {
             textTemplate.text = t
         }
-        textTemplate.textColor = UIColor.blackColor()
-        textTemplate.backgroundColor = UIColor.whiteColor()
-        textTemplate.font = UIFont.systemFontOfSize(16)
+        textTemplate.textColor = UIColor.black
+        textTemplate.backgroundColor = UIColor.white
+        textTemplate.font = UIFont.systemFont(ofSize: 16)
         self.view.addSubview(textTemplate)
         
-        buttonInstructions.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-        buttonInstructions.setTitle("How to write a template", forState: UIControlState.Normal)
-        buttonInstructions.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        buttonInstructions.addTarget(self, action: #selector(MainTemplatePropVC.displayTemplateInstructions(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        buttonInstructions.setTitleColor(UIColor.blue, for: UIControlState())
+        buttonInstructions.setTitle("How to write a template", for: UIControlState())
+        buttonInstructions.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
+        buttonInstructions.addTarget(self, action: #selector(MainTemplatePropVC.displayTemplateInstructions(_:)), for: UIControlEvents.touchUpInside)
 
         self.view.addSubview(buttonInstructions)
 
-        self.view.backgroundColor = UIColor.lightGrayColor()
+        self.view.backgroundColor = UIColor.lightGray
 
         spaceAtBottom = 20
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil);
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil);
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
 
         let textTemplateHeight = height - CGFloat(spaceAtBottom) - 30
-        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
-        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
+        appLog.log(logger, logtype: .debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRect(x: 10, y: 10, width: width-20, height: textTemplateHeight)
         
-        buttonInstructions.frame.origin.y = CGRectGetMaxY(textTemplate.frame)
+        buttonInstructions.frame.origin.y = textTemplate.frame.maxY
         buttonInstructions.frame.size.height = 30
         buttonInstructions.frame.size.width = width - 20
         buttonInstructions.center.x = width/2
@@ -152,83 +152,83 @@ class MainTemplatePropVC: UIViewController,
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     // GUI actions
 
-    func cancel(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "cancel")
-        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+    func cancel(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "cancel")
+        appLog.log(logger, logtype: .guiAction, message: "cancel")
 
-        performSegueWithIdentifier("CancelTemplateProp", sender: self)
+        performSegue(withIdentifier: "CancelTemplateProp", sender: self)
     }
     
-    func save(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "save")
-        appLog.log(logger, logtype: .GUIAction, message: "save")
+    func save(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "save")
+        appLog.log(logger, logtype: .guiAction, message: "save")
 
         let st = SessionTemplate()
         st.parseTemplate(textTemplate.text)
         if(st.templateOk) {
-            appLog.log(logger, logtype: .Debug, message: "Syntax check ok")
+            appLog.log(logger, logtype: .debug, message: "Syntax check ok")
             updatedTemplateSrc = textTemplate.text
             parsedUpdatedTemplate = st
-            performSegueWithIdentifier("SaveTemplateProp", sender: self)
+            performSegue(withIdentifier: "SaveTemplateProp", sender: self)
         } else {
-            appLog.log(logger, logtype: .Debug, message: "Check template NOT ok (\(st.errorMessage))")
+            appLog.log(logger, logtype: .debug, message: "Check template NOT ok (\(st.errorMessage))")
             // Display alert with error message, only have an "Ok" or "dismiss" button.
             let alertController = getSyntaxErrorAlert("Problems with template", errorMessage: st.errorMessage)
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         }
     }
 
-    func getSyntaxErrorAlert(prompt: String, errorMessage: String) -> UIAlertController
+    func getSyntaxErrorAlert(_ prompt: String, errorMessage: String) -> UIAlertController
     {
         let alertContoller = UIAlertController(title: "\(prompt)?", message: errorMessage,
-            preferredStyle: .Alert)
-        let ok = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+            preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Ok", style: .default, handler: nil)
         alertContoller.addAction(ok)
         return alertContoller
     }
 
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            appLog.log(logger, logtype: .Debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
+    func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            appLog.log(logger, logtype: .debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20 + Int(keyboardSize.height)
         }
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
         let textTemplateHeight = height-CGFloat(spaceAtBottom)
-        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
-        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
+        appLog.log(logger, logtype: .debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRect(x: 10, y: 10, width: width-20, height: textTemplateHeight)
     }
 
-    func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-            appLog.log(logger, logtype: .Debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
+    func keyboardWillHide(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            appLog.log(logger, logtype: .debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20
         }
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
         let textTemplateHeight = height-CGFloat(spaceAtBottom)
-        appLog.log(logger, logtype: .Debug, message: "textTemplateHeight=\(textTemplateHeight)")
-        textTemplate.frame = CGRectMake(10, 10, width-20, textTemplateHeight)
+        appLog.log(logger, logtype: .debug, message: "textTemplateHeight=\(textTemplateHeight)")
+        textTemplate.frame = CGRect(x: 10, y: 10, width: width-20, height: textTemplateHeight)
     }
     
-    func displayTemplateInstructions(sender: UIButton)
+    func displayTemplateInstructions(_ sender: UIButton)
     {
-        appLog.log(logger, logtype: .EnterExit, message: "displayTemplateInstructions")
-        appLog.log(logger, logtype: .GUIAction, message: "displayTemplateInstructions")
+        appLog.log(logger, logtype: .enterExit, message: "displayTemplateInstructions")
+        appLog.log(logger, logtype: .guiAction, message: "displayTemplateInstructions")
         
-        if let u = NSURL(string: "http://timepolice.perekskog.se/getstarted.html#templates")
+        if let u = URL(string: "http://timepolice.perekskog.se/getstarted.html#templates")
         {
-            UIApplication.sharedApplication().openURL(u)
+            UIApplication.shared.openURL(u)
         }
     }
 }

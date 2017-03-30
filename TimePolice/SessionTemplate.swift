@@ -30,15 +30,15 @@ class SessionTemplate {
     Parse a string to be able to store a session template.
     - parameter string: A string defining the template
     */
-	func parseTemplate(string: String) {
+	func parseTemplate(_ string: String) {
         tasks = []
-        var lines: [String] = string.componentsSeparatedByString("\n")
+        var lines: [String] = string.components(separatedBy: "\n")
 		if lines.count == 0 {
 			return
 		}
 
 		let sessionNameVersion = UtilitiesString.getWithoutProperties(lines[0])
-        let (sessionName, sessionVersion) = UtilitiesString.get2Parts(sessionNameVersion, separator: NSCharacterSet(charactersInString: "."))
+        let (sessionName, sessionVersion) = UtilitiesString.get2Parts(sessionNameVersion, separator: CharacterSet(charactersIn: "."))
         let sessionProps = UtilitiesString.getProperties(lines[0])
 
         if sessionName==templateProjectName {

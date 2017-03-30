@@ -23,30 +23,30 @@ class Project: NSManagedObject {
     // Project - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, 
+    class func createInMOC(_ moc: NSManagedObjectContext, 
             name: String) -> Project {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "createInMOC(name=\(name))")
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "createInMOC(name=\(name))")
 
         let n = UtilitiesString.getWithoutProperties(name)
         let p = UtilitiesString.getProperties(name)
         return Project.createInMOC(moc, name: n, properties: p)
     }
 
-    class func createInMOC(moc: NSManagedObjectContext, 
+    class func createInMOC(_ moc: NSManagedObjectContext, 
             name: String, properties: [String: String]) -> Project {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "createInMOC(name=\(name), props...)")
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "createInMOC(name=\(name), props...)")
 
-        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Project", inManagedObjectContext: moc) as! Project
+        let newItem = NSEntityDescription.insertNewObject(forEntityName: "Project", into: moc) as! Project
 
-        let date = NSDate()
-        let deviceName = UIDevice.currentDevice().name
+        let date = Date()
+        let deviceName = UIDevice.current.name
         newItem.id = "P:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = name
         newItem.created = date
-        newItem.properties = properties
+        newItem.properties = properties as NSObject
 
         let s = UtilitiesString.dumpProperties(properties)
-        UtilitiesApplog.logDefault("Project properties", logtype: .Debug, message: s)
+        UtilitiesApplog.logDefault("Project properties", logtype: .debug, message: s)
 
         return newItem
     }
@@ -55,15 +55,15 @@ class Project: NSManagedObject {
     // Project - findInMOC
     //---------------------------------------------
 
-    class func findInMOC(moc: NSManagedObjectContext, name: String) -> [Project]? {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "findInMOC(name=\(name))")
+    class func findInMOC(_ moc: NSManagedObjectContext, name: String) -> [Project]? {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "findInMOC(name=\(name))")
 
-        let fetchRequest = NSFetchRequest(entityName: "Project")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Project")
         let predicate = NSPredicate(format: "name == %@", name) 
         fetchRequest.predicate = predicate
 
         do {
-            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project]
+            let fetchResults = try moc.fetch(fetchRequest) as? [Project]
 
             return fetchResults
         } catch {
@@ -71,13 +71,13 @@ class Project: NSManagedObject {
         }
     }
 
-    class func findInMOC(moc: NSManagedObjectContext) -> [Project]? {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "findInMOC()")
+    class func findInMOC(_ moc: NSManagedObjectContext) -> [Project]? {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "findInMOC()")
 
-        let fetchRequest = NSFetchRequest(entityName: "Project")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Project")
 
         do {
-            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project]
+            let fetchResults = try moc.fetch(fetchRequest) as? [Project]
 
             return fetchResults
         } catch {
@@ -89,18 +89,18 @@ class Project: NSManagedObject {
     // Project - delete
     //---------------------------------------------
 
-    class func deleteObjectOnly(project: Project) {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "deleteObjectOnly(name=\(project.name))")
+    class func deleteObjectOnly(_ project: Project) {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "deleteObjectOnly(name=\(project.name))")
         guard let moc = project.managedObjectContext else { return }
-        moc.deleteObject(project)
+        moc.delete(project)
     }
 
-    class func deleteObject(project: Project) {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "deleteObject(name=\(project.name))")
+    class func deleteObject(_ project: Project) {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "deleteObject(name=\(project.name))")
         guard let moc = project.managedObjectContext else { return }
         let sessions = project.sessions
-        moc.deleteObject(project)
-        UtilitiesApplog.logDefault("Project", logtype: .Debug, message: "Delete all sessions")
+        moc.delete(project)
+        UtilitiesApplog.logDefault("Project", logtype: .debug, message: "Delete all sessions")
         for session in sessions {
             if let s = session as? Session {
                 Session.deleteObject(s)
@@ -121,13 +121,13 @@ class Project: NSManagedObject {
         UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "Project not deleted, \(project.sessions.count) sessions left.")
     }
 */
-    class func purgeIfEmpty(project: Project, exceptSession session:Session) {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "purgeIfEmpty(name=\(project.name))")
-        if project.sessions.count==0 || (project.sessions.count==1 && project.sessions.containsObject(session)) {
+    class func purgeIfEmpty(_ project: Project, exceptSession session:Session) {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "purgeIfEmpty(name=\(project.name))")
+        if project.sessions.count==0 || (project.sessions.count==1 && project.sessions.contains(session)) {
             Project.deleteObjectOnly(project)
-            UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "Project deleted because none or only 1 specific session left.")
+            UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "Project deleted because none or only 1 specific session left.")
         } else {
-            UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "Project not deleted, \(project.sessions.count) sessions left.")
+            UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "Project not deleted, \(project.sessions.count) sessions left.")
         }
     }
 
@@ -135,10 +135,10 @@ class Project: NSManagedObject {
     // Project - addSession (internal use only)
     //---------------------------------------------
 
-    func addSession(session: Session) {
-        UtilitiesApplog.logDefault("Project", logtype: .EnterExit, message: "addSession(name=\(name), session=\(session.name))")
+    func addSession(_ session: Session) {
+        UtilitiesApplog.logDefault("Project", logtype: .enterExit, message: "addSession(name=\(name), session=\(session.name))")
         let s = self.sessions.mutableCopy() as! NSMutableOrderedSet
-        s.addObject(session)
+        s.add(session)
         self.sessions = s
     }
 

@@ -25,7 +25,7 @@ class TaskEntryCreatorByAddToListVC:
     
     var sourceController: MainSessionListVC?
 
-    var taskEntriesTableView = UITableView(frame: CGRectZero, style: .Plain)
+    var taskEntriesTableView = UITableView(frame: CGRect.zero, style: .plain)
 
     var sessionLabel: UILabel?
 
@@ -33,11 +33,11 @@ class TaskEntryCreatorByAddToListVC:
 
 
     // Cached values, calculated at startup
-    var sessionSummary: (Int, NSTimeInterval) = (0,0)
+    var sessionSummary: (Int, TimeInterval) = (0,0)
 
-    var updateActiveActivityTimer: NSTimer?
+    var updateActiveActivityTimer: Timer?
 
-    let exitButton = UIButton(type: UIButtonType.System)
+    let exitButton = UIButton(type: UIButtonType.system)
     let sessionNameView = TaskEntriesToolView()
     let pageIndicatorView = TaskPickerPageIndicatorView()
     let taskEntriesBGView = TaskEntriesBGView()
@@ -67,31 +67,31 @@ class TaskEntryCreatorByAddToListVC:
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.datasource = self
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
         //GAP: Update list of gaps
         gap2taskEntry = []
         if let s = session,
-            wl = s.taskEntries.array as? [TaskEntry] {
+            let wl = s.taskEntries.array as? [TaskEntry] {
             gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
         var s = ""
         for i in gap2taskEntry {
             s += "\(i)\t"
         }
-        appLog.log(logger, logtype: .Debug, message: s)
+        appLog.log(logger, logtype: .debug, message: s)
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByAddToListVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.setTitleColor(UIColor.white, for: UIControlState())
+        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByAddToListVC.exit(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
-        sessionNameView.tool = .SessionName
+        sessionNameView.tool = .sessionName
         sessionNameView.toolbarInfoDelegate = self
         var recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.useTemplate(_:)))
         recognizer.delegate = self
@@ -106,19 +106,19 @@ class TaskEntryCreatorByAddToListVC:
 
         infoAreaView.theme = theme
         infoAreaView.toolbarInfoDelegate = self
-        infoAreaView.tool = .InfoArea
+        infoAreaView.tool = .infoArea
         taskEntriesBGView.addSubview(infoAreaView)
 
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
-        signInSignOutView.tool = .SignInSignOut
+        signInSignOutView.tool = .signInSignOut
         recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.switchOngoingFinished(_:)))
         recognizer.delegate = self
         signInSignOutView.addGestureRecognizer(recognizer)
         taskEntriesBGView.addSubview(signInSignOutView)
 
 
-        taskEntriesTableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TaskEntriesCell")
+        taskEntriesTableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "TaskEntriesCell")
         taskEntriesTableView.dataSource = self
         taskEntriesTableView.delegate = self
         taskEntriesTableView.rowHeight = CGFloat(selectItemTableRowHeight)
@@ -128,7 +128,7 @@ class TaskEntryCreatorByAddToListVC:
 
         addView.theme = theme
         addView.toolbarInfoDelegate = self
-        addView.tool = .Add
+        addView.tool = .add
         recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByAddToListVC.addTaskEntry(_:)))
         recognizer.delegate = self
         addView.addGestureRecognizer(recognizer)
@@ -136,32 +136,32 @@ class TaskEntryCreatorByAddToListVC:
 
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
 
 
         if let indexPath = taskEntriesTableView.indexPathForSelectedRow {
-            taskEntriesTableView.deselectRowAtIndexPath(indexPath, animated: true)
+            taskEntriesTableView.deselectRow(at: indexPath, animated: true)
         }
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         // This was originally in viewWillAppear, but it seems that viewWillAppear will be called
         // when changing session (PageController) and then, when changing TabBar, it will NOT
         // be called. 
         // viewDidAppear is always called.
 
-        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+        updateActiveActivityTimer = Timer.scheduledTimer(timeInterval: 1,
                 target: self,
               selector: #selector(TaskEntryCreatorByAddToListVC.updateActiveTask(_:)),
               userInfo: nil,
                repeats: true)        
 
-        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .resource, message: "starting timer \(String(describing: updateActiveActivityTimer))")
 
         self.sessionSummary = (0,0)
         if let s = session?.getSessionSummary(moc) {
@@ -172,17 +172,17 @@ class TaskEntryCreatorByAddToListVC:
     }
 
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
 
-        appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .resource, message: "stopping timer \(String(describing: updateActiveActivityTimer))")
 
         updateActiveActivityTimer?.invalidate()
     }
@@ -190,40 +190,40 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        var width = CGRectGetWidth(self.view.frame)
-        var height = CGRectGetHeight(self.view.frame) - 50
+        var width = self.view.frame.width
+        var height = self.view.frame.height - 50
 
         var lastview: UIView
 
-        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight) - 5)
+        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRectMake(70, 25 + CGFloat(minimumComponentHeight) - 5, width-70, 5)
+        pageIndicatorView.frame = CGRect(x: 70, y: 25 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
         pageIndicatorView.toolbarInfoDelegate = self
         lastview = pageIndicatorView
 
-        taskEntriesBGView.frame = CGRectMake(0, 25 + CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
+        taskEntriesBGView.frame = CGRect(x: 0, y: 25 + CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
         lastview = taskEntriesBGView
 
-        width = CGRectGetWidth(taskEntriesBGView.frame)
-        height = CGRectGetHeight(taskEntriesBGView.frame)
+        width = taskEntriesBGView.frame.width
+        height = taskEntriesBGView.frame.height
         let padding = 1
 
-        infoAreaView.frame = CGRectMake(CGFloat(padding), CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
+        infoAreaView.frame = CGRect(x: CGFloat(padding), y: CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight))
         lastview = infoAreaView
 
-        signInSignOutView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
+        signInSignOutView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight))
         lastview = signInSignOutView
 
-        taskEntriesTableView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), height - CGRectGetMaxY(lastview.frame) - 3*CGFloat(padding) - CGFloat(minimumComponentHeight))
+        taskEntriesTableView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: height - lastview.frame.maxY - 3*CGFloat(padding) - CGFloat(minimumComponentHeight))
         lastview = taskEntriesTableView
 
-        addView.frame = CGRectMake(CGFloat(padding), CGRectGetMaxY(lastview.frame) + CGFloat(padding), width - 2*CGFloat(padding), CGFloat(minimumComponentHeight))
+        addView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight))
         lastview = addView
 
         // This was originally in viewWillAppear, but it seems that viewWillAPpear will be called
@@ -242,13 +242,13 @@ class TaskEntryCreatorByAddToListVC:
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
 
         // Inset to left edge on cells with text
-        taskEntriesTableView.separatorInset = UIEdgeInsetsZero
+        taskEntriesTableView.separatorInset = UIEdgeInsets.zero
 
         // Inset to left edge on empty cells
-        taskEntriesTableView.layoutMargins = UIEdgeInsetsZero
+        taskEntriesTableView.layoutMargins = UIEdgeInsets.zero
     }
 
     //-----------------------------------------
@@ -256,42 +256,42 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
 
-    func exit(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "exit")
-        appLog.log(logger, logtype: .GUIAction, message: "exit")
+    func exit(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "exit")
+        appLog.log(logger, logtype: .guiAction, message: "exit")
         
-        performSegueWithIdentifier("Exit", sender: self)
+        performSegue(withIdentifier: "Exit", sender: self)
     }
 
-    func useTemplate(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
-        appLog.log(logger, logtype: .GUIAction, message: "useTemplate")
+    func useTemplate(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "useTemplate")
+        appLog.log(logger, logtype: .guiAction, message: "useTemplate")
 
-        performSegueWithIdentifier("UseTemplate", sender: self)
+        performSegue(withIdentifier: "UseTemplate", sender: self)
     }
 
-    func switchOngoingFinished(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "switchOngoingFinished")
-        appLog.log(logger, logtype: .GUIAction, message: "switchOngoingFinished")
+    func switchOngoingFinished(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "switchOngoingFinished")
+        appLog.log(logger, logtype: .guiAction, message: "switchOngoingFinished")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
 
         guard let w = session?.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in switchOngoingFinished")
+            appLog.log(logger, logtype: .guard, message: "guard fail in switchOngoingFinished")
             return
         }
 
         if w.isOngoing() {
-            w.setStoppedAt(NSDate())
+            w.setStoppedAt(Date())
             var (activations, totalTime) = sessionSummary
             activations += 1
-            totalTime += w.stopTime.timeIntervalSinceDate(w.startTime)
+            totalTime += w.stopTime.timeIntervalSince(w.startTime)
             sessionSummary = (activations, totalTime)
         } else {
             var (activations, totalTime) = sessionSummary
             activations -= 1
-            totalTime -= w.stopTime.timeIntervalSinceDate(w.startTime)
+            totalTime -= w.stopTime.timeIntervalSince(w.startTime)
             sessionSummary = (activations, totalTime)
             w.setAsOngoing()
         }
@@ -299,16 +299,16 @@ class TaskEntryCreatorByAddToListVC:
         scrollToEnd(taskEntriesTableView)
     }
     
-    func addTaskEntry(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "addTaskEntry")
-        appLog.log(logger, logtype: .GUIAction, message: "addTaskEntry")
+    func addTaskEntry(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "addTaskEntry")
+        appLog.log(logger, logtype: .guiAction, message: "addTaskEntry")
 
         guard let s = session else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in addTaskEntry")
+            appLog.log(logger, logtype: .guard, message: "guard fail in addTaskEntry")
             return
         }
 
-        let now = NSDate()
+        let now = Date()
         var task = s.tasks[0] as! Task
         if let lastTaskEntry = s.getLastTaskEntry() {
             task = lastTaskEntry.task
@@ -316,17 +316,17 @@ class TaskEntryCreatorByAddToListVC:
                 lastTaskEntry.setStoppedAt(now)
                 var (activations, totalTime) = sessionSummary
                 activations += 1
-                totalTime += lastTaskEntry.stopTime.timeIntervalSinceDate(lastTaskEntry.startTime)
+                totalTime += lastTaskEntry.stopTime.timeIntervalSince(lastTaskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }
         }
 
-        TaskEntry.createInMOC(moc, name: "", session: s, task: task)
+        _ = TaskEntry.createInMOC(moc, name: "", session: s, task: task)
         TimePoliceModelUtils.save(moc)
 
         gap2taskEntry = []
         if let s = session,
-            wl = s.taskEntries.array as? [TaskEntry] {
+            let wl = s.taskEntries.array as? [TaskEntry] {
             gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
 
@@ -341,89 +341,89 @@ class TaskEntryCreatorByAddToListVC:
     // TaskEntryCreatorByAddToList - UITableViewDelegate
     //-----------------------------------------
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var cellString = ""
-        if let cell = tableView.cellForRowAtIndexPath(indexPath),
-            s = cell.textLabel?.text {
+        if let cell = tableView.cellForRow(at: indexPath),
+            let s = cell.textLabel?.text {
                 cellString = s
         }
 
-        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
+        appLog.log(logger, logtype: .enterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .guiAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         //GAP: Use a popover for a gap, continue if not a gap
         if indexPath.row >= gap2taskEntry.count {
-            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskENtryIndex out of bounds]")
+            appLog.log(logger, logtype: .guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskENtryIndex out of bounds]")
             
             return
         }
 
         if gap2taskEntry[indexPath.row] == -1 {
-            appLog.log(logger, logtype: .Guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskEntryIndex=gap]")
+            appLog.log(logger, logtype: .guard, message: "check fail in tableView:didSelectRowAtIndexPath [taskEntryIndex=gap]")
             
             // A gap is never first or last in the list => There is always a choice between fill with previous or next
             
             let alertContoller = UIAlertController(title: "Delete gap", message: nil,
-                preferredStyle: .ActionSheet)
+                preferredStyle: .actionSheet)
             
-            let fillWithPreviousAction = UIAlertAction(title: "...fill with previous", style: .Default,
+            let fillWithPreviousAction = UIAlertAction(title: "...fill with previous", style: .default,
                 handler: { action in
                     self.handleDeleteFillWithPrevious(indexPath.row)
                 })
             alertContoller.addAction(fillWithPreviousAction)
             
-            let fillWithNextAction = UIAlertAction(title: "...fill with next", style: .Default,
+            let fillWithNextAction = UIAlertAction(title: "...fill with next", style: .default,
                 handler: { action in
                     self.handleDeleteFillWithNext(indexPath.row)
                 })
             alertContoller.addAction(fillWithNextAction)
             
-            let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel,
                 handler: { action in
                     if let indexPath = self.taskEntriesTableView.indexPathForSelectedRow {
-                        self.taskEntriesTableView.deselectRowAtIndexPath(indexPath, animated: true)
+                        self.taskEntriesTableView.deselectRow(at: indexPath, animated: true)
                     }
                 })
             alertContoller.addAction(cancel)
             
-            presentViewController(alertContoller, animated: true, completion: nil)
+            present(alertContoller, animated: true, completion: nil)
             
             return
         }
         let taskEntryIndex = gap2taskEntry[indexPath.row]
 
         guard let te = session?.taskEntries[taskEntryIndex] as? TaskEntry else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskentry]")
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskentry]")
             return
         }
 
         selectedTaskEntry = te
         selectedTaskEntryIndex = taskEntryIndex
         
-        appLog.log(logger, logtype: .Debug) { "selected(row=\(taskEntryIndex), taskentry=\(te.task.name))" }
+        appLog.log(logger, logtype: .debug) { "selected(row=\(taskEntryIndex), taskentry=\(te.task.name))" }
 
-        performSegueWithIdentifier("EditTaskEntry", sender: self)
+        performSegue(withIdentifier: "EditTaskEntry", sender: self)
     }
 
-    func handleDeleteFillWithPrevious(index: Int) {
-        appLog.log(logger, logtype: .Debug, message: "Fill with previous")
+    func handleDeleteFillWithPrevious(_ index: Int) {
+        appLog.log(logger, logtype: .debug, message: "Fill with previous")
         if let s = session {
             let previousTaskEntryIndex = gap2taskEntry[index-1]
             let nextTaskEntryIndex = gap2taskEntry[index+1]
-            let nextStartTime = s.taskEntries[nextTaskEntryIndex].startTime
-            s.setStopTime(moc, taskEntryIndex: previousTaskEntryIndex, desiredStopTime: nextStartTime)
+            let nextStartTime = (s.taskEntries[nextTaskEntryIndex] as AnyObject).startTime
+            s.setStopTime(moc, taskEntryIndex: previousTaskEntryIndex, desiredStopTime: nextStartTime!)
             redrawAfterSegue()
         }
     }
 
-    func handleDeleteFillWithNext(index: Int) {
-        appLog.log(logger, logtype: .Debug, message: "Fill with next")
+    func handleDeleteFillWithNext(_ index: Int) {
+        appLog.log(logger, logtype: .debug, message: "Fill with next")
 
         if let s = session {
             let previousTaskEntryIndex = gap2taskEntry[index-1]
             let nextTaskEntryIndex = gap2taskEntry[index+1]
-            let previousStopTime = s.taskEntries[previousTaskEntryIndex].stopTime
-            s.setStartTime(moc, taskEntryIndex: nextTaskEntryIndex, desiredStartTime: previousStopTime)
+            let previousStopTime = (s.taskEntries[previousTaskEntryIndex] as AnyObject).stopTime
+            s.setStartTime(moc, taskEntryIndex: nextTaskEntryIndex, desiredStartTime: previousStopTime!)
             redrawAfterSegue()
         }
     }
@@ -432,7 +432,7 @@ class TaskEntryCreatorByAddToListVC:
     // TaskEntryCreatorByAddToList - UITableViewDataSource
     //-----------------------------------------
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //GAP: Include gaps in count
         if let _ = session?.taskEntries {
             return gap2taskEntry.count
@@ -441,12 +441,12 @@ class TaskEntryCreatorByAddToListVC:
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TaskEntriesCell")!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskEntriesCell")!
 
         //GAP: Special handling for gaps, should return a cell with other formatting
         if indexPath.row >= gap2taskEntry.count {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskEntryIndex]")
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:didSelectRowAtIndexPath [taskEntryIndex]")
             return cell
         }
         
@@ -468,12 +468,12 @@ class TaskEntryCreatorByAddToListVC:
         }
 
         guard let w = session?.taskEntries[taskEntryIndex] as? TaskEntry else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:cellForRowAtIndexPath")
             return cell
         }
 
         if w.isStopped() {
-            let timeForTaskEntry = w.stopTime.timeIntervalSinceDate(w.startTime)
+            let timeForTaskEntry = w.stopTime.timeIntervalSince(w.startTime)
             cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->\(UtilitiesDate.getStringNoDate(w.stopTime)) = \(UtilitiesDate.getString(timeForTaskEntry))\n"
         } else {
             cell.textLabel?.text = "\(w.task.name) \(UtilitiesDate.getStringNoDate(w.startTime))->(ongoing) = ------\n"
@@ -500,7 +500,7 @@ class TaskEntryCreatorByAddToListVC:
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
+        appLog.log(logger, logtype: .periodicCallback, message: "getToolbarInfo")
 
         var (totalActivations, totalTime) = sessionSummary
 
@@ -515,9 +515,9 @@ class TaskEntryCreatorByAddToListVC:
                 if taskEntry.isOngoing() {
                     signedIn = true
 
-                    let now = NSDate()
-                    if(now.compare(taskEntry.startTime) == .OrderedDescending) {
-                        let timeForActiveTask = NSDate().timeIntervalSinceDate(taskEntry.startTime)
+                    let now = Date()
+                    if(now.compare(taskEntry.startTime) == .orderedDescending) {
+                        let timeForActiveTask = Date().timeIntervalSince(taskEntry.startTime)
                         totalTime += timeForActiveTask
                     }
                 }
@@ -556,7 +556,7 @@ class TaskEntryCreatorByAddToListVC:
         //GAP: Update list of gaps, there may be new ones, or old ones may be "removed"
         gap2taskEntry = []
         if let s = session,
-            wl = s.taskEntries.array as? [TaskEntry] {
+            let wl = s.taskEntries.array as? [TaskEntry] {
             gap2taskEntry = TimePoliceModelUtils.getGap2TaskEntry(wl)
         }
 
@@ -575,8 +575,8 @@ class TaskEntryCreatorByAddToListVC:
     var updateN = 0
 
     @objc
-    func updateActiveTask(timer: NSTimer) {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "updateActiveTask")
+    func updateActiveTask(_ timer: Timer) {
+        appLog.log(logger, logtype: .periodicCallback, message: "updateActiveTask")
         infoAreaView.setNeedsDisplay()
     }
 
@@ -585,13 +585,13 @@ class TaskEntryCreatorByAddToListVC:
     //---------------------------------------------
 
 
-    func scrollToEnd(tableView: UITableView) {
+    func scrollToEnd(_ tableView: UITableView) {
         let numberOfSections = tableView.numberOfSections
-        let numberOfRows = tableView.numberOfRowsInSection(numberOfSections-1)
+        let numberOfRows = tableView.numberOfRows(inSection: numberOfSections-1)
         
         if numberOfRows > 0 {
-            let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
-            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+            let indexPath = IndexPath(row: numberOfRows-1, section: (numberOfSections-1))
+            tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
         }
         
     }

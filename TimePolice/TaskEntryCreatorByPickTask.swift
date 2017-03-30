@@ -28,7 +28,7 @@ class TaskEntryCreatorByPickTaskVC:
         UIGestureRecognizerDelegate
 	{
 
-    let exitButton = UIButton(type: UIButtonType.System)
+    let exitButton = UIButton(type: UIButtonType.system)
     let sessionNameView = TaskPickerToolView()
     let pageIndicatorView = TaskPickerPageIndicatorView()
     let signInSignOutView = TaskPickerToolView()
@@ -38,12 +38,12 @@ class TaskEntryCreatorByPickTaskVC:
 
     var layout: Layout?
 
-    var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
+    var sessionTaskSummary: [Task: (Int, TimeInterval)] = [:]
 
     var recognizers: [UIGestureRecognizer: Int] = [:]
     var taskbuttonviews: [Int: TaskPickerButtonView] = [:]
 
-    var updateActiveActivityTimer: NSTimer?
+    var updateActiveActivityTimer: Timer?
     
     let theme = BlackGreenTheme()
 //        let theme = BasicTheme()
@@ -68,19 +68,19 @@ class TaskEntryCreatorByPickTaskVC:
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.datasource = self
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        exitButton.setTitle("EXIT", forState: UIControlState.Normal)
-        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByPickTaskVC.exit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        exitButton.setTitleColor(UIColor.white, for: UIControlState())
+        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByPickTaskVC.exit(_:)), for: UIControlEvents.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
-        sessionNameView.tool = .SessionName
+        sessionNameView.tool = .sessionName
         var recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByPickTaskVC.useTemplate(_:)))
         recognizer.delegate = self
         sessionNameView.addGestureRecognizer(recognizer)
@@ -94,20 +94,20 @@ class TaskEntryCreatorByPickTaskVC:
 
         signInSignOutView.theme = theme
         signInSignOutView.toolbarInfoDelegate = self
-        signInSignOutView.tool = .SignInSignOut
+        signInSignOutView.tool = .signInSignOut
         recognizer = UITapGestureRecognizer(target:self, action:#selector(TaskEntryCreatorByPickTaskVC.handleTapSigninSignout(_:)))
         signInSignOutView.addGestureRecognizer(recognizer)
         taskPickerBGView.addSubview(signInSignOutView)
             
         infoAreaView.theme = theme
         infoAreaView.toolbarInfoDelegate = self
-        infoAreaView.tool = .InfoArea
+        infoAreaView.tool = .infoArea
         taskPickerBGView.addSubview(infoAreaView)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
 
         for (_, v) in taskbuttonviews {
             if let rr = v.gestureRecognizers {
@@ -122,7 +122,7 @@ class TaskEntryCreatorByPickTaskVC:
         taskbuttonviews = [:]
 
         guard let s = session else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in viewWillAppear")
+            appLog.log(logger, logtype: .guard, message: "guard fail in viewWillAppear")
             return
         }
 
@@ -132,7 +132,7 @@ class TaskEntryCreatorByPickTaskVC:
         var columns: Int = 1 + s.tasks.count/10
 
         if let cols = s.getProperty("columns"),
-            c = Int(cols) {
+            let c = Int(cols) {
                 columns = c
         }
 
@@ -146,8 +146,8 @@ class TaskEntryCreatorByPickTaskVC:
         self.sessionTaskSummary = s.getSessionTaskSummary(false)
 
         guard let tl = s.tasks.array as? [Task],
-            l = layout else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in viewWillAppear 2")
+            let l = layout else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in viewWillAppear 2")
             return
         }
 
@@ -185,35 +185,35 @@ class TaskEntryCreatorByPickTaskVC:
         redrawAfterSegue()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         // This was originally in viewWillAppear, but it seems that viewWillAppear will be called
         // when changing session (PageController) and then, when changing TabBar, it will NOT
         // be called. 
         // viewDidAppear is always called.
 
-        updateActiveActivityTimer = NSTimer.scheduledTimerWithTimeInterval(1,
+        updateActiveActivityTimer = Timer.scheduledTimer(timeInterval: 1,
             target: self,
             selector: #selector(TaskEntryCreatorByPickTaskVC.updateActiveTask(_:)),
             userInfo: nil,
             repeats: true)
 
-        appLog.log(logger, logtype: .Resource, message: "starting timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .resource, message: "starting timer \(String(describing:updateActiveActivityTimer))")
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
 
-        appLog.log(logger, logtype: .Resource, message: "stopping timer \(updateActiveActivityTimer)")
+        appLog.log(logger, logtype: .resource, message: "stopping timer \(String(describing:updateActiveActivityTimer))")
 
         updateActiveActivityTimer?.invalidate()
     }
@@ -221,23 +221,23 @@ class TaskEntryCreatorByPickTaskVC:
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame) - 50
+        let width = self.view.frame.width
+        let height = self.view.frame.height - 50
 
-        exitButton.frame = CGRectMake(0, 25, 70, CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
         
-        sessionNameView.frame = CGRectMake(70, 25, width-70, CGFloat(minimumComponentHeight) - 5)
+        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRectMake(70, 25 + CGFloat(minimumComponentHeight) - 5, width-70, 5)
+        pageIndicatorView.frame = CGRect(x: 70, y: 25 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
         pageIndicatorView.toolbarInfoDelegate = self
 
-        taskPickerBGView.frame = CGRectMake(0, 25 + CGFloat(minimumComponentHeight), width, height - 25 - CGFloat(minimumComponentHeight))
+        taskPickerBGView.frame = CGRect(x: 0, y: 25 + CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
 
         guard let l = layout else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in viewWillLayoutSubviews")
+            appLog.log(logger, logtype: .guard, message: "guard fail in viewWillLayoutSubviews")
             return
         }
 
@@ -260,32 +260,32 @@ class TaskEntryCreatorByPickTaskVC:
     // TaskEntryCreatorByPickTask - GUI actions
     //---------------------------------------------
 
-    func exit(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "exit")
-        appLog.log(logger, logtype: .GUIAction, message: "exit")
+    func exit(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "exit")
+        appLog.log(logger, logtype: .guiAction, message: "exit")
 
         updateActiveActivityTimer?.invalidate()
-        performSegueWithIdentifier("Exit", sender: self)
+        performSegue(withIdentifier: "Exit", sender: self)
     }
 
-    func useTemplate(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "useTemplate")
-        appLog.log(logger, logtype: .GUIAction, message: "useTemplate")
+    func useTemplate(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "useTemplate")
+        appLog.log(logger, logtype: .guiAction, message: "useTemplate")
 
-        performSegueWithIdentifier("UseTemplate", sender: self)
+        performSegue(withIdentifier: "UseTemplate", sender: self)
     }
 
-    func handleTapSigninSignout(sender: UITapGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleTapSigninSignout")
-        appLog.log(logger, logtype: .GUIAction, message: "handleTapSigninSignout")
+    func handleTapSigninSignout(_ sender: UITapGestureRecognizer) {
+        appLog.log(logger, logtype: .enterExit, message: "handleTapSigninSignout")
+        appLog.log(logger, logtype: .guiAction, message: "handleTapSigninSignout")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
 
         guard let s = session,
-                taskList = s.tasks.array as? [Task],
-                taskEntry = s.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in handleTapSigninSignout")
+                let taskList = s.tasks.array as? [Task],
+                let taskEntry = s.getLastTaskEntry() else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in handleTapSigninSignout")
             return
         }
 
@@ -294,28 +294,28 @@ class TaskEntryCreatorByPickTaskVC:
         } else {
             setLastTaskEntryAsOngoing()
         }
-        if let taskIndex = taskList.indexOf(taskEntry.task as Task) {
+        if let taskIndex = taskList.index(of: taskEntry.task as Task) {
             taskbuttonviews[taskIndex]?.setNeedsDisplay()
         }
 
-        appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+        appLog.log(logger, logtype: .enterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
-    func handleTapTask(sender: UITapGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleTap")
+    func handleTapTask(_ sender: UITapGestureRecognizer) {
+        appLog.log(logger, logtype: .enterExit, message: "handleTap")
 
         signInSignOutView.setNeedsDisplay()
         infoAreaView.setNeedsDisplay()
 
         guard let s = session,
-                taskList = s.tasks.array as? [Task] else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in handleTapTask")
+                let taskList = s.tasks.array as? [Task] else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in handleTapTask")
             return
         }
 
         // Handle ongoing task
         if let taskEntry = s.getLastTaskEntry() {
-            if let taskIndex = taskList.indexOf(taskEntry.task as Task) {
+            if let taskIndex = taskList.index(of: taskEntry.task as Task) {
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
             }
 
@@ -328,44 +328,44 @@ class TaskEntryCreatorByPickTaskVC:
         let taskIndex = recognizers[sender]
         let task = taskList[taskIndex!]
         
-        appLog.log(logger, logtype: .GUIAction, message: "handleTap(\(task.name))")
+        appLog.log(logger, logtype: .guiAction, message: "handleTap(\(task.name))")
 
         addNewTaskEntry(task)
         taskbuttonviews[taskIndex!]?.setNeedsDisplay()
 
-        appLog.log(logger, logtype: .CoreDataSnapshot) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+        appLog.log(logger, logtype: .coreDataSnapshot) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
-    func handleLongPressTask(sender: UILongPressGestureRecognizer) {
-        appLog.log(logger, logtype: .EnterExit, message: "handleLongPressTask")
-        appLog.log(logger, logtype: .GUIAction, message: "handleLongPressTask")
+    func handleLongPressTask(_ sender: UILongPressGestureRecognizer) {
+        appLog.log(logger, logtype: .enterExit, message: "handleLongPressTask")
+        appLog.log(logger, logtype: .guiAction, message: "handleLongPressTask")
 
-        if sender.state != UIGestureRecognizerState.Began {
+        if sender.state != UIGestureRecognizerState.began {
             return
         }
 
         guard let s = session,
-                taskList = session?.tasks.array as? [Task] else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in handleLongPress 1")
+                let taskList = session?.tasks.array as? [Task] else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in handleLongPress 1")
             return
         }
         
         guard let taskEntry = s.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .EnterExit, message: "No last taskentry")
-            appLog.log(logger, logtype: .Guard, message: "guard fail in handleLongPress 2")
+            appLog.log(logger, logtype: .enterExit, message: "No last taskentry")
+            appLog.log(logger, logtype: .guard, message: "guard fail in handleLongPress 2")
             return
         }
         
         let taskPressedIndex = recognizers[sender]
         let taskPressed = taskList[taskPressedIndex!]
         if taskEntry.isOngoing() && taskEntry.task != taskPressed {
-            appLog.log(logger, logtype: .EnterExit, message: "TaskEntry is ongoing, LongPress on inactive task")
+            appLog.log(logger, logtype: .enterExit, message: "TaskEntry is ongoing, LongPress on inactive task")
             return
         }
 
         selectedTaskEntryIndex = s.taskEntries.count - 1
 
-        performSegueWithIdentifier("EditTaskEntry", sender: self)
+        performSegue(withIdentifier: "EditTaskEntry", sender: self)
     }
 
     
@@ -374,7 +374,7 @@ class TaskEntryCreatorByPickTaskVC:
     //---------------------------------------------
     
     override func redrawAfterSegue() {
-        appLog.log(logger, logtype: .EnterExit, message: "redraw")
+        appLog.log(logger, logtype: .enterExit, message: "redraw")
 
         if let s = session?.getSessionTaskSummary(false) {
             sessionTaskSummary = s
@@ -394,8 +394,8 @@ class TaskEntryCreatorByPickTaskVC:
     // TaskEntryCreatorByPickTask - GestureRecognizerDelegate
     //---------------------------------------------
 
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
-        shouldReceiveTouch touch: UITouch) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch) -> Bool {
             return true
             /*
             if let taskNumber = recognizers[gestureRecognizer] {
@@ -411,8 +411,8 @@ class TaskEntryCreatorByPickTaskVC:
     //  TaskEntryCreatorByPickTask - SelectionAreaInfoDelegate
     //----------------------------------------------
 
-	func getSelectionAreaInfo(selectionArea: Int) -> SelectionAreaInfo {
-        appLog.log(logger, logtype: .PeriodicCallback) { "getSelectionAreaInfo\(selectionArea)"}
+	func getSelectionAreaInfo(_ selectionArea: Int) -> SelectionAreaInfo {
+        appLog.log(logger, logtype: .periodicCallback) { "getSelectionAreaInfo\(selectionArea)"}
 
         // This will only be called when there are selection areas setup 
         //  => there _is_ a session
@@ -421,8 +421,8 @@ class TaskEntryCreatorByPickTaskVC:
         let sai = SelectionAreaInfo()
         
         guard let s = session,
-            taskList = s.tasks.array as? [Task] else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in getSelectionAreaInfo 1")
+            let taskList = s.tasks.array as? [Task] else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in getSelectionAreaInfo 1")
             return sai
         }
 
@@ -437,7 +437,7 @@ class TaskEntryCreatorByPickTaskVC:
         }
         
         guard let taskEntry = s.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in getSelectionAreaInfo getLastTaskEntry")
+            appLog.log(logger, logtype: .guard, message: "guard fail in getSelectionAreaInfo getLastTaskEntry")
             return sai
         }
 
@@ -464,10 +464,10 @@ class TaskEntryCreatorByPickTaskVC:
     //----------------------------------------------
 
     func getToolbarInfo() -> ToolbarInfo {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "getToolbarInfo")
+        appLog.log(logger, logtype: .periodicCallback, message: "getToolbarInfo")
         
         var totalActivations: Int = 0 // The first task is active when first selected
-        var totalTime: NSTimeInterval = 0
+        var totalTime: TimeInterval = 0
         
         for (_, (activations, time)) in sessionTaskSummary {
             totalActivations += activations
@@ -479,9 +479,9 @@ class TaskEntryCreatorByPickTaskVC:
             if taskEntry.isOngoing() {
                 signedIn = true
                 
-                let now = NSDate()
-                if(now.compare(taskEntry.startTime) == .OrderedDescending) {
-                    let timeForActiveTask = NSDate().timeIntervalSinceDate(taskEntry.startTime)
+                let now = Date()
+                if(now.compare(taskEntry.startTime) == .orderedDescending) {
+                    let timeForActiveTask = Date().timeIntervalSince(taskEntry.startTime)
                     totalTime += timeForActiveTask
                 }
             }
@@ -517,65 +517,65 @@ class TaskEntryCreatorByPickTaskVC:
     //  TaskEntryCreatorByPickTask - Sign int/out, add new taskEntry
     //--------------------------------------------
 
-    func addNewTaskEntry(task: Task) {
-        appLog.log(logger, logtype: .EnterExit, message: "addTaskEntry")
+    func addNewTaskEntry(_ task: Task) {
+        appLog.log(logger, logtype: .enterExit, message: "addTaskEntry")
 
         if let s = session {
-            TaskEntry.createInMOC(moc, name: "", session: s, task: task)
+            _ = TaskEntry.createInMOC(moc, name: "", session: s, task: task)
             TimePoliceModelUtils.save(moc)
         }
     }
 
     func setLastTaskEntryAsFinished() {
-        appLog.log(logger, logtype: .EnterExit, message: "setLastTaskEntryFinished")
+        appLog.log(logger, logtype: .enterExit, message: "setLastTaskEntryFinished")
 
         guard let taskEntry = session?.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .Debug, message: "no taskentry in list")
-            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastTaskEntryAsFinished")
+            appLog.log(logger, logtype: .debug, message: "no taskentry in list")
+            appLog.log(logger, logtype: .guard, message: "guard fail in setLastTaskEntryAsFinished")
             return
         }
         
         if taskEntry.isOngoing() {
-            taskEntry.setStoppedAt(NSDate())
+            taskEntry.setStoppedAt(Date())
 
-            var taskSummary: (Int, NSTimeInterval) = (0, 0)
+            var taskSummary: (Int, TimeInterval) = (0, 0)
             if let t = sessionTaskSummary[taskEntry.task] {
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
             numberOfTimesActivated += 1
-            totalTimeActive += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+            totalTimeActive += taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
             sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 
             TimePoliceModelUtils.save(moc)
         } else {
-            appLog.log(logger, logtype: .EnterExit, message: "last taskentry not ongoing")
+            appLog.log(logger, logtype: .enterExit, message: "last taskentry not ongoing")
         }
     }
 
     func setLastTaskEntryAsOngoing() {
-        appLog.log(logger, logtype: .EnterExit, message: "setLastTaskEntryOngoing")
+        appLog.log(logger, logtype: .enterExit, message: "setLastTaskEntryOngoing")
 
         guard let taskEntry = session?.getLastTaskEntry() else {
-            appLog.log(logger, logtype: .Debug, message: "no taskEntry in list")
-            appLog.log(logger, logtype: .Guard, message: "guard fail in setLastTaskEntryAsOngoing")
+            appLog.log(logger, logtype: .debug, message: "no taskEntry in list")
+            appLog.log(logger, logtype: .guard, message: "guard fail in setLastTaskEntryAsOngoing")
             return
         }
         if !taskEntry.isOngoing() {
-            var taskSummary: (Int, NSTimeInterval) = (0, 0)
+            var taskSummary: (Int, TimeInterval) = (0, 0)
             if let t = sessionTaskSummary[taskEntry.task] {
                 taskSummary = t
             }
             var (numberOfTimesActivated, totalTimeActive) = taskSummary
             numberOfTimesActivated -= 1
-            totalTimeActive -= taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+            totalTimeActive -= taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
             sessionTaskSummary[taskEntry.task] = (numberOfTimesActivated, totalTimeActive)
 
             taskEntry.setAsOngoing()
 
             TimePoliceModelUtils.save(moc)
         } else {
-            appLog.log(logger, logtype: .EnterExit, message: "last taskEntry not finished")
+            appLog.log(logger, logtype: .enterExit, message: "last taskEntry not finished")
         }
     }
 
@@ -588,11 +588,11 @@ class TaskEntryCreatorByPickTaskVC:
     var updateN = 0
 
     @objc
-    func updateActiveTask(timer: NSTimer) {
-        appLog.log(logger, logtype: .PeriodicCallback, message: "updateActiveTask")
+    func updateActiveTask(_ timer: Timer) {
+        appLog.log(logger, logtype: .periodicCallback, message: "updateActiveTask")
 
         guard let s = session else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask session")
+            appLog.log(logger, logtype: .guard, message: "guard fail in updateActiveTask session")
             return
         }
             
@@ -603,12 +603,12 @@ class TaskEntryCreatorByPickTaskVC:
         }
         
         guard let taskList = s.tasks.array as? [Task] else {
-                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask tasklist")
+                appLog.log(logger, logtype: .guard, message: "guard fail in updateActiveTask tasklist")
                 return
         }
         
-        guard let taskIndex = taskList.indexOf(taskEntry.task as Task) else {
-                appLog.log(logger, logtype: .Guard, message: "guard fail in updateActiveTask taskindex")
+        guard let taskIndex = taskList.index(of: taskEntry.task as Task) else {
+                appLog.log(logger, logtype: .guard, message: "guard fail in updateActiveTask taskindex")
                 return
         }
         

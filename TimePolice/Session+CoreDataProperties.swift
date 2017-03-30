@@ -15,7 +15,7 @@ import CoreData
 extension Session {
 
     @NSManaged var archived: NSNumber
-    @NSManaged var created: NSDate
+    @NSManaged var created: Date
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var properties: NSObject

@@ -20,8 +20,8 @@ import UIKit
 class TaskEntryCreatorManagerPageViewController: UIPageViewController {
 
     init() {
-        super.init(transitionStyle: .Scroll,
-        navigationOrientation: .Horizontal,
+        super.init(transitionStyle: .scroll,
+        navigationOrientation: .horizontal,
         options: nil)
     }
 
@@ -32,7 +32,7 @@ class TaskEntryCreatorManagerPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.edgesForExtendedLayout = .None        
+        self.edgesForExtendedLayout = UIRectEdge()        
     }
 
 }

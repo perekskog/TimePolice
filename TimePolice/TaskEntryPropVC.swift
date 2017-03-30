@@ -17,11 +17,11 @@ TODO
 import UIKit
 
 enum FillWith: Int {
-    case FillWithNone, FillWithPrevious, FillWithNext
+    case fillWithNone, fillWithPrevious, fillWithNext
 }
 
 enum InsertPosition: Int {
-    case InsertNewBeforeThis, InsertNewAfterThis
+    case insertNewBeforeThis, insertNewAfterThis
 }
 
 class TaskEntryPropVC: 
@@ -34,16 +34,16 @@ class TaskEntryPropVC:
     var taskEntryTemplate: TaskEntry?
     var segue: String?
     var taskList: [Task] = []
-    var minimumDate: NSDate?
-    var maximumDate: NSDate?
+    var minimumDate: Date?
+    var maximumDate: Date?
     var isOngoing: Bool?
     var isFirst: Bool?
     var isLast: Bool?
     
     // Output data
     var taskToUse: Task?
-    var initialStartDate: NSDate?
-    var initialStopDate: NSDate?
+    var initialStartDate: Date?
+    var initialStopDate: Date?
     var delete: FillWith?
     var insert: InsertPosition?
 
@@ -54,29 +54,29 @@ class TaskEntryPropVC:
     // Table and table cells
     var table: UITableView!
     
-    let cellStartTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type1")
-    let cellStopTime = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type2")
-    let cellTask = UITableViewCell(style: .Value1, reuseIdentifier: "EditTaskEntry-type3")
+    let cellStartTime = UITableViewCell(style: .value1, reuseIdentifier: "EditTaskEntry-type1")
+    let cellStopTime = UITableViewCell(style: .value1, reuseIdentifier: "EditTaskEntry-type2")
+    let cellTask = UITableViewCell(style: .value1, reuseIdentifier: "EditTaskEntry-type3")
 
     // Hold TaskEntry attributes while editing
     let datePickerStart = UIDatePicker()
     let datePickerStop = UIDatePicker()
     var taskSelected: Task?
     
-    let buttonCancel = UIButton(type: .System)
-    let buttonSave = UIButton(type: .System)
+    let buttonCancel = UIButton(type: .system)
+    let buttonSave = UIButton(type: .system)
 
     //----------------------------------------------------------------
     // TaskEntryPropVC - Lazy properties
     //----------------------------------------------------------------
     
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
         }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -94,27 +94,27 @@ class TaskEntryPropVC:
     // TaskEntryPropVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.datasource = self
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
         
-        self.edgesForExtendedLayout = .None
+        self.edgesForExtendedLayout = UIRectEdge()
 
         if let s = segue {
             switch s {
@@ -127,21 +127,21 @@ class TaskEntryPropVC:
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TaskEntryPropVC.cancel(_:)))
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TaskEntryPropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TaskEntryPropVC.save(_:)))
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TaskEntryPropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
 
-        table = UITableView(frame: self.view.frame, style: .Grouped)
+        table = UITableView(frame: self.view.frame, style: .grouped)
         table.dataSource = self
         table.delegate = self
         self.view.addSubview(table)
         
-        let now = NSDate()
+        let now = Date()
         datePickerStart.date = now
         datePickerStop.date = now
-        datePickerStart.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        datePickerStop.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerStart.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControlEvents.valueChanged)
+        datePickerStop.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControlEvents.valueChanged)
         datePickerStart.minimumDate = minimumDate
         datePickerStart.maximumDate = maximumDate
         datePickerStop.minimumDate = minimumDate
@@ -162,68 +162,68 @@ class TaskEntryPropVC:
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
 
         if let indexPath = table.indexPathForSelectedRow {
-            table.deselectRowAtIndexPath(indexPath, animated: true)
+            table.deselectRow(at: indexPath, animated: true)
         }
         
     }
 
     override func viewWillLayoutSubviews() {
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
         let width = self.view.frame.size.width
         let height = self.view.frame.size.height
         
-        table.frame = CGRectMake(5, 0, width-10, height)
+        table.frame = CGRect(x: 5, y: 0, width: width-10, height: height)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
 
-        table.separatorInset = UIEdgeInsetsZero
-        table.layoutMargins = UIEdgeInsetsZero
+        table.separatorInset = UIEdgeInsets.zero
+        table.layoutMargins = UIEdgeInsets.zero
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     // GUI actions
 
-    func cancel(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "cancel")
-        appLog.log(logger, logtype: .GUIAction, message: "cancel")
+    func cancel(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "cancel")
+        appLog.log(logger, logtype: .guiAction, message: "cancel")
 
-        performSegueWithIdentifier("CancelTaskEntry", sender: self)
+        performSegue(withIdentifier: "CancelTaskEntry", sender: self)
     }
     
-    func save(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "save")
-        appLog.log(logger, logtype: .GUIAction, message: "save")
+    func save(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "save")
+        appLog.log(logger, logtype: .guiAction, message: "save")
 
         if let _ = taskSelected {
             // Must have selected a task to save the task entry
-            performSegueWithIdentifier("SaveTaskEntry", sender: self)            
+            performSegue(withIdentifier: "SaveTaskEntry", sender: self)            
         }
     }
     
-    func datePickerChanged(sender: UIDatePicker) {
+    func datePickerChanged(_ sender: UIDatePicker) {
         if sender == datePickerStart {
-            if datePickerStart.date.compare(datePickerStop.date) == .OrderedDescending {
+            if datePickerStart.date.compare(datePickerStop.date) == .orderedDescending {
                 datePickerStop.date = datePickerStart.date
                 cellStopTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStop.date)
             }
             cellStartTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStart.date)
         }
         if sender == datePickerStop {
-            if datePickerStop.date.compare(datePickerStart.date) == .OrderedAscending {
+            if datePickerStop.date.compare(datePickerStart.date) == .orderedAscending {
                 datePickerStart.date = datePickerStop.date
                 cellStartTime.detailTextLabel?.text = UtilitiesDate.getString(datePickerStart.date)
             }
@@ -233,7 +233,7 @@ class TaskEntryPropVC:
     
     // UITableViewDelegate
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat
         switch indexPath.section {
         case 0:
@@ -259,22 +259,22 @@ class TaskEntryPropVC:
         return height
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var cellString = ""
-        if let cell = tableView.cellForRowAtIndexPath(indexPath),
-            s = cell.textLabel?.text {
+        if let cell = tableView.cellForRow(at: indexPath),
+            let s = cell.textLabel?.text {
                 cellString = s
         }
 
-        appLog.log(logger, logtype: .EnterExit, message: "tableView.didSelectRowAtIndexPath")
-        appLog.log(logger, logtype: .GUIAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
+        appLog.log(logger, logtype: .enterExit, message: "tableView.didSelectRowAtIndexPath")
+        appLog.log(logger, logtype: .guiAction, message: "tableView.didSelectRowAtIndexPath(\(cellString))")
 
         editStart = false
         editStop = false
         
         guard let first = self.isFirst,
-                last = self.isLast else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
+                let last = self.isLast else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:didSelectRowAtIndexPath")
             return
         }
 
@@ -296,37 +296,37 @@ class TaskEntryPropVC:
         case 1:
             switch indexPath.row {
             default:
-                performSegueWithIdentifier("SelectTask", sender: self)
+                performSegue(withIdentifier: "SelectTask", sender: self)
             }
         case 2:
             // Sama logic as for "cellForRowAtIndexPath"
             switch indexPath.row {
             case 0:
-                self.delete = .FillWithPrevious
+                self.delete = .fillWithPrevious
                 if first {
-                    self.delete = .FillWithNone
+                    self.delete = .fillWithNone
                 }
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                performSegue(withIdentifier: "DeleteTaskEntry", sender: self)
             case 1:
-                self.delete = .FillWithNone
+                self.delete = .fillWithNone
                 if (first && !last) {
-                    self.delete = .FillWithNext
+                    self.delete = .fillWithNext
                 }
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                performSegue(withIdentifier: "DeleteTaskEntry", sender: self)
             case 2:
-                self.delete = .FillWithNext
-                performSegueWithIdentifier("DeleteTaskEntry", sender: self)
+                self.delete = .fillWithNext
+                performSegue(withIdentifier: "DeleteTaskEntry", sender: self)
             default:
                 _ = 1
             }
         case 3:
             switch indexPath.row {
             case 0:
-                self.insert = .InsertNewBeforeThis
-                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+                self.insert = .insertNewBeforeThis
+                performSegue(withIdentifier: "InsertNewTaskEntry", sender: self)
             case 1:
-                self.insert = .InsertNewAfterThis
-                performSegueWithIdentifier("InsertNewTaskEntry", sender: self)
+                self.insert = .insertNewAfterThis
+                performSegue(withIdentifier: "InsertNewTaskEntry", sender: self)
             default:
                 _ = 1
             }
@@ -337,15 +337,15 @@ class TaskEntryPropVC:
     
     // UITableViewDataSource
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let ongoing = self.isOngoing,
-            first = self.isFirst,
-            last = self.isLast else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:numberOfRowsInSection")
+            let first = self.isFirst,
+            let last = self.isLast else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:numberOfRowsInSection")
             return 0
         }
 
@@ -387,13 +387,13 @@ class TaskEntryPropVC:
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cell: UITableViewCell
 
         guard let first = self.isFirst,
-                last = self.isLast else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in tableView:cellForRowAtIndexPath")
+                let last = self.isLast else {
+            appLog.log(logger, logtype: .guard, message: "guard fail in tableView:cellForRowAtIndexPath")
             return UITableViewCell()
         }
 
@@ -435,7 +435,7 @@ class TaskEntryPropVC:
                     }
                     
                 }
-                cellTask.accessoryType = .DisclosureIndicator
+                cellTask.accessoryType = .disclosureIndicator
                 cell = cellTask
             default:
                 cell = UITableViewCell()
@@ -496,9 +496,9 @@ class TaskEntryPropVC:
 
     // Segue handling
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SelectTask" {
-            if let vc = segue.destinationViewController as? TaskSelectVC {
+            if let vc = segue.destination as? TaskSelectVC {
                 vc.tasks = taskList
             }
         }
@@ -510,12 +510,12 @@ class TaskEntryPropVC:
         }
     }
 
-    @IBAction func exitSelectTask(unwindSegue: UIStoryboardSegue ) {
+    @IBAction func exitSelectTask(_ unwindSegue: UIStoryboardSegue ) {
         if unwindSegue.identifier == "DoneSelectTask" {
 
-            guard let vc = unwindSegue.sourceViewController as? TaskSelectVC,
-                i = vc.taskIndexSelected else {
-                appLog.log(logger, logtype: .Guard, message: "guard fail in exitSelectTask DoneSelectTask 1")
+            guard let vc = unwindSegue.source as? TaskSelectVC,
+                let i = vc.taskIndexSelected else {
+                appLog.log(logger, logtype: .guard, message: "guard fail in exitSelectTask DoneSelectTask 1")
                 return
             }
 

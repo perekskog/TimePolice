@@ -23,7 +23,7 @@ protocol TaskEntryCreator {
 }
 
 protocol TaskEntryCreatorDelegate {
-    func taskEntryCreator(taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int)
+    func taskEntryCreator(_ taskEntryCreator: TaskEntryCreator, willViewSessionIndex: Int)
 }
 
 class TaskEntryCreatorBase:
@@ -45,17 +45,17 @@ class TaskEntryCreatorBase:
 
     lazy var moc : NSManagedObjectContext = {
 
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
     }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog        
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -77,20 +77,20 @@ class TaskEntryCreatorBase:
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.datasource = self
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewDidLoad")
         
         // Do not extend to full screen
-        self.edgesForExtendedLayout = .None
+        self.edgesForExtendedLayout = UIRectEdge()
     }
 
 
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewWillAppear")
         
         guard let i = sessionIndex  else {
-            appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in viewWillAppear")
+            appLog.log(logger, logtype: .guard, message: "(...Base) guard fail in viewWillAppear")
             return
         }
 
@@ -98,38 +98,38 @@ class TaskEntryCreatorBase:
     }
 
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewDidAppear")
     }
 
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewWillDisappear")
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewDidDisappear")
     }
 
 
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewWillLayoutSubviews")
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) viewDidLayoutSubviews")
     }
 
 
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "(...Base) didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "(...Base) didReceiveMemoryWarning")
     }
     
 
@@ -140,19 +140,19 @@ class TaskEntryCreatorBase:
     //---------------------------------------------
 
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        appLog.log(logger, logtype: .EnterExit) { "(...Base) prepareForSegue(\(segue.identifier))" }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        appLog.log(logger, logtype: .enterExit) { "(...Base) prepareForSegue(\(String(describing: segue.identifier)))" }
 
         if segue.identifier == "ExitVC" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle ExitVC... Do nothing")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle ExitVC... Do nothing")
             // Nothing to prepare
         }
 
 
         if segue.identifier == "UseTemplate" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle UseTemplate...")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle UseTemplate...")
 
-            guard let nvc = segue.destinationViewController as? UINavigationController,
+            guard let nvc = segue.destination as? UINavigationController,
                     let vc = nvc.topViewController as? TaskEntryTemplateSelectVC else {
                 return
             }
@@ -162,25 +162,25 @@ class TaskEntryCreatorBase:
         }
 
         if segue.identifier == "EditTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle EditTaskEntry...")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle EditTaskEntry...")
 
-            guard let nvc = segue.destinationViewController as? UINavigationController,
+            guard let nvc = segue.destination as? UINavigationController,
                     let vc = nvc.topViewController as? TaskEntryPropVC,
                     let s = session,
                     let tl = s.tasks.array as? [Task],
                     let wl = s.taskEntries.array as? [TaskEntry],
                     let i = selectedTaskEntryIndex else {
-                appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in prepareForSegue")
+                appLog.log(logger, logtype: .guard, message: "(...Base) guard fail in prepareForSegue")
                return
             }
-            appLog.log(logger, logtype: .EnterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+            appLog.log(logger, logtype: .enterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
 
             vc.taskList = tl
 
             vc.taskEntryTemplate = wl[i]
 
             // Never set any time into the future
-            vc.maximumDate = NSDate()
+            vc.maximumDate = Date()
 
             if i > 0 {
                 // Limit to starttime of previous item, if any
@@ -209,19 +209,19 @@ class TaskEntryCreatorBase:
 
     }
 
-    @IBAction func exitUseTemplate(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "(...Base) exitUseTemplate(unwindsegue=\(unwindSegue.identifier))")
+    @IBAction func exitUseTemplate(_ unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .enterExit, message: "(...Base) exitUseTemplate(unwindsegue=\(String(describing: unwindSegue.identifier)))")
 
-        let vc = unwindSegue.sourceViewController as! TaskEntryTemplateSelectVC
+        let vc = unwindSegue.source as! TaskEntryTemplateSelectVC
 
 
         if unwindSegue.identifier == "CancelUseTemplate" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle CancelUseTemplate... Do nothing")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle CancelUseTemplate... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "DoneUseTemplate" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle DoneUseTemplate")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle DoneUseTemplate")
             // Replace tasks for current session
             guard let i = vc.templateIndexSelected,
                 let session = vc.templates?[i] else {
@@ -240,7 +240,7 @@ class TaskEntryCreatorBase:
                 s.src = session.src
                 
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+                appLog.log(logger, logtype: .debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
 
             }
@@ -250,40 +250,40 @@ class TaskEntryCreatorBase:
 
     }
         
-    @IBAction func exitTaskEntryProp(unwindSegue: UIStoryboardSegue ) {
-        appLog.log(logger, logtype: .EnterExit, message: "e(...Base) exitTaskEntryProp(unwindsegue=\(unwindSegue.identifier))")
+    @IBAction func exitTaskEntryProp(_ unwindSegue: UIStoryboardSegue ) {
+        appLog.log(logger, logtype: .enterExit, message: "e(...Base) exitTaskEntryProp(unwindsegue=\(String(describing: unwindSegue.identifier)))")
 
-        let vc = unwindSegue.sourceViewController as! TaskEntryPropVC
+        let vc = unwindSegue.source as! TaskEntryPropVC
 
         if unwindSegue.identifier == "CancelTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle CancelTaskEntry... Do nothing")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle CancelTaskEntry... Do nothing")
             // Do nothing
         }
 
         if unwindSegue.identifier == "SaveTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle SaveTaskEntry")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle SaveTaskEntry")
 
             guard let s = session,
-                     i = selectedTaskEntryIndex  else {
-                appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp SaveTaskEntry")
+                     let i = selectedTaskEntryIndex  else {
+                appLog.log(logger, logtype: .guard, message: "(...Base) guard fail in exitTaskEntryProp SaveTaskEntry")
                 return
             }
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+                appLog.log(logger, logtype: .debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             if let t = vc.taskToUse {
                 // Change task if this attribute was set
-                appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected task=\(t.name)")
+                appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry selected task=\(t.name)")
                 if let w = s.getTaskEntry(i) {
                     //w.task = t
                     w.changeTaskTo(t)
                 }
             } else {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry no task selected")
+                appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry no task selected")
             }
 
             // Default: First adjust starttime, then adjust stoptime.
@@ -293,18 +293,18 @@ class TaskEntryCreatorBase:
             // it may be so that both start- and stoptime has been changed.
             // In this case, adjust stoptime first, then starttime.
             if let initialStopDate = vc.initialStopDate {
-                if vc.datePickerStart.date.compare(initialStopDate) == .OrderedDescending {
+                if vc.datePickerStart.date.compare(initialStopDate) == .orderedDescending {
                     startTimeFirst = false
                 }
             }
 
             if startTimeFirst {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Will adjust starttime first")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Will adjust starttime first")
 
                 adjustStartTime(s, i:i, moc: moc, vc: vc)
                 adjustStopTime(s, i:i, moc:moc, vc:vc)
             } else {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Will adjust stoptime first")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Will adjust stoptime first")
 
                 adjustStopTime(s, i:i, moc:moc, vc:vc)
                 adjustStartTime(s, i:i, moc:moc, vc:vc)
@@ -313,89 +313,89 @@ class TaskEntryCreatorBase:
         }
 
         if unwindSegue.identifier == "DeleteTaskEntry" {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle DeleteTaskEntry")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle DeleteTaskEntry")
 
             guard let s = session,
-                     i = selectedTaskEntryIndex,
-                     delete = vc.delete else {
-                appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp DeleteTaskEntry")
+                     let i = selectedTaskEntryIndex,
+                     let delete = vc.delete else {
+                appLog.log(logger, logtype: .guard, message: "(...Base) guard fail in exitTaskEntryProp DeleteTaskEntry")
                 return
             }
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+                appLog.log(logger, logtype: .debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             switch delete {
-            case .FillWithNone: // Nothing, delete task entry
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with nothing")
+            case .fillWithNone: // Nothing, delete task entry
+                appLog.log(logger, logtype: .debug, message: "(...Base) Fill with nothing")
                 s.deleteTaskEntry(moc, taskEntryIndex: i)
-            case .FillWithPrevious: // Previous item, deleteNextTaskEntryAndAlignStop
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with previous")
+            case .fillWithPrevious: // Previous item, deleteNextTaskEntryAndAlignStop
+                appLog.log(logger, logtype: .debug, message: "(...Base) Fill with previous")
                 s.deleteNextTaskEntryAndAlignStop(moc, taskEntryIndex: i-1)
-            case .FillWithNext: // Next item, deletePreviousTaskEntryAndAlignStart
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Fill with next")
+            case .fillWithNext: // Next item, deletePreviousTaskEntryAndAlignStart
+                appLog.log(logger, logtype: .debug, message: "(...Base) Fill with next")
                 s.deletePreviousTaskEntryAndAlignStart(moc, taskEntryIndex: i+1)
             }
         }
 
         if unwindSegue.identifier == "InsertNewTaskEntry" {
 
-            appLog.log(logger, logtype: .Debug, message: "(...Base) Handle InsertNewTaskEntry")
+            appLog.log(logger, logtype: .debug, message: "(...Base) Handle InsertNewTaskEntry")
 
             guard let s = session,
-                     i = selectedTaskEntryIndex,
-                     insert = vc.insert else {
-                appLog.log(logger, logtype: .Guard, message: "(...Base) guard fail in exitTaskEntryProp InsertNewTaskEntry")
+                     let i = selectedTaskEntryIndex,
+                     let insert = vc.insert else {
+                appLog.log(logger, logtype: .guard, message: "(...Base) guard fail in exitTaskEntryProp InsertNewTaskEntry")
                 return
             }
 
             defer {
                 TimePoliceModelUtils.save(moc)
-                appLog.log(logger, logtype: .Debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
+                appLog.log(logger, logtype: .debug) { TimePoliceModelUtils.getSessionTaskEntries(s) }
                 redrawAfterSegue()
             }
 
             switch insert {
-            case .InsertNewBeforeThis:
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Insert new before this (index=\(i))")
-                TaskEntry.createInMOCBeforeIndex(moc, session: s, index: i)
-            case .InsertNewAfterThis:
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Insert new after this (index=\(i))")
-                TaskEntry.createInMOCAfterIndex(moc, session: s, index: i)
+            case .insertNewBeforeThis:
+                appLog.log(logger, logtype: .debug, message: "(...Base) Insert new before this (index=\(i))")
+                _ = TaskEntry.createInMOCBeforeIndex(moc, session: s, index: i)
+            case .insertNewAfterThis:
+                appLog.log(logger, logtype: .debug, message: "(...Base) Insert new after this (index=\(i))")
+                _ = TaskEntry.createInMOCAfterIndex(moc, session: s, index: i)
             }
 
         }        
     }
     
-    func adjustStartTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
+    func adjustStartTime(_ s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStartDate {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry initial start date=\(UtilitiesDate.getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected start date=\(UtilitiesDate.getString(vc.datePickerStart.date))")
+            appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry initial start date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry selected start date=\(UtilitiesDate.getString(vc.datePickerStart.date))")
             
             if initialDate != vc.datePickerStart.date {
                 // The initial starttime was changed
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Selected starttime != initial starttime, setting starttime")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Selected starttime != initial starttime, setting starttime")
                 s.setStartTime(moc, taskEntryIndex: i, desiredStartTime: vc.datePickerStart.date)
             } else {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Selected starttime = initial starttime, don't set starttime")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Selected starttime = initial starttime, don't set starttime")
             }
         }
     }
     
-    func adjustStopTime(s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
+    func adjustStopTime(_ s: Session, i: Int, moc: NSManagedObjectContext, vc: TaskEntryPropVC) {
         if let initialDate = vc.initialStopDate {
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry initial stop date=\(UtilitiesDate.getString(initialDate))")
-            appLog.log(logger, logtype: .Debug, message: "(...Base) EditTaskEntry selected stop date=\(UtilitiesDate.getString(vc.datePickerStop.date))")
+            appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry initial stop date=\(UtilitiesDate.getString(initialDate))")
+            appLog.log(logger, logtype: .debug, message: "(...Base) EditTaskEntry selected stop date=\(UtilitiesDate.getString(vc.datePickerStop.date))")
             
             if initialDate != vc.datePickerStop.date {
                 // The initial stoptime was changed
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Selected stoptime != initial stoptime, setting stoptime")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Selected stoptime != initial stoptime, setting stoptime")
                 s.setStopTime(moc, taskEntryIndex: i, desiredStopTime: vc.datePickerStop.date)
             } else {
-                appLog.log(logger, logtype: .Debug, message: "(...Base) Selected stoptime = initial stoptime, don't set stoptime")
+                appLog.log(logger, logtype: .debug, message: "(...Base) Selected stoptime = initial stoptime, don't set stoptime")
             }
         }
         
@@ -406,14 +406,14 @@ class TaskEntryCreatorBase:
         // DO nothing here
     }
 
-    func getTemplates(project: String) -> [Session] {
-        appLog.log(logger, logtype: .EnterExit, message: "getTemplates")
+    func getTemplates(_ project: String) -> [Session] {
+        appLog.log(logger, logtype: .enterExit, message: "getTemplates")
 
         do {
-            let fetchRequest = NSFetchRequest(entityName: "Session")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Session")
             var templateSessions: [Session] = []
-            if let tmpSessions = try moc.executeFetchRequest(fetchRequest) as? [Session] {
-                for session in tmpSessions.sort({ (s1:Session, s2:Session) -> Bool in
+            if let tmpSessions = try moc.fetch(fetchRequest) as? [Session] {
+                for session in tmpSessions.sorted(by: { (s1:Session, s2:Session) -> Bool in
                     if s1.name != s2.name {
                         return s1.name < s2.name
                     } else {

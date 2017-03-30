@@ -14,12 +14,12 @@ import CoreData
 
 extension TaskEntry {
 
-    @NSManaged var created: NSDate
+    @NSManaged var created: Date
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var properties: NSObject
-    @NSManaged var startTime: NSDate
-    @NSManaged var stopTime: NSDate
+    @NSManaged var startTime: Date
+    @NSManaged var stopTime: Date
     @NSManaged var session: Session
     @NSManaged var task: Task
 

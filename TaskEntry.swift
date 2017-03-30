@@ -13,35 +13,35 @@ import UIKit
 
 class TaskEntry: NSManagedObject {
 
-    let stoptimeOngoing = NSDate(timeIntervalSince1970: 0)
+    let stoptimeOngoing = Date(timeIntervalSince1970: 0)
     
     //---------------------------------------------
     // TaskEntry - createInMOC
     //---------------------------------------------
     
-    class func createInMOC(moc: NSManagedObjectContext,
+    class func createInMOC(_ moc: NSManagedObjectContext,
         name: String, session: Session, task: Task) -> TaskEntry {
-            UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name))")
+            UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name))")
             
             let n = UtilitiesString.getWithoutProperties(name)
             let p = UtilitiesString.getProperties(name)
             return TaskEntry.createInMOC(moc, name: n, properties: p, session: session, task: task)
     }
     
-    class func createInMOC(moc: NSManagedObjectContext,
+    class func createInMOC(_ moc: NSManagedObjectContext,
         name: String, properties: [String: String], session: Session, task: Task) -> TaskEntry {
-            UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name), props...)")
+            UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "createInMOC(name=\(name), session=\(session.name), task=\(task.name), props...)")
             
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("TaskEntry", inManagedObjectContext: moc) as! TaskEntry
+            let newItem = NSEntityDescription.insertNewObject(forEntityName: "TaskEntry", into: moc) as! TaskEntry
             
-            let date = NSDate()
-            let deviceName = UIDevice.currentDevice().name
+            let date = Date()
+            let deviceName = UIDevice.current.name
             newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
             newItem.name = name
             newItem.created = date
-            newItem.properties = properties
+            newItem.properties = properties as NSObject
             newItem.startTime = date
-            newItem.stopTime = NSDate(timeIntervalSince1970: 0) // stoptimeOngoing
+            newItem.stopTime = Date(timeIntervalSince1970: 0) // stoptimeOngoing
             
             // Maintain relations
             newItem.task = task
@@ -51,25 +51,25 @@ class TaskEntry: NSManagedObject {
             session.addTaskEntry(newItem)
             
             let s = UtilitiesString.dumpProperties(properties)
-            UtilitiesApplog.logDefault("TaskEntry properties", logtype: .Debug, message: s)
+            UtilitiesApplog.logDefault("TaskEntry properties", logtype: .debug, message: s)
             
             return newItem
     }
     
     
-    class func createInMOCBeforeIndex(moc: NSManagedObjectContext,
+    class func createInMOCBeforeIndex(_ moc: NSManagedObjectContext,
         session: Session, index: Int) -> TaskEntry? {
-            UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "createInMOCBeforeIndex(name=\(session.name), index=\(index)")
+            UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "createInMOCBeforeIndex(name=\(session.name), index=\(index)")
             
             guard let templateItem = session.getTaskEntry(index) else {
-                UtilitiesApplog.logDefault("TaskEntry", logtype: .Guard, message: "guard fail createInMOCBeforeIndex")
+                UtilitiesApplog.logDefault("TaskEntry", logtype: .guard, message: "guard fail createInMOCBeforeIndex")
                 return nil
             }
             
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("TaskEntry", inManagedObjectContext: moc) as! TaskEntry
+            let newItem = NSEntityDescription.insertNewObject(forEntityName: "TaskEntry", into: moc) as! TaskEntry
             
-            let date = NSDate()
-            let deviceName = UIDevice.currentDevice().name
+            let date = Date()
+            let deviceName = UIDevice.current.name
             newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
             newItem.name = templateItem.name
             newItem.created = date
@@ -86,25 +86,25 @@ class TaskEntry: NSManagedObject {
             
             if let p = templateItem.properties as? [String: String] {
                 let s = UtilitiesString.dumpProperties(p)
-                UtilitiesApplog.logDefault("TaskEntry.createInMOC", logtype: .Debug, message: s)
+                UtilitiesApplog.logDefault("TaskEntry.createInMOC", logtype: .debug, message: s)
             }
             
             return newItem
     }
     
-    class func createInMOCAfterIndex(moc: NSManagedObjectContext,
+    class func createInMOCAfterIndex(_ moc: NSManagedObjectContext,
         session: Session, index: Int) -> TaskEntry? {
-            UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "createInMOCAfterIndex(name=\(session.name), index=\(index)")
+            UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "createInMOCAfterIndex(name=\(session.name), index=\(index)")
             
             guard let templateItem = session.getTaskEntry(index) else {
-                UtilitiesApplog.logDefault("TaskEntry", logtype: .Guard, message: "guard fail createInMOCAfterIndex")
+                UtilitiesApplog.logDefault("TaskEntry", logtype: .guard, message: "guard fail createInMOCAfterIndex")
                 return nil
             }
             
-            let newItem = NSEntityDescription.insertNewObjectForEntityForName("TaskEntry", inManagedObjectContext: moc) as! TaskEntry
+            let newItem = NSEntityDescription.insertNewObject(forEntityName: "TaskEntry", into: moc) as! TaskEntry
             
-            let date = NSDate()
-            let deviceName = UIDevice.currentDevice().name
+            let date = Date()
+            let deviceName = UIDevice.current.name
             newItem.id = "W:(no name)/\(date.timeIntervalSince1970)/\(deviceName)"
             newItem.name = templateItem.name
             newItem.created = date
@@ -121,7 +121,7 @@ class TaskEntry: NSManagedObject {
             
             if let p = templateItem.properties as? [String: String] {
                 let s = UtilitiesString.dumpProperties(p)
-                UtilitiesApplog.logDefault("TaskEntry.createInMOC", logtype: .Debug, message: s)
+                UtilitiesApplog.logDefault("TaskEntry.createInMOC", logtype: .debug, message: s)
             }
             
             return newItem
@@ -132,20 +132,20 @@ class TaskEntry: NSManagedObject {
     // TaskEntry - Core Data manipulation
     //---------------------------------------------
     
-    class func deleteObject(taskEntry: TaskEntry) {
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "deleteObject(name=\(taskEntry.name))")
+    class func deleteObject(_ taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "deleteObject(name=\(taskEntry.name))")
         guard let moc = taskEntry.managedObjectContext else { return }
         let task = taskEntry.task
-        moc.deleteObject(taskEntry)
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "Purge task if orhpaned")
+        moc.delete(taskEntry)
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "Purge task if orhpaned")
         Task.purgeIfEmpty(task, exceptTaskEntry: taskEntry)
     }
     
-    func changeTaskTo(newTask: Task) {
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "changeTaskTo(name=\(newTask.name))")
+    func changeTaskTo(_ newTask: Task) {
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "changeTaskTo(name=\(newTask.name))")
         let oldTask = self.task
         self.task = newTask
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "Purge task if orhpaned")
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "Purge task if orhpaned")
         Task.purgeIfEmpty(oldTask, exceptTaskEntry: self)
     }
     
@@ -165,10 +165,10 @@ class TaskEntry: NSManagedObject {
         return !isOngoing()
     }
     
-    func setStartedAt(time: NSDate) {
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "setStartedAt(\(UtilitiesDate.getString(time))")
+    func setStartedAt(_ time: Date) {
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "setStartedAt(\(UtilitiesDate.getString(time))")
         
-        if isStopped() && time.compare(self.stopTime) == .OrderedDescending {
+        if isStopped() && time.compare(self.stopTime) == .orderedDescending {
             // Don't set a stopped item's starttime > stoptime
             return
         }
@@ -179,10 +179,10 @@ class TaskEntry: NSManagedObject {
         self.startTime = time
     }
     
-    func setStoppedAt(time: NSDate) {
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "setStoppedAt(\(UtilitiesDate.getString(time))")
+    func setStoppedAt(_ time: Date) {
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "setStoppedAt(\(UtilitiesDate.getString(time))")
         
-        if time.compare(self.startTime) == .OrderedAscending {
+        if time.compare(self.startTime) == .orderedAscending {
             // Don't set an item's stoptime < starttime
             return
         }
@@ -190,7 +190,7 @@ class TaskEntry: NSManagedObject {
     }
     
     func setAsOngoing() {
-        UtilitiesApplog.logDefault("TaskEntry", logtype: .EnterExit, message: "setAsOngoing()")
+        UtilitiesApplog.logDefault("TaskEntry", logtype: .enterExit, message: "setAsOngoing()")
         
         self.stopTime = stoptimeOngoing
     }

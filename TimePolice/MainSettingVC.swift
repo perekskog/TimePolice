@@ -23,7 +23,7 @@ class MainSettingVC: UIViewController,
     
     let theme = BlackGreenTheme()
 
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
 
 
     //---------------------------------------
@@ -31,17 +31,17 @@ class MainSettingVC: UIViewController,
     //---------------------------------------
 
     lazy var mainQueueMOC : NSManagedObjectContext = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.managedObjectContext
         }()
 
     lazy var appLog : AppLog = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.appLog
     }()
 
     lazy var logger: AppLogger = {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         var defaultLogger = appDelegate.getDefaultLogger()
         defaultLogger.datasource = self
         return defaultLogger
@@ -61,43 +61,43 @@ class MainSettingVC: UIViewController,
     // MainSettingsVC - View lifecycle
     //---------------------------------------------
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillAppear")
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillDisappear")
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidAppear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidAppear")
 
         let (shouldPopupAlert, message) = TimePoliceModelUtils.verifyConstraints(mainQueueMOC)
         if shouldPopupAlert == true {
             let alertController = TimePoliceModelUtils.getConsistencyAlert(message, moc: mainQueueMOC)
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         }
 
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidDisappear")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidDisappear")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewWillLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewWillLayoutSubviews")
 
-        let width = CGRectGetWidth(self.view.frame)
-        let height = CGRectGetHeight(self.view.frame)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
 
         exitButton.frame.size.height = CGFloat(minimumComponentHeight)
 
-        var textRect = CGRectMake(0, height/4, width, 50)
+        var textRect = CGRect(x: 0, y: height/4, width: width, height: 50)
         settingsLabel.frame = textRect
 
         textRect.origin.y += height/5
@@ -128,23 +128,23 @@ class MainSettingVC: UIViewController,
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLayoutSubviews")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLayoutSubviews")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "viewDidLoad")
+        appLog.log(logger, logtype: .viewLifecycle, message: "viewDidLoad")
 
         (self.view as! TimePoliceBGView).theme = theme
 
-        exitButton.titleLabel?.font = UIFont.systemFontOfSize(CGFloat(themeBigTextSize))
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
 
-        settingsLabel.font = UIFont.boldSystemFontOfSize(CGFloat(textTitleSize))
+        settingsLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(textTitleSize))
 
         sessionSelectionControl.removeAllSegments()
-        sessionSelectionControl.insertSegmentWithTitle("Active", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("Archived", atIndex: 0, animated: false)
-        sessionSelectionControl.insertSegmentWithTitle("All", atIndex: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Active", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "Archived", at: 0, animated: false)
+        sessionSelectionControl.insertSegment(withTitle: "All", at: 0, animated: false)
         sessionSelectionControl.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         sessionSelectionControl.tintColor = UIColor(red:0.1, green:0.6, blue:0.1, alpha: 1.0)
         sessionSelectionControl.selectedSegmentIndex = 0
@@ -159,23 +159,23 @@ class MainSettingVC: UIViewController,
         redrawAll(false)
     }
     
-     func fakeCrash(sender: UILongPressGestureRecognizer) {
-         guard sender.state == .Began else {
+     func fakeCrash(_ sender: UILongPressGestureRecognizer) {
+         guard sender.state == .began else {
              return
          }
         
-         appLog.log(logger, logtype: .GUIAction, message: "fakeCrash")
+         appLog.log(logger, logtype: .guiAction, message: "fakeCrash")
         
          let alertContoller = UIAlertController(title: "Crash?", message: nil,
-             preferredStyle: .Alert)
-         let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+             preferredStyle: .alert)
+         let cancel = UIAlertAction(title: "Cancel", style: .cancel,
              handler: { action in
-                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(cancel)")
+                 self.appLog.log(self.logger, logtype: .guiAction, message: "fakeCrash(cancel)")
          })
          alertContoller.addAction(cancel)
-         let ok = UIAlertAction(title: "OK", style: .Default,
+         let ok = UIAlertAction(title: "OK", style: .default,
              handler: { action in
-                 self.appLog.log(self.logger, logtype: .GUIAction, message: "fakeCrash(ok)")
+                 self.appLog.log(self.logger, logtype: .guiAction, message: "fakeCrash(ok)")
                  // This code is supposed to force a crash that can be seen on the device page in XCode.
                  // In Swift 2.3, this produced a build error
                  //let vc: UIViewController?
@@ -183,39 +183,39 @@ class MainSettingVC: UIViewController,
          })
          alertContoller.addAction(ok)
 
-         presentViewController(alertContoller, animated: true, completion: nil)
+         present(alertContoller, animated: true, completion: nil)
      }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        appLog.log(logger, logtype: .ViewLifecycle, message: "didReceiveMemoryWarning")
+        appLog.log(logger, logtype: .viewLifecycle, message: "didReceiveMemoryWarning")
     }
 
     //----------------------------------------
     // MainSettingsVC - Buttons
     //----------------------------------------
     
-    @IBAction func clearCoreData(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "clearCoreData")
-        appLog.log(logger, logtype: .GUIAction, message: "clearCoreData")
+    @IBAction func clearCoreData(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "clearCoreData")
+        appLog.log(logger, logtype: .guiAction, message: "clearCoreData")
 
         let alertContoller = UIAlertController(title: "Delete all data?", message: nil,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let deleteAllDataAction = UIAlertAction(title: "Delete", style: .Default,
+        let deleteAllDataAction = UIAlertAction(title: "Delete", style: .default,
             handler: { action in
 
             // Dispatch long running job on its own queue
             self.activityIndicator.startAnimating()
-            self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+            self.appLog.log(self.logger, logtype: .debug, message: "Dispatching job")
 
 
-            let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-            privateMOC.parentContext = self.mainQueueMOC
+            let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            privateMOC.parent = self.mainQueueMOC
 
 
-            privateMOC.performBlock({
-                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+            privateMOC.perform({
+                self.appLog.log(self.logger, logtype: .debug, message: "Dispatched job started")
 
                 MainSettingVC.clearAllData(privateMOC)
 
@@ -225,12 +225,12 @@ class MainSettingVC: UIViewController,
                     fatalError("Failure to save context: \(error)")
                 }
 
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did delete all data")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did delete all data")
 
                 // Hide activity indicator
                 // Must e done on main queue so it is hidden immediatly
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                DispatchQueue.main.async(execute: {
+                    self.appLog.log(self.logger, logtype: .debug, message: "Hide activity indicator")
                     self.activityIndicator.stopAnimating()
                     self.redrawAll(false)
                 })
@@ -240,16 +240,16 @@ class MainSettingVC: UIViewController,
 
         alertContoller.addAction(deleteAllDataAction)
         
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,
             handler: nil)
         alertContoller.addAction(cancel)
         
-        presentViewController(alertContoller, animated: true, completion: nil)
+        present(alertContoller, animated: true, completion: nil)
     }
 
-    @IBAction func deleteSessions(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "deleteSessions")
-        appLog.log(logger, logtype: .GUIAction, message: "deleteSessions")
+    @IBAction func deleteSessions(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "deleteSessions")
+        appLog.log(logger, logtype: .guiAction, message: "deleteSessions")
 
         var prompt: String
         var active = false
@@ -270,21 +270,21 @@ class MainSettingVC: UIViewController,
         }
         
         let alertContoller = UIAlertController(title: "\(prompt)?", message: nil,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
 
-        let deleteSessionsAction = UIAlertAction(title: "Delete", style: .Default,
+        let deleteSessionsAction = UIAlertAction(title: "Delete", style: .default,
             handler: { action in
                 
                 // Dispatch long running job on its own queue
                 self.activityIndicator.startAnimating()
-                self.appLog.log(self.logger, logtype: .Debug, message: "Dispatching job")
+                self.appLog.log(self.logger, logtype: .debug, message: "Dispatching job")
 
-                let privateMOC = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-                privateMOC.parentContext = self.mainQueueMOC
+                let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                privateMOC.parent = self.mainQueueMOC
 
 
-                privateMOC.performBlock({
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Dispatched job started")
+                privateMOC.perform({
+                    self.appLog.log(self.logger, logtype: .debug, message: "Dispatched job started")
                     
                     MainSettingVC.clearSessionsKeepTemplates(privateMOC, archived: archived, active: active)
 
@@ -294,12 +294,12 @@ class MainSettingVC: UIViewController,
                         fatalError("Failure to save context: \(error)")
                     }
 
-                    self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(prompt)")
+                    self.appLog.log(self.logger, logtype: .debug, message: "Did: \(prompt)")
                     
                     // Hide activity indicator
                     // Must e done on main queue so it is hidden immediatly
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.appLog.log(self.logger, logtype: .Debug, message: "Hide activity indicator")
+                    DispatchQueue.main.async(execute: {
+                        self.appLog.log(self.logger, logtype: .debug, message: "Hide activity indicator")
                         self.activityIndicator.stopAnimating()
                         self.redrawAll(false)
                     })
@@ -308,31 +308,31 @@ class MainSettingVC: UIViewController,
 
         alertContoller.addAction(deleteSessionsAction)
         
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,
             handler: nil)
         alertContoller.addAction(cancel)
         
-        presentViewController(alertContoller, animated: true, completion: nil)
+        present(alertContoller, animated: true, completion: nil)
     }
 
-    @IBAction func applogActions(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "applogActions")
-        appLog.log(logger, logtype: .GUIAction, message: "applogActions")
+    @IBAction func applogActions(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "applogActions")
+        appLog.log(logger, logtype: .guiAction, message: "applogActions")
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let alertController = UIAlertController(title: "Applog actions", message: nil,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
 
 
         var toggleString = "Enable applog"
         if appDelegate.enabled == true {
             toggleString = "Disable applog"
         }
-        let toggleApplogAction = UIAlertAction(title: toggleString, style: .Default,
+        let toggleApplogAction = UIAlertAction(title: toggleString, style: .default,
             handler: { action in
                 appDelegate.enabled = !appDelegate.enabled
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleString)")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did: \(toggleString)")
             }
         )
         alertController.addAction(toggleApplogAction)
@@ -340,9 +340,9 @@ class MainSettingVC: UIViewController,
 
 
 
-        let noTracesSetting = UIAlertAction(title: "No traces", style: .Default,
+        let noTracesSetting = UIAlertAction(title: "No traces", style: .default,
             handler: { action in
-                self.appLog.log(self.logger, logtype: .Debug, message: "Set to no traces")
+                self.appLog.log(self.logger, logtype: .debug, message: "Set to no traces")
                 appDelegate.included = noTraces
             }
         )
@@ -352,17 +352,17 @@ class MainSettingVC: UIViewController,
 
 
         var toggleGUIActionTitle = "+ GUIAction"
-        if appDelegate.included.contains(.GUIAction) {
+        if appDelegate.included.contains(.guiAction) {
             toggleGUIActionTitle = "- GUIAction"
         }
-        let toggleGUIAction = UIAlertAction(title: toggleGUIActionTitle, style: .Default,
+        let toggleGUIAction = UIAlertAction(title: toggleGUIActionTitle, style: .default,
             handler: { action in
-                if appDelegate.included.contains(.GUIAction) {
-                    appDelegate.included.remove(.GUIAction)
+                if appDelegate.included.contains(.guiAction) {
+                    appDelegate.included.remove(.guiAction)
                 } else {
-                    appDelegate.included.insert(.GUIAction)
+                    appDelegate.included.insert(.guiAction)
                 }
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleGUIActionTitle)")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did: \(toggleGUIActionTitle)")
             }
         )
         alertController.addAction(toggleGUIAction)
@@ -370,17 +370,17 @@ class MainSettingVC: UIViewController,
 
 
         var toggleViewLifecycleTitle = "+ ViewLifecycle"
-        if appDelegate.included.contains(.ViewLifecycle) {
+        if appDelegate.included.contains(.viewLifecycle) {
             toggleViewLifecycleTitle = "- ViewLifecycle"
         }
-        let toggleViewLifecycle = UIAlertAction(title: toggleViewLifecycleTitle, style: .Default,
+        let toggleViewLifecycle = UIAlertAction(title: toggleViewLifecycleTitle, style: .default,
             handler: { action in
-                if appDelegate.included.contains(.ViewLifecycle) {
-                    appDelegate.included.remove(.ViewLifecycle)
+                if appDelegate.included.contains(.viewLifecycle) {
+                    appDelegate.included.remove(.viewLifecycle)
                 } else {
-                    appDelegate.included.insert(.ViewLifecycle)
+                    appDelegate.included.insert(.viewLifecycle)
                 }
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(toggleViewLifecycleTitle)")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did: \(toggleViewLifecycleTitle)")
             }
         )
         alertController.addAction(toggleViewLifecycle)
@@ -389,9 +389,9 @@ class MainSettingVC: UIViewController,
 
 
 
-        let defaultTracesSetting = UIAlertAction(title: "Default traces", style: .Default,
+        let defaultTracesSetting = UIAlertAction(title: "Default traces", style: .default,
             handler: { action in
-                self.appLog.log(self.logger, logtype: .Debug, message: "Set to default traces")
+                self.appLog.log(self.logger, logtype: .debug, message: "Set to default traces")
                 appDelegate.included = defaultTraces
             }
         )
@@ -401,17 +401,17 @@ class MainSettingVC: UIViewController,
 
 
         var togglePeriodicCallbackTitle = "+ PeriodicCallback"
-        if appDelegate.included.contains(.PeriodicCallback) {
+        if appDelegate.included.contains(.periodicCallback) {
             togglePeriodicCallbackTitle = "- PeriodicCallback"
         }
-        let togglePeriodicCallback = UIAlertAction(title: togglePeriodicCallbackTitle, style: .Default,
+        let togglePeriodicCallback = UIAlertAction(title: togglePeriodicCallbackTitle, style: .default,
             handler: { action in
-                if appDelegate.included.contains(.PeriodicCallback) {
-                    appDelegate.included.remove(.PeriodicCallback)
+                if appDelegate.included.contains(.periodicCallback) {
+                    appDelegate.included.remove(.periodicCallback)
                 } else {
-                    appDelegate.included.insert(.PeriodicCallback)
+                    appDelegate.included.insert(.periodicCallback)
                 }
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did: \(togglePeriodicCallbackTitle)")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did: \(togglePeriodicCallbackTitle)")
             }
         )
         alertController.addAction(togglePeriodicCallback)
@@ -419,10 +419,10 @@ class MainSettingVC: UIViewController,
 
 
 
-        let resetApplog = UIAlertAction(title: "Reset applog", style: .Default,
+        let resetApplog = UIAlertAction(title: "Reset applog", style: .default,
             handler: { action in
                 self.appLog.logString = ""
-                self.appLog.log(self.logger, logtype: .Debug, message: "Did reset applog")
+                self.appLog.log(self.logger, logtype: .debug, message: "Did reset applog")
                 self.redrawAll(false)
 
             }
@@ -430,18 +430,18 @@ class MainSettingVC: UIViewController,
         alertController.addAction(resetApplog)
 
 
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel,
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,
             handler: nil)
         alertController.addAction(cancel)
 
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 
     //---------------------------------------------
     // MainSettingsVC - Data and GUI updates
     //---------------------------------------------
 
-    func redrawAll(refreshCoreData: Bool) {
+    func redrawAll(_ refreshCoreData: Bool) {
         if refreshCoreData==true {
         }
         applogSizeValueLabel.text = "\(self.appLog.logString.characters.count)"
@@ -451,26 +451,26 @@ class MainSettingVC: UIViewController,
     // MainSettingsVC - GUI actions
     //---------------------------------------------
 
-    @IBAction func exit(sender: UIButton) {
-        appLog.log(logger, logtype: .EnterExit, message: "exit")
-        appLog.log(logger, logtype: .GUIAction, message: "exit")
+    @IBAction func exit(_ sender: UIButton) {
+        appLog.log(logger, logtype: .enterExit, message: "exit")
+        appLog.log(logger, logtype: .guiAction, message: "exit")
 
-        performSegueWithIdentifier("Exit", sender: self)
+        performSegue(withIdentifier: "Exit", sender: self)
     }
 
     //---------------------------------------------
     // MainSettingsVC - clearAllData
     //---------------------------------------------
 
-    class func clearAllData(moc: NSManagedObjectContext) {
-        var fetchRequest: NSFetchRequest
+    class func clearAllData(_ moc: NSManagedObjectContext) {
+        var fetchRequest: NSFetchRequest<NSFetchRequestResult>
         
         do {
             // Delete all task entries
             fetchRequest = NSFetchRequest(entityName: "TaskEntry")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [TaskEntry] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [TaskEntry] {
                 for taskEntry in fetchResults {
-                    moc.deleteObject(taskEntry)
+                    moc.delete(taskEntry)
                 }
             }
         } catch {
@@ -480,9 +480,9 @@ class MainSettingVC: UIViewController,
         do {
             // Delete all tasks
             fetchRequest = NSFetchRequest(entityName: "Task")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Task] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Task] {
                 for task in fetchResults {
-                    moc.deleteObject(task)
+                    moc.delete(task)
                 }
             }
         } catch {
@@ -492,9 +492,9 @@ class MainSettingVC: UIViewController,
         do {
             // Delete all sessions
             fetchRequest = NSFetchRequest(entityName: "Session")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Session] {
                 for session in fetchResults {
-                    moc.deleteObject(session)
+                    moc.delete(session)
                 }
             }
         } catch {
@@ -504,9 +504,9 @@ class MainSettingVC: UIViewController,
         do {
             // Delete all projects
             fetchRequest = NSFetchRequest(entityName: "Project")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Project] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Project] {
                 for project in fetchResults {
-                    moc.deleteObject(project)
+                    moc.delete(project)
                 }
             }
         } catch {
@@ -520,16 +520,16 @@ class MainSettingVC: UIViewController,
     // MainSettingsVC - clearSessionsKeepTemplates
     //---------------------------------------------
 
-    class func clearSessionsKeepTemplates(moc: NSManagedObjectContext, archived: Bool, active: Bool) {
-        var fetchRequest: NSFetchRequest
+    class func clearSessionsKeepTemplates(_ moc: NSManagedObjectContext, archived: Bool, active: Bool) {
+        var fetchRequest: NSFetchRequest<NSFetchRequestResult>
 
         
         do {
             fetchRequest = NSFetchRequest(entityName: "Session")
-            if let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session] {
+            if let fetchResults = try moc.fetch(fetchRequest) as? [Session] {
                 for session in fetchResults {
                     if session.project.name != templateProjectName {
-                        if session.archived == archived || session.archived != active {
+                        if session.archived == NSNumber(value:archived) || session.archived != NSNumber(value:active) {
                             Session.deleteObject(session)
                             TimePoliceModelUtils.save(moc)
                         }

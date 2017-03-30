@@ -30,17 +30,17 @@ class TaskEntryCreatorManagerForAddToList: TaskEntryCreatorManagerBase {
     /////////////////////////
 
     override
-    func pageViewControllerAtIndex(index: Int) -> TaskEntryCreatorBase? {
-        appLog.log(logger, logtype: .EnterExit, message: "pageViewControllerAtIndex(index=\(index)")
+    func pageViewControllerAtIndex(_ index: Int) -> TaskEntryCreatorBase? {
+        appLog.log(logger, logtype: .enterExit, message: "pageViewControllerAtIndex(index=\(index)")
 
         guard let s = dataSource?.taskEntryCreatorManager(self, sessionForIndex: index) else {
-            appLog.log(logger, logtype: .Guard, message: "guard fail in pageViewControllerAtIndex")
+            appLog.log(logger, logtype: .guard, message: "guard fail in pageViewControllerAtIndex")
             return nil
         }
         
         let storyBoard = UIStoryboard(name: "Main",
-            bundle: NSBundle.mainBundle())
-        if let newVC = storyBoard.instantiateViewControllerWithIdentifier("TaskEntryCreatorByAddToList") as? TaskEntryCreatorBase {
+            bundle: Bundle.main)
+        if let newVC = storyBoard.instantiateViewController(withIdentifier: "TaskEntryCreatorByAddToList") as? TaskEntryCreatorBase {
             newVC.sessionIndex = index
             newVC.numberOfSessions = self.numberOfSessions
             newVC.session = s

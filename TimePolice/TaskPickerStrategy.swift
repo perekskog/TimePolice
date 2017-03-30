@@ -16,24 +16,24 @@ TODO
 import Foundation
 
 protocol TaskSelectionStrategy {
-	func selectableTasks(taskList: [Task]) -> [Task]
-    func isSelectable(task: Task) -> Bool
-    func taskSelected(task: Task)
-	func taskUnselected(task: Task)
+	func selectableTasks(_ taskList: [Task]) -> [Task]
+    func isSelectable(_ task: Task) -> Bool
+    func taskSelected(_ task: Task)
+	func taskUnselected(_ task: Task)
 }
 
 class TaskSelectAny: TaskSelectionStrategy {
 	init() {}
-	func selectableTasks(taskList: [Task]) -> [Task] {
+	func selectableTasks(_ taskList: [Task]) -> [Task] {
 		return taskList
 	}
-    func isSelectable(task: Task) -> Bool {
+    func isSelectable(_ task: Task) -> Bool {
         return true
     }
-	func taskSelected(task: Task) {
+	func taskSelected(_ task: Task) {
 		// Do nothing
 	}
-	func taskUnselected(task: Task) {
+	func taskUnselected(_ task: Task) {
 		// Do nothing
 	}
 }
@@ -45,14 +45,14 @@ class TaskSelectInSequence: TaskSelectionStrategy {
         selectedTasks = []
     }
     
-	func selectableTasks(taskList: [Task]) -> [Task] {
+	func selectableTasks(_ taskList: [Task]) -> [Task] {
 		var indexes = [Int]()
 
 		if selectedTasks==[] {
 			return taskList
 		}
 
-		for (index, task) in taskList.enumerate() {
+		for (index, task) in taskList.enumerated() {
 			if selectedTasks.contains(task) {
 				indexes.append(index)
 			}
@@ -62,7 +62,7 @@ class TaskSelectInSequence: TaskSelectionStrategy {
 		return Array(taskList[x+1..<taskList.count])
 	}
     
-    func isSelectable(task: Task) -> Bool {
+    func isSelectable(_ task: Task) -> Bool {
         if selectedTasks.contains(task) {
             return false
         } else {
@@ -70,13 +70,13 @@ class TaskSelectInSequence: TaskSelectionStrategy {
         }
     }
 
-	func taskSelected(task: Task) {
+	func taskSelected(_ task: Task) {
 		if !selectedTasks.contains(task) {
 			selectedTasks.append(task)
 		}
 	}
 
-	func taskUnselected(task: Task) {
+	func taskUnselected(_ task: Task) {
 		selectedTasks = selectedTasks.filter({!($0==task)})
 	}	
 }

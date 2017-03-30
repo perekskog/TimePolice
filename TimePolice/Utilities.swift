@@ -19,7 +19,7 @@ import CoreData
 
 class UtilitiesDate {
 
-	class func getString(timeInterval: NSTimeInterval) -> String {
+	class func getString(_ timeInterval: TimeInterval) -> String {
 	    let h = Int(timeInterval / 3600)
 		let m = (Int(timeInterval) - h*3600) / 60
 		let s = Int(timeInterval) - h*3600 - m*60
@@ -37,31 +37,31 @@ class UtilitiesDate {
 	    return time
 	}
 
-	class func getString(date: NSDate) -> String {
-		let formatter = NSDateFormatter();
-	    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("yyyyMMddhhmmss", options: 0, locale: NSLocale.currentLocale())
-		let timeString = formatter.stringFromDate(date)
+	class func getString(_ date: Date) -> String {
+		let formatter = DateFormatter();
+	    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyyMMddhhmmss", options: 0, locale: Locale.current)
+		let timeString = formatter.string(from: date)
 		return timeString
 	}
 
-	class func getStringNoDate(date: NSDate) -> String {
-		let formatter = NSDateFormatter();
-	    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("hhmmss", options: 0, locale: NSLocale.currentLocale())
-		let timeString = formatter.stringFromDate(date)
+	class func getStringNoDate(_ date: Date) -> String {
+		let formatter = DateFormatter();
+	    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "hhmmss", options: 0, locale: Locale.current)
+		let timeString = formatter.string(from: date)
 		return timeString
 	}
 
-	class func getStringOnlyDay(date: NSDate) -> String {
-		let formatter = NSDateFormatter();
-	    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("dd", options: 0, locale: NSLocale.currentLocale())
-		let timeString = formatter.stringFromDate(date)
+	class func getStringOnlyDay(_ date: Date) -> String {
+		let formatter = DateFormatter();
+	    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "dd", options: 0, locale: Locale.current)
+		let timeString = formatter.string(from: date)
 		return timeString
 	}
 
-	class func getStringWithFormat(date: NSDate, format: String) -> String {
-		let formatter = NSDateFormatter();
-	    formatter.dateFormat = NSDateFormatter.dateFormatFromTemplate(format, options: 0, locale: NSLocale.currentLocale())
-		let timeString = formatter.stringFromDate(date)
+	class func getStringWithFormat(_ date: Date, format: String) -> String {
+		let formatter = DateFormatter();
+	    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: format, options: 0, locale: Locale.current)
+		let timeString = formatter.string(from: date)
 		return timeString
 	}
 }
@@ -71,11 +71,11 @@ class UtilitiesDate {
 
 class UtilitiesApplog {
 
-	class func logDefault(logdomain: String, logtype: AppLogEntryType, message: String) {
-		let appdelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+	class func logDefault(_ logdomain: String, logtype: AppLogEntryType, message: String) {
+		let appdelegate = (UIApplication.shared.delegate as! AppDelegate)
 	 	var logger = appdelegate.defaultLogger
 	 	logger.datasource = DefaultLogHelper(logdomain: logdomain)
-	    (UIApplication.sharedApplication().delegate as! AppDelegate).appLog.log(logger, logtype: .Guard, message: message)
+	    (UIApplication.shared.delegate as! AppDelegate).appLog.log(logger, logtype: .guard, message: message)
 	}
 }
 
@@ -93,28 +93,28 @@ class DefaultLogHelper: AppLoggerDataSource {
 
 class UtilitiesString {
 
-    class func getWithoutProperties(source: String) -> String {
+    class func getWithoutProperties(_ source: String) -> String {
         var text = ""
-        let x = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        let x = source.components(separatedBy: CharacterSet(charactersIn: "#"))
         if x.count>=1 {
             text = x[0]
         }
         return text
     }
     
-    class func getProperties(source: String) -> [String: String] {
+    class func getProperties(_ source: String) -> [String: String] {
         var propString: String?
-        let parts = source.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "#"))
+        let parts = source.components(separatedBy: CharacterSet(charactersIn: "#"))
         if parts.count==2 {
             propString = parts[1]
         } else {
             return [:]
         }
 
-        let propstring=propString!.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: ","))
+        let propstring=propString!.components(separatedBy: CharacterSet(charactersIn: ","))
         var props = [String: String]()
         for s in propstring {
-        	let parts = s.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "="))
+        	let parts = s.components(separatedBy: CharacterSet(charactersIn: "="))
         	if parts.count == 2 {
         		props[parts[0]] = parts[1]
         	}
@@ -126,17 +126,17 @@ class UtilitiesString {
         }
     }
 
-    class func getStringFromProperties(props: [String: String]) -> String {
+    class func getStringFromProperties(_ props: [String: String]) -> String {
         var s = ""
         for (key, value) in props {
             s += "\(key)=\(value),"
         }
-        s.removeAtIndex(s.endIndex.predecessor())
+        s.remove(at: s.characters.index(before: s.endIndex))
         return s
     }
 
-    class func get2Parts(s: String, separator: NSCharacterSet) -> (String, String) {
-        let strings = s.componentsSeparatedByCharactersInSet(separator)
+    class func get2Parts(_ s: String, separator: CharacterSet) -> (String, String) {
+        let strings = s.components(separatedBy: separator)
         var s1 = ""
         var s2 = ""
         if strings.count >= 1 {
@@ -148,7 +148,7 @@ class UtilitiesString {
         return (s1, s2)
     }
 
-    class func dumpProperties(props: [String: String]) -> String {
+    class func dumpProperties(_ props: [String: String]) -> String {
     	var s = ""
     	for (key,value) in props {
     		s += "\n\(key) = \(value)"
@@ -161,19 +161,19 @@ class UtilitiesString {
 
 class UtilitiesColor {
     
-    class func string2color(text: String) -> UIColor {
+    class func string2color(_ text: String) -> UIColor {
         //var color: UIColor?
-        let r = text[text.startIndex.advancedBy(0)]
+        let r = text[text.characters.index(text.startIndex, offsetBy: 0)]
         let red = hexchar2value(r)
-        let g = text[text.startIndex.advancedBy(1)]
+        let g = text[text.characters.index(text.startIndex, offsetBy: 1)]
         let green = hexchar2value(g)
-        let b = text[text.startIndex.advancedBy(2)]
+        let b = text[text.characters.index(text.startIndex, offsetBy: 2)]
         let blue = hexchar2value(b)
         
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
     }
     
-    class func hexchar2value(ch: Character) -> CGFloat {
+    class func hexchar2value(_ ch: Character) -> CGFloat {
         switch ch {
         case "0": return 0.0
         case "1": return 1.0/16.0
@@ -198,12 +198,12 @@ class UtilitiesColor {
 
 class UtilitiesImage {
 
-    class func getImageWithColor(color: UIColor, width: CGFloat, height: CGFloat) -> UIImage {                    
-        let rect = CGRectMake(0.0, 0.0, width, height);
+    class func getImageWithColor(_ color: UIColor, width: CGFloat, height: CGFloat) -> UIImage {                    
+        let rect = CGRect(x: 0.0, y: 0.0, width: width, height: height);
         UIGraphicsBeginImageContext(rect.size);
         let context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context!, color.CGColor)
-        CGContextFillRect(context!, rect);
+        context!.setFillColor(color.cgColor)
+        context!.fill(rect);
         let image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
 

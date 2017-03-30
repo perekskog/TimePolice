@@ -33,19 +33,19 @@ class Session: NSManagedObject {
     // Session - createInMOC
     //---------------------------------------------
 
-    class func createInMOC(moc: NSManagedObjectContext, 
+    class func createInMOC(_ moc: NSManagedObjectContext, 
         name: String, version: String, properties: [String: String], project: Project, src: String) -> Session {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "createInMOC(name=\(name),version=\(version),props...)")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "createInMOC(name=\(name),version=\(version),props...)")
 
-        let newItem = NSEntityDescription.insertNewObjectForEntityForName("Session", inManagedObjectContext: moc) as! Session
+        let newItem = NSEntityDescription.insertNewObject(forEntityName: "Session", into: moc) as! Session
 
-        let date = NSDate()
-        let deviceName = UIDevice.currentDevice().name
+        let date = Date()
+        let deviceName = UIDevice.current.name
         newItem.id = "S:\(name)/\(date.timeIntervalSince1970)/\(deviceName)"
         newItem.name = name
         newItem.version = version
         newItem.created = date
-        newItem.properties = properties
+        newItem.properties = properties as NSObject
         newItem.src = src
         newItem.archived = false
         
@@ -55,7 +55,7 @@ class Session: NSManagedObject {
         project.addSession(newItem)
 
         let s = UtilitiesString.dumpProperties(properties)
-        UtilitiesApplog.logDefault("Session properties", logtype: .Debug, message: s)
+        UtilitiesApplog.logDefault("Session properties", logtype: .debug, message: s)
 
         return newItem
     }
@@ -64,15 +64,15 @@ class Session: NSManagedObject {
     // Session - findInMOC
     //---------------------------------------------
 
-    class func findInMOC(moc: NSManagedObjectContext, name: String) -> [Session]? {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "findInMOC(name=\(name))")
+    class func findInMOC(_ moc: NSManagedObjectContext, name: String) -> [Session]? {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "findInMOC(name=\(name))")
 
-        let fetchRequest = NSFetchRequest(entityName: "Session")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Session")
         let predicate = NSPredicate(format: "name == %@", name) 
         fetchRequest.predicate = predicate
 
         do {
-            let fetchResults = try moc.executeFetchRequest(fetchRequest) as? [Session]
+            let fetchResults = try moc.fetch(fetchRequest) as? [Session]
             return fetchResults
         } catch {
             return nil
@@ -84,27 +84,27 @@ class Session: NSManagedObject {
     // Session - delete
     //---------------------------------------------
 
-    class func deleteObject(session: Session) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteObject(name=\(session.name))")
+    class func deleteObject(_ session: Session) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "deleteObject(name=\(session.name))")
         guard let moc = session.managedObjectContext else { return }
         let taskEntries = session.taskEntries
         let tasks = session.tasks
         let project = session.project
-        moc.deleteObject(session)
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Delete all taskentries")
+        moc.delete(session)
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "Delete all taskentries")
         for taskEntry in taskEntries {
             if let te = taskEntry as? TaskEntry {
                 TaskEntry.deleteObject(te)
                 Task.purgeIfEmpty(te.task, exceptSession: session, exceptTaskEntry: te)
             }
         }
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge all orphaned tasks")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "Purge all orphaned tasks")
         for task in tasks {
             if let t = task as? Task {
                 Task.purgeIfEmpty(t, exceptSession:session)
             }
         } 
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "Purge project if orphaned")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "Purge project if orphaned")
         Project.purgeIfEmpty(project, exceptSession: session)
     }
 
@@ -113,10 +113,10 @@ class Session: NSManagedObject {
     // Session - get attributes
     //---------------------------------------------
     
-    func getProperty(key: String) -> String? {
+    func getProperty(_ key: String) -> String? {
 //        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getProperty(key=\(key))")
         guard let p = properties as? [String: String] else {
-            UtilitiesApplog.logDefault("Session", logtype: .Guard, message: "guard fail getProperty")
+            UtilitiesApplog.logDefault("Session", logtype: .guard, message: "guard fail getProperty")
             return nil
         }
         return p[key]
@@ -145,24 +145,24 @@ class Session: NSManagedObject {
     // Session - addTaskEntry (internal use only)
     //---------------------------------------------
     
-    func addTaskEntry(taskEntry: TaskEntry) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTaskEntry(taskEntry=\(taskEntry.name))")
+    func addTaskEntry(_ taskEntry: TaskEntry) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "addTaskEntry(taskEntry=\(taskEntry.name))")
         let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
-        sw.addObject(taskEntry)
+        sw.add(taskEntry)
         self.taskEntries = sw
     }
 
-    func insertTaskEntryBefore(taskEntry: TaskEntry, index: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertTaskEntryBefore(taskEntry=\(taskEntry.name), index=\(index))")
+    func insertTaskEntryBefore(_ taskEntry: TaskEntry, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "insertTaskEntryBefore(taskEntry=\(taskEntry.name), index=\(index))")
         let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(taskEntry, atIndex: index)
+        sw.insert(taskEntry, at: index)
         self.taskEntries = sw
     }
 
-    func insertTaskEntryAfter(taskEntry: TaskEntry, index: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "insertTaskEntryAfter(taskEntry=\(taskEntry.name), index=\(index))")
+    func insertTaskEntryAfter(_ taskEntry: TaskEntry, index: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "insertTaskEntryAfter(taskEntry=\(taskEntry.name), index=\(index))")
         let sw = self.taskEntries.mutableCopy() as! NSMutableOrderedSet
-        sw.insertObject(taskEntry, atIndex: index+1)
+        sw.insert(taskEntry, at: index+1)
         self.taskEntries = sw
     }
 
@@ -183,8 +183,8 @@ class Session: NSManagedObject {
     // Session - getTaskEntry
     //---------------------------------------------
 
-    func getTaskEntry(index: Int) -> TaskEntry? {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getTaskEntry(index=\(index))")
+    func getTaskEntry(_ index: Int) -> TaskEntry? {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "getTaskEntry(index=\(index))")
         if index >= 0 && taskEntries.count > index {
             return taskEntries[index] as? TaskEntry
         } else {
@@ -197,15 +197,15 @@ class Session: NSManagedObject {
     // Session - addTask (internal use only)
     //---------------------------------------------
 
-    func addTask(task: Task) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTask(task=\(task.name))")
+    func addTask(_ task: Task) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "addTask(task=\(task.name))")
         let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
-        st.addObject(task)
+        st.add(task)
         self.tasks = st
     }
 
-    func addTasks(taskList: [Task]) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "addTasks(...)")
+    func addTasks(_ taskList: [Task]) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "addTasks(...)")
         for task in taskList {
             addTask(task)
         }
@@ -216,10 +216,10 @@ class Session: NSManagedObject {
     // Session - deleteTasks (internal use only)
     //---------------------------------------------
 
-    func deleteTask(task: Task) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteTask(task=\(task.name))")
+    func deleteTask(_ task: Task) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "deleteTask(task=\(task.name))")
         let st = self.tasks.mutableCopy() as! NSMutableOrderedSet
-        st.removeObject(task)
+        st.remove(task)
         self.tasks = st
     }
 
@@ -228,8 +228,8 @@ class Session: NSManagedObject {
     // Session - replaceTasks (internal use only)
     //---------------------------------------------
 
-    func replaceTasksWith(newTasks: [Task]) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "replaceTasksWith(tasks...)")
+    func replaceTasksWith(_ newTasks: [Task]) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "replaceTasksWith(tasks...)")
         let oldTasks = self.tasks
 
 
@@ -250,31 +250,31 @@ class Session: NSManagedObject {
     // Session - getSessionTaskSummary
     //---------------------------------------------
 
-    func getSessionTaskSummary(includeOngoing: Bool) -> [Task: (Int, NSTimeInterval)] {
-        var sessionTaskSummary: [Task: (Int, NSTimeInterval)] = [:]
+    func getSessionTaskSummary(_ includeOngoing: Bool) -> [Task: (Int, TimeInterval)] {
+        var sessionTaskSummary: [Task: (Int, TimeInterval)] = [:]
 
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionTaskSummary")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "getSessionTaskSummary")
 
-        self.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-
+        self.taskEntries.enumerateObjects({ (elem, idx, stop) -> Void in
+            
             let taskEntry = elem as! TaskEntry
             // For all ongoing items
             if taskEntry.isStopped() || includeOngoing {
                 let task = taskEntry.task
-                var taskSummary: (Int, NSTimeInterval) = (0, 0)
+                var taskSummary: (Int, TimeInterval) = (0, 0)
                 if let t = sessionTaskSummary[task] {
                     taskSummary = t
                 }
                 var (activations, totalTime) = taskSummary
                 activations += 1
                 if taskEntry.isStopped() {
-                    totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                    totalTime += taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                 } else {
-                    totalTime += NSDate().timeIntervalSinceDate(taskEntry.startTime)
+                    totalTime += Date().timeIntervalSince(taskEntry.startTime)
                 }
                 sessionTaskSummary[task] = (activations, totalTime)
             }
-        }
+        })
 
         return sessionTaskSummary
     }
@@ -283,22 +283,22 @@ class Session: NSManagedObject {
     // Session - getSessionSummary
     //---------------------------------------------
 
-    func getSessionSummary(moc: NSManagedObjectContext) -> (Int, NSTimeInterval) {
-        var sessionSummary: (Int, NSTimeInterval) = (0,0)
+    func getSessionSummary(_ moc: NSManagedObjectContext) -> (Int, TimeInterval) {
+        var sessionSummary: (Int, TimeInterval) = (0,0)
 
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionSummary")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "getSessionSummary")
 
-        self.taskEntries.enumerateObjectsUsingBlock { (elem, idx, stop) -> Void in
-
+        self.taskEntries.enumerateObjects({ (elem, idx, stop) -> Void in
+            
             let taskEntry = elem as! TaskEntry
             // For all items but the last one, if it is ongoing
             if idx != self.taskEntries.count-1 || taskEntry.isStopped() {
                 var (activations, totalTime) = sessionSummary
                 activations += 1
-                totalTime += taskEntry.stopTime.timeIntervalSinceDate(taskEntry.startTime)
+                totalTime += taskEntry.stopTime.timeIntervalSince(taskEntry.startTime)
                 sessionSummary = (activations, totalTime)
             }
-        }
+        })
 
         return sessionSummary
     }
@@ -307,10 +307,10 @@ class Session: NSManagedObject {
     // Session - archived
     //---------------------------------------------
 
-    func setArchivedTo(archived: Bool) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "getSessionSummary")
+    func setArchivedTo(_ archived: Bool) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "getSessionSummary")
 
-        self.archived = archived
+        self.archived = archived as NSNumber
 
         if let moc = self.managedObjectContext {
             TimePoliceModelUtils.save(moc)
@@ -377,8 +377,8 @@ Future extensions
 
 */
 
-    func setStartTime(moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStartTime: NSDate) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStartTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
+    func setStartTime(_ moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStartTime: Date) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStartTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -389,14 +389,14 @@ Future extensions
         let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
 
         // Never change starttime into the future
-        let now = NSDate()
-        if targetTime.compare(now) == .OrderedDescending {
+        let now = Date()
+        if targetTime.compare(now) == .orderedDescending {
             // c1, c11
             targetTime = now
         }
 
         // Don't set starttime passed a stopped taskEntryToModify
-        if taskEntryToModify.isStopped() && targetTime.compare(taskEntryToModify.stopTime) == .OrderedDescending {
+        if taskEntryToModify.isStopped() && targetTime.compare(taskEntryToModify.stopTime) == .orderedDescending {
             // c2, c12
             targetTime = taskEntryToModify.stopTime
         }
@@ -416,11 +416,11 @@ Future extensions
             let previousTaskEntry = taskEntries[taskEntryIndex-1] as! TaskEntry
 
             // Don't set starttime earlier than start of previous taskentry
-            if targetTime.compare(previousTaskEntry.startTime) == .OrderedAscending {
+            if targetTime.compare(previousTaskEntry.startTime) == .orderedAscending {
                 targetTime = previousTaskEntry.startTime
             }
 
-            if targetTime.compare(previousTaskEntry.stopTime) == .OrderedAscending {
+            if targetTime.compare(previousTaskEntry.stopTime) == .orderedAscending {
                 // c11/c12: t1
                 // taskEntryToModify will overlap with previousTaskEntry
                 previousTaskEntry.setStoppedAt(targetTime)
@@ -460,8 +460,8 @@ Future extensions
 */
 
 
-    func setStopTime(moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStopTime: NSDate) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "setStopTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
+    func setStopTime(_ moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStopTime: Date) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStopTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -473,14 +473,14 @@ Future extensions
         let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
 
         // Never change stoptime into the future
-        let now = NSDate()
-        if targetTime.compare(now) == .OrderedDescending {
+        let now = Date()
+        if targetTime.compare(now) == .orderedDescending {
             // c1, c11
             targetTime = now
         }
 
         // Never set stoptime before start of taskEntryToModify
-        if targetTime.compare(taskEntryToModify.startTime) == .OrderedAscending {
+        if targetTime.compare(taskEntryToModify.startTime) == .orderedAscending {
             targetTime = taskEntryToModify.startTime
         }
 
@@ -498,10 +498,10 @@ Future extensions
             // Not the last item => There is a next item
             let nextTaskEntry = taskEntries[taskEntryIndex+1] as! TaskEntry
 
-            if targetTime.compare(nextTaskEntry.startTime) == .OrderedDescending {
+            if targetTime.compare(nextTaskEntry.startTime) == .orderedDescending {
                 // Need to adjust next taskentry
 
-                if !nextTaskEntry.isOngoing() && targetTime.compare(nextTaskEntry.stopTime) == .OrderedDescending {
+                if !nextTaskEntry.isOngoing() && targetTime.compare(nextTaskEntry.stopTime) == .orderedDescending {
                     // c12
                     targetTime = nextTaskEntry.stopTime
                 }
@@ -534,8 +534,8 @@ Future extensions
     pc1 *** |------------| ... |------------? ***     ==>    *** |------------? ***
             1            2     3            4                    1            4
 */
-    func deletePreviousTaskEntryAndAlignStart(moc: NSManagedObjectContext, taskEntryIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousTaskEntryAndAlignStart(taskEntryIndex=\(taskEntryIndex))")
+    func deletePreviousTaskEntryAndAlignStart(_ moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "deletePreviousTaskEntryAndAlignStart(taskEntryIndex=\(taskEntryIndex))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -580,8 +580,8 @@ Future extensions
     pc1 *** |------------| ... |--------? ***     ==>    *** |------------? ***
             1            2     3        4                    1            4
 */
-    func deleteNextTaskEntryAndAlignStop(moc: NSManagedObjectContext, taskEntryIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deletePreviousTaskEntryAndAlignStop(taskEntryIndex=\(taskEntryIndex))")
+    func deleteNextTaskEntryAndAlignStop(_ moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "deletePreviousTaskEntryAndAlignStop(taskEntryIndex=\(taskEntryIndex))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -625,8 +625,8 @@ Future extensions
     pc1 *** |------------? ***                       ==>  ***  (removed)  ***
 */
 
-    func deleteTaskEntry(moc: NSManagedObjectContext, taskEntryIndex: Int) {
-        UtilitiesApplog.logDefault("Session", logtype: .EnterExit, message: "deleteTaskEntry(taskEntryIndex=\(taskEntryIndex))")
+    func deleteTaskEntry(_ moc: NSManagedObjectContext, taskEntryIndex: Int) {
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "deleteTaskEntry(taskEntryIndex=\(taskEntryIndex))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -635,7 +635,7 @@ Future extensions
 
         let taskEntryToModify = taskEntries[taskEntryIndex] as! TaskEntry
         
-        UtilitiesApplog.logDefault("Session", logtype: .Debug, message: "delete the taskentry item")
+        UtilitiesApplog.logDefault("Session", logtype: .debug, message: "delete the taskentry item")
         
         // Deete taskentry, this will also try to purge the task.
         TaskEntry.deleteObject(taskEntryToModify)

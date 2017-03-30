@@ -17,9 +17,9 @@ import UIKit
 
 protocol Layout {
     func numberOfSelectionAreas() -> Int
-    func getViewRectInfo(parentViewRect: CGRect) -> CGRect
-    func getViewRectSignInSignOut(parentViewRect: CGRect) -> CGRect
-    func getViewRect(parentViewRect: CGRect, buttonNumber: Int) -> CGRect
+    func getViewRectInfo(_ parentViewRect: CGRect) -> CGRect
+    func getViewRectSignInSignOut(_ parentViewRect: CGRect) -> CGRect
+    func getViewRect(_ parentViewRect: CGRect, buttonNumber: Int) -> CGRect
 }
 
 class GridLayout : Layout {
@@ -39,26 +39,26 @@ class GridLayout : Layout {
         return rows * columns;
     }
   
-    func getViewRectInfo(parentViewRect: CGRect) -> CGRect {
+    func getViewRectInfo(_ parentViewRect: CGRect) -> CGRect {
             let columnWidth = parentViewRect.width
-            let rect = CGRectMake(padding, padding, columnWidth-2*padding, toolHeight)
+            let rect = CGRect(x: padding, y: padding, width: columnWidth-2*padding, height: toolHeight)
             return rect
     }
 
-    func getViewRectSignInSignOut(parentViewRect: CGRect) -> CGRect {
+    func getViewRectSignInSignOut(_ parentViewRect: CGRect) -> CGRect {
             let columnWidth = parentViewRect.width
-            let rect = CGRectMake(padding, padding*2+toolHeight, columnWidth-2*padding, toolHeight)
+            let rect = CGRect(x: padding, y: padding*2+toolHeight, width: columnWidth-2*padding, height: toolHeight)
             return rect
     }
 
-    func getViewRect(parentViewRect: CGRect, buttonNumber: Int) -> CGRect {
+    func getViewRect(_ parentViewRect: CGRect, buttonNumber: Int) -> CGRect {
         let row = buttonNumber / columns
         let column = buttonNumber % columns
         let rowHeight = (parentViewRect.height-2*toolHeight-(3+CGFloat(rows))*padding) / CGFloat(rows)
         let columnWidth = (parentViewRect.width - (1+CGFloat(columns))*padding) / CGFloat(columns)
         let x = padding+(columnWidth+padding)*CGFloat(column)
         let y = 2*toolHeight+3*padding+(rowHeight+padding)*CGFloat(row)
-        let rect = CGRectMake(x, y, columnWidth, rowHeight)
+        let rect = CGRect(x: x, y: y, width: columnWidth, height: rowHeight)
         
         return rect
     }
