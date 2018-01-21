@@ -162,14 +162,14 @@ class MainTemplatePropVC: UIViewController,
 
     // GUI actions
 
-    func cancel(_ sender: UIButton) {
+    @objc func cancel(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "cancel")
         appLog.log(logger, logtype: .guiAction, message: "cancel")
 
         performSegue(withIdentifier: "CancelTemplateProp", sender: self)
     }
     
-    func save(_ sender: UIButton) {
+    @objc func save(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "save")
         appLog.log(logger, logtype: .guiAction, message: "save")
 
@@ -197,7 +197,7 @@ class MainTemplatePropVC: UIViewController,
         return alertContoller
     }
 
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             appLog.log(logger, logtype: .debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20 + Int(keyboardSize.height)
@@ -209,7 +209,7 @@ class MainTemplatePropVC: UIViewController,
         textTemplate.frame = CGRect(x: 10, y: 10, width: width-20, height: textTemplateHeight)
     }
 
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             appLog.log(logger, logtype: .debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20
@@ -221,7 +221,7 @@ class MainTemplatePropVC: UIViewController,
         textTemplate.frame = CGRect(x: 10, y: 10, width: width-20, height: textTemplateHeight)
     }
     
-    func displayTemplateInstructions(_ sender: UIButton)
+    @objc func displayTemplateInstructions(_ sender: UIButton)
     {
         appLog.log(logger, logtype: .enterExit, message: "displayTemplateInstructions")
         appLog.log(logger, logtype: .guiAction, message: "displayTemplateInstructions")

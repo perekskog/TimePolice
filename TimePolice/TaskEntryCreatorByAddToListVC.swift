@@ -256,21 +256,21 @@ class TaskEntryCreatorByAddToListVC:
     //-----------------------------------------
 
 
-    func exit(_ sender: UIButton) {
+    @objc func exit(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "exit")
         appLog.log(logger, logtype: .guiAction, message: "exit")
         
         performSegue(withIdentifier: "Exit", sender: self)
     }
 
-    func useTemplate(_ sender: UIButton) {
+    @objc func useTemplate(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "useTemplate")
         appLog.log(logger, logtype: .guiAction, message: "useTemplate")
 
         performSegue(withIdentifier: "UseTemplate", sender: self)
     }
 
-    func switchOngoingFinished(_ sender: UIButton) {
+    @objc func switchOngoingFinished(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "switchOngoingFinished")
         appLog.log(logger, logtype: .guiAction, message: "switchOngoingFinished")
 
@@ -299,7 +299,7 @@ class TaskEntryCreatorByAddToListVC:
         scrollToEnd(taskEntriesTableView)
     }
     
-    func addTaskEntry(_ sender: UIButton) {
+    @objc func addTaskEntry(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "addTaskEntry")
         appLog.log(logger, logtype: .guiAction, message: "addTaskEntry")
 

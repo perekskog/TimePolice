@@ -159,7 +159,7 @@ class MainSettingVC: UIViewController,
         redrawAll(false)
     }
     
-     func fakeCrash(_ sender: UILongPressGestureRecognizer) {
+     @objc func fakeCrash(_ sender: UILongPressGestureRecognizer) {
          guard sender.state == .began else {
              return
          }

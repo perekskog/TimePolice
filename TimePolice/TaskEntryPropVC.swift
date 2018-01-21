@@ -197,14 +197,14 @@ class TaskEntryPropVC:
 
     // GUI actions
 
-    func cancel(_ sender: UIButton) {
+    @objc func cancel(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "cancel")
         appLog.log(logger, logtype: .guiAction, message: "cancel")
 
         performSegue(withIdentifier: "CancelTaskEntry", sender: self)
     }
     
-    func save(_ sender: UIButton) {
+    @objc func save(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "save")
         appLog.log(logger, logtype: .guiAction, message: "save")
 
@@ -214,7 +214,7 @@ class TaskEntryPropVC:
         }
     }
     
-    func datePickerChanged(_ sender: UIDatePicker) {
+    @objc func datePickerChanged(_ sender: UIDatePicker) {
         if sender == datePickerStart {
             if datePickerStart.date.compare(datePickerStop.date) == .orderedDescending {
                 datePickerStop.date = datePickerStart.date

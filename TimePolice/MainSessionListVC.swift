@@ -266,7 +266,7 @@ class MainSessionListVC: UIViewController,
         }
     }
     
-    func selectSessions(_ sender: UISegmentedControl) {
+    @objc func selectSessions(_ sender: UISegmentedControl) {
         appLog.log(logger, logtype: .enterExit, message: "selectSessions")
         redrawAll(true)
     }
@@ -289,7 +289,7 @@ class MainSessionListVC: UIViewController,
         performSegue(withIdentifier: "AddSession", sender: self)
     }
 
-    func handleLongPressTableView(_ sender: UILongPressGestureRecognizer) {
+    @objc func handleLongPressTableView(_ sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .enterExit, message: "handleLongPressTableView")
 
         if sender.state != UIGestureRecognizerState.began {

@@ -106,7 +106,7 @@ class MainTemplateSelectVC: UIViewController,
 
     // GUI actions
 
-    func cancel(_ sender: UIButton) {
+    @objc func cancel(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "cancel")
         appLog.log(logger, logtype: .guiAction, message: "cancel")
 

@@ -260,7 +260,7 @@ class TaskEntryCreatorByPickTaskVC:
     // TaskEntryCreatorByPickTask - GUI actions
     //---------------------------------------------
 
-    func exit(_ sender: UIButton) {
+    @objc func exit(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "exit")
         appLog.log(logger, logtype: .guiAction, message: "exit")
 
@@ -268,14 +268,14 @@ class TaskEntryCreatorByPickTaskVC:
         performSegue(withIdentifier: "Exit", sender: self)
     }
 
-    func useTemplate(_ sender: UIButton) {
+    @objc func useTemplate(_ sender: UIButton) {
         appLog.log(logger, logtype: .enterExit, message: "useTemplate")
         appLog.log(logger, logtype: .guiAction, message: "useTemplate")
 
         performSegue(withIdentifier: "UseTemplate", sender: self)
     }
 
-    func handleTapSigninSignout(_ sender: UITapGestureRecognizer) {
+    @objc func handleTapSigninSignout(_ sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .enterExit, message: "handleTapSigninSignout")
         appLog.log(logger, logtype: .guiAction, message: "handleTapSigninSignout")
 
@@ -301,7 +301,7 @@ class TaskEntryCreatorByPickTaskVC:
         appLog.log(logger, logtype: .enterExit) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
-    func handleTapTask(_ sender: UITapGestureRecognizer) {
+    @objc func handleTapTask(_ sender: UITapGestureRecognizer) {
         appLog.log(logger, logtype: .enterExit, message: "handleTap")
 
         signInSignOutView.setNeedsDisplay()
@@ -336,7 +336,7 @@ class TaskEntryCreatorByPickTaskVC:
         appLog.log(logger, logtype: .coreDataSnapshot) { TimePoliceModelUtils.getSessionTaskEntries(s) }
     }
 
-    func handleLongPressTask(_ sender: UILongPressGestureRecognizer) {
+    @objc func handleLongPressTask(_ sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .enterExit, message: "handleLongPressTask")
         appLog.log(logger, logtype: .guiAction, message: "handleLongPressTask")
 
