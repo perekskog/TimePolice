@@ -123,7 +123,7 @@ class MainTemplateListVC: UIViewController,
         templateTableView.dataSource = self
         templateTableView.delegate = self
         templateTableView.rowHeight = CGFloat(selectItemTableRowHeight)
-        templateTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
+        templateTableView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         templateTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         templateListBGView.addSubview(templateTableView)                
 
@@ -157,13 +157,13 @@ class MainTemplateListVC: UIViewController,
 
         var lastview: UIView
 
-        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 30, width: 70, height: CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight))
+        sessionNameView.frame = CGRect(x: 70, y: 30, width: width-70, height: CGFloat(minimumComponentHeight))
         lastview = sessionNameView
 
-        templateListBGView.frame = CGRect(x: 0, y: 25+CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
+        templateListBGView.frame = CGRect(x: 0, y: 30+CGFloat(minimumComponentHeight), width: width, height: height - 30 - CGFloat(minimumComponentHeight) - 20.0)
         lastview = templateListBGView
 
         width = templateListBGView.frame.width
@@ -312,7 +312,7 @@ class MainTemplateListVC: UIViewController,
             cell.textLabel?.text = session.getDisplayName()
         }
 
-        cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
+        cell.backgroundColor = UIColor(white:0.0, alpha:1.0)
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
 

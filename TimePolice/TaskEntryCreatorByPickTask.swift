@@ -226,15 +226,15 @@ class TaskEntryCreatorByPickTaskVC:
         let width = self.view.frame.width
         let height = self.view.frame.height - 50
 
-        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 30, width: 70, height: CGFloat(minimumComponentHeight))
         
-        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
+        sessionNameView.frame = CGRect(x: 70, y: 30, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRect(x: 70, y: 25 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
+        pageIndicatorView.frame = CGRect(x: 70, y: 30 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
         pageIndicatorView.toolbarInfoDelegate = self
 
-        taskPickerBGView.frame = CGRect(x: 0, y: 25 + CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
+        taskPickerBGView.frame = CGRect(x: 0, y: 30 + CGFloat(minimumComponentHeight), width: width, height: height - 30 - CGFloat(minimumComponentHeight) - 33)
 
         guard let l = layout else {
             appLog.log(logger, logtype: .guard, message: "guard fail in viewWillLayoutSubviews")

@@ -422,23 +422,23 @@ class BlackGreenTheme : Theme {
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         
         // Top area
-        let locations1: [CGFloat] = [ 0.0, 1.0 ]
-        let colors1 = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
-            CGColor(colorSpace: colorSpaceRGB, components: [0.5, 0.75, 0.5, 1.0])!]
-        let gradient1 = CGGradient(colorsSpace: colorSpaceRGB,
-            colors: colors1 as CFArray, locations: locations1)
-        let startPoint1 = CGPoint(x:0.0, y:0.0)
-        let endPoint1 =  CGPoint(x:0.0, y:25.0)
-        context.drawLinearGradient(gradient1!,
-            start: startPoint1, end: endPoint1, options: CGGradientDrawingOptions(rawValue: 0))
+//        let locations1: [CGFloat] = [ 0.0, 1.0 ]
+//        let colors1 = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
+//            CGColor(colorSpace: colorSpaceRGB, components: [0.5, 0.75, 0.5, 1.0])!]
+//        let gradient1 = CGGradient(colorsSpace: colorSpaceRGB,
+//            colors: colors1 as CFArray, locations: locations1)
+//        let startPoint1 = CGPoint(x:0.0, y:0.0)
+//        let endPoint1 =  CGPoint(x:0.0, y:30.0)
+//        context.drawLinearGradient(gradient1!,
+//            start: startPoint1, end: endPoint1, options: CGGradientDrawingOptions(rawValue: 0))
 
         // Gradient
         let locations2: [CGFloat] = [ 0.0, 1.0 ]
-        let colors2 = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
-            CGColor(colorSpace: colorSpaceRGB, components: [0.2, 0.2, 0.2, 1.0])!]
+        let colors2 = [CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!,
+            CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!]
         let gradient2 = CGGradient(colorsSpace: colorSpaceRGB,
             colors: colors2 as CFArray, locations: locations2)
-        let startPoint2 = CGPoint(x:0.0, y:25.0)
+        let startPoint2 = CGPoint(x:0.0, y:30.0)
         let endPoint2 =  CGPoint(x:0.0, y:parent.height)
         context.drawLinearGradient(gradient2!,
             start: startPoint2, end: endPoint2, options: CGGradientDrawingOptions(rawValue: 0))
@@ -480,8 +480,10 @@ class BlackGreenTheme : Theme {
         let foregroundColorWhite = UIColor(white: 1.0, alpha: 1.0).cgColor
         _ = UIColor(white: 0.0, alpha: 1.0).cgColor
 
-        let backgroundColorsNeutral = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
-            CGColor(colorSpace: colorSpaceRGB, components: [0.2, 0.2, 0.2, 1.0])!]
+//        let backgroundColorsNeutral = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
+//            CGColor(colorSpace: colorSpaceRGB, components: [0.2, 0.2, 0.2, 1.0])!]
+        let backgroundColorsNeutral = [CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!,
+                                       CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!]
 
         let backgroundColorsRed = [CGColor(colorSpace: colorSpaceRGB, components: [0.7, 0.7, 0.7, 1.0])!,
             CGColor(colorSpace: colorSpaceRGB, components: [0.4, 0.0, 0.0, 1.0])!]
@@ -529,8 +531,10 @@ class BlackGreenTheme : Theme {
         // Gradient
         let colorSpaceRGB = CGColorSpaceCreateDeviceRGB()
         let locations: [CGFloat] = [ 0.0, 1.0 ]
-        var colors = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
-            CGColor(colorSpace: colorSpaceRGB, components: [0.2, 0.2, 0.2, 1.0])!]
+//        var colors = [CGColor(colorSpace: colorSpaceRGB, components: [0.3, 0.3, 0.3, 1.0])!,
+//            CGColor(colorSpace: colorSpaceRGB, components: [0.2, 0.2, 0.2, 1.0])!]
+        var colors = [CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!,
+                      CGColor(colorSpace: colorSpaceRGB, components: [0.0, 0.0, 0.0, 1.0])!]
         if let active = selectionAreaInfo.active {
             if active {
                 if let ongoing = selectionAreaInfo.ongoing {
