@@ -36,7 +36,7 @@ class MainSessionListVC: UIViewController,
 
     // GUI
     var sessionTableView = UITableView(frame: CGRect.zero, style: .plain)
-    let exitButton = UIButton(type: UIButtonType.system)
+    let exitButton = UIButton(type: UIButton.ButtonType.system)
     let sessionNameView = TaskEntriesToolView()
     let sessionSelectionControl = UISegmentedControl(frame: CGRect.zero)
     let sessionListBGView = TaskEntriesBGView()
@@ -108,10 +108,10 @@ class MainSessionListVC: UIViewController,
         (self.view as! TimePoliceBGView).theme = theme
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.white, for: UIControlState())
-        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.setTitleColor(UIColor.white, for: UIControl.State())
+        exitButton.setTitle("EXIT", for: UIControl.State())
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(MainSessionListVC.exit(_:)), for: UIControlEvents.touchUpInside)
+        exitButton.addTarget(self, action: #selector(MainSessionListVC.exit(_:)), for: UIControl.Event.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -292,7 +292,7 @@ class MainSessionListVC: UIViewController,
     @objc func handleLongPressTableView(_ sender: UILongPressGestureRecognizer) {
         appLog.log(logger, logtype: .enterExit, message: "handleLongPressTableView")
 
-        if sender.state != UIGestureRecognizerState.began {
+        if sender.state != UIGestureRecognizer.State.began {
             return
         }
 
@@ -469,7 +469,7 @@ class MainSessionListVC: UIViewController,
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         var cellString = ""
         if let cell = tableView.cellForRow(at: indexPath),
             let s = cell.textLabel?.text {
@@ -479,7 +479,7 @@ class MainSessionListVC: UIViewController,
         appLog.log(logger, logtype: .enterExit, message: "tableView.commitEditingStyle")
         appLog.log(logger, logtype: .guiAction, message: "tableView.commitEditingStyle(\(cellString))")
 
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             if let session = nonTemplateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .debug, message: "Delete row \(indexPath.row)")
                 Session.deleteObject(session)

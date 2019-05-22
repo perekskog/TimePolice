@@ -23,7 +23,7 @@ class MainSettingVC: UIViewController,
     
     let theme = BlackGreenTheme()
 
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
 
     //---------------------------------------

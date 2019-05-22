@@ -127,9 +127,9 @@ class TaskEntryPropVC:
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TaskEntryPropVC.cancel(_:)))
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action: #selector(TaskEntryPropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TaskEntryPropVC.save(_:)))
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItem.Style.plain, target: self, action: #selector(TaskEntryPropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
 
         table = UITableView(frame: self.view.frame, style: .grouped)
@@ -140,8 +140,8 @@ class TaskEntryPropVC:
         let now = Date()
         datePickerStart.date = now
         datePickerStop.date = now
-        datePickerStart.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControlEvents.valueChanged)
-        datePickerStop.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControlEvents.valueChanged)
+        datePickerStart.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControl.Event.valueChanged)
+        datePickerStop.addTarget(self, action: #selector(TaskEntryPropVC.datePickerChanged(_:)), for: UIControl.Event.valueChanged)
         datePickerStart.minimumDate = minimumDate
         datePickerStart.maximumDate = maximumDate
         datePickerStop.minimumDate = minimumDate

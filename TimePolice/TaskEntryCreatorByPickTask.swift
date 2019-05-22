@@ -28,7 +28,7 @@ class TaskEntryCreatorByPickTaskVC:
         UIGestureRecognizerDelegate
 	{
 
-    let exitButton = UIButton(type: UIButtonType.system)
+    let exitButton = UIButton(type: UIButton.ButtonType.system)
     let sessionNameView = TaskPickerToolView()
     let pageIndicatorView = TaskPickerPageIndicatorView()
     let signInSignOutView = TaskPickerToolView()
@@ -73,10 +73,10 @@ class TaskEntryCreatorByPickTaskVC:
         (self.view as! TimePoliceBGView).theme = theme
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.white, for: UIControlState())
-        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.setTitleColor(UIColor.white, for: UIControl.State())
+        exitButton.setTitle("EXIT", for: UIControl.State())
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByPickTaskVC.exit(_:)), for: UIControlEvents.touchUpInside)
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByPickTaskVC.exit(_:)), for: UIControl.Event.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -294,7 +294,7 @@ class TaskEntryCreatorByPickTaskVC:
         } else {
             setLastTaskEntryAsOngoing()
         }
-        if let taskIndex = taskList.index(of: taskEntry.task as Task) {
+        if let taskIndex = taskList.firstIndex(of: taskEntry.task as Task) {
             taskbuttonviews[taskIndex]?.setNeedsDisplay()
         }
 
@@ -315,7 +315,7 @@ class TaskEntryCreatorByPickTaskVC:
 
         // Handle ongoing task
         if let taskEntry = s.getLastTaskEntry() {
-            if let taskIndex = taskList.index(of: taskEntry.task as Task) {
+            if let taskIndex = taskList.firstIndex(of: taskEntry.task as Task) {
                 taskbuttonviews[taskIndex]?.setNeedsDisplay()
             }
 
@@ -340,7 +340,7 @@ class TaskEntryCreatorByPickTaskVC:
         appLog.log(logger, logtype: .enterExit, message: "handleLongPressTask")
         appLog.log(logger, logtype: .guiAction, message: "handleLongPressTask")
 
-        if sender.state != UIGestureRecognizerState.began {
+        if sender.state != UIGestureRecognizer.State.began {
             return
         }
 
@@ -607,7 +607,7 @@ class TaskEntryCreatorByPickTaskVC:
                 return
         }
         
-        guard let taskIndex = taskList.index(of: taskEntry.task as Task) else {
+        guard let taskIndex = taskList.firstIndex(of: taskEntry.task as Task) else {
                 appLog.log(logger, logtype: .guard, message: "guard fail in updateActiveTask taskindex")
                 return
         }
