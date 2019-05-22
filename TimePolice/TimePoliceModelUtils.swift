@@ -255,7 +255,7 @@ class TimePoliceModelUtils {
         var found = false
         for s in templateProject.sessions {
             if (s as AnyObject).name == sessionName && (s as AnyObject).version == sessionVersion {
-                templateSession = s as! Session
+                templateSession = (s as! Session)
                 found = true
             }
         }
