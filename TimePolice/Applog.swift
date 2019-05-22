@@ -177,7 +177,7 @@ class TextViewLogger: BasicLogger {
         }
 
         t.text! += "\n\(entry)"
-        let numberOfElements = t.text.characters.count
+        let numberOfElements = t.text.count
         let range:NSRange = NSMakeRange(numberOfElements-1, 1)
         t.scrollRangeToVisible(range)
 	}
