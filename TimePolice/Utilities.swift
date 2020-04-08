@@ -131,7 +131,7 @@ class UtilitiesString {
         for (key, value) in props {
             s += "\(key)=\(value),"
         }
-        s.remove(at: s.characters.index(before: s.endIndex))
+        s.remove(at: s.index(before: s.endIndex))
         return s
     }
 
@@ -163,11 +163,11 @@ class UtilitiesColor {
     
     class func string2color(_ text: String) -> UIColor {
         //var color: UIColor?
-        let r = text[text.characters.index(text.startIndex, offsetBy: 0)]
+        let r = text[text.index(text.startIndex, offsetBy: 0)]
         let red = hexchar2value(r)
-        let g = text[text.characters.index(text.startIndex, offsetBy: 1)]
+        let g = text[text.index(text.startIndex, offsetBy: 1)]
         let green = hexchar2value(g)
-        let b = text[text.characters.index(text.startIndex, offsetBy: 2)]
+        let b = text[text.index(text.startIndex, offsetBy: 2)]
         let blue = hexchar2value(b)
         
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)

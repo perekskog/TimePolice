@@ -23,7 +23,7 @@ class MainSettingVC: UIViewController,
     
     let theme = BlackGreenTheme()
 
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 
 
     //---------------------------------------
@@ -444,7 +444,7 @@ class MainSettingVC: UIViewController,
     func redrawAll(_ refreshCoreData: Bool) {
         if refreshCoreData==true {
         }
-        applogSizeValueLabel.text = "\(self.appLog.logString.characters.count)"
+        applogSizeValueLabel.text = "\(self.appLog.logString.count)"
     }
 
     //---------------------------------------------

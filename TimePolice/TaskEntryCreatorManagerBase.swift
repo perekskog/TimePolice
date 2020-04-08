@@ -95,9 +95,9 @@ class TaskEntryCreatorManagerBase: UIViewController,
             completion: nil)
         pageViewController.delegate = self
         
-        self.addChildViewController(pageViewController)
+        self.addChild(pageViewController)
         self.view.addSubview(self.pageViewController.view)
-        pageViewController.didMove(toParentViewController: self)
+        pageViewController.didMove(toParent: self)
     }
     
     

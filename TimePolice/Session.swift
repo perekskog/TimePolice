@@ -378,7 +378,7 @@ Future extensions
 */
 
     func setStartTime(_ moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStartTime: Date) {
-        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStartTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStartTime)))")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStartTime(taskEntryIndex=\(String(describing: index)), time=\(UtilitiesDate.getString(desiredStartTime)))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds
@@ -461,7 +461,7 @@ Future extensions
 
 
     func setStopTime(_ moc: NSManagedObjectContext, taskEntryIndex: Int, desiredStopTime: Date) {
-        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStopTime(taskEntryIndex=\(index), time=\(UtilitiesDate.getString(desiredStopTime)))")
+        UtilitiesApplog.logDefault("Session", logtype: .enterExit, message: "setStopTime(taskEntryIndex=\(String(describing: index)), time=\(UtilitiesDate.getString(desiredStopTime)))")
 
         if taskEntryIndex < 0 || taskEntryIndex >= taskEntries.count  {
             // Index out of bounds

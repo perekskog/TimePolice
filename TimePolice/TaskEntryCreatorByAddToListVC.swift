@@ -37,7 +37,7 @@ class TaskEntryCreatorByAddToListVC:
 
     var updateActiveActivityTimer: Timer?
 
-    let exitButton = UIButton(type: UIButtonType.system)
+    let exitButton = UIButton(type: UIButton.ButtonType.system)
     let sessionNameView = TaskEntriesToolView()
     let pageIndicatorView = TaskPickerPageIndicatorView()
     let taskEntriesBGView = TaskEntriesBGView()
@@ -84,10 +84,10 @@ class TaskEntryCreatorByAddToListVC:
         appLog.log(logger, logtype: .debug, message: s)
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.white, for: UIControlState())
-        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.setTitleColor(UIColor.white, for: UIControl.State())
+        exitButton.setTitle("EXIT", for: UIControl.State())
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByAddToListVC.exit(_:)), for: UIControlEvents.touchUpInside)
+        exitButton.addTarget(self, action: #selector(TaskEntryCreatorByAddToListVC.exit(_:)), for: UIControl.Event.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -591,7 +591,7 @@ class TaskEntryCreatorByAddToListVC:
         
         if numberOfRows > 0 {
             let indexPath = IndexPath(row: numberOfRows-1, section: (numberOfSections-1))
-            tableView.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: true)
+            tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.bottom, animated: true)
         }
         
     }

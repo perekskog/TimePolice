@@ -628,9 +628,9 @@ class ThemeUtilities {
     
     class func addText(_ context: CGContext, text: String, origin: CGPoint, fontSize: CGFloat, withFrame: Bool, foregroundColor: CGColor) {
         context.saveGState()
-        let attributes: [NSAttributedStringKey: Any] = [
-            NSAttributedStringKey.foregroundColor : foregroundColor,
-            NSAttributedStringKey.font : UIFont.systemFont(ofSize: fontSize)
+        let attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.foregroundColor : foregroundColor,
+            NSAttributedString.Key.font : UIFont.systemFont(ofSize: fontSize)
         ]
         //let font = attributes[NSFontAttributeName] as! UIFont
         let attributedString = NSAttributedString(string: text, attributes: attributes)

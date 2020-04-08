@@ -24,7 +24,7 @@ class MainTemplatePropVC: UIViewController,
     let textTemplate = UITextView(frame: CGRect.zero)
     var spaceAtBottom = 0
     let padding = 10
-    let buttonInstructions = UIButton(type: UIButtonType.system)
+    let buttonInstructions = UIButton(type: UIButton.ButtonType.system)
 
 
     deinit {
@@ -98,9 +98,9 @@ class MainTemplatePropVC: UIViewController,
             }
         }
 
-        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MainTemplatePropVC.cancel(_:)))
+        let buttonCancel = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action: #selector(MainTemplatePropVC.cancel(_:)))
         self.navigationItem.leftBarButtonItem = buttonCancel
-        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
+        let buttonSave = UIBarButtonItem(title: "Save", style: UIBarButtonItem.Style.plain, target: self, action: #selector(MainTemplatePropVC.save(_:)))
         self.navigationItem.rightBarButtonItem = buttonSave
         
 
@@ -113,10 +113,10 @@ class MainTemplatePropVC: UIViewController,
         textTemplate.font = UIFont.systemFont(ofSize: 16)
         self.view.addSubview(textTemplate)
         
-        buttonInstructions.setTitleColor(UIColor.blue, for: UIControlState())
-        buttonInstructions.setTitle("How to write a template", for: UIControlState())
+        buttonInstructions.setTitleColor(UIColor.blue, for: UIControl.State())
+        buttonInstructions.setTitle("How to write a template", for: UIControl.State())
         buttonInstructions.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
-        buttonInstructions.addTarget(self, action: #selector(MainTemplatePropVC.displayTemplateInstructions(_:)), for: UIControlEvents.touchUpInside)
+        buttonInstructions.addTarget(self, action: #selector(MainTemplatePropVC.displayTemplateInstructions(_:)), for: UIControl.Event.touchUpInside)
 
         self.view.addSubview(buttonInstructions)
 
@@ -124,8 +124,8 @@ class MainTemplatePropVC: UIViewController,
 
         spaceAtBottom = 20
 
-        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil);
-        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillShow(_:)), name:UIResponder.keyboardWillShowNotification, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(MainTemplatePropVC.keyboardWillHide(_:)), name:UIResponder.keyboardWillHideNotification, object: nil);
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -198,7 +198,7 @@ class MainTemplatePropVC: UIViewController,
     }
 
     @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             appLog.log(logger, logtype: .debug, message: "will show keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20 + Int(keyboardSize.height)
         }
@@ -210,7 +210,7 @@ class MainTemplatePropVC: UIViewController,
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             appLog.log(logger, logtype: .debug, message: "will hide keyboard, height=\(keyboardSize.height), textheight is \(self.textTemplate.frame.size.height)")
             spaceAtBottom = 20
         }

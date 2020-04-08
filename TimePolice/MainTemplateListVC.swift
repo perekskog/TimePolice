@@ -31,7 +31,7 @@ class MainTemplateListVC: UIViewController,
 
     // GUI
     var templateTableView = UITableView(frame: CGRect.zero, style: .plain)
-    let exitButton = UIButton(type: UIButtonType.system)
+    let exitButton = UIButton(type: UIButton.ButtonType.system)
     let sessionNameView = TaskEntriesToolView()
     let templateListBGView = TaskEntriesBGView()
     let addView = TaskEntriesToolView()
@@ -105,10 +105,10 @@ class MainTemplateListVC: UIViewController,
         self.edgesForExtendedLayout = UIRectEdge()
 
         exitButton.backgroundColor = UIColor(red: 0.0, green: 0.4, blue: 0.0, alpha: 1.0)
-        exitButton.setTitleColor(UIColor.white, for: UIControlState())
-        exitButton.setTitle("EXIT", for: UIControlState())
+        exitButton.setTitleColor(UIColor.white, for: UIControl.State())
+        exitButton.setTitle("EXIT", for: UIControl.State())
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(themeBigTextSize))
-        exitButton.addTarget(self, action: #selector(MainTemplateListVC.exit(_:)), for: UIControlEvents.touchUpInside)
+        exitButton.addTarget(self, action: #selector(MainTemplateListVC.exit(_:)), for: UIControl.Event.touchUpInside)
         self.view.addSubview(exitButton)
 
         sessionNameView.theme = theme
@@ -342,7 +342,7 @@ class MainTemplateListVC: UIViewController,
         }
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         var cellString = ""
         if let cell = tableView.cellForRow(at: indexPath),
             let s = cell.textLabel?.text {
@@ -352,7 +352,7 @@ class MainTemplateListVC: UIViewController,
         appLog.log(logger, logtype: .enterExit, message: "tableView.commitEditingStyle")
         appLog.log(logger, logtype: .guiAction, message: "tableView.commitEditingStyle(\(cellString))")
 
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
+        if (editingStyle == UITableViewCell.EditingStyle.delete) {
             if let session = templateSessions?[indexPath.row] {
                 appLog.log(logger, logtype: .debug, message: "Delete row \(indexPath.row)")
                 Session.deleteObject(session)
