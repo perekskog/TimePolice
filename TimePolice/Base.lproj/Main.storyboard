@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="h2A-Ro-PcX">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="h2A-Ro-PcX">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--MainTemplateListVC-->
@@ -10,9 +14,9 @@
             <objects>
                 <viewController id="Irr-mv-VTQ" userLabel="MainTemplateListVC" customClass="MainTemplateListVC" customModule="TimePolice" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lzC-uF-hWr" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="7dW-GI-dvj"/>
                     <connections>
@@ -31,9 +35,9 @@
             <objects>
                 <viewController id="kUl-Z4-YiI" userLabel="MainTemplatePropVC" customClass="MainTemplatePropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Hgy-cC-Rfq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="USl-RV-TM6"/>
                     <connections>
@@ -51,9 +55,9 @@
             <objects>
                 <viewController id="ibE-kE-IVF" userLabel="MainSessionListVC" customClass="MainSessionListVC" customModule="TimePolice" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uMu-Gj-jXc" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="0sO-rL-U6m">
                         <barButtonItem key="rightBarButtonItem" title="Item" id="uxp-TD-gik"/>
@@ -74,9 +78,9 @@
             <objects>
                 <viewController id="mfS-TQ-VpO" userLabel="MainTemplateSelectVC" customClass="MainTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ohm-CD-deu">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="d9x-TN-yOa"/>
                     <connections>
@@ -94,9 +98,9 @@
             <objects>
                 <viewController storyboardIdentifier="TaskEntryCreatorByPickTask" id="vXZ-lx-hvc" userLabel="TaskEntryCreatorByPickTaskVC" customClass="TaskEntryCreatorByPickTaskVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="PickTask" id="tKP-7b-sfM"/>
                     <navigationItem key="navigationItem" id="lIo-Le-7fv"/>
@@ -116,9 +120,9 @@
             <objects>
                 <viewController id="dbK-Rd-6L5" userLabel="SessionManagerForPickTask" customClass="TaskEntryCreatorManagerForPickTask" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0lZ-XA-JZB">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Pick task" image="PickTask.png" selectedImage="PickTask.png" id="qvg-By-36f"/>
                 </viewController>
@@ -131,9 +135,9 @@
             <objects>
                 <viewController id="FNn-dD-6RS" userLabel="SessionManagerForAddToList" customClass="TaskEntryCreatorManagerForAddToList" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dLM-Hw-a9v">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Add to list" image="AddToList.png" id="ylp-rN-Xxe"/>
                 </viewController>
@@ -146,9 +150,9 @@
             <objects>
                 <viewController storyboardIdentifier="TaskEntryCreatorByAddToList" id="QbM-a3-K2L" userLabel="TaskEntryCreatorByAddToListVC" customClass="TaskEntryCreatorByAddToListVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2FS-jY-MDf" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.064999889510000006" green="0.74704583899999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="AddToList" id="RdQ-G0-15G"/>
                     <navigationItem key="navigationItem" id="dxa-gD-taX"/>
@@ -168,9 +172,9 @@
             <objects>
                 <viewController id="dzU-1d-OfS" userLabel="TaskEntryPropVC" customClass="TaskEntryPropVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zqu-r5-rZm">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="6ZT-nV-5Yo"/>
                     <connections>
@@ -191,9 +195,9 @@
             <objects>
                 <viewController id="tNe-a1-HVm" userLabel="TaskSelectVC" customClass="TaskSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZeU-h1-S4t">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="xaU-H0-X65"/>
                     <connections>
@@ -210,7 +214,7 @@
             <objects>
                 <viewController id="eLJ-bB-2C6" userLabel="MainVC" customClass="MainVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BEL-M0-Gy8" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="L7G-KF-Reh">
@@ -218,7 +222,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Sessions">
-                                    <color key="titleColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.67010452109999996" green="0.89285714289999996" blue="0.6703591378" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <segue destination="ibE-kE-IVF" kind="push" identifier="Sessions" id="iCc-NT-gCD"/>
@@ -228,9 +232,9 @@
                                 <rect key="frame" x="27" y="203" width="159" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Templates">
-                                    <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <segue destination="Irr-mv-VTQ" kind="push" identifier="Templates" id="vBV-Ts-BqF"/>
@@ -240,7 +244,7 @@
                                 <rect key="frame" x="32" y="94" width="268" height="62"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="black" pointSize="40"/>
-                                <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="160330 timepolice icons_Arrow.png" id="ROk-kF-3rJ">
@@ -264,8 +268,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.30389532342657344" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.076277818359999999" green="0.77040816329999995" blue="0.0023913399539999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="rDQ-wU-VfL"/>
                     <connections>
@@ -286,7 +290,7 @@
             <objects>
                 <viewController id="SF8-YH-e6F" userLabel="MainExportVC" customClass="MainExportVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mGh-7y-Ctg" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="304-oV-hmY">
@@ -294,21 +298,21 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Applog">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="dumpApplog:" destination="SF8-YH-e6F" eventType="touchUpInside" id="F4J-es-VeJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9I-4w-amE">
-                                <rect key="frame" x="0.0" y="25" width="70" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9I-4w-amE">
+                                <rect key="frame" x="0.0" y="30" width="70" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="EXIT">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="exit:" destination="SF8-YH-e6F" eventType="touchUpInside" id="6bl-fe-S1a"/>
@@ -318,14 +322,14 @@
                                 <rect key="frame" x="-40" y="117" width="400" height="87"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="16"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NB9-zW-I8r">
                                 <rect key="frame" x="101" y="84" width="118" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
-                                <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GK6-I2-o8Q">
@@ -341,8 +345,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Data structures">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="dumpCoreData:" destination="SF8-YH-e6F" eventType="touchUpInside" id="4Xk-bS-5Dk"/>
@@ -353,7 +357,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Session summary">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="dumpSessionSummary:" destination="SF8-YH-e6F" eventType="touchUpInside" id="7tc-KH-Slj"/>
@@ -364,14 +368,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Session details">
-                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.92346938779999999" green="0.91740545159999998" blue="0.01097657927" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="dumpSessionDetails:" destination="SF8-YH-e6F" eventType="touchUpInside" id="Mbf-Ss-BDr"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.29848666958041958" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="Op2-MH-YBM"/>
                     <connections>
@@ -396,17 +400,17 @@
             <objects>
                 <viewController id="jaN-JA-eGe" userLabel="MainSettingsVC" customClass="MainSettingVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uKX-cz-dYV" customClass="TimePoliceBGView" customModule="TimePolice" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="joo-kf-e6R">
-                                <rect key="frame" x="0.0" y="25" width="70" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="joo-kf-e6R">
+                                <rect key="frame" x="0.0" y="30" width="70" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.039819624269999999" green="0.44387754800000001" blue="0.0038571245970000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="3" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="EXIT">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="exit:" destination="jaN-JA-eGe" eventType="touchUpInside" id="Xua-Sp-sPl"/>
@@ -416,14 +420,14 @@
                                 <rect key="frame" x="170" y="347" width="79" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lVc-xG-n18">
                                 <rect key="frame" x="97" y="89" width="126" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="30"/>
-                                <color key="textColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="GXK-1U-UOo">
@@ -439,7 +443,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Delete sessions">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="deleteSessions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="5JE-Hq-sqi"/>
@@ -449,7 +453,7 @@
                                 <rect key="frame" x="68" y="347" width="94" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1be-JN-Dkf">
@@ -457,8 +461,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Manage applog">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="applogActions:" destination="jaN-JA-eGe" eventType="touchUpInside" id="0e1-zz-Fg7"/>
@@ -469,15 +473,15 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Delete all data">
-                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="1" green="0.56998841119999999" blue="0.49371205889999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="clearCoreData:" destination="jaN-JA-eGe" eventType="touchUpInside" id="woR-cP-Y6t"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.29602819055944057" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="CIq-i1-a0C"/>
                     <connections>
@@ -502,9 +506,9 @@
             <objects>
                 <viewController id="K31-sT-C4m" userLabel="TaskEntryUseTemplate" customClass="TaskEntryTemplateSelectVC" customModule="TimePolice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lCk-0v-Vni">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="guz-W2-o7i"/>
                     <connections>
@@ -523,7 +527,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nCY-7c-hUA" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uiX-mm-FeM">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -543,9 +547,10 @@
                     <navigationItem key="navigationItem" id="wfp-8f-Yzk"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="Mdf-Pt-r24">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" white="0.25193036130536123" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="dbK-Rd-6L5" kind="relationship" relationship="viewControllers" id="1Av-G5-DqJ"/>
@@ -562,7 +567,6 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="h2A-Ro-PcX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3Gz-bL-3qq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -581,7 +585,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="cNY-tf-Pao"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="26V-3P-75g">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -600,7 +604,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="2kF-8a-jW3"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dbq-Bf-IIa">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -618,7 +622,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ouh-dk-s8P" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="cDe-Te-MJr">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -635,12 +639,12 @@
         <image name="160330 timepolice icons_Arrow.png" width="180" height="180"/>
         <image name="160330 timepolice icons_Export.png" width="75" height="76"/>
         <image name="160330 timepolice icons_Settings.png" width="75" height="75"/>
-        <image name="AddToList.png" width="19" height="23"/>
-        <image name="PickTask.png" width="19" height="25"/>
+        <image name="AddToList.png" width="18" height="23"/>
+        <image name="PickTask.png" width="18" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="JW7-jI-2S6"/>
         <segue reference="Rbx-w5-iep"/>
-        <segue reference="I7g-5x-ylG"/>
-        <segue reference="cS4-xQ-gF3"/>
+        <segue reference="hjh-eJ-Q4q"/>
     </inferredMetricsTieBreakers>
 </document>

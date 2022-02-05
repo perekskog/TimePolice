@@ -122,7 +122,7 @@ class TaskEntryCreatorByAddToListVC:
         taskEntriesTableView.dataSource = self
         taskEntriesTableView.delegate = self
         taskEntriesTableView.rowHeight = CGFloat(selectItemTableRowHeight)
-        taskEntriesTableView.backgroundColor = UIColor(white: 0.3, alpha: 1.0)
+        taskEntriesTableView.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         taskEntriesTableView.separatorColor = UIColor(red: 0.0, green: 0.8, blue: 0.0, alpha: 1.0)
         taskEntriesBGView.addSubview(taskEntriesTableView)
 
@@ -197,17 +197,17 @@ class TaskEntryCreatorByAddToListVC:
 
         var lastview: UIView
 
-        exitButton.frame = CGRect(x: 0, y: 25, width: 70, height: CGFloat(minimumComponentHeight))
+        exitButton.frame = CGRect(x: 0, y: 30, width: 70, height: CGFloat(minimumComponentHeight))
         lastview = exitButton
 
-        sessionNameView.frame = CGRect(x: 70, y: 25, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
+        sessionNameView.frame = CGRect(x: 70, y: 30, width: width-70, height: CGFloat(minimumComponentHeight) - 5)
         sessionNameView.toolbarInfoDelegate = self
 
-        pageIndicatorView.frame = CGRect(x: 70, y: 25 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
+        pageIndicatorView.frame = CGRect(x: 70, y: 30 + CGFloat(minimumComponentHeight) - 5, width: width-70, height: 5)
         pageIndicatorView.toolbarInfoDelegate = self
         lastview = pageIndicatorView
 
-        taskEntriesBGView.frame = CGRect(x: 0, y: 25 + CGFloat(minimumComponentHeight), width: width, height: height - 25 - CGFloat(minimumComponentHeight))
+        taskEntriesBGView.frame = CGRect(x: 0, y: 30 + CGFloat(minimumComponentHeight), width: width, height: height - 30 - CGFloat(minimumComponentHeight))
         lastview = taskEntriesBGView
 
         width = taskEntriesBGView.frame.width
@@ -220,7 +220,7 @@ class TaskEntryCreatorByAddToListVC:
         signInSignOutView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight))
         lastview = signInSignOutView
 
-        taskEntriesTableView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: height - lastview.frame.maxY - 3*CGFloat(padding) - CGFloat(minimumComponentHeight))
+        taskEntriesTableView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: height - lastview.frame.maxY - 3*CGFloat(padding) - CGFloat(minimumComponentHeight) - 33.0)
         lastview = taskEntriesTableView
 
         addView.frame = CGRect(x: CGFloat(padding), y: lastview.frame.maxY + CGFloat(padding), width: width - 2*CGFloat(padding), height: CGFloat(minimumComponentHeight))
@@ -455,7 +455,7 @@ class TaskEntryCreatorByAddToListVC:
         if taskEntryIndex == -1 {
             cell.textLabel?.text = "---"
 
-            cell.backgroundColor = UIColor(white:0.2, alpha:1.0)
+            cell.backgroundColor = UIColor(white:0.0, alpha:1.0)
             cell.textLabel?.textColor = UIColor(white: 0.5, alpha: 1.0)
             cell.textLabel?.adjustsFontSizeToFitWidth = true
 
@@ -484,7 +484,7 @@ class TaskEntryCreatorByAddToListVC:
             cell.imageView?.image = UtilitiesImage.getImageWithColor(color, width: 10.0, height: 10.0)
         }
 
-        cell.backgroundColor = UIColor(white:0.3, alpha:1.0)
+        cell.backgroundColor = UIColor(white:0.0, alpha:1.0)
         cell.textLabel?.textColor = UIColor(white: 1.0, alpha: 1.0)
         cell.textLabel?.adjustsFontSizeToFitWidth = true
 
