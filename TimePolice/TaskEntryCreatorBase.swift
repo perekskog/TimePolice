@@ -184,7 +184,13 @@ class TaskEntryCreatorBase:
 
             if i > 0 {
                 // Limit to starttime of previous item, if any
-                vc.minimumDate = wl[i-1].startTime
+                if wl[i-1].stopTime == wl[i].startTime {
+                    // No gap => limit to previous item's starttime
+                    vc.minimumDate = wl[i-1].startTime
+                } else {
+                    // A gap => limit to previous item's stoptime
+                    vc.minimumDate = wl[i-1].stopTime
+                }
             }
             if i < wl.count-1 && !wl[i+1].isOngoing() {
                 // Limit to stoptime of next item, if any
