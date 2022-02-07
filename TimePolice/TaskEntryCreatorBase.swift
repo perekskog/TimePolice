@@ -183,8 +183,13 @@ class TaskEntryCreatorBase:
             vc.maximumDate = Date()
 
             if i > 0 {
+                appLog.log(logger, logtype: .debug, message:"\(wl[i-1].startTime.timeIntervalSince1970)")
+                appLog.log(logger, logtype: .debug, message:"\(wl[i-1].stopTime.timeIntervalSince1970)")
+                appLog.log(logger, logtype: .debug, message:"\(wl[i].startTime.timeIntervalSince1970)")
+// te.startTime.timeIntervalSince(previousTaskEntry.stopTime) < 0.5
                 // Limit to starttime of previous item, if any
-                if wl[i-1].stopTime == wl[i].startTime {
+            //if wl[i-1].stopTime == wl[i].startTime {
+                if wl[i].startTime.timeIntervalSince(wl[i-1].stopTime) < 0.5 {
                     // No gap => limit to previous item's starttime
                     vc.minimumDate = wl[i-1].startTime
                 } else {
